@@ -3,7 +3,6 @@
 .idea/
 .vscode/
 *.swp
-*.swo
 .env
 .env.*
 *.key
@@ -15,6 +14,5 @@
 .claude/settings.local.json
 .Codex/
 node_modules/
-dist/
 scratch/
 tmp/

@@ -1,46 +1,49 @@
 # skillissue.sh
 
-Jack Arturo's personal/agent skills collection — the public home for skills that
-actually earn their keep across Claude Code, Codex, Cursor, and AutoHub.
+Jack Arturo's personal/agent skills collection — public narratives for skills that
+earn their keep across Claude Code, Codex, Cursor, and AutoHub.
 
 **Live:** <https://skillissue.sh>
 
-The domain is a buried pun ("skill issue") that also reads as shell (`.sh`).
-If you noticed, good. If you didn't, still good — the install commands work either way.
+Packages live in [AutoVault](https://autovault.dev). Memory lives in [AutoMem](https://automem.ai).
+This site is the shelf — not a registry.
 
 ## Layout
 
 | Path | What |
 |---|---|
-| `site/` | Cloudflare Pages source for skillissue.sh. Static HTML, no build step. |
-| `site/skills.json` | Machine-readable catalog. |
-| `site/llms.txt` | Short agent-facing summary. |
+| `content/skills/` | Authored public skill narratives (required for a public page) |
+| `content/story/` | About / install / changelog source |
+| `catalog/` | denylist, vault-index (committed for CI), build report |
+| `scripts/` | inventory + catalog generator |
+| `functions/` | Pages Functions lead-capture (D1 + Resend when bound) |
+| `site/` | Generated Cloudflare Pages output |
+
+## Develop
+
+```bash
+npm run inventory   # requires local ~/.autovault/skills — refresh vault-index.json
+npm run build       # content + vault-index → site/
+npm run preview     # http://127.0.0.1:8787
+```
+
+Public skills need a `content/skills/<name>.md` with Why/History/How (or explicit upstream origin).
+Bare vault scrape alone will not publish.
 
 ## Deploy
 
-Cloudflare Pages project `skillissue` is GitHub-connected
-(`jack-arturo/skillissue`, production branch `main`):
+GitHub-connected Pages project `skillissue`:
 
-- Framework preset: **None**
-- Build command: *(blank)*
-- Build output directory: `site`
+- Build command: `npm run build`
+- Output directory: `site`
+- Push `main` → production
 
-```bash
-git push origin main
-```
+Do **not** `wrangler pages deploy` against this project.
 
-Custom domains: `skillissue.sh`, `www.skillissue.sh`, and the typo catch
-`skilissue.sh`.
+## Email list
 
-Do **not** run `wrangler pages deploy` against this project — it is
-GitHub-connected; direct uploads create split-brain deploys.
-
-## Local preview
-
-```bash
-cd site && python3 -m http.server 8787
-# open http://127.0.0.1:8787
-```
+Lead-capture Functions are in-repo. **D1 binding pending** (account at free-tier D1 cap).
+See [README.lead-capture.md](./README.lead-capture.md).
 
 ## License
 

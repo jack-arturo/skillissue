@@ -1,0 +1,17 @@
+{
+  "name": "skillissue",
+  "version": "0.2.0",
+  "private": true,
+  "description": "skillissue.sh — Jack Arturo's personal/agent skills collection",
+  "type": "module",
+  "scripts": {
+    "inventory": "node scripts/inventory-vault.mjs",
+    "build": "node scripts/build-catalog.mjs",
+    "build:strict": "node scripts/build-catalog.mjs --strict",
+    "build:local": "node scripts/inventory-vault.mjs && node scripts/build-catalog.mjs",
+    "preview": "python3 -m http.server 8787 --directory site"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>inbox-triage — skillissue.sh</title>
+<meta name="description" content="Clear Jack's Gmail unread pile into action buckets and one digest.">
+<link rel="canonical" href="https://skillissue.sh/skills/inbox-triage/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0a0c0f">
+<meta property="og:title" content="inbox-triage — skillissue.sh">
+<meta property="og:description" content="Clear Jack's Gmail unread pile into action buckets and one digest.">
+<meta property="og:image" content="https://skillissue.sh/assets/og.png">
+<meta property="og:url" content="https://skillissue.sh/skills/inbox-triage/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
+</head>
+<body>
+  <header class="top" id="topbar">
+    <div class="wrap top-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">$</span>
+        <span>skillissue.sh</span>
+      </a>
+      <nav class="links" aria-label="Primary">
+        <a href="/">home</a>
+        <a href="/skills/" aria-current="page">skills</a>
+        <a href="/install/">install</a>
+        <a href="/about/">about</a>
+        <a href="/skills.json">skills.json</a>
+        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+
+    <section class="hero skill-hero">
+      <div class="wrap">
+        <div class="prompt"><span class="dot"></span> skill · v1.1.0 · house</div>
+        <h1><span class="path">inbox-triage</span></h1>
+        <p class="lede">Clear Jack's Gmail unread pile into action buckets and one digest.</p>
+        <div class="meta" style="margin-bottom:1.25rem"><span class="tag">email</span> <span class="tag">gmail</span>
+          <span class="badge">house</span>
+          
+        </div>
+        <div class="cta-row">
+          <button type="button" class="btn btn-primary" data-copy="npx skills find inbox-triage">Copy find command</button>
+          <a class="btn btn-ghost" href="/skills/">All skills</a>
+          <a class="btn btn-ghost" href="https://autovault.dev">AutoVault</a>
+        </div>
+        <div class="term" style="max-width:42rem">
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install</span></div>
+          <div class="term-body">
+            <div><span class="dim">$</span> <span class="cmd">npx skills find inbox-triage</span></div>
+            <div class="dim"># package lives in AutoVault; this page is the public story</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap prose">
+        <h2>Why it exists</h2>
+<p>Unread was a tax. Four labels, parallel classify, single digest.</p>
+<h2>History</h2>
+<h3>1.1.0</h3>
+<p>Validated on a 179-message run; MCP bridge throughput constraints documented.</p>
+<h2>How Jack actually uses it</h2>
+<p>Any &quot;triage my inbox&quot; request — even without the skill name.</p>
+<h2>What it is not</h2>
+<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p>
+        <h2>Related</h2><div class="meta"><a class="tag" href="/skills/autojack-delegate/">autojack-delegate</a></div>
+        <h2>In the vault</h2>
+        <p class="muted">Category <code>ops</code>
+         · agents: claude-code
+         · first used 2026-05</p>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap foot-inner">
+      <div>
+        <span class="foot-mono">skillissue.sh</span>
+        · MIT ·
+        <a href="https://autovault.dev">AutoVault</a> ·
+        <a href="https://automem.ai">AutoMem</a> ·
+        <a href="/skills.json">skills.json</a>
+      </div>
+      <div class="foot-mono">also answers on skilissue.sh</div>
+    </div>
+  </footer>
+  <script>
+    (function(){
+      var t=document.getElementById('topbar');
+      if(!t)return;
+      var on=function(){t.classList.toggle('scrolled',window.scrollY>8)};
+      window.addEventListener('scroll',on,{passive:true});on();
+      document.addEventListener('click',async function(e){
+        var b=e.target.closest('[data-copy]');if(!b)return;
+        try{await navigator.clipboard.writeText(b.getAttribute('data-copy'));
+          var p=b.textContent;b.textContent='copied';b.classList.add('copied');
+          setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
+        }catch(_){b.textContent='failed'}
+      });
+    })();
+  </script>
+</body>
+</html>

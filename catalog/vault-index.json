@@ -1,0 +1,1981 @@
+{
+  "generatedAt": "2026-07-19T22:47:09.209Z",
+  "vaultRoot": "/Users/jgarturo/.autovault/skills",
+  "count": 107,
+  "skills": [
+    {
+      "name": "autojack-blog-publisher",
+      "dirName": "autojack-blog-publisher",
+      "description": "Prepare, trigger, and audit subject-focused AutoJack blog runs with citations, charts, WordPress media uploads, and direct SVG embeds.",
+      "category": "publishing",
+      "version": "1.0.0",
+      "tags": [
+        "autojack",
+        "blog",
+        "wordpress",
+        "workflow",
+        "publishing",
+        "social"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "6d7c471ce57e",
+      "bodyChars": 860
+    },
+    {
+      "name": "autojack-delegate",
+      "dirName": "autojack-delegate",
+      "description": "Use when a Claude Code session needs a capability it doesn't have locally (Google Calendar/Gmail/Drive, Slack DM, Discord, WhatsApp, etc.) and the user's AutoHub server has the tool wired in. Delegates one natural-language request to autojack via the local chat API and returns the result.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "94ad2e45ac5b",
+      "bodyChars": 4725
+    },
+    {
+      "name": "automem",
+      "dirName": "automem",
+      "description": "Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections (\"actually\", \"no, I prefer\", \"stop doing X\", \"we decided X already\", \"I told you before\"), decisions that stabilize after a round of pushback (\"let's go with X\", \"ship it\", \"yeah that's the plan\", \"do it that way\"), or articulated patterns (\"I always X\", \"every time\", \"my thing is\"). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.",
+      "category": "meta",
+      "version": "1.0.0",
+      "tags": [
+        "memory",
+        "automem",
+        "mcp",
+        "meta"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "0d1d98fae422",
+      "bodyChars": 8144
+    },
+    {
+      "name": "autovault-brand-system",
+      "dirName": "autovault-brand-system",
+      "description": "Apply the AutoVault brand system across web SVG, terminal ASCII, illustrated mascot, social asset, and video-oriented surfaces when creating or adapting AutoVault-branded UI, docs, demos, or marketing visuals.",
+      "category": "brand",
+      "version": "0.1.0",
+      "tags": [
+        "autovault",
+        "brand",
+        "design",
+        "motion",
+        "svg",
+        "ascii",
+        "mascot",
+        "demo"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "516befd06283",
+      "bodyChars": 3478
+    },
+    {
+      "name": "autovault-skill",
+      "dirName": "autovault-skill",
+      "description": "Understand AutoVault-managed skills. AutoVault syncs skills into the agent's normal skill directory, so loaded skills can be used directly without an AutoVault MCP server.",
+      "category": "meta",
+      "version": "1.1.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "ef381a8a703e",
+      "bodyChars": 8360
+    },
+    {
+      "name": "award-travel-research",
+      "dirName": "award-travel-research",
+      "description": "Research award flights with mandatory live verification, optional provider-specific accelerators, normalized comparisons, and transfer-safe recommendations.",
+      "category": "travel",
+      "version": "1.1.0",
+      "tags": [
+        "travel",
+        "awards",
+        "flights",
+        "miles",
+        "points",
+        "research"
+      ],
+      "agents": [
+        "codex",
+        "autojack",
+        "autohub"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "8c49c02a2c41",
+      "bodyChars": 3520
+    },
+    {
+      "name": "awtrix-board",
+      "dirName": "awtrix-board",
+      "description": "Control Jack's two Ulanzi TC001 LED matrix displays (32×8 pixels each) running AWTRIX 3 over the LAN — push notifications (scrolling text + color + icon + optional sound), set brightness, read battery / temperature / humidity, or identify which physical unit is which. Device-direct via the bundled `bin/awtrix` helper (raw HTTP, no Home Assistant, no secrets). Because AWTRIX runs its own app loop on-device and notifications overlay then auto-dismiss, there is NO takeover gate to manage (unlike the Divoom Pixoo). Trigger when Jack says \"notify/show X on the awtrix\", \"put X on the office/bedroom display\", \"what's the battery/temp on the clock\", or \"locate the awtrix displays\".",
+      "category": "iot",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "60da393aabcd",
+      "bodyChars": 7516
+    },
+    {
+      "name": "babysit",
+      "dirName": "babysit",
+      "description": "Create or take over a GitHub pull request, require Codex review on the current head, address valid Codex P0/P1 review threads, fix scoped CI failures, and leave the PR merge-ready without merging. Maintains exclusive babysit:* PR labels (active, waiting-codex, waiting-ci, blocked, ready) so status is visible from the PR list without opening each PR. Use when the user asks to babysit a PR, create a PR and review it, address Codex comments, or get a PR green.",
+      "category": "git",
+      "version": "1.2.0",
+      "tags": [
+        "git",
+        "github",
+        "pull-request",
+        "codex",
+        "ci",
+        "review",
+        "automation",
+        "general",
+        "labels"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "e44f3877895a",
+      "bodyChars": 16123
+    },
+    {
+      "name": "bio-author",
+      "dirName": "bio-author",
+      "description": "Given a locked brand bible (identity + visual-language), draft paste-ready bios for every active social platform — character-budgeted, voice-aligned, and tested against the brand bible's continuity rules before locking. Use when a brand/artist is populating new channels, refreshing stale ones, or rolling out a release where every bio needs the same call-to-action.",
+      "category": "brand",
+      "version": "0.1.0",
+      "tags": [
+        "brand",
+        "social",
+        "copywriting",
+        "voice",
+        "music-marketing"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "6cfc8358f029",
+      "bodyChars": 6801
+    },
+    {
+      "name": "brainstorming",
+      "dirName": "brainstorming",
+      "description": "You MUST use this before any creative work - creating features, building components, adding functionality, or modifying behavior. Explores user intent, requirements and design before implementation.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 3,
+      "contentHash": "e84af28670cc",
+      "bodyChars": 10151
+    },
+    {
+      "name": "brand-bible-author",
+      "dirName": "brand-bible-author",
+      "description": "Codify a divergent Midjourney exploration + moodboard + voice context into a locked brand bible — `<project>/brand/{identity.md, visual-language.md, reference-pins/}` — that downstream image, packaging, and voice skills can share. Use after a Phase 0 divergent run has surfaced 3–5 winning picks and the operator has held a confirming taste conversation with the artist.",
+      "category": "design",
+      "version": "0.1.0",
+      "tags": [
+        "brand",
+        "design",
+        "midjourney",
+        "brand-bible",
+        "music",
+        "content-strategy"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 6,
+      "contentHash": "51c2cd5bae29",
+      "bodyChars": 14079
+    },
+    {
+      "name": "bubble-tea-tui-builder",
+      "dirName": "bubble-tea-tui-builder",
+      "description": "Build, test, and harden Go Bubble Tea terminal user interfaces when a project needs a standalone TUI, PTY/fixture testing, high-frequency rendering, terminal graphics fallbacks, or an AutoHub voice cockpit bridge.",
+      "category": "terminal",
+      "version": "1.1.0",
+      "tags": [
+        "tui",
+        "terminal",
+        "bubble-tea",
+        "go",
+        "testing",
+        "graphics",
+        "autohub"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "f554959d6926",
+      "bodyChars": 9130
+    },
+    {
+      "name": "building-emdash-site",
+      "dirName": "building-emdash-site",
+      "description": "Build and customize EmDash CMS sites on Astro. Use when creating pages, defining collections, writing seed files, querying content, rendering Portable Text, setting up menus/taxonomies/widgets, configuring deployment, or any task involving an EmDash-powered Astro site. Assumes basic Astro knowledge but provides all EmDash-specific patterns.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "2e07301681a8",
+      "bodyChars": 6215
+    },
+    {
+      "name": "clerk",
+      "dirName": "clerk",
+      "description": "Clerk authentication router. Use when user asks about Clerk CLI operations,",
+      "category": "uncategorized",
+      "version": "2.0.1",
+      "tags": [],
+      "agents": [
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "1b47d5c8402a",
+      "bodyChars": 5007
+    },
+    {
+      "name": "clerk-android",
+      "dirName": "clerk-android",
+      "description": "Implement Clerk authentication for native Android apps using Kotlin and Jetpack Compose with clerk-android source-guided patterns. Use for prebuilt AuthView/UserButton or custom API-driven auth flows. Do not use for Expo or React Native projects.",
+      "category": "uncategorized",
+      "version": "1.2.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "09b62ac075c5",
+      "bodyChars": 8125
+    },
+    {
+      "name": "clerk-astro-patterns",
+      "dirName": "clerk-astro-patterns",
+      "description": "Astro patterns with Clerk — middleware, SSR pages, island components, API routes, static vs SSR rendering. Triggers on: astro clerk, clerk astro middleware, astro protected page, clerk island component, astro API route auth, clerk astro SSR.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "2d9d307722b5",
+      "bodyChars": 2909
+    },
+    {
+      "name": "clerk-billing",
+      "dirName": "clerk-billing",
+      "description": "Clerk Billing for subscription management - render Clerk's PricingTable and in-app checkout drawer, configure subscription plans, seat-limit plans for B2B, feature entitlements with has(), and billing webhooks. Use for SaaS monetization, plan gating, checkout flows, trials, invoicing, and subscription lifecycle management.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "ea107c8177b1",
+      "bodyChars": 19817
+    },
+    {
+      "name": "clerk-chrome-extension-patterns",
+      "dirName": "clerk-chrome-extension-patterns",
+      "description": "Chrome Extension auth with @clerk/chrome-extension -- popup/sidepanel setup, syncHost for OAuth/SAML via web app, createClerkClient for service workers and headless extensions, stable CRX ID. Triggers on: Chrome extension auth, Plasmo clerk, popup sign-in, syncHost, background service worker token, createClerkClient, headless extension.",
+      "category": "uncategorized",
+      "version": "2.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "235efc5efb23",
+      "bodyChars": 10901
+    },
+    {
+      "name": "clerk-cli",
+      "dirName": "clerk-cli",
+      "description": "Operate the Clerk CLI (`clerk` binary) for authentication, user/org/session management, deploy verification, instance config, env keys, and any Clerk Backend or Platform API call. Use when the user mentions Clerk management tasks, \"list clerk users\", \"create a clerk user\", \"update organization\", \"pull clerk config\", \"clerk env pull\", \"clerk doctor\", \"clerk deploy\", \"clerk deploy status\", \"clerk api\", or any ad-hoc Clerk API request. Prefer the CLI over raw HTTP: it handles auth, key resolution, app/instance targeting, and formatting automatically.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "4fefac7f8597",
+      "bodyChars": 29558
+    },
+    {
+      "name": "clerk-cloudflare-auth",
+      "dirName": "clerk-cloudflare-auth",
+      "description": "Add Clerk authentication to Cloudflare Pages or Workers apps when a project needs login, user sessions, protected APIs, D1 user mapping, or Stripe-linked account gating.",
+      "category": "auth",
+      "version": "1.0.4",
+      "tags": [
+        "clerk",
+        "cloudflare",
+        "auth",
+        "pages",
+        "workers",
+        "vite",
+        "vue",
+        "stripe",
+        "d1",
+        "clerk-auth"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "20a651c14a48",
+      "bodyChars": 18196
+    },
+    {
+      "name": "clerk-cloudflare-commerce-bootstrap",
+      "dirName": "clerk-cloudflare-commerce-bootstrap",
+      "description": "Orchestrator skill that one-shots a production-ready Clerk + Cloudflare + Stripe commerce site. Sequences clerk-cloudflare-auth, cloudflare-commerce-deploy, cloudflare-ops, and stripe-commerce-checkout with a strict test-mode default for Stripe; live mode requires explicit user confirmation containing the word \"live\".",
+      "category": "orchestrator",
+      "version": "1.0.2",
+      "tags": [
+        "orchestrator",
+        "clerk",
+        "cloudflare",
+        "stripe",
+        "commerce",
+        "bootstrap",
+        "autovault",
+        "clerk-auth"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "5381bc8dedfe",
+      "bodyChars": 13688
+    },
+    {
+      "name": "clerk-custom-ui",
+      "dirName": "clerk-custom-ui",
+      "description": "Custom authentication flows and component appearance - hooks (useSignIn, useSignUp), themes, colors, fonts, CSS. Use for custom sign-in/sign-up flows, appearance styling, visual customization, branding.",
+      "category": "uncategorized",
+      "version": "2.3.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "2fdbfb222953",
+      "bodyChars": 6150
+    },
+    {
+      "name": "clerk-expo",
+      "dirName": "clerk-expo",
+      "description": "Add Clerk authentication to Expo and React Native apps using @clerk/expo. Use for Expo setup, prebuilt native components (AuthView, UserButton), custom sign-in/sign-up flows (email, password, SMS/phone OTP, MFA), OAuth/SSO, native Google/Apple sign-in, Expo Router protected routes, biometrics, and push notifications. Do not use for native Swift/iOS, native Android/Kotlin, or web-only framework projects.",
+      "category": "uncategorized",
+      "version": "2.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "7e922793e6f6",
+      "bodyChars": 10598
+    },
+    {
+      "name": "clerk-nextjs-patterns",
+      "dirName": "clerk-nextjs-patterns",
+      "description": "Advanced Next.js patterns - middleware, Server Actions, caching with Clerk.",
+      "category": "uncategorized",
+      "version": "2.2.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "fd64cc079baa",
+      "bodyChars": 7859
+    },
+    {
+      "name": "clerk-nuxt-patterns",
+      "dirName": "clerk-nuxt-patterns",
+      "description": "Nuxt 3 auth patterns with @clerk/nuxt - middleware, composables, server API routes, SSR. Triggers on: Nuxt auth, useAuth composable, clerkMiddleware Nuxt, server API Clerk, Nuxt route protection.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "9975dd96d617",
+      "bodyChars": 2834
+    },
+    {
+      "name": "clerk-orgs",
+      "dirName": "clerk-orgs",
+      "description": "Clerk Organizations for B2B SaaS - create multi-tenant apps with org switching, role-based access, verified domains, and enterprise SSO. Use for team workspaces, RBAC, org-based routing, member management.",
+      "category": "uncategorized",
+      "version": "3.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "b087659bf5db",
+      "bodyChars": 18554
+    },
+    {
+      "name": "clerk-react-patterns",
+      "dirName": "clerk-react-patterns",
+      "description": "React SPA auth patterns with @clerk/react for Vite/CRA - ClerkProvider setup, useAuth/useUser/useClerk hooks, React Router protected routes, custom sign-in flows. Triggers on: Vite Clerk setup, React Router auth, useAuth hook, protected route, custom sign-in form React.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "1d18f14e4880",
+      "bodyChars": 3751
+    },
+    {
+      "name": "clerk-react-router-patterns",
+      "dirName": "clerk-react-router-patterns",
+      "description": "React Router v7/v8 patterns with Clerk — rootAuthLoader, getAuth in loaders, clerkMiddleware, protected routes, SSR user data, org switching. Triggers on: react-router auth, rootAuthLoader, getAuth loader, react-router protected route, loader authentication, SSR auth react-router, useNavigate may be used only in the context of a Router.",
+      "category": "uncategorized",
+      "version": "1.1.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "92b8f6ede4ca",
+      "bodyChars": 6875
+    },
+    {
+      "name": "clerk-setup",
+      "dirName": "clerk-setup",
+      "description": "Add Clerk authentication to any project by following the official quickstart guides.",
+      "category": "uncategorized",
+      "version": "2.3.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "5e1f5b8538d4",
+      "bodyChars": 12441
+    },
+    {
+      "name": "clerk-swift",
+      "dirName": "clerk-swift",
+      "description": "Implement Clerk authentication for native Swift and iOS apps using ClerkKit and ClerkKitUI source-guided patterns. Use for prebuilt AuthView or custom native flows. Do not use for Expo or React Native projects.",
+      "category": "uncategorized",
+      "version": "1.2.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "4039ffea0175",
+      "bodyChars": 11671
+    },
+    {
+      "name": "clerk-tanstack-patterns",
+      "dirName": "clerk-tanstack-patterns",
+      "description": "TanStack React Start auth patterns with @clerk/tanstack-react-start - createServerFn, beforeLoad guards, loaders, Vinxi server. Triggers on: TanStack auth, createServerFn clerk, beforeLoad protection, TanStack Start middleware.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "1d599ee47c20",
+      "bodyChars": 3132
+    },
+    {
+      "name": "clerk-testing",
+      "dirName": "clerk-testing",
+      "description": "E2E testing for Clerk apps. Use with Playwright or Cypress for auth flow",
+      "category": "uncategorized",
+      "version": "1.2.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "0db14edb4d69",
+      "bodyChars": 1663
+    },
+    {
+      "name": "clerk-vue-patterns",
+      "dirName": "clerk-vue-patterns",
+      "description": "Vue 3 patterns with Clerk — composables (useAuth, useUser, useClerk, useOrganization), Vue Router guards, Pinia auth store integration. Triggers on: vue clerk, useAuth vue, clerk composables, vue router clerk guard, pinia auth clerk. For Nuxt, use clerk-nuxt-patterns instead.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "3fb9baac4c55",
+      "bodyChars": 2412
+    },
+    {
+      "name": "clerk-webhooks",
+      "dirName": "clerk-webhooks",
+      "description": "Clerk webhooks for real-time events and data syncing. Verify with verifyWebhook from the framework-specific package. Handle user, session, organization, billing, and payment events. Build event-driven features like database sync, notifications, and integrations.",
+      "category": "uncategorized",
+      "version": "1.2.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "7efd5e709093",
+      "bodyChars": 12479
+    },
+    {
+      "name": "cli-installer-ux",
+      "dirName": "cli-installer-ux",
+      "description": "Design and harden compact, useful CLI installers, updaters, setup wizards, and command output surfaces without leaking debug logs or machine JSON into human UX.",
+      "category": "terminal",
+      "version": "1.0.0",
+      "tags": [
+        "cli",
+        "installer",
+        "updater",
+        "terminal",
+        "ux",
+        "testing",
+        "node",
+        "shell"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "fbbbbd61040b",
+      "bodyChars": 4086
+    },
+    {
+      "name": "cloudflare-commerce-deploy",
+      "dirName": "cloudflare-commerce-deploy",
+      "description": "Deploy and operate commerce apps on Cloudflare when a user wants Pages or Workers deployment, DNS/custom domains, storage bindings, secrets, logs, per-environment env vars, or optional Registrar domain registration handled by an agent.",
+      "category": "deployment",
+      "version": "1.0.3",
+      "tags": [
+        "cloudflare",
+        "commerce",
+        "deployment",
+        "dns",
+        "pages",
+        "workers",
+        "registrar",
+        "autovault"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "d8a8459e6039",
+      "bodyChars": 11756
+    },
+    {
+      "name": "cloudflare-emdash-cms-deploy",
+      "dirName": "cloudflare-emdash-cms-deploy",
+      "description": "Use when deploying an Astro + EmDash CMS site to Cloudflare, when a site serves raw source / downloads wrangler.jsonc / 404s at the root after an Astro migration, when every page redirects to /_emdash/admin/setup even after setup is complete, when CMS posts render with an empty title/body, when an admin preview link 404s, when adding a custom API route/contact form to an EmDash/Astro worker, when adding a second/new content collection to an already-live EmDash site (schema create/add-field), or when standing up EmDash with D1 + R2 and an admin login. EmDash/Astro deploys to Cloudflare Workers, NOT Pages.",
+      "category": "deployment",
+      "version": "1.10.0",
+      "tags": [
+        "cloudflare",
+        "workers",
+        "emdash",
+        "astro",
+        "cms",
+        "d1",
+        "r2",
+        "deployment",
+        "autohub"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "552a9b1773c6",
+      "bodyChars": 28972
+    },
+    {
+      "name": "cloudflare-lead-capture",
+      "dirName": "cloudflare-lead-capture",
+      "description": "Scaffold Cloudflare Pages or Workers lead-capture systems (Pages Functions OR Astro SSR API routes) with D1 contacts, web forms, Resend email templates, unsubscribe links, Turnstile checks, exports, and a small admin UI when a project needs repeatable email database infrastructure.",
+      "category": "cloudflare",
+      "version": "1.3.0",
+      "tags": [
+        "cloudflare",
+        "d1",
+        "resend",
+        "email",
+        "lead-capture",
+        "forms",
+        "turnstile",
+        "autovault",
+        "commerce"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "b5dd1637ace9",
+      "bodyChars": 11343
+    },
+    {
+      "name": "cloudflare-ops",
+      "dirName": "cloudflare-ops",
+      "description": "Use when the user asks to deploy an AutoHub-style project to Cloudflare, run Pages or Worker preflights, operate D1 migrations/sync, manage the local Cloudflare tunnel helper, standardize repo-local Cloudflare hacks, or add a simple DNS TXT/CNAME on a VGP zone (e.g. wpfusion.com Wordfence wfvendor=… verification). Assume CLOUDFLARE_API_TOKEN + ACCOUNT_ID are already in the shell / System Configuration secrets — do not ask Jack to paste Wrangler creds.",
+      "category": "deployment",
+      "version": "1.0.5",
+      "tags": [
+        "cloudflare",
+        "ops",
+        "pages",
+        "workers",
+        "d1",
+        "kv",
+        "tunnel",
+        "dns",
+        "autovault",
+        "autohub"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack",
+        "cursor"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "b85c641f61f3",
+      "bodyChars": 8650
+    },
+    {
+      "name": "codex-docs-drift-scout",
+      "dirName": "codex-docs-drift-scout",
+      "description": "Install the AutoHub docs-drift Codex automation from signed AutoVault skill resources and audit its render fidelity with autovault doctor.",
+      "category": "automation",
+      "version": "0.1.0",
+      "tags": [
+        "codex",
+        "automation",
+        "docs",
+        "autohub",
+        "drift"
+      ],
+      "agents": [
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "d15d4344b3e2",
+      "bodyChars": 4253
+    },
+    {
+      "name": "codex-review",
+      "dirName": "codex-review",
+      "description": "Compatibility alias for babysit. Use when the user says \"address Codex comments\", \"fix Codex feedback\", or passes a PR number/URL with Codex review context; route to the unified babysit PR workflow.",
+      "category": "review",
+      "version": "2.0.1",
+      "tags": [
+        "github",
+        "codex",
+        "review",
+        "git",
+        "pull-request",
+        "ci",
+        "automation"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "c6c988147bc1",
+      "bodyChars": 527
+    },
+    {
+      "name": "commit-message",
+      "dirName": "commit-message",
+      "description": "Draft a conventional-commit-style message from the repository's staged changes. Uses git only; no external services or API keys required.",
+      "category": "git",
+      "version": "1.0.0",
+      "tags": [
+        "git",
+        "commit",
+        "conventional-commits",
+        "demo",
+        "general",
+        "stacy-share"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "e2ca59007ca5",
+      "bodyChars": 3495
+    },
+    {
+      "name": "copilot-review",
+      "dirName": "copilot-review",
+      "description": "Legacy-only workflow for unresolved GitHub Copilot review comments on existing PRs. Use only when the user explicitly says Copilot or asks to handle existing Copilot feedback; default AutoHub review work uses codex-review.",
+      "category": "review",
+      "version": "1.0.0",
+      "tags": [
+        "github",
+        "copilot",
+        "review",
+        "git"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "aa38a03e461d",
+      "bodyChars": 7742
+    },
+    {
+      "name": "creating-plugins",
+      "dirName": "creating-plugins",
+      "description": "Create EmDash CMS plugins with hooks, storage, settings, admin UI, API routes, and Portable Text block types. Use this skill when asked to build, scaffold, or implement an EmDash plugin, or when creating plugin features like custom block types, admin pages, or content hooks.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "53c45be52b29",
+      "bodyChars": 20908
+    },
+    {
+      "name": "dev-browser",
+      "dirName": "dev-browser",
+      "description": "Drive the user's real Chrome end-to-end — doctor, open, snapshot, fill forms, click, type, screenshot, evaluate, navigate, autofill from the local profile. Two paths under one skill — extension-relay CLI (default, no `--remote-debugging-port`, no WebDriver banner) and headless `dev-browser run --connect` (fallback for sandboxed scripting, file uploads, and dedicated-profile authenticated SPA work). Use when the user asks to fill out a form, click on a page, screenshot the current tab, log into a site, automate \"this page\" / \"active tab\", post under an authenticated identity, or run any Playwright-style script against signed-in Chrome.",
+      "category": "browser",
+      "version": "0.3.2",
+      "tags": [
+        "browser-automation",
+        "autohub",
+        "dev-browser",
+        "chrome-extension",
+        "cdp",
+        "playwright",
+        "authenticated-sessions",
+        "autofill",
+        "stacy-share"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "511a6943a08e",
+      "bodyChars": 61302
+    },
+    {
+      "name": "dispatching-parallel-agents",
+      "dirName": "dispatching-parallel-agents",
+      "description": "Use when facing 2+ independent tasks that can be worked on without shared state or sequential dependencies",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "f0df13f58404",
+      "bodyChars": 6456
+    },
+    {
+      "name": "docs-screenshot-packager",
+      "dirName": "docs-screenshot-packager",
+      "description": "Capture, package, optimize, verify, and place documentation screenshots for GitHub READMEs, repo docs, and marketing/docs sites. Use for release screenshot passes, visual docs updates, screenshot QA, and reusable screenshot workflows across repos.",
+      "category": "docs",
+      "version": "1.0.0",
+      "tags": [
+        "screenshots",
+        "docs",
+        "readme",
+        "github",
+        "marketing",
+        "visual-qa"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 4,
+      "contentHash": "ae0ee190e9d4",
+      "bodyChars": 4329
+    },
+    {
+      "name": "dsp-profile-populate",
+      "dirName": "dsp-profile-populate",
+      "description": "Post-DSP-release runbook for claiming and populating the artist-profile dashboards a distributor (DistroKid, etc.) unlocks once a track goes live — Spotify for Artists, Apple Music for Artists, Audiomack, Tidal Artist Home, Amazon Music for Artists, and the YouTube Official Artist Channel upgrade. Use right after a go-live when these dashboards need onboarding. It enumerates which surfaces became claimable, splits the work into agent-mechanical (images + link/social URLs, applied via dev-browser Path A, act-then-report) versus human-only (claim/identity/2FA and all bio/prose text), drives the mechanical fills, and keeps the bios bible's asset map in sync. Pairs with bio-author (upstream copy), social-asset-pack (upstream crops), launch-strategist (the campaign plan this slots into), and dev-browser (the execution mechanism).",
+      "category": "marketing",
+      "version": "0.2.0",
+      "tags": [
+        "music-marketing",
+        "social",
+        "launch",
+        "dsp",
+        "distrokid",
+        "dev-browser",
+        "brand"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "c12b417dfcb6",
+      "bodyChars": 7955
+    },
+    {
+      "name": "elevenlabs-automem-memory",
+      "dirName": "elevenlabs-automem-memory",
+      "description": "Wire AutoMem persistent memory into an ElevenLabs Conversational-AI (Convai) agent end-to-end — deploy a dedicated AutoMem stack on Railway, register its MCP bridge as a custom MCP server on the agent, gate the bridge behind a token, and verify the agent actually calls memory. Use this whenever giving an ElevenLabs voice/Convai agent long-term memory; standing up a per-persona AutoMem instance on Railway; debugging \"is my agent actually calling its memory / MCP tools?\"; configuring Convai MCP servers, tools, or approval policies over the API; or hitting Railway CLI deploy gotchas (volume attach, IPv6 Qdrant). Covers the simulate-conversation-mocks-tools trap and the bridge no-token-fallback auth model. Reach for it even if the user only says \"give the agent memory,\" \"wire up AutoMem,\" or \"why isn't recall firing in my voice agent.\"",
+      "category": "meta",
+      "version": "1.0.0",
+      "tags": [
+        "elevenlabs",
+        "automem",
+        "mcp",
+        "railway",
+        "voice",
+        "deployment"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "53bfee35784f",
+      "bodyChars": 10716
+    },
+    {
+      "name": "emdash-cli",
+      "dirName": "emdash-cli",
+      "description": "Use the EmDash CLI to manage content, schema, media, and more. Use this skill when you need to interact with a running EmDash instance from the command line — creating content, managing collections, uploading media, generating types, or scripting CMS operations.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "e5c59110e474",
+      "bodyChars": 7546
+    },
+    {
+      "name": "entity-dossier",
+      "dirName": "entity-dossier",
+      "description": "Research a person, business, or concept with primary sources and persist a durable AutoMem dossier through AutoHub's context-module write path (scripts/build-context-module.js). Use when asked to \"build a dossier on X\", \"research X and remember them\", or for pre-meeting/collab background that should survive the conversation. The stored dossier is the deliverable — verify it with a recall before reporting done.",
+      "category": "research",
+      "version": "0.1.0",
+      "tags": [
+        "research",
+        "memory",
+        "automem",
+        "dossier",
+        "context-module",
+        "people-research"
+      ],
+      "agents": [
+        "claude-code",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "0489e3dbcc46",
+      "bodyChars": 2899
+    },
+    {
+      "name": "executing-plans",
+      "dirName": "executing-plans",
+      "description": "Use when you have a written implementation plan to execute in a separate session with review checkpoints",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "bbd8d28bb655",
+      "bodyChars": 2440
+    },
+    {
+      "name": "finishing-a-development-branch",
+      "dirName": "finishing-a-development-branch",
+      "description": "Use when implementation is complete, all tests pass, and you need to decide how to integrate the work - guides completion of development work by presenting structured options for merge, PR, or cleanup",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "e6d4a812de90",
+      "bodyChars": 6555
+    },
+    {
+      "name": "flashspace",
+      "dirName": "flashspace",
+      "description": "Operate FlashSpace virtual workspaces on Jack's Mac via the installed `flashspace` CLI (v1.0.0 from FlashSpace.app). Switch profiles and workspaces, assign/unassign apps, manage floating apps, focus windows, inventory displays, and clean unassigned apps. Use when Jack says \"switch workspace/space\", \"go to Code/Web/Chat/Terminal\", \"FlashSpace\", \"assign this app\", \"float/unfloat\", \"list workspaces\", \"hide unassigned\", or wants a dual-display workspace change. Prefer this over reinventing Mission Control / yabai / AeroSpace scripts.",
+      "category": "desktop",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "98e68a23d002",
+      "bodyChars": 10388
+    },
+    {
+      "name": "groover-curator-research",
+      "dirName": "groover-curator-research",
+      "description": "Research and score Groover curators before a music campaign spend. Use after launch planning when an artist needs a fit-first Groover shortlist, personalized producer-lane pitches, and a submission ledger without launching the campaign.",
+      "category": "marketing",
+      "version": "0.1.0",
+      "tags": [
+        "music-marketing",
+        "groover",
+        "curator-research",
+        "playlist-pitching",
+        "launch",
+        "stacyoffline",
+        "stacy-share"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 4,
+      "contentHash": "c222be8ac392",
+      "bodyChars": 8530
+    },
+    {
+      "name": "hatch-pet",
+      "dirName": "hatch-pet",
+      "description": "Create, repair, validate, visually QA, and package Codex-compatible animated pets and pet spritesheets from character art, generated images, company or prospect brand cues, or visual references. Use when a user wants a lightweight-worker Codex pet workflow, a non-pixel custom pet style, a prospect or company mascot pet, or a full 8x9 animated pet atlas with transparent unused cells, QA contact sheets, and pet.json packaging. This skill composes the installed $imagegen system skill for visual generation and uses bundled scripts for deterministic spritesheet assembly.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 4,
+      "contentHash": "dbf8bbd7c1ac",
+      "bodyChars": 36680
+    },
+    {
+      "name": "home-assistant-operator",
+      "dirName": "home-assistant-operator",
+      "description": "Bootstrap, inventory, verify, and maintain AutoHub Home Assistant MCP access as a reusable AutoVault skill.",
+      "category": "operations",
+      "version": "1.0.0",
+      "tags": [
+        "home-assistant",
+        "mcp",
+        "smart-home",
+        "inventory",
+        "autohub"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "fac5d2ab5ef1",
+      "bodyChars": 616
+    },
+    {
+      "name": "html-asset-renderer",
+      "dirName": "html-asset-renderer",
+      "description": "Render fixed-size HTML/CSS design exports into production raster assets when users need social cards, favicons, docs images, app-store screenshots, or other web-rendered artwork captured, dimension-checked, and prepared for merge.",
+      "category": "design",
+      "version": "1.0.0",
+      "tags": [
+        "html",
+        "screenshots",
+        "social-assets",
+        "visual-qa",
+        "design-handoff",
+        "social"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "1ccd92719d67",
+      "bodyChars": 3420
+    },
+    {
+      "name": "inbox-triage",
+      "dirName": "inbox-triage",
+      "description": "Triage Jack's Gmail unread inbox into action buckets (!Action / !AI Handle / !Waiting On / archive) using the google_workspace MCP, then post one digest. Use this whenever Jack asks to triage, clear, sort, process, or \"do\" his email or inbox — \"inbox triage\", \"clear the unread pile\", \"go through my gmail\", \"sort my inbox\", \"process my email\", \"deal with my unread\" — even if he never says the word \"skill\". It enumerates all unread, runs a small parallel read-only classifier fan-out, shows the buckets for approval, then applies Gmail labels SEQUENTIALLY and posts a \"Worth your attention\" + \"Security roundup\" digest. It mutates the live inbox, so it always gets approval before writing.",
+      "category": "uncategorized",
+      "version": "1.1.0",
+      "tags": [],
+      "agents": [
+        "claude-code"
+      ],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "7d345845d389",
+      "bodyChars": 9984
+    },
+    {
+      "name": "ios-app-intents",
+      "dirName": "ios-app-intents",
+      "description": "Design App Intents, app entities, and App Shortcuts for iOS system surfaces. Use when exposing app actions or content to Shortcuts, Siri, Spotlight, widgets, or controls.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "65c8823bff6a",
+      "bodyChars": 4399
+    },
+    {
+      "name": "ios-debugger-agent",
+      "dirName": "ios-debugger-agent",
+      "description": "Build, run, and debug iOS apps on Simulator with XcodeBuildMCP. Use when launching an app, inspecting simulator UI or logs, or diagnosing runtime behavior.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "06b7aa9fd4ac",
+      "bodyChars": 2441
+    },
+    {
+      "name": "ios-ettrace-performance",
+      "dirName": "ios-ettrace-performance",
+      "description": "Capture and interpret iOS Simulator ETTrace profiles. Use when profiling launch or runtime latency, comparing traces, or finding CPU-heavy stacks.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "2cbf47c8906c",
+      "bodyChars": 8634
+    },
+    {
+      "name": "ios-memgraph-leaks",
+      "dirName": "ios-memgraph-leaks",
+      "description": "Capture and inspect iOS leaks and memgraphs. Use when debugging leaked objects, retain cycles, memory growth, or before/after leak evidence.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "e953f09cbf27",
+      "bodyChars": 3766
+    },
+    {
+      "name": "ios-simulator-browser",
+      "dirName": "ios-simulator-browser",
+      "description": "Mirror an iOS Simulator into the Codex in-app browser and render SwiftUI previews from importable Swift packages in that simulator with hot reload. Use when a user wants to watch or interact with an iOS app in the browser, see a SwiftUI preview outside Xcode Canvas, iterate live on a preview, or capture browser-visible simulator proof.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "3c9d0742087f",
+      "bodyChars": 2864
+    },
+    {
+      "name": "jacks-writing-style",
+      "dirName": "jacks-writing-style",
+      "description": "Write exactly like Jack Arturo — direct, casual, technical, with personality. For blog posts, READMEs, CHANGELOGs, technical audits, system prompts, and any first-person technical writing. Use this skill whenever Jack asks you to draft, edit, polish, ghostwrite, or \"do a pass on\" anything that will go out under his name — even if he doesn't explicitly say \"in my voice.\" Also use when the conversation is clearly producing content for drunk.support, verygoodplugins.com, WP Fusion changelogs, autohub/AutoMem/AutoVault READMEs, or anything else Jack publishes. Default to this style for first-person prose from Jack unless he says otherwise.",
+      "category": "writing",
+      "version": "1.0.0",
+      "tags": [
+        "writing",
+        "style",
+        "voice",
+        "editing"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "c24f9d71a844",
+      "bodyChars": 17499
+    },
+    {
+      "name": "launch-strategist",
+      "dirName": "launch-strategist",
+      "description": "Turn a finished track plus a DSP release date into a dated, brand-coherent, multi-platform launch plan that consumes the locked brand bible, bios, and social-asset pack and emits one post-brief per scheduled row. Use when an artist has a track ready to ship and needs a campaign plan (T-14 → T+30) instead of hand-thinking the sequence every time; pairs with `dev-browser`, the autohub Twitter tool, and `/schedule` for execution. Voice rows stop at the locked plan for Jack to send; mechanical/factual release updates (link-order, locked-asset, and release-state swaps) are agent-executable under the COLLAB.md mechanical carve-out (act-then-report).",
+      "category": "marketing",
+      "version": "1.2.1",
+      "tags": [
+        "music-marketing",
+        "social",
+        "launch",
+        "campaign-planning",
+        "hyperpop",
+        "brand"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 5,
+      "contentHash": "33d2e7037570",
+      "bodyChars": 12123
+    },
+    {
+      "name": "long-haul-parallel-repair",
+      "dirName": "long-haul-parallel-repair",
+      "description": "Use when the user explicitly authorizes subagents, fan-out, delegation, long-running autonomous work, \"work for hours\", \"iterate until satisfied\", or solving every <8/10 confidence item through evidence, fixes, and verification. Also use for deep investigation or repair only when paired with explicit autonomy, fan-out, or subagent authorization.",
+      "category": "orchestration",
+      "version": "1.0.0",
+      "tags": [
+        "parallel",
+        "subagents",
+        "orchestration",
+        "investigation",
+        "repair",
+        "verification",
+        "confidence",
+        "codex"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "92ec888ef6a5",
+      "bodyChars": 3676
+    },
+    {
+      "name": "mcp-builder",
+      "dirName": "mcp-builder",
+      "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "Complete terms in LICENSE.txt",
+      "resourceCount": 3,
+      "contentHash": "257288cde3cd",
+      "bodyChars": 8710
+    },
+    {
+      "name": "mcp-registry-maintainer",
+      "dirName": "mcp-registry-maintainer",
+      "description": "Maintain AutoHub MCP server configuration, tool registry scans, health checks, and host config repair through a standardized AutoVault skill.",
+      "category": "operations",
+      "version": "1.0.0",
+      "tags": [
+        "mcp",
+        "registry",
+        "tools",
+        "autohub",
+        "diagnostics"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "b7c8dc851532",
+      "bodyChars": 797
+    },
+    {
+      "name": "meeting-activity-prep",
+      "dirName": "meeting-activity-prep",
+      "description": "Assemble a recurring-meeting prep brief — mastermind, board, or biweekly 1:1 — by collecting the last N weeks of calendar, email, support, and memory activity into a structured HIGHS / LOWS / metrics note, then archiving it. Use when someone asks to \"prep my mastermind update\", \"get me ready for the <recurring meeting>\", \"pull my highs and lows for this period\", or \"summarize the last two weeks for my call\". Reads real activity across MCP sources, extracts attendees from the calendar event, generates measurable wins and genuine challenges, and saves the brief to a notebook — leaving Goals and Hotseat blank for the human.",
+      "category": "productivity",
+      "version": "0.1.0",
+      "tags": [
+        "meeting-prep",
+        "mastermind",
+        "calendar",
+        "evernote",
+        "review"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "4a60051f60c8",
+      "bodyChars": 5139
+    },
+    {
+      "name": "midjourney-iteration",
+      "dirName": "midjourney-iteration",
+      "description": "Iterate on Midjourney prompts in a closed loop — generate, vision-evaluate the result grid against a structured brief, refine the prompt, re-roll — when a user wants album art, music video stills, social-post imagery, or any other MJ output that benefits from autonomous taste-driven iteration rather than one-shot prompting.",
+      "category": "design",
+      "version": "0.1.0",
+      "tags": [
+        "midjourney",
+        "image-generation",
+        "social-assets",
+        "dev-browser",
+        "design",
+        "iteration",
+        "social"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 7,
+      "contentHash": "754d6bae97c6",
+      "bodyChars": 8118
+    },
+    {
+      "name": "phala-gpu-tee-deploy",
+      "dirName": "phala-gpu-tee-deploy",
+      "description": "Deploy and verify a GPU workload (ComfyUI image generation, vLLM text serving) on a Phala confidential H200 GPU TEE when a user wants an attested, bearer-gated private endpoint with sealed secrets. Covers the dashboard-only GPU reservation flow, the no-file-mount Docker Compose pattern (inline Caddy gate + model-init sidecar), hardware/CC attestation verification with honest limits, and the on-demand billing/stop gotchas.",
+      "category": "deployment",
+      "version": "1.0.0",
+      "tags": [
+        "phala",
+        "gpu",
+        "tee",
+        "confidential-compute",
+        "dstack",
+        "comfyui",
+        "vllm",
+        "deployment",
+        "attestation",
+        "autovault"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "2265a86144e0",
+      "bodyChars": 10936
+    },
+    {
+      "name": "pirsch-analytics-bootstrap",
+      "dirName": "pirsch-analytics-bootstrap",
+      "description": "Add Pirsch Analytics to a website, create or inspect the domain with explicit authorization, install and verify the tracking snippet, configure optional DNS verification and custom events, and wire a scoped MCP client without exposing credentials.",
+      "category": "analytics",
+      "version": "1.1.0",
+      "tags": [
+        "analytics",
+        "pirsch",
+        "vitepress",
+        "nextjs",
+        "cloudflare-pages",
+        "autovault"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "e54476fc8a27",
+      "bodyChars": 9737
+    },
+    {
+      "name": "raycast",
+      "dirName": "raycast",
+      "description": "Operate and partially configure Raycast on Jack's Mac via deeplinks, Script Commands, file-based AI providers/skills, and AI Command import packs. Use when Jack says \"open in Raycast\", \"run the X Raycast command\", \"deeplink\", \"Script Command\", \"AI Command/Agent/Skill\", \"providers.yaml\", \"Import AI Commands\", \"PromptLab\", clipboard history, Superwhisper toggle, or wants Autohub Raycast scripts installed (delegate install/sync to raycast-autojack). Prefer this over inventing osascript launchers. Not a full settings API — see Supported config surfaces.",
+      "category": "desktop",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "895577a2498e",
+      "bodyChars": 16208
+    },
+    {
+      "name": "raycast-autojack",
+      "dirName": "raycast-autojack",
+      "description": "Install, verify, and operate AutoJack Raycast scripts as a reusable AutoVault-managed desktop capability.",
+      "category": "desktop",
+      "version": "1.0.0",
+      "tags": [
+        "raycast",
+        "autojack",
+        "desktop",
+        "install"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "f04252baa1c5",
+      "bodyChars": 833
+    },
+    {
+      "name": "receiving-code-review",
+      "dirName": "receiving-code-review",
+      "description": "Use when receiving code review feedback, before implementing suggestions, especially if feedback seems unclear or technically questionable - requires technical rigor and verification, not performative agreement or blind implementation",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "647036bbdab7",
+      "bodyChars": 6060
+    },
+    {
+      "name": "release-readiness",
+      "dirName": "release-readiness",
+      "description": "Use when preparing to tag or cut a release of a WordPress plugin (or any repo that carries its version in readme.txt \"Stable tag\" and tags releases as bare semver). Triggers on \"is this ready to tag\", \"prep the release\", \"release readiness\", \"get the release ready\", \"release preflight\", \"what's left before we ship X.Y.Z\", or any moment just before a release tag. Audits everything merged since the last git tag, surfaces the gaps (undocumented features, missing changelog entries, dirty working tree, stale branches/worktrees, open PRs, version not bumped, failing tests), then — after one approval — closes the in-repo gaps it can (drafts the changelog, bumps the version, dispatches the repo's docs/verification agents, runs the suite behind a safety guard) and stops at a green \"ready to tag\" state. It NEVER pushes, tags, or publishes anything: every action that leaves the repo stays the human's decision.",
+      "category": "workflow",
+      "version": "1.0.0",
+      "tags": [
+        "release",
+        "wordpress",
+        "changelog",
+        "preflight",
+        "ci",
+        "git",
+        "wp-fusion"
+      ],
+      "agents": [
+        "claude-code"
+      ],
+      "license": "proprietary",
+      "resourceCount": 1,
+      "contentHash": "e85dddbca18e",
+      "bodyChars": 16065
+    },
+    {
+      "name": "repo-demo-video-director",
+      "dirName": "repo-demo-video-director",
+      "description": "Plan truthful repository README demo videos and stop for human script/storyboard review before rendering. Use when a public repo needs a Remotion/product overview video brief, claim ledger, screenshot/terminal/audio asset plan, simulated-data plan, README placement guidance, and Remotion plugin handoff notes.",
+      "category": "media",
+      "version": "1.4.0",
+      "tags": [
+        "video",
+        "remotion",
+        "readme",
+        "marketing",
+        "github",
+        "repository",
+        "screenshots",
+        "terminal",
+        "audio",
+        "elevenlabs"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "a924ea370069",
+      "bodyChars": 11970
+    },
+    {
+      "name": "repo-demo-video-publisher",
+      "dirName": "repo-demo-video-publisher",
+      "description": "Create and publish short repository README demo videos with mandatory human review gates, using screenshots, terminal clips, ElevenLabs audio, the Remotion plugin when available, verified GitHub user-attachments upload, and README-only diff hygiene. Use when a repo needs a Remotion/product demo video embedded in README via a GitHub-hosted user-attachments URL.",
+      "category": "media",
+      "version": "1.6.0",
+      "tags": [
+        "video",
+        "remotion",
+        "github",
+        "readme",
+        "marketing",
+        "dev-browser",
+        "screenshots",
+        "terminal",
+        "audio",
+        "elevenlabs"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "b42519cb4ddf",
+      "bodyChars": 27844
+    },
+    {
+      "name": "requesting-code-review",
+      "dirName": "requesting-code-review",
+      "description": "Use when completing tasks, implementing major features, or before merging to verify work meets requirements",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "fd1c8497b1a2",
+      "bodyChars": 2666
+    },
+    {
+      "name": "resend-cli",
+      "dirName": "resend-cli",
+      "description": "Operate the Resend platform from the terminal — send emails (including React Email .tsx templates via --react-email), manage domains, contacts, broadcasts, templates, webhooks, API keys, logs, automations, and events via the `resend` CLI. Use when the user wants to run Resend commands in the shell, scripts, or CI/CD pipelines, or send/preview React Email templates. Always load this skill before running `resend` commands — it contains the non-interactive flag contract and gotchas that prevent silent failures.",
+      "category": "uncategorized",
+      "version": "2.3.1",
+      "tags": [],
+      "agents": [
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "d139aa2f0005",
+      "bodyChars": 7667
+    },
+    {
+      "name": "session-consolidate",
+      "dirName": "session-consolidate",
+      "description": "Run at a natural stopping point or via the /consolidate command to harvest durable learnings from the current session into AutoMem (store, associate, update, invalidate) and to create, update, merge, deduplicate, or simplify AutoVault skills. Enumerates candidates for veto first, requires explicit per-item confirmation before any destructive skill change, and ends with a short summary of what was created, updated, and consolidated.",
+      "category": "meta",
+      "version": "1.1.0",
+      "tags": [
+        "automem",
+        "autovault",
+        "memory",
+        "skills",
+        "consolidation",
+        "meta"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "37f0da8a6f11",
+      "bodyChars": 5543
+    },
+    {
+      "name": "skill-author",
+      "dirName": "skill-author",
+      "description": "Package and validate an existing skill draft for AutoVault when its frontmatter, resources, capabilities, or admission result need review.",
+      "category": "meta",
+      "version": "2.0.0",
+      "tags": [
+        "packaging",
+        "validation",
+        "skills",
+        "autovault",
+        "meta"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "dcf0c9cdc33c",
+      "bodyChars": 6236
+    },
+    {
+      "name": "social-asset-pack",
+      "dirName": "social-asset-pack",
+      "description": "Given a locked brand bible (identity + visual-language) and a folder of reference-pin source images, produce a complete per-platform avatar+banner pack with an asset map documenting which pin lands where. Use when an artist or brand is launching/refreshing social channels and needs platform-spec crops derived from a single source-of-truth set of stills.",
+      "category": "brand",
+      "version": "0.1.0",
+      "tags": [
+        "brand",
+        "social",
+        "image",
+        "crops",
+        "hyperpop",
+        "music-marketing"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "8eb128db03ba",
+      "bodyChars": 6795
+    },
+    {
+      "name": "split-to-prs",
+      "dirName": "split-to-prs",
+      "description": "Split current work into small reviewable PRs. Use when the user asks to split a chat, set of changes, branch, or PR.",
+      "category": "uncategorized",
+      "version": "1.0.0",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "943368081c80",
+      "bodyChars": 2097
+    },
+    {
+      "name": "spotify-youtube-playlist-migration",
+      "dirName": "spotify-youtube-playlist-migration",
+      "description": "Mirror a Spotify playlist into an unlisted YouTube playlist of official music videos, dry-run-safe. Use whenever someone asks to \"turn my Spotify playlist into YouTube videos\", \"make a YouTube music-video playlist from <playlist>\", \"migrate a playlist to YouTube\", or \"build a video playlist from these tracks\". Fetches the Spotify tracklist in order, matches each track to a high-confidence official music video, and creates the YouTube playlist preserving order — skipping lyric videos, audio-only uploads, live clips, covers, and karaoke. Writes are gated behind dryRun until explicitly confirmed.",
+      "category": "music",
+      "version": "0.1.0",
+      "tags": [
+        "spotify",
+        "youtube",
+        "playlist",
+        "music",
+        "migration"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "bcc9b467d9b3",
+      "bodyChars": 5816
+    },
+    {
+      "name": "stripe-commerce-checkout",
+      "dirName": "stripe-commerce-checkout",
+      "description": "Build Stripe commerce checkout endpoints with per-project restricted keys, Stripe App RAK setup, branded Checkout Session URLs, and Stripe CLI provisioning. Test mode is the default; live mode requires explicit user confirmation.",
+      "category": "payments",
+      "version": "1.0.3",
+      "tags": [
+        "stripe",
+        "commerce",
+        "checkout",
+        "payments",
+        "branding",
+        "restricted-keys",
+        "autovault"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "8df720314c7b",
+      "bodyChars": 11343
+    },
+    {
+      "name": "subagent-driven-development",
+      "dirName": "subagent-driven-development",
+      "description": "Use when executing implementation plans with independent tasks in the current session",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 3,
+      "contentHash": "d64821212313",
+      "bodyChars": 21399
+    },
+    {
+      "name": "suno-track-archiver",
+      "dirName": "suno-track-archiver",
+      "description": "Wrap a sunoapi.org music-generation call so the audio variants AND the lyrics land in `<project>/library/tracks/<yyyy-mm-dd>-<slug>/` instead of getting orphaned on suno's web UI. Use whenever you'd otherwise hit the raw Suno API by voice or chat — this skill is the only path that captures lyrics + request/response metadata next to the mp3s. Also runs in archive-only mode (taskId in, files out) to rescue runs that already happened bare-API.",
+      "category": "music",
+      "version": "0.2.0",
+      "tags": [
+        "music",
+        "suno",
+        "sunoapi",
+        "audio",
+        "archival",
+        "music-marketing",
+        "social"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "0c7a170854c2",
+      "bodyChars": 14413
+    },
+    {
+      "name": "suno-track-producer",
+      "dirName": "suno-track-producer",
+      "description": "Concept → lyrics → style string → sanitization → operator gate → Suno generation → archive → iterate, for an artist project governed by a lyric-craft bible (brand/lyric-craft.md). The writing-side complement to suno-track-archiver. Use for any \"make a track / write a song / generate music on Suno / re-roll that track\" request in a bible-governed repo (stacy.offline is the reference project). Refuses to run where no lyric-craft bible exists — run the craft analysis first.",
+      "category": "music",
+      "version": "0.1.3",
+      "tags": [
+        "music",
+        "suno",
+        "lyrics",
+        "songwriting",
+        "hyperpop",
+        "brand"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "license": "MIT",
+      "resourceCount": 1,
+      "contentHash": "65cca1f0a1a7",
+      "bodyChars": 9131
+    },
+    {
+      "name": "swiftui-liquid-glass",
+      "dirName": "swiftui-liquid-glass",
+      "description": "Implement and review iOS 26+ SwiftUI Liquid Glass UI. Use when adopting Liquid Glass or checking its correctness, performance, and design fit.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "393a4f0116ab",
+      "bodyChars": 3554
+    },
+    {
+      "name": "swiftui-performance-audit",
+      "dirName": "swiftui-performance-audit",
+      "description": "Audit SwiftUI runtime performance from code first. Use when diagnosing slow rendering, janky scrolling, expensive updates, or profiling needs.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "442a013dafd4",
+      "bodyChars": 4816
+    },
+    {
+      "name": "swiftui-ui-patterns",
+      "dirName": "swiftui-ui-patterns",
+      "description": "Build and refactor SwiftUI UI with component patterns and examples. Use when shaping navigation, state, layouts, controls, or screen composition.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "52ee136b9d30",
+      "bodyChars": 7132
+    },
+    {
+      "name": "swiftui-view-refactor",
+      "dirName": "swiftui-view-refactor",
+      "description": "Refactor SwiftUI view files into stable, testable structure. Use when splitting large views, tightening data flow, or cleaning Observation ownership.",
+      "category": "ios",
+      "version": "0.1.2",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 2,
+      "contentHash": "898c33b3f94e",
+      "bodyChars": 7681
+    },
+    {
+      "name": "systematic-debugging",
+      "dirName": "systematic-debugging",
+      "description": "Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 10,
+      "contentHash": "afa13bcb2097",
+      "bodyChars": 9721
+    },
+    {
+      "name": "test-driven-development",
+      "dirName": "test-driven-development",
+      "description": "Use when implementing any feature or bugfix, before writing implementation code",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "14542ddb3df8",
+      "bodyChars": 9753
+    },
+    {
+      "name": "triage-autohub-runtime",
+      "dirName": "triage-autohub-runtime",
+      "description": "Diagnose recent AutoHub runtime incidents from logs and live health evidence, separating first causes from retry cascades, process-local database poison, credential-copy drift, platform recipient or permission failures, and intentional fallbacks. Use when AutoHub logs show repeated errors, stuck writes, webhook retry storms, MCP authentication failures, or regressions after a restart.",
+      "category": "operations",
+      "version": "1.0.1",
+      "tags": [],
+      "agents": [],
+      "license": "MIT",
+      "resourceCount": 2,
+      "contentHash": "ff40e5ce5f1c",
+      "bodyChars": 7131
+    },
+    {
+      "name": "tui-design",
+      "dirName": "tui-design",
+      "description": "This skill should be used when designing terminal user interfaces, creating TUI layouts, choosing TUI color schemes, implementing keyboard navigation, building terminal dashboards, or working with any TUI framework. Activates on mentions of TUI design, terminal UI, Ratatui layout, Ink components, Textual widgets, Bubbletea views, terminal color palette, keybinding design, panel layout, split panes, terminal dashboard, box-drawing characters, sparklines, progress bars, modal dialogs, focus management, or terminal accessibility.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "d32bf2572620",
+      "bodyChars": 22851
+    },
+    {
+      "name": "unity-ai-collaboration",
+      "dirName": "unity-ai-collaboration",
+      "description": "Use when coordinating Unity Assistant, AI Gateway, Unity MCP servers, external coding agents, or read-only subagents on the same Unity project, especially when concurrent writes, paid generation, credentials, profiler evidence, or editor handoffs are possible.",
+      "category": "unity",
+      "version": "1.1.0",
+      "tags": [
+        "unity",
+        "assistant",
+        "ai-gateway",
+        "mcp",
+        "codex",
+        "collaboration",
+        "profiler",
+        "quest"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "438a7ef8508a",
+      "bodyChars": 6214
+    },
+    {
+      "name": "unity-quest-build",
+      "dirName": "unity-quest-build",
+      "description": "Use when building, simulating, profiling, sideloading, or verifying Unity 6 Meta Quest applications, especially when XR state, Meta XR Simulator, passthrough cameras, ADB, MQDH, Vulkan, or on-device evidence is involved.",
+      "category": "xr",
+      "version": "2.0.2",
+      "tags": [
+        "unity",
+        "quest",
+        "meta-xr",
+        "simulator",
+        "vr",
+        "mr",
+        "android",
+        "openxr",
+        "il2cpp",
+        "adb",
+        "mcp"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "license": "MIT",
+      "resourceCount": 3,
+      "contentHash": "ea37264025ea",
+      "bodyChars": 5687
+    },
+    {
+      "name": "using-git-worktrees",
+      "dirName": "using-git-worktrees",
+      "description": "Use when starting feature work that needs isolation from current workspace or before executing implementation plans - ensures an isolated workspace exists via native tools or git worktree fallback",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "e2c3ec142e52",
+      "bodyChars": 7222
+    },
+    {
+      "name": "using-superpowers",
+      "dirName": "using-superpowers",
+      "description": "Use when starting any conversation - establishes how to find and use skills, requiring skill invocation before ANY response including clarifying questions",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "f0f7975d94fa",
+      "bodyChars": 2851
+    },
+    {
+      "name": "verification-before-completion",
+      "dirName": "verification-before-completion",
+      "description": "Use when about to claim work is complete, fixed, or passing, before committing or creating PRs - requires running verification commands and confirming output before making any success claims; evidence before assertions always",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 0,
+      "contentHash": "ea52d15aabaf",
+      "bodyChars": 3865
+    },
+    {
+      "name": "video-toolkit",
+      "dirName": "video-toolkit",
+      "description": "Create professional local video projects with claude-code-video-toolkit, including AI voiceover, images, music, talking heads, chained clips, brand recall, progress monitoring, and Remotion rendering.",
+      "category": "media",
+      "version": "1.0.0",
+      "tags": [
+        "video",
+        "media",
+        "remotion",
+        "modal",
+        "image-generation",
+        "voiceover",
+        "music"
+      ],
+      "agents": [
+        "autojack",
+        "claude-code",
+        "codex"
+      ],
+      "license": "MIT",
+      "resourceCount": 0,
+      "contentHash": "ea504ff47b2a",
+      "bodyChars": 23967
+    },
+    {
+      "name": "wordpress-theme-to-emdash",
+      "dirName": "wordpress-theme-to-emdash",
+      "description": "Port WordPress themes to EmDash CMS. Use when asked to convert, migrate, or port a WordPress theme to EmDash, or when creating an EmDash site that should match an existing WordPress site's design. Handles design extraction, template conversion, and EmDash-specific features like menus, taxonomies, and widgets.",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 3,
+      "contentHash": "8935cb56b3e4",
+      "bodyChars": 3076
+    },
+    {
+      "name": "writing-plans",
+      "dirName": "writing-plans",
+      "description": "Use when you have a spec or requirements for a multi-step task, before touching code",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 1,
+      "contentHash": "e9b853d9b635",
+      "bodyChars": 6944
+    },
+    {
+      "name": "writing-skills",
+      "dirName": "writing-skills",
+      "description": "Use when creating new skills, editing existing skills, or verifying skills work before deployment",
+      "category": "uncategorized",
+      "version": "?",
+      "tags": [],
+      "agents": [],
+      "license": "",
+      "resourceCount": 6,
+      "contentHash": "c003f7c95eeb",
+      "bodyChars": 26188
+    }
+  ]
+}

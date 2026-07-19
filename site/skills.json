@@ -3,148 +3,562 @@
   "url": "https://skillissue.sh",
   "description": "Jack Arturo's personal/agent skills collection — skills that earn their keep across Claude Code, Codex, Cursor, and AutoHub.",
   "updated": "2026-07-19",
+  "vaultSkillsKnown": 107,
+  "publicCount": 30,
   "install": {
-    "autovault": "autovault add <owner/repo:path> --sync-profiles",
+    "autovault": "autovault add <skill> --sync-profiles",
     "skills_cli": "npx skills find <query>"
   },
   "featured": [
-    "jacks-writing-style",
-    "find-skills",
+    "babysit",
+    "cloudflare-lead-capture",
     "cloudflare-ops",
     "dev-browser",
+    "jacks-writing-style",
+    "long-haul-parallel-repair",
+    "session-consolidate",
     "skill-author"
   ],
   "skills": [
     {
-      "name": "jacks-writing-style",
-      "category": "writing",
-      "description": "Write exactly like Jack Arturo — direct, casual, technical, with personality. For blog posts, READMEs, CHANGELOGs, technical audits, and system prompts.",
-      "tags": ["writing", "style", "voice"],
-      "agents": ["claude-code", "codex", "cursor"],
-      "featured": true
-    },
-    {
-      "name": "find-skills",
-      "category": "meta",
-      "description": "Discover and install agent skills when you ask “how do I do X” or “is there a skill for…”. Routes through the open skills ecosystem and Skills CLI.",
-      "tags": ["skills", "discovery", "install"],
-      "agents": ["claude-code", "codex", "cursor"],
-      "featured": true
-    },
-    {
-      "name": "cloudflare-ops",
-      "category": "deployment",
-      "description": "Deploy AutoHub-style projects to Cloudflare — Pages preflights, D1 migrations/sync, tunnel helpers, preview pairs, and DNS ops without pasting tokens into chat.",
-      "tags": ["cloudflare", "pages", "workers", "d1"],
-      "agents": ["claude-code", "codex", "autojack", "cursor"],
-      "featured": true
-    },
-    {
-      "name": "dev-browser",
-      "category": "browser",
-      "description": "Drive the user's real Chrome end-to-end — open, snapshot, fill, click, screenshot, autofill — via extension relay or headless connect, reusing live login state.",
-      "tags": ["browser", "chrome", "automation"],
-      "agents": ["claude-code", "codex"],
-      "featured": true
-    },
-    {
-      "name": "skill-author",
-      "category": "meta",
-      "description": "Package and validate an existing skill draft for AutoVault — frontmatter, resources, capabilities, and admission checks before it enters the vault.",
-      "tags": ["autovault", "skills", "packaging"],
-      "agents": ["claude-code", "codex"],
-      "featured": true
-    },
-    {
-      "name": "commit-message",
-      "category": "git",
-      "description": "Draft a conventional-commit-style message from the repository's staged changes. Git only — no external services or API keys.",
-      "tags": ["git", "commits"],
-      "agents": ["claude-code", "codex", "cursor"]
-    },
-    {
       "name": "babysit",
+      "title": "Babysit",
       "category": "git",
-      "description": "Create or take over a PR, require Codex review, address P0/P1 threads, fix scoped CI failures, and leave the PR merge-ready without merging.",
-      "tags": ["github", "pr", "codex", "ci"],
-      "agents": ["claude-code", "codex"]
-    },
-    {
-      "name": "inbox-triage",
-      "category": "ops",
-      "description": "Triage Gmail unread into action buckets (!Action / !AI Handle / !Waiting On / archive) and post one digest.",
-      "tags": ["email", "gmail", "triage"],
-      "agents": ["claude-code", "autojack"]
-    },
-    {
-      "name": "cli-installer-ux",
-      "category": "terminal",
-      "description": "Design and harden compact CLI installers, updaters, and setup wizards without leaking debug logs or machine JSON into human UX.",
-      "tags": ["cli", "ux", "installers"],
-      "agents": ["claude-code", "codex"]
-    },
-    {
-      "name": "mcp-builder",
-      "category": "mcp",
-      "description": "Guide for creating high-quality MCP servers that enable LLMs to interact with external services through well-designed tools.",
-      "tags": ["mcp", "tools", "servers"],
-      "agents": ["claude-code", "codex"]
-    },
-    {
-      "name": "session-consolidate",
-      "category": "meta",
-      "description": "Harvest durable learnings into AutoMem and create/update/merge AutoVault skills at a natural stopping point, with confirmation before destructive skill changes.",
-      "tags": ["automem", "autovault", "memory"],
-      "agents": ["claude-code", "codex"]
-    },
-    {
-      "name": "docs-screenshot-packager",
-      "category": "docs",
-      "description": "Capture, package, optimize, verify, and place documentation screenshots for READMEs, repo docs, and marketing sites.",
-      "tags": ["docs", "screenshots", "assets"],
-      "agents": ["claude-code", "codex"]
+      "description": "Own a PR through Codex review and CI until merge-ready — without merging.",
+      "version": "1.2.0",
+      "tags": [
+        "github",
+        "pr",
+        "codex"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/babysit/"
     },
     {
       "name": "cloudflare-lead-capture",
+      "title": "Cloudflare Lead Capture",
       "category": "cloudflare",
-      "description": "Scaffold Cloudflare Pages/Workers lead-capture with D1 contacts, Resend templates, Turnstile, unsubscribe, and a small admin UI.",
-      "tags": ["cloudflare", "email", "forms", "d1"],
-      "agents": ["claude-code", "codex"]
+      "description": "D1 + Resend lead/forms pattern with Turnstile, unsubscribe, and a small admin UI.",
+      "version": "1.3.0",
+      "tags": [
+        "cloudflare",
+        "d1",
+        "resend",
+        "email"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/cloudflare-lead-capture/"
     },
     {
-      "name": "awtrix-board",
-      "category": "iot",
-      "description": "Control Ulanzi TC001 LED matrix displays running AWTRIX 3 — notifications, brightness, sensors — device-direct over the LAN.",
-      "tags": ["iot", "awtrix", "home"],
-      "agents": ["claude-code", "autojack"]
+      "name": "cloudflare-ops",
+      "title": "Cloudflare Ops",
+      "category": "deployment",
+      "description": "Pages/Workers preflights, D1 pairs, tunnels, and DNS ops without pasting tokens into chat.",
+      "version": "1.0.5",
+      "tags": [
+        "cloudflare",
+        "pages",
+        "d1"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack",
+        "cursor"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/cloudflare-ops/"
     },
     {
-      "name": "flashspace",
-      "category": "desktop",
-      "description": "Operate FlashSpace virtual workspaces on macOS — switch profiles, assign apps, manage floating windows.",
-      "tags": ["macos", "workspace", "desktop"],
-      "agents": ["claude-code", "autojack"]
+      "name": "dev-browser",
+      "title": "Dev Browser",
+      "category": "browser",
+      "description": "Drive the real authenticated Chrome — extension relay first, headless connect as fallback.",
+      "version": "0.3.2",
+      "tags": [
+        "browser",
+        "chrome",
+        "automation"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/dev-browser/"
     },
     {
-      "name": "raycast",
-      "category": "desktop",
-      "description": "Operate and partially configure Raycast via deeplinks, Script Commands, and AI provider packs.",
-      "tags": ["raycast", "macos", "launcher"],
-      "agents": ["claude-code", "autojack"]
+      "name": "jacks-writing-style",
+      "title": "Jack's Writing Style",
+      "category": "writing",
+      "description": "Write like Jack Arturo — direct, casual, technical, with personality. The anti-Claude-voice skill.",
+      "version": "1.0.0",
+      "tags": [
+        "writing",
+        "voice",
+        "style"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/jacks-writing-style/"
+    },
+    {
+      "name": "long-haul-parallel-repair",
+      "title": "Long-Haul Parallel Repair",
+      "category": "orchestration",
+      "description": "Authorized multi-hour fan-out: subagents, evidence, iterate until confidence is earned.",
+      "version": "1.0.0",
+      "tags": [
+        "subagents",
+        "autonomy"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/long-haul-parallel-repair/"
+    },
+    {
+      "name": "session-consolidate",
+      "title": "Session Consolidate",
+      "category": "meta",
+      "description": "Harvest session learnings into AutoMem and fold procedures into AutoVault skills.",
+      "version": "1.1.0",
+      "tags": [
+        "automem",
+        "autovault"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/session-consolidate/"
+    },
+    {
+      "name": "skill-author",
+      "title": "Skill Author",
+      "category": "meta",
+      "description": "Package and validate skill drafts for AutoVault — frontmatter, resources, admission.",
+      "version": "2.0.0",
+      "tags": [
+        "autovault",
+        "skills"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": true,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/skill-author/"
     },
     {
       "name": "autojack-delegate",
+      "title": "AutoJack Delegate",
       "category": "hub",
-      "description": "Delegate a capability the local session lacks (Calendar, Gmail, Slack, WhatsApp…) to AutoHub's autojack runtime over the local chat API.",
-      "tags": ["autohub", "delegation", "mcp"],
-      "agents": ["claude-code", "codex"]
+      "description": "Hand a capability you lack (Gmail, Calendar, Slack…) to AutoHub autojack over the local chat API.",
+      "version": "1.0.0",
+      "tags": [
+        "autohub",
+        "delegation"
+      ],
+      "agents": [],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/autojack-delegate/"
+    },
+    {
+      "name": "automem",
+      "title": "AutoMem",
+      "category": "meta",
+      "description": "Operational playbook for AutoMem recall/store/associate — the durable memory ritual.",
+      "version": "1.0.0",
+      "tags": [
+        "memory",
+        "automem"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/automem/"
+    },
+    {
+      "name": "autovault-skill",
+      "title": "AutoVault Skill",
+      "category": "meta",
+      "description": "How AutoVault profile sync works — filesystem-native skills, optional MCP.",
+      "version": "1.1.0",
+      "tags": [
+        "autovault"
+      ],
+      "agents": [],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/autovault-skill/"
+    },
+    {
+      "name": "awtrix-board",
+      "title": "AWTRIX Board",
+      "category": "iot",
+      "description": "Control Ulanzi TC001 LED matrices over LAN — notifications, brightness, sensors.",
+      "version": "1.0.0",
+      "tags": [
+        "awtrix",
+        "iot"
+      ],
+      "agents": [],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/awtrix-board/"
+    },
+    {
+      "name": "cli-installer-ux",
+      "title": "CLI Installer UX",
+      "category": "terminal",
+      "description": "Installers and setup wizards that stay human — no debug JSON in the happy path.",
+      "version": "1.0.0",
+      "tags": [
+        "cli",
+        "ux"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/cli-installer-ux/"
+    },
+    {
+      "name": "cloudflare-commerce-deploy",
+      "title": "Cloudflare Commerce Deploy",
+      "category": "deployment",
+      "description": "Pages/Workers deploy, custom domains, bindings, and per-environment secrets the right way.",
+      "version": "1.0.3",
+      "tags": [
+        "cloudflare",
+        "pages",
+        "dns"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/cloudflare-commerce-deploy/"
+    },
+    {
+      "name": "cloudflare-emdash-cms-deploy",
+      "title": "Cloudflare EmDash CMS Deploy",
+      "category": "deployment",
+      "description": "Astro + EmDash on Cloudflare Workers — not Pages — with D1/R2 and admin setup.",
+      "version": "1.10.0",
+      "tags": [
+        "emdash",
+        "astro",
+        "workers"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/"
+    },
+    {
+      "name": "codex-review",
+      "title": "Codex Review",
+      "category": "review",
+      "description": "Compatibility alias for babysit — address Codex review threads the unified way.",
+      "version": "2.0.1",
+      "tags": [
+        "codex",
+        "pr"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/codex-review/"
+    },
+    {
+      "name": "commit-message",
+      "title": "Commit Message",
+      "category": "git",
+      "description": "Conventional commits from staged diff — git only, no API keys.",
+      "version": "1.0.0",
+      "tags": [
+        "git",
+        "commits"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/commit-message/"
+    },
+    {
+      "name": "docs-screenshot-packager",
+      "title": "Docs Screenshot Packager",
+      "category": "docs",
+      "description": "Capture, optimize, verify, and place documentation screenshots for READMEs and docs sites.",
+      "version": "1.0.0",
+      "tags": [
+        "docs",
+        "screenshots"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/docs-screenshot-packager/"
+    },
+    {
+      "name": "entity-dossier",
+      "title": "Entity Dossier",
+      "category": "research",
+      "description": "Research a person/business/concept and persist a durable AutoMem dossier.",
+      "version": "0.1.0",
+      "tags": [
+        "automem",
+        "research"
+      ],
+      "agents": [
+        "claude-code",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/entity-dossier/"
+    },
+    {
+      "name": "flashspace",
+      "title": "FlashSpace",
+      "category": "desktop",
+      "description": "Drive FlashSpace virtual workspaces on Jack's Mac via the installed CLI.",
+      "version": "1.0.0",
+      "tags": [
+        "macos",
+        "workspace"
+      ],
+      "agents": [],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/flashspace/"
+    },
+    {
+      "name": "home-assistant-operator",
+      "title": "Home Assistant Operator",
+      "category": "operations",
+      "description": "Bootstrap and maintain AutoHub Home Assistant MCP access as a reusable skill.",
+      "version": "1.0.0",
+      "tags": [
+        "home-assistant"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/home-assistant-operator/"
     },
     {
       "name": "html-asset-renderer",
+      "title": "HTML Asset Renderer",
       "category": "design",
-      "description": "Render fixed-size HTML/CSS design exports into production raster assets — social cards, favicons, docs images, app-store screenshots.",
-      "tags": ["design", "assets", "html"],
-      "agents": ["claude-code", "codex"]
+      "description": "Render fixed-size HTML/CSS into production rasters — social cards, favicons, app-store shots.",
+      "version": "1.0.0",
+      "tags": [
+        "design",
+        "assets"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/html-asset-renderer/"
+    },
+    {
+      "name": "inbox-triage",
+      "title": "Inbox Triage",
+      "category": "ops",
+      "description": "Clear Jack's Gmail unread pile into action buckets and one digest.",
+      "version": "1.1.0",
+      "tags": [
+        "email",
+        "gmail"
+      ],
+      "agents": [
+        "claude-code"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/inbox-triage/"
+    },
+    {
+      "name": "mcp-builder",
+      "title": "MCP Builder",
+      "category": "mcp",
+      "description": "Guide for high-quality MCP servers — outcomes over REST mirrors, tool-bloat resistance.",
+      "version": "?",
+      "tags": [
+        "mcp",
+        "tools"
+      ],
+      "agents": [],
+      "featured": false,
+      "provenance": "mixed",
+      "url": "https://skillissue.sh/skills/mcp-builder/"
+    },
+    {
+      "name": "mcp-registry-maintainer",
+      "title": "MCP Registry Maintainer",
+      "category": "operations",
+      "description": "Keep AutoHub MCP config, health checks, and host config repair standardized.",
+      "version": "1.0.0",
+      "tags": [
+        "mcp",
+        "autohub"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/mcp-registry-maintainer/"
+    },
+    {
+      "name": "pirsch-analytics-bootstrap",
+      "title": "Pirsch Analytics Bootstrap",
+      "category": "analytics",
+      "description": "Add Pirsch the right way — explicit domain auth, snippet, optional DNS, scoped MCP.",
+      "version": "1.1.0",
+      "tags": [
+        "pirsch",
+        "analytics"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/pirsch-analytics-bootstrap/"
+    },
+    {
+      "name": "raycast",
+      "title": "Raycast",
+      "category": "desktop",
+      "description": "Operate Raycast via deeplinks, Script Commands, and AI provider packs — not an MCP.",
+      "version": "1.0.0",
+      "tags": [
+        "raycast",
+        "macos"
+      ],
+      "agents": [],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/raycast/"
+    },
+    {
+      "name": "release-readiness",
+      "title": "Release Readiness",
+      "category": "workflow",
+      "description": "Preflight before tagging a WordPress plugin release — readme Stable tag, since-last-tag audit.",
+      "version": "1.0.0",
+      "tags": [
+        "wordpress",
+        "release"
+      ],
+      "agents": [
+        "claude-code"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/release-readiness/"
+    },
+    {
+      "name": "resend-cli",
+      "title": "Resend CLI",
+      "category": "ops",
+      "description": "Operate Resend from the terminal — domains, keys, sends — non-interactive flags included.",
+      "version": "2.3.1",
+      "tags": [
+        "resend",
+        "email"
+      ],
+      "agents": [
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "mixed",
+      "url": "https://skillissue.sh/skills/resend-cli/"
+    },
+    {
+      "name": "triage-autohub-runtime",
+      "title": "Triage AutoHub Runtime",
+      "category": "operations",
+      "description": "Diagnose AutoHub incidents from logs — first causes vs retry cascades.",
+      "version": "1.0.1",
+      "tags": [
+        "autohub",
+        "ops"
+      ],
+      "agents": [],
+      "featured": false,
+      "provenance": "house",
+      "url": "https://skillissue.sh/skills/triage-autohub-runtime/"
     }
   ]
 }

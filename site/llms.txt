@@ -3,28 +3,49 @@
 > Jack Arturo's personal/agent skills collection. Skills that earn their keep across Claude Code, Codex, Cursor, and AutoHub.
 
 ## Site
-
 - Home: https://skillissue.sh/
+- Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
+- About: https://skillissue.sh/about/
+- Install: https://skillissue.sh/install/
 - Source: https://github.com/jack-arturo/skillissue
-- Typo alias: https://skilissue.sh/ (same site)
 
-## What this is
+## Relationship
+- AutoVault (https://autovault.dev) — local-first vault for skill packages
+- AutoMem (https://automem.ai) — durable agent memory
+- skillissue.sh — public narratives + install affordances for Jack's collection
 
-Not a marketplace. Not a registry. A public window onto the skills Jack actually runs — the ones that survived use, got vaulted, and stay in rotation. Install via AutoVault or the Skills CLI; load them through your agent's normal skill directory.
+## Public skills (30)
+- babysit (v1.2.0) — Own a PR through Codex review and CI until merge-ready — without merging.
+- cloudflare-lead-capture (v1.3.0) — D1 + Resend lead/forms pattern with Turnstile, unsubscribe, and a small admin UI.
+- cloudflare-ops (v1.0.5) — Pages/Workers preflights, D1 pairs, tunnels, and DNS ops without pasting tokens into chat.
+- dev-browser (v0.3.2) — Drive the real authenticated Chrome — extension relay first, headless connect as fallback.
+- jacks-writing-style (v1.0.0) — Write like Jack Arturo — direct, casual, technical, with personality. The anti-Claude-voice skill.
+- long-haul-parallel-repair (v1.0.0) — Authorized multi-hour fan-out: subagents, evidence, iterate until confidence is earned.
+- session-consolidate (v1.1.0) — Harvest session learnings into AutoMem and fold procedures into AutoVault skills.
+- skill-author (v2.0.0) — Package and validate skill drafts for AutoVault — frontmatter, resources, admission.
+- autojack-delegate (v1.0.0) — Hand a capability you lack (Gmail, Calendar, Slack…) to AutoHub autojack over the local chat API.
+- automem (v1.0.0) — Operational playbook for AutoMem recall/store/associate — the durable memory ritual.
+- autovault-skill (v1.1.0) — How AutoVault profile sync works — filesystem-native skills, optional MCP.
+- awtrix-board (v1.0.0) — Control Ulanzi TC001 LED matrices over LAN — notifications, brightness, sensors.
+- cli-installer-ux (v1.0.0) — Installers and setup wizards that stay human — no debug JSON in the happy path.
+- cloudflare-commerce-deploy (v1.0.3) — Pages/Workers deploy, custom domains, bindings, and per-environment secrets the right way.
+- cloudflare-emdash-cms-deploy (v1.10.0) — Astro + EmDash on Cloudflare Workers — not Pages — with D1/R2 and admin setup.
+- codex-review (v2.0.1) — Compatibility alias for babysit — address Codex review threads the unified way.
+- commit-message (v1.0.0) — Conventional commits from staged diff — git only, no API keys.
+- docs-screenshot-packager (v1.0.0) — Capture, optimize, verify, and place documentation screenshots for READMEs and docs sites.
+- entity-dossier (v0.1.0) — Research a person/business/concept and persist a durable AutoMem dossier.
+- flashspace (v1.0.0) — Drive FlashSpace virtual workspaces on Jack's Mac via the installed CLI.
+- home-assistant-operator (v1.0.0) — Bootstrap and maintain AutoHub Home Assistant MCP access as a reusable skill.
+- html-asset-renderer (v1.0.0) — Render fixed-size HTML/CSS into production rasters — social cards, favicons, app-store shots.
+- inbox-triage (v1.1.0) — Clear Jack's Gmail unread pile into action buckets and one digest.
+- mcp-builder (v?) — Guide for high-quality MCP servers — outcomes over REST mirrors, tool-bloat resistance.
+- mcp-registry-maintainer (v1.0.0) — Keep AutoHub MCP config, health checks, and host config repair standardized.
+- pirsch-analytics-bootstrap (v1.1.0) — Add Pirsch the right way — explicit domain auth, snippet, optional DNS, scoped MCP.
+- raycast (v1.0.0) — Operate Raycast via deeplinks, Script Commands, and AI provider packs — not an MCP.
+- release-readiness (v1.0.0) — Preflight before tagging a WordPress plugin release — readme Stable tag, since-last-tag audit.
+- resend-cli (v2.3.1) — Operate Resend from the terminal — domains, keys, sends — non-interactive flags included.
+- triage-autohub-runtime (v1.0.1) — Diagnose AutoHub incidents from logs — first causes vs retry cascades.
 
-## Featured skills
-
-- jacks-writing-style — write like Jack (direct, casual, technical)
-- find-skills — discover installable agent skills
-- cloudflare-ops — Cloudflare Pages/Workers/D1 deploy ops
-- dev-browser — drive real authenticated Chrome
-- skill-author — package skills for AutoVault
-
-## Full catalog
-
-See https://skillissue.sh/skills.json for names, categories, tags, and descriptions.
-
-## Voice
-
-Dry, technical, lightly humorous. The domain pun ("skill issue") is intentional and not explained at length.
+## Vault
+The local vault currently indexes 107 skills. Only skills with authored public narratives appear on this site.

@@ -4,563 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>skillissue.sh — agent skills that earn their keep</title>
-<meta name="description" content="Jack Arturo's personal/agent skills collection. Real skills for Claude Code, Codex, Cursor, and AutoHub — installable, vaulted, and battle-tested.">
+<meta name="description" content="Jack Arturo's personal/agent skills collection. Real skills for Claude Code, Codex, Cursor, and AutoHub.">
 <link rel="canonical" href="https://skillissue.sh/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0c0f">
-<meta property="og:title" content="skillissue.sh">
-<meta property="og:description" content="Agent skills that earn their keep. Jack Arturo's personal collection for Claude Code, Codex, Cursor, and AutoHub.">
+<meta property="og:title" content="skillissue.sh — agent skills that earn their keep">
+<meta property="og:description" content="Jack Arturo's personal/agent skills collection. Real skills for Claude Code, Codex, Cursor, and AutoHub.">
 <meta property="og:image" content="https://skillissue.sh/assets/og.png">
 <meta property="og:url" content="https://skillissue.sh/">
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="skillissue.sh">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="skillissue.sh">
-<meta name="twitter:description" content="Agent skills that earn their keep.">
-<meta name="twitter:image" content="https://skillissue.sh/assets/og.png">
+<link rel="stylesheet" href="/assets/site.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
-<style>
-  :root {
-    --bg: #0a0c0f;
-    --bg-elev: #10141b;
-    --bg-card: #121821;
-    --line: #1e2430;
-    --line-strong: #2a3344;
-    --ink: #e8edf5;
-    --muted: #8b95a8;
-    --dim: #5c667a;
-    --green: #3dff9a;
-    --green-dim: rgba(61, 255, 154, 0.12);
-    --green-glow: rgba(61, 255, 154, 0.28);
-    --amber: #ffb020;
-    --cyan: #5cc8ff;
-    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
-    --sans: "Inter", "SF Pro Text", system-ui, -apple-system, sans-serif;
-    --radius: 14px;
-    --max: 1080px;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; }
-  html { scroll-behavior: smooth; }
-  body {
-    margin: 0;
-    min-height: 100svh;
-    background:
-      radial-gradient(1200px 600px at 15% -10%, rgba(61,255,154,0.08), transparent 55%),
-      radial-gradient(900px 500px at 90% 0%, rgba(92,200,255,0.06), transparent 50%),
-      var(--bg);
-    color: var(--ink);
-    font-family: var(--sans);
-    font-size: 16px;
-    line-height: 1.55;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  a { color: var(--green); text-decoration: none; }
-  a:hover { text-decoration: underline; text-underline-offset: 3px; }
-
-  .wrap {
-    width: min(var(--max), calc(100% - 2.5rem));
-    margin-inline: auto;
-  }
-
-  /* top bar */
-  header.top {
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    backdrop-filter: blur(14px);
-    background: rgba(10, 12, 15, 0.72);
-    border-bottom: 1px solid transparent;
-    transition: border-color 160ms ease;
-  }
-  header.top.scrolled { border-bottom-color: var(--line); }
-  .top-inner {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.85rem 0;
-  }
-  .brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.65rem;
-    color: var(--ink);
-    text-decoration: none;
-    font-family: var(--mono);
-    font-weight: 600;
-    font-size: 0.95rem;
-    letter-spacing: -0.02em;
-  }
-  .brand:hover { text-decoration: none; color: var(--green); }
-  .brand-mark {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    background: var(--bg-elev);
-    border: 1px solid var(--line-strong);
-    display: grid;
-    place-items: center;
-    color: var(--green);
-    font-size: 0.95rem;
-    box-shadow: 0 0 0 1px rgba(61,255,154,0.08);
-  }
-  nav.links {
-    display: flex;
-    gap: 0.35rem 1.1rem;
-    flex-wrap: wrap;
-    font-size: 0.9rem;
-  }
-  nav.links a { color: var(--muted); }
-  nav.links a:hover { color: var(--ink); text-decoration: none; }
-
-  /* hero */
-  .hero {
-    padding: 4.5rem 0 3rem;
-  }
-  .prompt {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-family: var(--mono);
-    font-size: 0.82rem;
-    color: var(--dim);
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 0.4rem 0.85rem;
-    margin-bottom: 1.4rem;
-  }
-  .prompt .dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 10px var(--green-glow);
-    animation: pulse 2.2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.45; }
-  }
-  h1 {
-    margin: 0 0 1rem;
-    font-size: clamp(2.4rem, 6.5vw, 4.1rem);
-    line-height: 1.05;
-    letter-spacing: -0.04em;
-    font-weight: 700;
-  }
-  h1 .path { color: var(--green); }
-  h1 .cursor {
-    display: inline-block;
-    width: 0.55ch;
-    height: 0.9em;
-    margin-left: 0.12em;
-    background: var(--green);
-    vertical-align: -0.05em;
-    animation: blink 1.05s steps(1) infinite;
-  }
-  @keyframes blink {
-    0%, 45% { opacity: 1; }
-    50%, 100% { opacity: 0; }
-  }
-  .lede {
-    max-width: 38rem;
-    margin: 0 0 1.75rem;
-    color: var(--muted);
-    font-size: clamp(1.05rem, 2vw, 1.2rem);
-    line-height: 1.6;
-  }
-  .lede strong { color: var(--ink); font-weight: 600; }
-
-  .cta-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 2rem;
-  }
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    border-radius: 10px;
-    padding: 0.72rem 1.05rem;
-    font-weight: 600;
-    font-size: 0.95rem;
-    border: 1px solid transparent;
-    cursor: pointer;
-    text-decoration: none;
-    transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
-  }
-  .btn:hover { text-decoration: none; transform: translateY(-1px); }
-  .btn-primary {
-    background: var(--green);
-    color: #04140c;
-  }
-  .btn-primary:hover { background: #62ffad; color: #04140c; }
-  .btn-ghost {
-    background: transparent;
-    color: var(--ink);
-    border-color: var(--line-strong);
-  }
-  .btn-ghost:hover { border-color: var(--muted); color: var(--ink); }
-
-  .term {
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-    max-width: 42rem;
-  }
-  .term-bar {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.7rem 0.9rem;
-    border-bottom: 1px solid var(--line);
-    background: rgba(255,255,255,0.02);
-  }
-  .term-bar i {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    display: block;
-  }
-  .term-bar i:nth-child(1) { background: #ff5f57; }
-  .term-bar i:nth-child(2) { background: #febc2e; }
-  .term-bar i:nth-child(3) { background: #28c840; }
-  .term-title {
-    margin-left: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--dim);
-  }
-  .term-body {
-    padding: 1rem 1.1rem 1.15rem;
-    font-family: var(--mono);
-    font-size: 0.86rem;
-    line-height: 1.7;
-    color: var(--muted);
-  }
-  .term-body .cmd { color: var(--ink); }
-  .term-body .ok { color: var(--green); }
-  .term-body .dim { color: var(--dim); }
-  .term-body .amber { color: var(--amber); }
-
-  /* stats */
-  .stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-    margin: 2.5rem 0 0;
-  }
-  @media (max-width: 640px) {
-    .stats { grid-template-columns: 1fr; }
-  }
-  .stat {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: 12px;
-    padding: 1rem 1.1rem;
-  }
-  .stat b {
-    display: block;
-    font-family: var(--mono);
-    font-size: 1.35rem;
-    color: var(--green);
-    letter-spacing: -0.03em;
-  }
-  .stat span {
-    color: var(--muted);
-    font-size: 0.88rem;
-  }
-
-  /* sections */
-  section { padding: 3.25rem 0; }
-  section + section { border-top: 1px solid var(--line); }
-  .section-head {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 1rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.4rem;
-  }
-  h2 {
-    margin: 0;
-    font-size: clamp(1.4rem, 3vw, 1.85rem);
-    letter-spacing: -0.03em;
-  }
-  .section-note {
-    color: var(--dim);
-    font-size: 0.9rem;
-    font-family: var(--mono);
-  }
-
-  /* filters */
-  .filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-    margin-bottom: 1.25rem;
-  }
-  .chip {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--muted);
-    background: transparent;
-    border: 1px solid var(--line);
-    border-radius: 999px;
-    padding: 0.35rem 0.75rem;
-    cursor: pointer;
-  }
-  .chip:hover { border-color: var(--line-strong); color: var(--ink); }
-  .chip.active {
-    color: var(--green);
-    border-color: rgba(61,255,154,0.4);
-    background: var(--green-dim);
-  }
-
-  .search-row {
-    display: flex;
-    gap: 0.6rem;
-    margin-bottom: 1.25rem;
-  }
-  .search {
-    flex: 1;
-    min-width: 0;
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    color: var(--ink);
-    font: inherit;
-    font-family: var(--mono);
-    font-size: 0.9rem;
-    padding: 0.7rem 0.9rem;
-    outline: none;
-  }
-  .search:focus {
-    border-color: rgba(61,255,154,0.45);
-    box-shadow: 0 0 0 3px var(--green-dim);
-  }
-  .search::placeholder { color: var(--dim); }
-
-  /* cards */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 0.85rem;
-  }
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 1.15rem 1.15rem 1.05rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.65rem;
-    transition: border-color 140ms ease, transform 140ms ease, box-shadow 140ms ease;
-  }
-  .card:hover {
-    border-color: var(--line-strong);
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(0,0,0,0.28);
-  }
-  .card.featured {
-    border-color: rgba(61,255,154,0.28);
-    background:
-      linear-gradient(180deg, rgba(61,255,154,0.06), transparent 45%),
-      var(--bg-card);
-  }
-  .card-top {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-  .card h3 {
-    margin: 0;
-    font-family: var(--mono);
-    font-size: 0.98rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-  }
-  .badge {
-    font-family: var(--mono);
-    font-size: 0.68rem;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--green);
-    background: var(--green-dim);
-    border: 1px solid rgba(61,255,154,0.22);
-    border-radius: 999px;
-    padding: 0.18rem 0.5rem;
-    white-space: nowrap;
-  }
-  .card p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.92rem;
-    flex: 1;
-  }
-  .meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-  }
-  .tag {
-    font-family: var(--mono);
-    font-size: 0.72rem;
-    color: var(--dim);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 0.15rem 0.4rem;
-  }
-  .card-actions {
-    display: flex;
-    gap: 0.45rem;
-    margin-top: 0.15rem;
-  }
-  .mini-btn {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--ink);
-    background: transparent;
-    border: 1px solid var(--line-strong);
-    border-radius: 8px;
-    padding: 0.4rem 0.6rem;
-    cursor: pointer;
-  }
-  .mini-btn:hover {
-    border-color: var(--green);
-    color: var(--green);
-  }
-  .mini-btn.copied {
-    border-color: var(--green);
-    color: var(--green);
-    background: var(--green-dim);
-  }
-
-  .empty {
-    display: none;
-    color: var(--dim);
-    font-family: var(--mono);
-    font-size: 0.9rem;
-    padding: 2rem 0;
-    text-align: center;
-  }
-  .empty.show { display: block; }
-
-  /* install */
-  .install-grid {
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 1rem;
-  }
-  @media (max-width: 800px) {
-    .install-grid { grid-template-columns: 1fr; }
-  }
-  .panel {
-    background: var(--bg-card);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-  }
-  .panel h3 {
-    margin: 0 0 0.5rem;
-    font-size: 1.05rem;
-  }
-  .panel p {
-    margin: 0 0 1rem;
-    color: var(--muted);
-    font-size: 0.95rem;
-  }
-  pre {
-    margin: 0;
-    background: var(--bg);
-    border: 1px solid var(--line);
-    border-radius: 10px;
-    padding: 0.9rem 1rem;
-    overflow-x: auto;
-    font-family: var(--mono);
-    font-size: 0.84rem;
-    color: var(--ink);
-    position: relative;
-  }
-  pre .copy {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    color: var(--muted);
-    background: var(--bg-elev);
-    border: 1px solid var(--line);
-    border-radius: 6px;
-    padding: 0.25rem 0.45rem;
-    cursor: pointer;
-  }
-  pre .copy:hover { color: var(--green); border-color: rgba(61,255,154,0.4); }
-
-  /* about */
-  .about {
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 1.25rem;
-  }
-  @media (max-width: 800px) {
-    .about { grid-template-columns: 1fr; }
-  }
-  .about p { color: var(--muted); margin: 0 0 0.9rem; }
-  .about p:last-child { margin-bottom: 0; }
-  .callout {
-    background:
-      linear-gradient(145deg, rgba(61,255,154,0.08), transparent 50%),
-      var(--bg-card);
-    border: 1px solid rgba(61,255,154,0.22);
-    border-radius: var(--radius);
-    padding: 1.25rem;
-  }
-  .callout h3 {
-    margin: 0 0 0.5rem;
-    font-family: var(--mono);
-    font-size: 0.95rem;
-    color: var(--green);
-  }
-  .callout p {
-    margin: 0;
-    color: var(--muted);
-    font-size: 0.92rem;
-  }
-
-  footer {
-    border-top: 1px solid var(--line);
-    padding: 2rem 0 2.75rem;
-    color: var(--dim);
-    font-size: 0.88rem;
-  }
-  .foot-inner {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
-    justify-content: space-between;
-    align-items: center;
-  }
-  footer a { color: var(--muted); }
-  footer a:hover { color: var(--green); }
-  .foot-mono { font-family: var(--mono); font-size: 0.8rem; }
-
-  @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-      animation: none !important;
-      transition: none !important;
-    }
-  }
-</style>
 </head>
 <body>
   <header class="top" id="topbar">
@@ -570,265 +27,156 @@
         <span>skillissue.sh</span>
       </a>
       <nav class="links" aria-label="Primary">
-        <a href="#skills">skills</a>
-        <a href="#install">install</a>
-        <a href="#about">about</a>
+        <a href="/" aria-current="page">home</a>
+        <a href="/skills/">skills</a>
+        <a href="/install/">install</a>
+        <a href="/about/">about</a>
         <a href="/skills.json">skills.json</a>
         <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </nav>
     </div>
   </header>
-
   <main>
+
     <section class="hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot" aria-hidden="true"></span> live · personal skills vault window</div>
-        <h1>
-          <span class="path">skillissue</span>.sh<span class="cursor" aria-hidden="true"></span>
-        </h1>
+        <div class="prompt"><span class="dot"></span> live · 30 public skills · 107 in vault</div>
+        <h1><span class="path">skillissue</span>.sh<span class="cursor" aria-hidden="true"></span></h1>
         <p class="lede">
           Jack Arturo’s personal/agent skills collection —
           the ones that <strong>earn their keep</strong> across Claude Code, Codex, Cursor, and AutoHub.
-          Not a marketplace. Not a registry. Just skills that survived real use.
+          Not a marketplace. A public window onto skills that survived real use.
         </p>
         <div class="cta-row">
-          <a class="btn btn-primary" href="#skills">Browse skills</a>
-          <a class="btn btn-ghost" href="#install">Install path</a>
-          <a class="btn btn-ghost" href="/llms.txt">llms.txt</a>
+          <a class="btn btn-primary" href="/skills/">Browse skills</a>
+          <a class="btn btn-ghost" href="/install/">Install</a>
+          <a class="btn btn-ghost" href="/about/">The story</a>
         </div>
-
         <div class="term" aria-label="Example terminal session">
-          <div class="term-bar">
-            <i></i><i></i><i></i>
-            <span class="term-title">zsh · skillissue</span>
-          </div>
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">zsh · skillissue</span></div>
           <div class="term-body">
             <div><span class="dim">$</span> <span class="cmd">npx skills find cloudflare</span></div>
-            <div class="dim"># or load from AutoVault once vaulted</div>
-            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue --sync-profiles</span></div>
-            <div class="ok">✓ skills synced · claude-code · codex · cursor</div>
+            <div class="dim"># packages live in AutoVault; stories live here</div>
+            <div class="ok">✓ 30 public narratives · vault knows 107</div>
             <div class="amber"># if your agent still can't ship… skill issue</div>
           </div>
         </div>
-
-        <div class="stats" id="stats">
-          <div class="stat"><b id="stat-count">—</b><span>skills in catalog</span></div>
-          <div class="stat"><b id="stat-featured">—</b><span>featured for day-one use</span></div>
-          <div class="stat"><b>4</b><span>agent runtimes covered</span></div>
+        <div class="stats">
+          <div class="stat"><b>30</b><span>public skill pages</span></div>
+          <div class="stat"><b>107</b><span>skills in the vault</span></div>
+          <div class="stat"><b>8</b><span>featured</span></div>
         </div>
       </div>
     </section>
-
-    <section id="skills">
+    <section id="featured">
       <div class="wrap">
-        <div class="section-head">
-          <h2>Skills</h2>
-          <div class="section-note">source: /skills.json</div>
-        </div>
-
-        <div class="search-row">
-          <input class="search" id="q" type="search" placeholder="filter by name, tag, or description…" autocomplete="off" spellcheck="false">
-        </div>
-        <div class="filters" id="filters" role="tablist" aria-label="Category filters"></div>
-        <div class="grid" id="grid"></div>
-        <div class="empty" id="empty">No skills match that filter.</div>
+        <div class="section-head"><h2>Featured</h2><div class="section-note">house skills that pull weight</div></div>
+        <div class="grid"><a class="card featured" href="/skills/babysit/">
+  <div class="card-top"><h3>babysit</h3><span class="badge">featured</span></div>
+  <p>Own a PR through Codex review and CI until merge-ready — without merging.</p>
+</a>
+<a class="card featured" href="/skills/cloudflare-lead-capture/">
+  <div class="card-top"><h3>cloudflare-lead-capture</h3><span class="badge">featured</span></div>
+  <p>D1 + Resend lead/forms pattern with Turnstile, unsubscribe, and a small admin UI.</p>
+</a>
+<a class="card featured" href="/skills/cloudflare-ops/">
+  <div class="card-top"><h3>cloudflare-ops</h3><span class="badge">featured</span></div>
+  <p>Pages/Workers preflights, D1 pairs, tunnels, and DNS ops without pasting tokens into chat.</p>
+</a>
+<a class="card featured" href="/skills/dev-browser/">
+  <div class="card-top"><h3>dev-browser</h3><span class="badge">featured</span></div>
+  <p>Drive the real authenticated Chrome — extension relay first, headless connect as fallback.</p>
+</a>
+<a class="card featured" href="/skills/jacks-writing-style/">
+  <div class="card-top"><h3>jacks-writing-style</h3><span class="badge">featured</span></div>
+  <p>Write like Jack Arturo — direct, casual, technical, with personality. The anti-Claude-voice skill.</p>
+</a>
+<a class="card featured" href="/skills/long-haul-parallel-repair/">
+  <div class="card-top"><h3>long-haul-parallel-repair</h3><span class="badge">featured</span></div>
+  <p>Authorized multi-hour fan-out: subagents, evidence, iterate until confidence is earned.</p>
+</a>
+<a class="card featured" href="/skills/session-consolidate/">
+  <div class="card-top"><h3>session-consolidate</h3><span class="badge">featured</span></div>
+  <p>Harvest session learnings into AutoMem and fold procedures into AutoVault skills.</p>
+</a>
+<a class="card featured" href="/skills/skill-author/">
+  <div class="card-top"><h3>skill-author</h3><span class="badge">featured</span></div>
+  <p>Package and validate skill drafts for AutoVault — frontmatter, resources, admission.</p>
+</a></div>
       </div>
     </section>
-
-    <section id="install">
+    <section id="newsletter">
       <div class="wrap">
-        <div class="section-head">
-          <h2>Install</h2>
-          <div class="section-note">AutoVault · Skills CLI</div>
-        </div>
-        <div class="install-grid">
-          <div class="panel">
-            <h3>AutoVault (preferred)</h3>
-            <p>
-              Skills live in a local vault, get validated, then sync into each agent’s
-              normal skill directory as filesystem links. No MCP required for day-to-day use.
-            </p>
-            <pre id="cmd-autovault"><button class="copy" type="button" data-copy="autovault add jack-arturo/skillissue --sync-profiles">copy</button><code>autovault add jack-arturo/skillissue --sync-profiles</code></pre>
-          </div>
-          <div class="panel">
-            <h3>Skills CLI</h3>
-            <p>
-              Search the open ecosystem, then install a package when you already know the slug.
-            </p>
-            <pre id="cmd-skills"><button class="copy" type="button" data-copy="npx skills find">copy</button><code>npx skills find
-npx skills add &lt;package&gt;</code></pre>
-          </div>
+        <div class="section-head"><h2>Get drops</h2><div class="section-note">occasional · no spam</div></div>
+        <div class="panel" style="max-width:36rem">
+          <h3>Skills that earn their keep</h3>
+          <p>Occasional notes when a new skill ships or an old one levels up. Unsubscribe anytime.</p>
+          <form class="signup" id="signup" action="/api/signup" method="POST">
+            <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" class="search" style="margin-bottom:0.6rem">
+            <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+            <input type="hidden" name="source" value="skillissue-hub">
+            <button type="submit" class="btn btn-primary">Subscribe</button>
+            <p class="form-msg" id="signup-msg" hidden></p>
+          </form>
         </div>
       </div>
     </section>
-
-    <section id="about">
-      <div class="wrap">
-        <div class="section-head">
-          <h2>About</h2>
+    <section>
+      <div class="wrap about" style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:1.25rem">
+        <div>
+          <h2>Why this exists</h2>
+          <p class="muted">AutoVault holds the packages. AutoMem holds the memory. skillissue.sh is the public shelf — what Jack actually runs, with history and install paths, without pretending it's a global registry.</p>
+          <p><a href="/about/">Read the full stack story →</a></p>
         </div>
-        <div class="about">
-          <div>
-            <p>
-              This site is a public window onto skills Jack actually runs — writing voice,
-              Cloudflare ops, browser automation, PR babysitting, inbox triage, desktop control,
-              and the meta-skills that keep the vault honest.
-            </p>
-            <p>
-              The domain is a buried pun. <strong style="color:var(--ink)">skill issue</strong>
-              is a gamer insult; <strong style="color:var(--ink)">.sh</strong> is shell.
-              If your agent can’t land a change, maybe it needs a better skill — not a longer prompt.
-            </p>
-            <p>
-              Source of truth for installable packages is AutoVault / the Skills CLI.
-              This site catalogs the collection and ships as a static Cloudflare Pages project
-              with no build step.
-            </p>
-          </div>
-          <div class="callout">
-            <h3>$ whoami</h3>
-            <p>
-              Jack Arturo — founder of Very Good Plugins, builder of AutoHub / AutoMem / AutoVault.
-              These skills are personal tooling made public where useful. Internal-only skills stay private.
-            </p>
-          </div>
+        <div class="callout">
+          <h3>$ whoami</h3>
+          <p>Jack Arturo — Very Good Plugins, AutoHub, AutoMem, AutoVault. These skills are personal tooling made public where useful.</p>
         </div>
       </div>
     </section>
+    <script>
+    (function(){
+      var f=document.getElementById('signup'); if(!f)return;
+      f.addEventListener('submit',async function(e){
+        e.preventDefault();
+        var msg=document.getElementById('signup-msg');
+        var fd=new FormData(f);
+        var body=Object.fromEntries(fd.entries());
+        try{
+          var r=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'fetch'},body:JSON.stringify(body)});
+          var j={}; try{j=await r.json()}catch(_){}
+          msg.hidden=false;
+          msg.textContent=r.ok?(j.message||'Check your inbox to confirm.'):(j.error||'Signup failed — try again later.');
+        }catch(_){msg.hidden=false;msg.textContent='Network error — try again later.'}
+      });
+    })();
+    </script>
   </main>
-
   <footer>
     <div class="wrap foot-inner">
       <div>
         <span class="foot-mono">skillissue.sh</span>
         · MIT ·
-        <a href="https://github.com/jack-arturo/skillissue">github</a>
-        ·
+        <a href="https://autovault.dev">AutoVault</a> ·
+        <a href="https://automem.ai">AutoMem</a> ·
         <a href="/skills.json">skills.json</a>
-        ·
-        <a href="/llms.txt">llms.txt</a>
       </div>
       <div class="foot-mono">also answers on skilissue.sh</div>
     </div>
   </footer>
-
   <script>
-    (function () {
-      const grid = document.getElementById('grid');
-      const empty = document.getElementById('empty');
-      const filters = document.getElementById('filters');
-      const q = document.getElementById('q');
-      let skills = [];
-      let activeCat = 'all';
-
-      const topbar = document.getElementById('topbar');
-      const onScroll = () => topbar.classList.toggle('scrolled', window.scrollY > 8);
-      window.addEventListener('scroll', onScroll, { passive: true });
-      onScroll();
-
-      function escapeHtml(s) {
-        return String(s)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;');
-      }
-
-      function renderFilters(cats) {
-        const all = ['all', ...cats];
-        filters.innerHTML = all.map((c) => {
-          const label = c === 'all' ? 'all' : c;
-          const active = c === activeCat ? ' active' : '';
-          return `<button type="button" class="chip${active}" data-cat="${escapeHtml(c)}" role="tab" aria-selected="${c === activeCat}">${escapeHtml(label)}</button>`;
-        }).join('');
-      }
-
-      function matches(skill, query) {
-        if (!query) return true;
-        const hay = [
-          skill.name,
-          skill.category,
-          skill.description,
-          ...(skill.tags || []),
-          ...(skill.agents || [])
-        ].join(' ').toLowerCase();
-        return hay.includes(query);
-      }
-
-      function render() {
-        const query = (q.value || '').trim().toLowerCase();
-        const list = skills.filter((s) => {
-          if (activeCat !== 'all' && s.category !== activeCat) return false;
-          return matches(s, query);
-        });
-
-        // featured first, then alpha
-        list.sort((a, b) => {
-          if (!!b.featured - !!a.featured) return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
-          return a.name.localeCompare(b.name);
-        });
-
-        empty.classList.toggle('show', list.length === 0);
-        grid.innerHTML = list.map((s) => {
-          const tags = (s.tags || []).slice(0, 4).map((t) => `<span class="tag">${escapeHtml(t)}</span>`).join('');
-          const badge = s.featured ? `<span class="badge">featured</span>` : `<span class="tag">${escapeHtml(s.category || 'general')}</span>`;
-          const copyCmd = `npx skills find ${s.name}`;
-          return `
-            <article class="card${s.featured ? ' featured' : ''}" data-name="${escapeHtml(s.name)}">
-              <div class="card-top">
-                <h3>${escapeHtml(s.name)}</h3>
-                ${badge}
-              </div>
-              <p>${escapeHtml(s.description || '')}</p>
-              <div class="meta">${tags}</div>
-              <div class="card-actions">
-                <button type="button" class="mini-btn" data-copy="${escapeHtml(copyCmd)}">copy find</button>
-              </div>
-            </article>`;
-        }).join('');
-      }
-
-      filters.addEventListener('click', (e) => {
-        const btn = e.target.closest('[data-cat]');
-        if (!btn) return;
-        activeCat = btn.getAttribute('data-cat');
-        renderFilters([...new Set(skills.map((s) => s.category).filter(Boolean))].sort());
-        render();
+    (function(){
+      var t=document.getElementById('topbar');
+      if(!t)return;
+      var on=function(){t.classList.toggle('scrolled',window.scrollY>8)};
+      window.addEventListener('scroll',on,{passive:true});on();
+      document.addEventListener('click',async function(e){
+        var b=e.target.closest('[data-copy]');if(!b)return;
+        try{await navigator.clipboard.writeText(b.getAttribute('data-copy'));
+          var p=b.textContent;b.textContent='copied';b.classList.add('copied');
+          setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
+        }catch(_){b.textContent='failed'}
       });
-
-      q.addEventListener('input', render);
-
-      document.addEventListener('click', async (e) => {
-        const btn = e.target.closest('[data-copy]');
-        if (!btn) return;
-        const text = btn.getAttribute('data-copy');
-        try {
-          await navigator.clipboard.writeText(text);
-          const prev = btn.textContent;
-          btn.textContent = 'copied';
-          btn.classList.add('copied');
-          setTimeout(() => {
-            btn.textContent = prev;
-            btn.classList.remove('copied');
-          }, 1200);
-        } catch (_) {
-          btn.textContent = 'failed';
-        }
-      });
-
-      fetch('/skills.json', { cache: 'no-cache' })
-        .then((r) => r.json())
-        .then((data) => {
-          skills = Array.isArray(data.skills) ? data.skills : [];
-          const cats = [...new Set(skills.map((s) => s.category).filter(Boolean))].sort();
-          document.getElementById('stat-count').textContent = String(skills.length);
-          document.getElementById('stat-featured').textContent = String(skills.filter((s) => s.featured).length);
-          renderFilters(cats);
-          render();
-        })
-        .catch(() => {
-          grid.innerHTML = '<p class="empty show">Could not load skills.json</p>';
-        });
     })();
   </script>
 </body>
