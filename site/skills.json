@@ -1,0 +1,150 @@
+{
+  "name": "skillissue",
+  "url": "https://skillissue.sh",
+  "description": "Jack Arturo's personal/agent skills collection — skills that earn their keep across Claude Code, Codex, Cursor, and AutoHub.",
+  "updated": "2026-07-19",
+  "install": {
+    "autovault": "autovault add <owner/repo:path> --sync-profiles",
+    "skills_cli": "npx skills find <query>"
+  },
+  "featured": [
+    "jacks-writing-style",
+    "find-skills",
+    "cloudflare-ops",
+    "dev-browser",
+    "skill-author"
+  ],
+  "skills": [
+    {
+      "name": "jacks-writing-style",
+      "category": "writing",
+      "description": "Write exactly like Jack Arturo — direct, casual, technical, with personality. For blog posts, READMEs, CHANGELOGs, technical audits, and system prompts.",
+      "tags": ["writing", "style", "voice"],
+      "agents": ["claude-code", "codex", "cursor"],
+      "featured": true
+    },
+    {
+      "name": "find-skills",
+      "category": "meta",
+      "description": "Discover and install agent skills when you ask “how do I do X” or “is there a skill for…”. Routes through the open skills ecosystem and Skills CLI.",
+      "tags": ["skills", "discovery", "install"],
+      "agents": ["claude-code", "codex", "cursor"],
+      "featured": true
+    },
+    {
+      "name": "cloudflare-ops",
+      "category": "deployment",
+      "description": "Deploy AutoHub-style projects to Cloudflare — Pages preflights, D1 migrations/sync, tunnel helpers, preview pairs, and DNS ops without pasting tokens into chat.",
+      "tags": ["cloudflare", "pages", "workers", "d1"],
+      "agents": ["claude-code", "codex", "autojack", "cursor"],
+      "featured": true
+    },
+    {
+      "name": "dev-browser",
+      "category": "browser",
+      "description": "Drive the user's real Chrome end-to-end — open, snapshot, fill, click, screenshot, autofill — via extension relay or headless connect, reusing live login state.",
+      "tags": ["browser", "chrome", "automation"],
+      "agents": ["claude-code", "codex"],
+      "featured": true
+    },
+    {
+      "name": "skill-author",
+      "category": "meta",
+      "description": "Package and validate an existing skill draft for AutoVault — frontmatter, resources, capabilities, and admission checks before it enters the vault.",
+      "tags": ["autovault", "skills", "packaging"],
+      "agents": ["claude-code", "codex"],
+      "featured": true
+    },
+    {
+      "name": "commit-message",
+      "category": "git",
+      "description": "Draft a conventional-commit-style message from the repository's staged changes. Git only — no external services or API keys.",
+      "tags": ["git", "commits"],
+      "agents": ["claude-code", "codex", "cursor"]
+    },
+    {
+      "name": "babysit",
+      "category": "git",
+      "description": "Create or take over a PR, require Codex review, address P0/P1 threads, fix scoped CI failures, and leave the PR merge-ready without merging.",
+      "tags": ["github", "pr", "codex", "ci"],
+      "agents": ["claude-code", "codex"]
+    },
+    {
+      "name": "inbox-triage",
+      "category": "ops",
+      "description": "Triage Gmail unread into action buckets (!Action / !AI Handle / !Waiting On / archive) and post one digest.",
+      "tags": ["email", "gmail", "triage"],
+      "agents": ["claude-code", "autojack"]
+    },
+    {
+      "name": "cli-installer-ux",
+      "category": "terminal",
+      "description": "Design and harden compact CLI installers, updaters, and setup wizards without leaking debug logs or machine JSON into human UX.",
+      "tags": ["cli", "ux", "installers"],
+      "agents": ["claude-code", "codex"]
+    },
+    {
+      "name": "mcp-builder",
+      "category": "mcp",
+      "description": "Guide for creating high-quality MCP servers that enable LLMs to interact with external services through well-designed tools.",
+      "tags": ["mcp", "tools", "servers"],
+      "agents": ["claude-code", "codex"]
+    },
+    {
+      "name": "session-consolidate",
+      "category": "meta",
+      "description": "Harvest durable learnings into AutoMem and create/update/merge AutoVault skills at a natural stopping point, with confirmation before destructive skill changes.",
+      "tags": ["automem", "autovault", "memory"],
+      "agents": ["claude-code", "codex"]
+    },
+    {
+      "name": "docs-screenshot-packager",
+      "category": "docs",
+      "description": "Capture, package, optimize, verify, and place documentation screenshots for READMEs, repo docs, and marketing sites.",
+      "tags": ["docs", "screenshots", "assets"],
+      "agents": ["claude-code", "codex"]
+    },
+    {
+      "name": "cloudflare-lead-capture",
+      "category": "cloudflare",
+      "description": "Scaffold Cloudflare Pages/Workers lead-capture with D1 contacts, Resend templates, Turnstile, unsubscribe, and a small admin UI.",
+      "tags": ["cloudflare", "email", "forms", "d1"],
+      "agents": ["claude-code", "codex"]
+    },
+    {
+      "name": "awtrix-board",
+      "category": "iot",
+      "description": "Control Ulanzi TC001 LED matrix displays running AWTRIX 3 — notifications, brightness, sensors — device-direct over the LAN.",
+      "tags": ["iot", "awtrix", "home"],
+      "agents": ["claude-code", "autojack"]
+    },
+    {
+      "name": "flashspace",
+      "category": "desktop",
+      "description": "Operate FlashSpace virtual workspaces on macOS — switch profiles, assign apps, manage floating windows.",
+      "tags": ["macos", "workspace", "desktop"],
+      "agents": ["claude-code", "autojack"]
+    },
+    {
+      "name": "raycast",
+      "category": "desktop",
+      "description": "Operate and partially configure Raycast via deeplinks, Script Commands, and AI provider packs.",
+      "tags": ["raycast", "macos", "launcher"],
+      "agents": ["claude-code", "autojack"]
+    },
+    {
+      "name": "autojack-delegate",
+      "category": "hub",
+      "description": "Delegate a capability the local session lacks (Calendar, Gmail, Slack, WhatsApp…) to AutoHub's autojack runtime over the local chat API.",
+      "tags": ["autohub", "delegation", "mcp"],
+      "agents": ["claude-code", "codex"]
+    },
+    {
+      "name": "html-asset-renderer",
+      "category": "design",
+      "description": "Render fixed-size HTML/CSS design exports into production raster assets — social cards, favicons, docs images, app-store screenshots.",
+      "tags": ["design", "assets", "html"],
+      "agents": ["claude-code", "codex"]
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+# skillissue.sh
+
+> Jack Arturo's personal/agent skills collection. Skills that earn their keep across Claude Code, Codex, Cursor, and AutoHub.
+
+## Site
+
+- Home: https://skillissue.sh/
+- Machine catalog: https://skillissue.sh/skills.json
+- Source: https://github.com/jack-arturo/skillissue
+- Typo alias: https://skilissue.sh/ (same site)
+
+## What this is
+
+Not a marketplace. Not a registry. A public window onto the skills Jack actually runs — the ones that survived use, got vaulted, and stay in rotation. Install via AutoVault or the Skills CLI; load them through your agent's normal skill directory.
+
+## Featured skills
+
+- jacks-writing-style — write like Jack (direct, casual, technical)
+- find-skills — discover installable agent skills
+- cloudflare-ops — Cloudflare Pages/Workers/D1 deploy ops
+- dev-browser — drive real authenticated Chrome
+- skill-author — package skills for AutoVault
+
+## Full catalog
+
+See https://skillissue.sh/skills.json for names, categories, tags, and descriptions.
+
+## Voice
+
+Dry, technical, lightly humorous. The domain pun ("skill issue") is intentional and not explained at length.
