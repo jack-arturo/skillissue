@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+storage_root="${AUTOVAULT_STORAGE_PATH:-$HOME/.autovault}"
+credentials_file="$storage_root/credentials/cloudflare-commerce.json"
+profile="${AUTOVAULT_CLOUDFLARE_PROFILE:-default}"
+
+redact() {
+  sed -E \
+    -e 's/cf[a-z]*_[A-Za-z0-9_-]{20,}/<redacted-cloudflare-token>/g' \
+    -e 's/Bearer[[:space:]]+[A-Za-z0-9._~+\/=-]{20,}/Bearer <redacted>/g'
+}
+
+load_profile() {
+  if [ ! -f "$credentials_file" ]; then
+    printf 'No Cloudflare credential file found at %s\n' "$credentials_file" >&2
+    printf 'Run: autovault skill setup cloudflare-commerce-deploy\n' >&2
+    exit 1
+  fi
+  if ! command -v node >/dev/null 2>&1; then
+    printf 'Node.js is required to read the AutoVault credential profile.\n' >&2
+    exit 1
+  fi
+  if ! profile_data="$(
+    PROFILE="$profile" CREDENTIALS_FILE="$credentials_file" node <<'NODE'
+const fs = require("fs");
+const file = process.env.CREDENTIALS_FILE;
+const profile = process.env.PROFILE || "default";
+const data = JSON.parse(fs.readFileSync(file, "utf8"));
+const item = data.profiles && data.profiles[profile];
+if (!item) {
+  console.error(`Profile not found: ${profile}`);
+  process.exit(2);
+}
+process.stdout.write([
+  item.account_id || "",
+  item.zone_id || "",
+  item.api_token || ""
+].map(String).join("\t"));
+NODE
+  )"; then
+    printf 'Failed to load Cloudflare profile "%s" from %s\n' "$profile" "$credentials_file" >&2
+    exit 1
+  fi
+  IFS=$'\t' read -r cloudflare_account_id cloudflare_zone_id cloudflare_api_token <<< "$profile_data"
+}
+
+api_request() {
+  method="$1"
+  url="$2"
+  body="${3:-}"
+  if [ -n "$body" ]; then
+    curl -fsS --request "$method" --config - --data "$body" "$url" <<EOF
+header = "Authorization: Bearer $cloudflare_api_token"
+header = "Content-Type: application/json"
+EOF
+  else
+    curl -fsS --request "$method" --config - "$url" <<EOF
+header = "Authorization: Bearer $cloudflare_api_token"
+header = "Content-Type: application/json"
+EOF
+  fi
+}
+
+check_required() {
+  label="$1"
+  method="$2"
+  url="$3"
+  body="${4:-}"
+  printf 'required  %-28s ' "$label"
+  if output="$(api_request "$method" "$url" "$body" 2>&1 | redact)"; then
+    printf 'ok\n'
+  else
+    printf 'failed\n'
+    printf '%s\n' "$output" >&2
+    return 1
+  fi
+}
+
+check_optional() {
+  label="$1"
+  method="$2"
+  url="$3"
+  body="${4:-}"
+  printf 'optional  %-28s ' "$label"
+  if output="$(api_request "$method" "$url" "$body" 2>&1 | redact)"; then
+    printf 'ok\n'
+  else
+    printf 'warn\n'
+    printf '  %s\n' "$output" | redact >&2
+  fi
+}
+
+load_profile
+
+if [ -z "$cloudflare_account_id" ] || [ -z "$cloudflare_api_token" ]; then
+  printf 'Profile "%s" is incomplete. Re-run setup.\n' "$profile" >&2
+  exit 1
+fi
+
+printf 'Cloudflare profile: %s\n' "$profile"
+printf 'Account ID: %s\n' "$cloudflare_account_id"
+if [ -n "$cloudflare_zone_id" ]; then
+  printf 'Zone ID: %s\n' "$cloudflare_zone_id"
+fi
+printf '\n'
+
+check_required "token verify" GET "https://api.cloudflare.com/client/v4/user/tokens/verify"
+check_required "account read" GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}"
+check_required "pages projects" GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/pages/projects?per_page=1"
+
+if [ -n "$cloudflare_zone_id" ]; then
+  check_required "zone read" GET "https://api.cloudflare.com/client/v4/zones/${cloudflare_zone_id}"
+  check_required "dns read" GET "https://api.cloudflare.com/client/v4/zones/${cloudflare_zone_id}/dns_records?per_page=1"
+fi
+
+check_optional "workers scripts" GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/workers/scripts"
+check_optional "d1 databases" GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/d1/database"
+check_optional "r2 buckets" GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/r2/buckets"
+check_optional "queues" GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/queues"
+check_optional "registrar check" POST "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/registrar/domain-check" '{"domains":["autovault-commerce-dry-run.dev"]}'
+
+printf '\nCloudflare commerce-deploy credential check complete.\n'

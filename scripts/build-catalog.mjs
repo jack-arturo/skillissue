@@ -1,19 +1,23 @@
 #!/usr/bin/env node
 /**
- * Merge vault-index + content/skills/*.md → site/
- * --strict fails if any public skill lacks uniqueness gate.
+ * Build site/ from skills/* SSOT (GitHub repo tree).
+ * No local AutoVault required — Pages CI has the git checkout.
+ *
+ *   skills/<name>/SKILL.md   — installable package
+ *   skills/<name>/story.md   — public narrative (site-only content)
  */
 import fs from "node:fs";
 import path from "node:path";
+import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const strict = process.argv.includes("--strict");
 const siteDir = path.join(root, "site");
-const contentSkills = path.join(root, "content/skills");
+const skillsDir = path.join(root, "skills");
 const contentStory = path.join(root, "content/story");
-const assetsSrc = path.join(root, "site/assets");
+const REPO = "jack-arturo/skillissue";
 
 function esc(s) {
   return String(s ?? "")
@@ -23,36 +27,59 @@ function esc(s) {
     .replace(/"/g, "&quot;");
 }
 
-function parseMd(text) {
+function gitSha() {
+  try {
+    return execSync("git rev-parse HEAD", { cwd: root, encoding: "utf8" }).trim();
+  } catch {
+    return "main";
+  }
+}
+
+function parseFrontmatter(text) {
   if (!text.startsWith("---")) return { fm: {}, body: text };
   const end = text.indexOf("\n---", 3);
   if (end === -1) return { fm: {}, body: text };
   const raw = text.slice(3, end).trim();
   const body = text.slice(end + 4).replace(/^\n/, "");
   const fm = {};
-  for (const line of raw.split("\n")) {
+  const lines = raw.split("\n");
+  let i = 0;
+  while (i < lines.length) {
+    const line = lines[i];
+    if (!line.trim() || line.trim().startsWith("#")) {
+      i++;
+      continue;
+    }
     const m = line.match(/^([A-Za-z0-9_-]+):\s*(.*)$/);
-    if (!m) continue;
+    if (!m) {
+      i++;
+      continue;
+    }
     const key = m[1];
     let val = m[2];
-    if (val === ">" || val === ">-") continue;
+    if (val === ">" || val === ">-" || val === "|" || val === "|-") {
+      const parts = [];
+      i++;
+      while (i < lines.length && (/^\s+/.test(lines[i]) || lines[i].trim() === "")) {
+        if (lines[i].trim()) parts.push(lines[i].replace(/^\s+/, ""));
+        i++;
+      }
+      fm[key] = parts.join(" ").trim();
+      continue;
+    }
     if (val.startsWith("[") && val.endsWith("]")) {
       fm[key] = val
         .slice(1, -1)
         .split(",")
         .map((s) => s.trim().replace(/^["']|["']$/g, ""))
         .filter(Boolean);
-    } else if (val.startsWith('"') || val.startsWith("'")) {
-      fm[key] = val.replace(/^["']|["']$/g, "");
     } else {
-      fm[key] = val.trim();
+      fm[key] = val.replace(/^["']|["']$/g, "").trim();
     }
+    i++;
   }
-  // folded summary lines immediately after summary: >-
-  if (raw.includes("summary:")) {
-    const sm = raw.match(/summary:\s*>-?\s*\n((?:\s+.+\n?)+)/);
-    if (sm) fm.summary = sm[1].split("\n").map((l) => l.trim()).filter(Boolean).join(" ");
-  }
+  const verMatch = raw.match(/version:\s*["']?([\d.]+)/);
+  if (verMatch) fm.version = verMatch[1];
   return { fm, body };
 }
 
@@ -67,6 +94,16 @@ function mdToHtml(md) {
       html.push("</ul>");
       inList = false;
     }
+  };
+  const inline = (s) => {
+    let t = esc(s);
+    t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
+    t = t.replace(
+      /\[([^\]]+)\]\((https?:[^)]+)\)/g,
+      '<a href="$2" rel="noopener">$1</a>'
+    );
+    return t;
   };
   for (const line of lines) {
     if (line.startsWith("```")) {
@@ -109,17 +146,6 @@ function mdToHtml(md) {
   flushList();
   if (inCode) html.push(`<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`);
   return html.join("\n");
-}
-
-function inline(s) {
-  let t = esc(s);
-  t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-  t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
-  t = t.replace(
-    /\[([^\]]+)\]\((https?:[^)]+)\)/g,
-    '<a href="$2" rel="noopener">$1</a>'
-  );
-  return t;
 }
 
 function loadDenylist() {
@@ -193,7 +219,7 @@ ${body}
         <a href="https://automem.ai">AutoMem</a> ·
         <a href="/skills.json">skills.json</a>
       </div>
-      <div class="foot-mono">also answers on skilissue.sh</div>
+      <div class="foot-mono">packages on github · install via AutoVault</div>
     </div>
   </footer>
   <script>
@@ -216,74 +242,90 @@ ${body}
 `;
 }
 
-// --- load data ---
-const vaultPath = path.join(root, "catalog/vault-index.json");
-// CI/Pages has no ~/.autovault — commit vault-index.json from local `npm run inventory`.
-let vault = { count: 0, skills: [] };
-if (fs.existsSync(vaultPath)) {
-  vault = JSON.parse(fs.readFileSync(vaultPath, "utf8"));
-} else {
-  console.warn("WARN: catalog/vault-index.json missing — building from content only");
-}
-const byName = new Map((vault.skills || []).map((s) => [s.name, s]));
+// --- load skills from repo tree ---
 const deny = loadDenylist();
-
-const contentFiles = fs.existsSync(contentSkills)
-  ? fs.readdirSync(contentSkills).filter((f) => f.endsWith(".md") && !f.startsWith("_"))
-  : [];
-
+const sha = gitSha();
+const shortSha = sha.slice(0, 7);
 const publicSkills = [];
 const errors = [];
-const report = { public: 0, internal: 0, missingNarrative: [], denied: [] };
+const report = { public: 0, skipped: [], missingNarrative: [], missingSkillMd: [] };
 
-for (const file of contentFiles) {
-  const raw = fs.readFileSync(path.join(contentSkills, file), "utf8");
-  const { fm, body } = parseMd(raw);
-  const name = fm.name || file.replace(/\.md$/, "");
+if (!fs.existsSync(skillsDir)) {
+  console.error("Missing skills/ directory — GitHub SSOT required");
+  process.exit(1);
+}
+
+for (const name of fs.readdirSync(skillsDir).sort()) {
+  const dir = path.join(skillsDir, name);
+  if (!fs.statSync(dir).isDirectory()) continue;
   if (deny.has(name)) {
-    report.denied.push(name);
+    report.skipped.push(name);
     continue;
   }
-  const visibility = fm.visibility || "internal";
+  const skillPath = path.join(dir, "SKILL.md");
+  const storyPath = path.join(dir, "story.md");
+  if (!fs.existsSync(skillPath)) {
+    report.missingSkillMd.push(name);
+    if (strict) errors.push(`missing SKILL.md: ${name}`);
+    continue;
+  }
+  const skillRaw = fs.readFileSync(skillPath, "utf8");
+  const { fm: skillFm } = parseFrontmatter(skillRaw);
+  let storyFm = {};
+  let storyBody = "";
+  if (fs.existsSync(storyPath)) {
+    const storyRaw = fs.readFileSync(storyPath, "utf8");
+    const parsed = parseFrontmatter(storyRaw);
+    storyFm = parsed.fm;
+    storyBody = parsed.body;
+  }
+  const visibility = storyFm.visibility || "public";
   if (visibility !== "public") {
-    report.internal++;
+    report.skipped.push(name);
     continue;
   }
-  const vaultSkill = byName.get(name) || {};
-  const provenance = fm.provenance || "house";
-  const bodyTrim = body.trim();
+  const summary =
+    storyFm.summary ||
+    (skillFm.description || "").replace(/\s+/g, " ").trim() ||
+    name;
+  const version = skillFm.version || storyFm.version_pin || "1.0.0";
+  const provenance = storyFm.provenance || "house";
+  const featured = storyFm.featured === true || storyFm.featured === "true";
+  const bodyTrim = storyBody.trim();
   const hasNarrative =
     bodyTrim.length > 80 &&
-    (/##\s+Why/i.test(body) ||
-      /##\s+History/i.test(body) ||
-      /##\s+How/i.test(body) ||
-      /##\s+Origin/i.test(body));
-  if (!hasNarrative && provenance === "house") {
+    (/##\s+Why/i.test(storyBody) ||
+      /##\s+History/i.test(storyBody) ||
+      /##\s+How/i.test(storyBody) ||
+      /##\s+Origin/i.test(storyBody));
+  if (!hasNarrative) {
     report.missingNarrative.push(name);
-    if (strict) errors.push(`public house skill lacks narrative: ${name}`);
-  }
-  if (!hasNarrative && provenance !== "house" && !/origin|upstream|source/i.test(body)) {
-    report.missingNarrative.push(name);
-    if (strict) errors.push(`public upstream skill lacks origin note: ${name}`);
+    if (strict) errors.push(`public skill lacks story narrative: ${name}`);
   }
 
-  const skill = {
-    name,
-    title: fm.title || name,
-    summary: fm.summary || vaultSkill.description || "",
-    description: fm.summary || vaultSkill.description || "",
-    category: fm.category || vaultSkill.category || "uncategorized",
-    version: fm.version_pin || vaultSkill.version || "?",
-    tags: fm.tags || vaultSkill.tags || [],
-    agents: vaultSkill.agents || [],
-    featured: fm.featured === true || fm.featured === "true",
+  const installId = `${REPO}@${sha}:skills/${name}/SKILL.md`;
+  const cliInstall = `autovault add ${installId} --sync-profiles`;
+  const mcpInstall = `add_skill({ source: "github", identifier: "${installId}" })`;
+  const sourceUrl = `https://github.com/${REPO}/blob/${sha}/skills/${name}/SKILL.md`;
+
+  publicSkills.push({
+    name: skillFm.name || name,
+    title: storyFm.title || skillFm.name || name,
+    summary,
+    category: storyFm.category || skillFm.category || "uncategorized",
+    version,
+    tags: storyFm.tags || skillFm.tags || [],
+    agents: skillFm.agents || [],
+    featured,
     provenance,
-    related: fm.related || [],
-    first_used: fm.first_used || "",
-    bodyHtml: mdToHtml(body),
-    body,
-  };
-  publicSkills.push(skill);
+    related: storyFm.related || [],
+    first_used: storyFm.first_used || "",
+    bodyHtml: mdToHtml(storyBody || `## ${name}\n\n${summary}`),
+    cliInstall,
+    mcpInstall,
+    sourceUrl,
+    installId,
+  });
   report.public++;
 }
 
@@ -297,35 +339,36 @@ if (strict && errors.length) {
   process.exit(1);
 }
 
-// preserve assets
-const keepAssets = fs.existsSync(assetsSrc)
-  ? null
-  : null;
-
-// clean generated pages but keep assets
+// clean site except assets
+fs.mkdirSync(siteDir, { recursive: true });
 for (const ent of fs.readdirSync(siteDir, { withFileTypes: true })) {
   if (ent.name === "assets") continue;
   const p = path.join(siteDir, ent.name);
   if (ent.isDirectory()) fs.rmSync(p, { recursive: true, force: true });
-  else if (ent.name !== ".gitkeep") fs.unlinkSync(p);
+  else fs.unlinkSync(p);
 }
 
-// CSS — write site.css if missing (build always overwrites from template)
-const cssPath = path.join(siteDir, "assets/site.css");
+// CSS
+const cssSrc = path.join(__dirname, "site.css");
 fs.mkdirSync(path.join(siteDir, "assets"), { recursive: true });
+if (fs.existsSync(cssSrc)) {
+  fs.writeFileSync(path.join(siteDir, "assets/site.css"), fs.readFileSync(cssSrc, "utf8"));
+}
 
-// --- skills.json ---
+// skills.json
 const skillsJson = {
   name: "skillissue",
   url: "https://skillissue.sh",
   description:
-    "Jack Arturo's personal/agent skills collection — skills that earn their keep across Claude Code, Codex, Cursor, and AutoHub.",
+    "Jack Arturo's personal/agent skills collection — packages on GitHub, install via AutoVault.",
   updated: new Date().toISOString().slice(0, 10),
-  vaultSkillsKnown: vault.count,
+  installPin: sha,
+  installPinShort: shortSha,
+  repo: REPO,
   publicCount: publicSkills.length,
   install: {
-    autovault: "autovault add <skill> --sync-profiles",
-    skills_cli: "npx skills find <query>",
+    autovault: `autovault add ${REPO}@${sha}:skills/<name>/SKILL.md --sync-profiles`,
+    bootstrap: "https://autovault.sh",
   },
   featured: publicSkills.filter((s) => s.featured).map((s) => s.name),
   skills: publicSkills.map((s) => ({
@@ -338,28 +381,27 @@ const skillsJson = {
     agents: s.agents,
     featured: !!s.featured,
     provenance: s.provenance,
+    cliInstall: s.cliInstall,
+    mcpInstall: s.mcpInstall,
+    sourceUrl: s.sourceUrl,
     url: `https://skillissue.sh/skills/${s.name}/`,
   })),
 };
 fs.writeFileSync(path.join(siteDir, "skills.json"), JSON.stringify(skillsJson, null, 2) + "\n");
 
-// --- per-skill pages ---
+// per-skill pages
 for (const s of publicSkills) {
   const dir = path.join(siteDir, "skills", s.name);
   fs.mkdirSync(dir, { recursive: true });
   const related = (s.related || [])
     .filter((n) => publicSkills.some((p) => p.name === n))
-    .map(
-      (n) =>
-        `<a class="tag" href="/skills/${esc(n)}/">${esc(n)}</a>`
-    )
+    .map((n) => `<a class="tag" href="/skills/${esc(n)}/">${esc(n)}</a>`)
     .join(" ");
-  const tags = (s.tags || []).map((t) => `<span class="tag">${esc(t)}</span>`).join(" ");
-  const installCmd = `npx skills find ${s.name}`;
+  const tags = (s.tags || []).map((t) => `<span class="tag">${esc(t)}</span>`).join("");
   const body = `
     <section class="hero skill-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v${esc(s.version)} · ${esc(s.provenance)}</div>
+        <div class="prompt"><span class="dot"></span> skill · v${esc(s.version)} · ${esc(s.provenance)} · pin ${esc(shortSha)}</div>
         <h1><span class="path">${esc(s.name)}</span></h1>
         <p class="lede">${esc(s.summary)}</p>
         <div class="meta" style="margin-bottom:1.25rem">${tags}
@@ -367,15 +409,19 @@ for (const s of publicSkills) {
           ${s.featured ? '<span class="badge">featured</span>' : ""}
         </div>
         <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-copy="${esc(installCmd)}">Copy find command</button>
-          <a class="btn btn-ghost" href="/skills/">All skills</a>
-          <a class="btn btn-ghost" href="https://autovault.dev">AutoVault</a>
+          <button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy AutoVault install</button>
+          <button type="button" class="btn btn-ghost" data-copy="${esc(s.mcpInstall)}">Copy MCP add_skill</button>
+          <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
         </div>
-        <div class="term" style="max-width:42rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install</span></div>
+        <div class="term" style="max-width:48rem">
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · ${esc(shortSha)}</span></div>
           <div class="term-body">
-            <div><span class="dim">$</span> <span class="cmd">${esc(installCmd)}</span></div>
-            <div class="dim"># package lives in AutoVault; this page is the public story</div>
+            <div><span class="dim"># CLI (primary)</span></div>
+            <div><span class="dim">$</span> <span class="cmd">${esc(s.cliInstall)}</span></div>
+            <div style="margin-top:0.6rem"><span class="dim"># MCP tool call</span></div>
+            <div class="cmd" style="word-break:break-all">${esc(s.mcpInstall)}</div>
+            <div class="ok" style="margin-top:0.6rem">→ vault validates · signs · syncs agent skill dirs</div>
+            <div class="dim">source: <a href="${esc(s.sourceUrl)}" style="color:inherit">${esc(REPO)}</a></div>
           </div>
         </div>
       </div>
@@ -384,10 +430,11 @@ for (const s of publicSkills) {
       <div class="wrap prose">
         ${s.bodyHtml}
         ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
-        <h2>In the vault</h2>
-        <p class="muted">Category <code>${esc(s.category)}</code>
-        ${s.agents?.length ? ` · agents: ${esc(s.agents.join(", "))}` : ""}
-        ${s.first_used ? ` · first used ${esc(s.first_used)}` : ""}</p>
+        <h2>Package</h2>
+        <p class="muted">Version <code>${esc(s.version)}</code>
+        · install pin <code>${esc(shortSha)}</code>
+        · SSOT <code>skills/${esc(s.name)}/</code> on GitHub
+        ${s.agents?.length ? ` · agents: ${esc((s.agents || []).join(", "))}` : ""}</p>
       </div>
     </section>`;
   fs.writeFileSync(
@@ -402,7 +449,7 @@ for (const s of publicSkills) {
   );
 }
 
-// --- catalog /skills/ ---
+// catalog
 fs.mkdirSync(path.join(siteDir, "skills"), { recursive: true });
 const cards = publicSkills
   .map((s) => {
@@ -420,12 +467,18 @@ const cards = publicSkills
   })
   .join("\n");
 
-const catalogBody = `
+fs.writeFileSync(
+  path.join(siteDir, "skills/index.html"),
+  shellLayout({
+    title: "Skills — skillissue.sh",
+    description: "Jack Arturo's public agent skills — packages on GitHub, install via AutoVault.",
+    path: "/skills/",
+    body: `
     <section class="hero" style="padding-bottom:1.5rem">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · ${vault.count} in vault</div>
+        <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · pin ${esc(shortSha)}</div>
         <h1>Skills</h1>
-        <p class="lede">Only skills with a real story ship here. The rest stay in the vault until they earn a page.</p>
+        <p class="lede">Each page is a story plus a real <code>autovault add</code> for the package living in this repo.</p>
         <div class="search-row"><input class="search" id="q" type="search" placeholder="filter…" autocomplete="off" spellcheck="false"></div>
         <div class="filters" id="filters"></div>
       </div>
@@ -466,19 +519,12 @@ const catalogBody = `
       }
       q.addEventListener('input',filter);
     })();
-    </script>`;
-fs.writeFileSync(
-  path.join(siteDir, "skills/index.html"),
-  shellLayout({
-    title: "Skills — skillissue.sh",
-    description: "Jack Arturo's public agent skills catalog.",
-    path: "/skills/",
-    body: catalogBody,
+    </script>`,
     active: "skills",
   })
 );
 
-// --- home ---
+// home
 const featured = publicSkills.filter((s) => s.featured).slice(0, 8);
 const featCards = featured
   .map(
@@ -489,34 +535,45 @@ const featCards = featured
   )
   .join("\n");
 
-const homeBody = `
+const sampleCli =
+  publicSkills.find((s) => s.name === "cloudflare-ops")?.cliInstall ||
+  publicSkills[0]?.cliInstall ||
+  "";
+
+fs.writeFileSync(
+  path.join(siteDir, "index.html"),
+  shellLayout({
+    title: "skillissue.sh — agent skills that earn their keep",
+    description:
+      "Jack Arturo's personal/agent skills. Packages live on GitHub; install with AutoVault.",
+    path: "/",
+    body: `
     <section class="hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> live · ${publicSkills.length} public skills · ${vault.count} in vault</div>
+        <div class="prompt"><span class="dot"></span> live · ${publicSkills.length} public skills · pin ${esc(shortSha)}</div>
         <h1><span class="path">skillissue</span>.sh<span class="cursor" aria-hidden="true"></span></h1>
         <p class="lede">
-          Jack Arturo’s personal/agent skills collection —
-          the ones that <strong>earn their keep</strong> across Claude Code, Codex, Cursor, and AutoHub.
-          Not a marketplace. A public window onto skills that survived real use.
+          Jack Arturo’s personal/agent skills —
+          the ones that <strong>earn their keep</strong>.
+          Packages live in this GitHub repo. Install with AutoVault. Not a marketplace.
         </p>
         <div class="cta-row">
           <a class="btn btn-primary" href="/skills/">Browse skills</a>
-          <a class="btn btn-ghost" href="/install/">Install</a>
+          <a class="btn btn-ghost" href="/install/">Install with AutoVault</a>
           <a class="btn btn-ghost" href="/about/">The story</a>
         </div>
         <div class="term" aria-label="Example terminal session">
           <div class="term-bar"><i></i><i></i><i></i><span class="term-title">zsh · skillissue</span></div>
           <div class="term-body">
-            <div><span class="dim">$</span> <span class="cmd">npx skills find cloudflare</span></div>
-            <div class="dim"># packages live in AutoVault; stories live here</div>
-            <div class="ok">✓ ${publicSkills.length} public narratives · vault knows ${vault.count}</div>
+            <div><span class="dim">$</span> <span class="cmd">${esc(sampleCli)}</span></div>
+            <div class="ok">✓ package from github · vault syncs claude-code · codex · cursor</div>
             <div class="amber"># if your agent still can't ship… skill issue</div>
           </div>
         </div>
         <div class="stats">
           <div class="stat"><b>${publicSkills.length}</b><span>public skill pages</span></div>
-          <div class="stat"><b>${vault.count}</b><span>skills in the vault</span></div>
           <div class="stat"><b>${featured.length}</b><span>featured</span></div>
+          <div class="stat"><b>${esc(shortSha)}</b><span>install pin (this build)</span></div>
         </div>
       </div>
     </section>
@@ -546,12 +603,12 @@ const homeBody = `
       <div class="wrap about" style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:1.25rem">
         <div>
           <h2>Why this exists</h2>
-          <p class="muted">AutoVault holds the packages. AutoMem holds the memory. skillissue.sh is the public shelf — what Jack actually runs, with history and install paths, without pretending it's a global registry.</p>
-          <p><a href="/about/">Read the full stack story →</a></p>
+          <p class="muted">AutoVault holds the runtime vault on your machine. This repo holds the public packages. skillissue.sh is the shelf — stories plus <code>autovault add</code>.</p>
+          <p><a href="/about/">Read the stack story →</a></p>
         </div>
         <div class="callout">
           <h3>$ whoami</h3>
-          <p>Jack Arturo — Very Good Plugins, AutoHub, AutoMem, AutoVault. These skills are personal tooling made public where useful.</p>
+          <p>Jack Arturo — Very Good Plugins, AutoHub, AutoMem, AutoVault. Personal tooling made public where useful.</p>
         </div>
       </div>
     </section>
@@ -567,45 +624,37 @@ const homeBody = `
           var r=await fetch('/api/signup',{method:'POST',headers:{'Content-Type':'application/json','X-Requested-With':'fetch'},body:JSON.stringify(body)});
           var j={}; try{j=await r.json()}catch(_){}
           msg.hidden=false;
-          msg.textContent=r.ok?(j.message||'Check your inbox to confirm.'):(j.error||'Signup failed — try again later.');
+          msg.textContent=r.ok?(j.message||'Signed up.'):(j.error||'Signup failed — try again later.');
         }catch(_){msg.hidden=false;msg.textContent='Network error — try again later.'}
       });
     })();
-    </script>`;
-
-fs.writeFileSync(
-  path.join(siteDir, "index.html"),
-  shellLayout({
-    title: "skillissue.sh — agent skills that earn their keep",
-    description:
-      "Jack Arturo's personal/agent skills collection. Real skills for Claude Code, Codex, Cursor, and AutoHub.",
-    path: "/",
-    body: homeBody,
+    </script>`,
     active: "home",
   })
 );
 
-// --- about / install / changelog from story md or defaults ---
 function storyPage(slug, fallbackTitle, fallbackMd, active) {
   const p = path.join(contentStory, `${slug}.md`);
   let title = fallbackTitle;
   let bodyMd = fallbackMd;
   if (fs.existsSync(p)) {
-    const { fm, body } = parseMd(fs.readFileSync(p, "utf8"));
+    const { fm, body } = parseFrontmatter(fs.readFileSync(p, "utf8"));
     title = fm.title || fallbackTitle;
     bodyMd = body;
   }
-  const dir = slug === "about" ? path.join(siteDir, "about") : path.join(siteDir, slug);
+  const dir = path.join(siteDir, slug);
   fs.mkdirSync(dir, { recursive: true });
-  const html = shellLayout({
-    title: `${title} — skillissue.sh`,
-    description: title,
-    path: `/${slug === "home" ? "" : slug + "/"}`,
-    body: `<section class="hero" style="padding-bottom:1rem"><div class="wrap"><h1>${esc(title)}</h1></div></section>
+  fs.writeFileSync(
+    path.join(dir, "index.html"),
+    shellLayout({
+      title: `${title} — skillissue.sh`,
+      description: title,
+      path: `/${slug}/`,
+      body: `<section class="hero" style="padding-bottom:1rem"><div class="wrap"><h1>${esc(title)}</h1></div></section>
     <section style="padding-top:0"><div class="wrap prose">${mdToHtml(bodyMd)}</div></section>`,
-    active,
-  });
-  fs.writeFileSync(path.join(dir, "index.html"), html);
+      active,
+    })
+  );
 }
 
 storyPage(
@@ -613,19 +662,15 @@ storyPage(
   "About",
   `## The short version
 
-skillissue.sh is the public window onto skills Jack actually runs. Packages live in [AutoVault](https://autovault.dev). Memory lives in [AutoMem](https://automem.ai). The runtime that glues day-to-day agent work is AutoHub.
+skillissue.sh is the public shelf for skills Jack actually runs. **Packages live in this GitHub repo** under \`skills/\`. You install them with [AutoVault](https://autovault.dev). Memory for the agents lives in [AutoMem](https://automem.ai).
 
 ## The longer version
 
-I build tools for agents the same way I used to build WordPress plugins — ship something that survives real use, then package the pattern so the next agent (or the next me) doesn't re-learn it from scratch.
+I build tools for agents the way I used to build WordPress plugins — ship something that survives real use, then package the pattern so the next agent doesn't re-learn it cold.
 
-**Very Good Plugins** paid the bills and taught the ops muscle. **AutoHub** became the agent runtime. **AutoMem** gave assistants durable memory. **AutoVault** is where skills get validated, signed, and synced across Claude Code, Codex, Cursor, and friends without drifting into five half-broken copies.
+**Very Good Plugins** paid the bills. **AutoHub** became the agent runtime. **AutoMem** gave assistants durable memory. **AutoVault** is where skills get validated, signed, and synced across Claude Code, Codex, Cursor, and friends.
 
-This site is not a registry. It's a shelf. If a skill doesn't have a story yet, it stays in the vault.
-
-## Domains
-
-Canonical: skillissue.sh. Typo catch: skilissue.sh. Same site.
+This site is not a registry and not a clone of autovault.dev. It's a shelf with install pins into the same git tree you can read on GitHub.
 `,
   "about"
 );
@@ -633,28 +678,39 @@ Canonical: skillissue.sh. Typo catch: skilissue.sh. Same site.
 storyPage(
   "install",
   "Install",
-  `## Preferred: AutoVault
+  `## 1. Get AutoVault
 
-Skills that earn a page here are meant to live in your local vault and sync into each agent's skill directory.
-
-\`\`\`
-autovault add <source> --sync-profiles
-\`\`\`
-
-See [autovault.dev](https://autovault.dev) for install paths (npm, Homebrew, installer script).
-
-## Skills CLI
-
-For discovery across the open ecosystem:
+If you don't have it yet:
 
 \`\`\`
-npx skills find <query>
-npx skills add <package>
+curl -fsSL https://autovault.sh | sh
 \`\`\`
 
-## What this site is not
+Or see [autovault.dev quick-start](https://autovault.dev/quick-start).
 
-We don't host the skill package bytes. We host the **story**, version context, and install affordances. The vault is the source of truth for what the agent loads.
+## 2. Add a skill from this repo
+
+Every public skill page has a copy button. Pattern:
+
+\`\`\`
+autovault add jack-arturo/skillissue@<sha>:skills/<name>/SKILL.md --sync-profiles
+\`\`\`
+
+The \`@sha\` pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.
+
+## 3. What AutoVault does
+
+1. Fetches the skill bundle at that commit  
+2. Validates / signs into your local vault  
+3. Syncs into agent skill directories (Claude Code, Codex, Cursor, …)
+
+You do **not** need an AutoVault MCP server for day-to-day use after sync — the files land where the agent already looks.
+
+## MCP form
+
+\`\`\`
+add_skill({ source: "github", identifier: "jack-arturo/skillissue@<sha>:skills/<name>/SKILL.md" })
+\`\`\`
 `,
   "install"
 );
@@ -662,48 +718,46 @@ We don't host the skill package bytes. We host the **story**, version context, a
 storyPage(
   "changelog",
   "Changelog",
-  `## 0.2.0 — 2026-07-20
+  `## 0.3.0 — 2026-07-20
 
-- Catalog generator from AutoVault inventory + authored narratives
-- Per-skill pages with provenance + version badges
-- About / install / uniqueness gate
-- Newsletter signup surface (Pages Functions + D1 + Resend)
+- GitHub SSOT: packages under \`skills/<name>/\` (SKILL.md + story.md)
+- AutoVault install rows (CLI + MCP) pinned to build commit
+- Email list: D1 LEAD_DB + Resend
+- Removed typo-domain marketing copy
+
+## 0.2.0 — 2026-07-20
+
+- Catalog generator + 30 narratives
 
 ## 0.1.0 — 2026-07-19
 
-- Initial static hub on Cloudflare Pages
-- Domains skillissue.sh + skilissue.sh
+- Initial hub on Cloudflare Pages
 `,
   "home"
 );
 
-// llms.txt
+// llms + sitemap + robots + headers
 const llms = `# skillissue.sh
 
-> Jack Arturo's personal/agent skills collection. Skills that earn their keep across Claude Code, Codex, Cursor, and AutoHub.
+> Jack Arturo's personal/agent skills. Packages on GitHub; install with AutoVault.
 
 ## Site
 - Home: https://skillissue.sh/
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
-- About: https://skillissue.sh/about/
-- Install: https://skillissue.sh/install/
-- Source: https://github.com/jack-arturo/skillissue
+- Source packages: https://github.com/jack-arturo/skillissue/tree/main/skills
+- Install pin (this build): ${sha}
 
-## Relationship
-- AutoVault (https://autovault.dev) — local-first vault for skill packages
-- AutoMem (https://automem.ai) — durable agent memory
-- skillissue.sh — public narratives + install affordances for Jack's collection
+## Install
+\`\`\`
+autovault add jack-arturo/skillissue@${sha}:skills/<name>/SKILL.md --sync-profiles
+\`\`\`
 
 ## Public skills (${publicSkills.length})
 ${publicSkills.map((s) => `- ${s.name} (v${s.version}) — ${s.summary}`).join("\n")}
-
-## Vault
-The local vault currently indexes ${vault.count} skills. Only skills with authored public narratives appear on this site.
 `;
 fs.writeFileSync(path.join(siteDir, "llms.txt"), llms);
 
-// sitemap + robots + headers
 const urls = [
   "/",
   "/skills/",
@@ -718,10 +772,7 @@ fs.writeFileSync(
   path.join(siteDir, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
     urls
-      .map(
-        (u) =>
-          `  <url><loc>https://skillissue.sh${u}</loc><changefreq>weekly</changefreq></url>`
-      )
+      .map((u) => `  <url><loc>https://skillissue.sh${u}</loc><changefreq>weekly</changefreq></url>`)
       .join("\n") +
     `\n</urlset>\n`
 );
@@ -746,26 +797,17 @@ fs.writeFileSync(
 
 /llms.txt
   Cache-Control: public, max-age=300
-
-/index.html
-  Cache-Control: public, max-age=0, must-revalidate
 `
 );
 
-// ensure CSS exists
-const css = fs.readFileSync(path.join(__dirname, "site.css"), "utf8");
-fs.writeFileSync(cssPath, css);
-
-// report
 report.generatedAt = new Date().toISOString();
+report.installPin = sha;
 report.publicSkills = publicSkills.map((s) => s.name);
-fs.writeFileSync(
-  path.join(root, "catalog/report.json"),
-  JSON.stringify(report, null, 2) + "\n"
-);
+fs.mkdirSync(path.join(root, "catalog"), { recursive: true });
+fs.writeFileSync(path.join(root, "catalog/report.json"), JSON.stringify(report, null, 2) + "\n");
 
 console.log(
-  `Built site: ${report.public} public, ${report.internal} content-internal, vault=${vault.count}`
+  `Built site: ${report.public} public from skills/ · pin ${shortSha}`
 );
 if (report.missingNarrative.length) {
   console.warn("Missing narrative:", report.missingNarrative.join(", "));

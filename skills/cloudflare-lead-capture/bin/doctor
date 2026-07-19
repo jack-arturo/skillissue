@@ -1,0 +1,103 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+const { spawnSync } = require('child_process');
+
+const root = process.cwd();
+const checks = [];
+
+function pass(label, detail = '') {
+  checks.push({ level: 'pass', label, detail });
+}
+
+function warn(label, detail = '') {
+  checks.push({ level: 'warn', label, detail });
+}
+
+function fail(label, detail = '') {
+  checks.push({ level: 'fail', label, detail });
+}
+
+function exists(relativePath) {
+  return fs.existsSync(path.join(root, relativePath));
+}
+
+function commandVersion(command, args = ['--version']) {
+  const result = spawnSync(command, args, { encoding: 'utf8' });
+  if (result.status === 0) {
+    return String(result.stdout || result.stderr || '').trim().split('\n')[0];
+  }
+  return null;
+}
+
+const nodeVersion = commandVersion('node');
+if (nodeVersion) pass('node', nodeVersion); else fail('node', 'Node.js is required.');
+
+const wranglerVersion = commandVersion('wrangler');
+if (wranglerVersion) pass('wrangler', wranglerVersion); else warn('wrangler', 'Wrangler was not found on PATH. Remote setup/deploy will need it.');
+
+const requiredFiles = [
+  'schema/lead-capture.sql',
+  'functions/lib/lead-capture/http.js',
+  'functions/lib/lead-capture/email.js',
+  'functions/lib/lead-capture/tokens.js',
+  'functions/lib/lead-capture/turnstile.js',
+  'functions/api/signup.js',
+  'functions/api/lead.js',
+  'functions/unsubscribe.js',
+  'functions/admin/lead-capture.js',
+  'functions/admin/lead-capture/templates.js',
+  'functions/admin/lead-capture/test-email.js',
+  'lead-capture-admin.html',
+  'snippets/lead-form.html',
+];
+
+for (const file of requiredFiles) {
+  if (exists(file)) pass(file); else fail(file, 'Missing generated file. Run scaffold.');
+}
+
+if (exists('schema/lead-capture.sql')) {
+  const schema = fs.readFileSync(path.join(root, 'schema/lead-capture.sql'), 'utf8');
+  for (const table of ['contacts', 'submissions', 'forms', 'email_templates', 'email_events']) {
+    if (schema.includes(`CREATE TABLE IF NOT EXISTS ${table}`)) pass(`schema table ${table}`); else fail(`schema table ${table}`);
+  }
+}
+
+const tomlPath = path.join(root, 'wrangler.toml');
+const jsoncPath = path.join(root, 'wrangler.jsonc');
+if (fs.existsSync(tomlPath) || fs.existsSync(jsoncPath)) {
+  const configPath = fs.existsSync(tomlPath) ? tomlPath : jsoncPath;
+  const config = fs.readFileSync(configPath, 'utf8');
+  pass(path.basename(configPath));
+  if (/d1_databases/.test(config) && /LEAD_DB|D1|DB/.test(config)) {
+    pass('D1 binding', 'Wrangler config references a D1 binding.');
+  } else {
+    warn('D1 binding', 'Wrangler config does not appear to include the generated D1 binding.');
+  }
+  if (/SEND_LEAD_CAPTURE_EMAIL/.test(config)) pass('email toggle var'); else warn('email toggle var', 'Add SEND_LEAD_CAPTURE_EMAIL if you want a config-controlled email toggle.');
+} else {
+  fail('wrangler config', 'No wrangler.toml or wrangler.jsonc found.');
+}
+
+if (exists('.dev.vars')) {
+  const devVars = fs.readFileSync(path.join(root, '.dev.vars'), 'utf8');
+  for (const name of ['RESEND_API_KEY', 'ADMIN_TOKEN']) {
+    if (new RegExp(`^${name}=`, 'm').test(devVars)) pass(`${name} local key`, 'Present in .dev.vars without printing value.'); else warn(`${name} local key`, 'Not found in .dev.vars. It may still be configured remotely.');
+  }
+  if (/^TURNSTILE_SECRET_KEY=/m.test(devVars)) pass('TURNSTILE_SECRET_KEY local key'); else warn('TURNSTILE_SECRET_KEY local key', 'Optional. Forms will skip Turnstile validation until configured.');
+} else {
+  warn('.dev.vars', 'No local secret file found. Remote Pages secrets may still be configured.');
+}
+
+for (const item of checks) {
+  const icon = item.level === 'pass' ? 'ok' : item.level === 'warn' ? 'warn' : 'fail';
+  console.log(`${icon.padEnd(5)} ${item.label}${item.detail ? ` - ${item.detail}` : ''}`);
+}
+
+const failed = checks.filter(item => item.level === 'fail');
+if (failed.length) {
+  console.error(`\n${failed.length} required check(s) failed.`);
+  process.exit(1);
+}
+
+console.log('\ncloudflare-lead-capture doctor complete.');

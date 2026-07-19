@@ -38,16 +38,21 @@
   </header>
   <main>
 <section class="hero" style="padding-bottom:1rem"><div class="wrap"><h1>Install</h1></div></section>
-    <section style="padding-top:0"><div class="wrap prose"><h2>Preferred: AutoVault</h2>
-<p>Skills that earn a page here are meant to live in your local vault and sync into each agent's skill directory.</p>
-<pre><code>autovault add &lt;source&gt; --sync-profiles</code></pre>
-<p>See <a href="https://autovault.dev" rel="noopener">autovault.dev</a> for install paths (npm, Homebrew, installer script).</p>
-<h2>Skills CLI</h2>
-<p>For discovery across the open ecosystem:</p>
-<pre><code>npx skills find &lt;query&gt;
-npx skills add &lt;package&gt;</code></pre>
-<h2>What this site is not</h2>
-<p>We don't host the skill package bytes. We host the <strong>story</strong>, version context, and install affordances. The vault is the source of truth for what the agent loads.</p></div></section>
+    <section style="padding-top:0"><div class="wrap prose"><h2>1. Get AutoVault</h2>
+<p>If you don't have it yet:</p>
+<pre><code>curl -fsSL https://autovault.sh | sh</code></pre>
+<p>Or see <a href="https://autovault.dev/quick-start" rel="noopener">autovault.dev quick-start</a>.</p>
+<h2>2. Add a skill from this repo</h2>
+<p>Every public skill page has a copy button. Pattern:</p>
+<pre><code>autovault add jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md --sync-profiles</code></pre>
+<p>The <code>@sha</code> pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
+<h2>3. What AutoVault does</h2>
+<p>1. Fetches the skill bundle at that commit  </p>
+<p>2. Validates / signs into your local vault  </p>
+<p>3. Syncs into agent skill directories (Claude Code, Codex, Cursor, …)</p>
+<p>You do <strong>not</strong> need an AutoVault MCP server for day-to-day use after sync — the files land where the agent already looks.</p>
+<h2>MCP form</h2>
+<pre><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md&quot; })</code></pre></div></section>
   </main>
   <footer>
     <div class="wrap foot-inner">
@@ -58,7 +63,7 @@ npx skills add &lt;package&gt;</code></pre>
         <a href="https://automem.ai">AutoMem</a> ·
         <a href="/skills.json">skills.json</a>
       </div>
-      <div class="foot-mono">also answers on skilissue.sh</div>
+      <div class="foot-mono">packages on github · install via AutoVault</div>
     </div>
   </footer>
   <script>

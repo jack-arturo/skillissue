@@ -1,51 +1,47 @@
 # skillissue.sh
 
-> Jack Arturo's personal/agent skills collection. Skills that earn their keep across Claude Code, Codex, Cursor, and AutoHub.
+> Jack Arturo's personal/agent skills. Packages on GitHub; install with AutoVault.
 
 ## Site
 - Home: https://skillissue.sh/
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
-- About: https://skillissue.sh/about/
-- Install: https://skillissue.sh/install/
-- Source: https://github.com/jack-arturo/skillissue
+- Source packages: https://github.com/jack-arturo/skillissue/tree/main/skills
+- Install pin (this build): e4889e1ee4cd124c20120e1e720822fc17fdf37b
 
-## Relationship
-- AutoVault (https://autovault.dev) — local-first vault for skill packages
-- AutoMem (https://automem.ai) — durable agent memory
-- skillissue.sh — public narratives + install affordances for Jack's collection
+## Install
+```
+autovault add jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/<name>/SKILL.md --sync-profiles
+```
 
 ## Public skills (30)
-- babysit (v1.2.0) — Own a PR through Codex review and CI until merge-ready — without merging.
-- cloudflare-lead-capture (v1.3.0) — D1 + Resend lead/forms pattern with Turnstile, unsubscribe, and a small admin UI.
-- cloudflare-ops (v1.0.5) — Pages/Workers preflights, D1 pairs, tunnels, and DNS ops without pasting tokens into chat.
-- dev-browser (v0.3.2) — Drive the real authenticated Chrome — extension relay first, headless connect as fallback.
-- jacks-writing-style (v1.0.0) — Write like Jack Arturo — direct, casual, technical, with personality. The anti-Claude-voice skill.
-- long-haul-parallel-repair (v1.0.0) — Authorized multi-hour fan-out: subagents, evidence, iterate until confidence is earned.
-- session-consolidate (v1.1.0) — Harvest session learnings into AutoMem and fold procedures into AutoVault skills.
-- skill-author (v2.0.0) — Package and validate skill drafts for AutoVault — frontmatter, resources, admission.
-- autojack-delegate (v1.0.0) — Hand a capability you lack (Gmail, Calendar, Slack…) to AutoHub autojack over the local chat API.
-- automem (v1.0.0) — Operational playbook for AutoMem recall/store/associate — the durable memory ritual.
-- autovault-skill (v1.1.0) — How AutoVault profile sync works — filesystem-native skills, optional MCP.
-- awtrix-board (v1.0.0) — Control Ulanzi TC001 LED matrices over LAN — notifications, brightness, sensors.
-- cli-installer-ux (v1.0.0) — Installers and setup wizards that stay human — no debug JSON in the happy path.
-- cloudflare-commerce-deploy (v1.0.3) — Pages/Workers deploy, custom domains, bindings, and per-environment secrets the right way.
-- cloudflare-emdash-cms-deploy (v1.10.0) — Astro + EmDash on Cloudflare Workers — not Pages — with D1/R2 and admin setup.
-- codex-review (v2.0.1) — Compatibility alias for babysit — address Codex review threads the unified way.
-- commit-message (v1.0.0) — Conventional commits from staged diff — git only, no API keys.
-- docs-screenshot-packager (v1.0.0) — Capture, optimize, verify, and place documentation screenshots for READMEs and docs sites.
-- entity-dossier (v0.1.0) — Research a person/business/concept and persist a durable AutoMem dossier.
-- flashspace (v1.0.0) — Drive FlashSpace virtual workspaces on Jack's Mac via the installed CLI.
-- home-assistant-operator (v1.0.0) — Bootstrap and maintain AutoHub Home Assistant MCP access as a reusable skill.
-- html-asset-renderer (v1.0.0) — Render fixed-size HTML/CSS into production rasters — social cards, favicons, app-store shots.
-- inbox-triage (v1.1.0) — Clear Jack's Gmail unread pile into action buckets and one digest.
-- mcp-builder (v?) — Guide for high-quality MCP servers — outcomes over REST mirrors, tool-bloat resistance.
-- mcp-registry-maintainer (v1.0.0) — Keep AutoHub MCP config, health checks, and host config repair standardized.
-- pirsch-analytics-bootstrap (v1.1.0) — Add Pirsch the right way — explicit domain auth, snippet, optional DNS, scoped MCP.
-- raycast (v1.0.0) — Operate Raycast via deeplinks, Script Commands, and AI provider packs — not an MCP.
-- release-readiness (v1.0.0) — Preflight before tagging a WordPress plugin release — readme Stable tag, since-last-tag audit.
-- resend-cli (v2.3.1) — Operate Resend from the terminal — domains, keys, sends — non-interactive flags included.
-- triage-autohub-runtime (v1.0.1) — Diagnose AutoHub incidents from logs — first causes vs retry cascades.
-
-## Vault
-The local vault currently indexes 107 skills. Only skills with authored public narratives appear on this site.
+- babysit (v1.2.0) — Create or take over a GitHub pull request, require Codex review on the current head, address valid Codex P0/P1 review threads, fix scoped CI failures, and leave the PR merge-ready without merging. Maintains exclusive babysit:* PR labels (active, waiting-codex, waiting-ci, blocked, ready) so status is visible from the PR list without opening each PR. Use when the user asks to babysit a PR, create a PR and review it, address Codex comments, or get a PR green.
+- cloudflare-lead-capture (v1.3.0) — Scaffold Cloudflare Pages or Workers lead-capture systems (Pages Functions OR Astro SSR API routes) with D1 contacts, web forms, Resend email templates, unsubscribe links, Turnstile checks, exports, and a small admin UI when a project needs repeatable email database infrastructure.
+- cloudflare-ops (v1.0.5) — Use when the user asks to deploy an AutoHub-style project to Cloudflare, run Pages or Worker preflights, operate D1 migrations/sync, manage the local Cloudflare tunnel helper, standardize repo-local Cloudflare hacks, or add a simple DNS TXT/CNAME on a VGP zone (e.g. wpfusion.com Wordfence wfvendor=… verification). Assume CLOUDFLARE_API_TOKEN + ACCOUNT_ID are already in the shell / System Configuration secrets — do not ask Jack to paste Wrangler creds.
+- dev-browser (v0.3.2) — Drive the user's real Chrome end-to-end — doctor, open, snapshot, fill forms, click, type, screenshot, evaluate, navigate, autofill from the local profile. Two paths under one skill — extension-relay CLI (default, no `--remote-debugging-port`, no WebDriver banner) and headless `dev-browser run --connect` (fallback for sandboxed scripting, file uploads, and dedicated-profile authenticated SPA work). Use when the user asks to fill out a form, click on a page, screenshot the current tab, log into a site, automate "this page" / "active tab", post under an authenticated identity, or run any Playwright-style script against signed-in Chrome.
+- jacks-writing-style (v1.0.0) — Write exactly like Jack Arturo — direct, casual, technical, with personality. For blog posts, READMEs, CHANGELOGs, technical audits, system prompts, and any first-person technical writing. Use this skill whenever Jack asks you to draft, edit, polish, ghostwrite, or "do a pass on" anything that will go out under his name — even if he doesn't explicitly say "in my voice." Also use when the conversation is clearly producing content for drunk.support, verygoodplugins.com, WP Fusion changelogs, autohub/AutoMem/AutoVault READMEs, or anything else Jack publishes. Default to this style for first-person prose from Jack unless he says otherwise.
+- long-haul-parallel-repair (v1.0.0) — Use when the user explicitly authorizes subagents, fan-out, delegation, long-running autonomous work, "work for hours", "iterate until satisfied", or solving every <8/10 confidence item through evidence, fixes, and verification. Also use for deep investigation or repair only when paired with explicit autonomy, fan-out, or subagent authorization.
+- session-consolidate (v1.1.0) — Run at a natural stopping point or via the /consolidate command to harvest durable learnings from the current session into AutoMem (store, associate, update, invalidate) and to create, update, merge, deduplicate, or simplify AutoVault skills. Enumerates candidates for veto first, requires explicit per-item confirmation before any destructive skill change, and ends with a short summary of what was created, updated, and consolidated.
+- skill-author (v2.0.0) — Package and validate an existing skill draft for AutoVault when its frontmatter, resources, capabilities, or admission result need review.
+- autojack-delegate (v1.0.0) — Use when a Claude Code session needs a capability it doesn't have locally (Google Calendar/Gmail/Drive, Slack DM, Discord, WhatsApp, etc.) and the user's AutoHub server has the tool wired in. Delegates one natural-language request to autojack via the local chat API and returns the result.
+- automem (v1.0.0) — Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections ("actually", "no, I prefer", "stop doing X", "we decided X already", "I told you before"), decisions that stabilize after a round of pushback ("let's go with X", "ship it", "yeah that's the plan", "do it that way"), or articulated patterns ("I always X", "every time", "my thing is"). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.
+- autovault-skill (v1.1.0) — Understand AutoVault-managed skills. AutoVault syncs skills into the agent's normal skill directory, so loaded skills can be used directly without an AutoVault MCP server.
+- awtrix-board (v1.0.0) — Control Jack's two Ulanzi TC001 LED matrix displays (32×8 pixels each) running AWTRIX 3 over the LAN — push notifications (scrolling text + color + icon + optional sound), set brightness, read battery / temperature / humidity, or identify which physical unit is which. Device-direct via the bundled `bin/awtrix` helper (raw HTTP, no Home Assistant, no secrets). Because AWTRIX runs its own app loop on-device and notifications overlay then auto-dismiss, there is NO takeover gate to manage (unlike the Divoom Pixoo). Trigger when Jack says "notify/show X on the awtrix", "put X on the office/bedroom display", "what's the battery/temp on the clock", or "locate the awtrix displays".
+- cli-installer-ux (v1.0.0) — Design and harden compact, useful CLI installers, updaters, setup wizards, and command output surfaces without leaking debug logs or machine JSON into human UX.
+- cloudflare-commerce-deploy (v1.0.3) — Deploy and operate commerce apps on Cloudflare when a user wants Pages or Workers deployment, DNS/custom domains, storage bindings, secrets, logs, per-environment env vars, or optional Registrar domain registration handled by an agent.
+- cloudflare-emdash-cms-deploy (v1.10.0) — Use when deploying an Astro + EmDash CMS site to Cloudflare, when a site serves raw source / downloads wrangler.jsonc / 404s at the root after an Astro migration, when every page redirects to /_emdash/admin/setup even after setup is complete, when CMS posts render with an empty title/body, when an admin preview link 404s, when adding a custom API route/contact form to an EmDash/Astro worker, when adding a second/new content collection to an already-live EmDash site (schema create/add-field), or when standing up EmDash with D1 + R2 and an admin login. EmDash/Astro deploys to Cloudflare Workers, NOT Pages.
+- codex-review (v2.0.1) — Compatibility alias for babysit. Use when the user says "address Codex comments", "fix Codex feedback", or passes a PR number/URL with Codex review context; route to the unified babysit PR workflow.
+- commit-message (v1.0.0) — Draft a conventional-commit-style message from the repository's staged changes. Uses git only; no external services or API keys required.
+- docs-screenshot-packager (v1.0.0) — Capture, package, optimize, verify, and place documentation screenshots for GitHub READMEs, repo docs, and marketing/docs sites. Use for release screenshot passes, visual docs updates, screenshot QA, and reusable screenshot workflows across repos.
+- entity-dossier (v0.1.0) — Research a person, business, or concept with primary sources and persist a durable AutoMem dossier through AutoHub's context-module write path (scripts/build-context-module.js). Use when asked to "build a dossier on X", "research X and remember them", or for pre-meeting/collab background that should survive the conversation. The stored dossier is the deliverable — verify it with a recall before reporting done.
+- flashspace (v1.0.0) — Operate FlashSpace virtual workspaces on Jack's Mac via the installed `flashspace` CLI (v1.0.0 from FlashSpace.app). Switch profiles and workspaces, assign/unassign apps, manage floating apps, focus windows, inventory displays, and clean unassigned apps. Use when Jack says "switch workspace/space", "go to Code/Web/Chat/Terminal", "FlashSpace", "assign this app", "float/unfloat", "list workspaces", "hide unassigned", or wants a dual-display workspace change. Prefer this over reinventing Mission Control / yabai / AeroSpace scripts.
+- home-assistant-operator (v1.0.0) — Bootstrap, inventory, verify, and maintain AutoHub Home Assistant MCP access as a reusable AutoVault skill.
+- html-asset-renderer (v1.0.0) — Render fixed-size HTML/CSS design exports into production raster assets when users need social cards, favicons, docs images, app-store screenshots, or other web-rendered artwork captured, dimension-checked, and prepared for merge.
+- inbox-triage (v1.1.0) — Triage Jack's Gmail unread inbox into action buckets (!Action / !AI Handle / !Waiting On / archive) using the google_workspace MCP, then post one digest. Use this whenever Jack asks to triage, clear, sort, process, or "do" his email or inbox — "inbox triage", "clear the unread pile", "go through my gmail", "sort my inbox", "process my email", "deal with my unread" — even if he never says the word "skill". It enumerates all unread, runs a small parallel read-only classifier fan-out, shows the buckets for approval, then applies Gmail labels SEQUENTIALLY and posts a "Worth your attention" + "Security roundup" digest. It mutates the live inbox, so it always gets approval before writing.
+- mcp-builder (v1.0.0) — Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).
+- mcp-registry-maintainer (v1.0.0) — Maintain AutoHub MCP server configuration, tool registry scans, health checks, and host config repair through a standardized AutoVault skill.
+- pirsch-analytics-bootstrap (v1.1.0) — Add Pirsch Analytics to a website, create or inspect the domain with explicit authorization, install and verify the tracking snippet, configure optional DNS verification and custom events, and wire a scoped MCP client without exposing credentials.
+- raycast (v1.0.0) — Operate and partially configure Raycast on Jack's Mac via deeplinks, Script Commands, file-based AI providers/skills, and AI Command import packs. Use when Jack says "open in Raycast", "run the X Raycast command", "deeplink", "Script Command", "AI Command/Agent/Skill", "providers.yaml", "Import AI Commands", "PromptLab", clipboard history, Superwhisper toggle, or wants Autohub Raycast scripts installed (delegate install/sync to raycast-autojack). Prefer this over inventing osascript launchers. Not a full settings API — see Supported config surfaces.
+- release-readiness (v1.0.0) — Use when preparing to tag or cut a release of a WordPress plugin (or any repo that carries its version in readme.txt "Stable tag" and tags releases as bare semver). Triggers on "is this ready to tag", "prep the release", "release readiness", "get the release ready", "release preflight", "what's left before we ship X.Y.Z", or any moment just before a release tag. Audits everything merged since the last git tag, surfaces the gaps (undocumented features, missing changelog entries, dirty working tree, stale branches/worktrees, open PRs, version not bumped, failing tests), then — after one approval — closes the in-repo gaps it can (drafts the changelog, bumps the version, dispatches the repo's docs/verification agents, runs the suite behind a safety guard) and stops at a green "ready to tag" state. It NEVER pushes, tags, or publishes anything: every action that leaves the repo stays the human's decision.
+- resend-cli (v2.3.1) — Operate the Resend platform from the terminal — send emails (including React Email .tsx templates via --react-email), manage domains, contacts, broadcasts, templates, webhooks, API keys, logs, automations, and events via the `resend` CLI. Use when the user wants to run Resend commands in the shell, scripts, or CI/CD pipelines, or send/preview React Email templates. Always load this skill before running `resend` commands — it contains the non-interactive flag contract and gotchas that prevent silent failures.
+- triage-autohub-runtime (v1.0.1) — Diagnose recent AutoHub runtime incidents from logs and live health evidence, separating first causes from retry cascades, process-local database poison, credential-copy drift, platform recipient or permission failures, and intentional fallbacks. Use when AutoHub logs show repeated errors, stuck writes, webhook retry storms, MCP authentication failures, or regressions after a restart.

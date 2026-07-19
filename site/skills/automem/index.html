@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>automem — skillissue.sh</title>
-<meta name="description" content="Operational playbook for AutoMem recall/store/associate — the durable memory ritual.">
+<meta name="description" content="Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections (&quot;actually&quot;, &quot;no, I prefer&quot;, &quot;stop doing X&quot;, &quot;we decided X already&quot;, &quot;I told you before&quot;), decisions that stabilize after a round of pushback (&quot;let's go with X&quot;, &quot;ship it&quot;, &quot;yeah that's the plan&quot;, &quot;do it that way&quot;), or articulated patterns (&quot;I always X&quot;, &quot;every time&quot;, &quot;my thing is&quot;). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.">
 <link rel="canonical" href="https://skillissue.sh/skills/automem/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0c0f">
 <meta property="og:title" content="automem — skillissue.sh">
-<meta property="og:description" content="Operational playbook for AutoMem recall/store/associate — the durable memory ritual.">
+<meta property="og:description" content="Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections (&quot;actually&quot;, &quot;no, I prefer&quot;, &quot;stop doing X&quot;, &quot;we decided X already&quot;, &quot;I told you before&quot;), decisions that stabilize after a round of pushback (&quot;let's go with X&quot;, &quot;ship it&quot;, &quot;yeah that's the plan&quot;, &quot;do it that way&quot;), or articulated patterns (&quot;I always X&quot;, &quot;every time&quot;, &quot;my thing is&quot;). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.">
 <meta property="og:image" content="https://skillissue.sh/assets/og.png">
 <meta property="og:url" content="https://skillissue.sh/skills/automem/">
 <meta property="og:type" content="website">
@@ -40,23 +40,27 @@
 
     <section class="hero skill-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v1.0.0 · house</div>
+        <div class="prompt"><span class="dot"></span> skill · v1.0.0 · house · pin e4889e1</div>
         <h1><span class="path">automem</span></h1>
-        <p class="lede">Operational playbook for AutoMem recall/store/associate — the durable memory ritual.</p>
-        <div class="meta" style="margin-bottom:1.25rem"><span class="tag">memory</span> <span class="tag">automem</span>
+        <p class="lede">Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections (&quot;actually&quot;, &quot;no, I prefer&quot;, &quot;stop doing X&quot;, &quot;we decided X already&quot;, &quot;I told you before&quot;), decisions that stabilize after a round of pushback (&quot;let's go with X&quot;, &quot;ship it&quot;, &quot;yeah that's the plan&quot;, &quot;do it that way&quot;), or articulated patterns (&quot;I always X&quot;, &quot;every time&quot;, &quot;my thing is&quot;). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.</p>
+        <div class="meta" style="margin-bottom:1.25rem"><span class="tag">memory</span><span class="tag">automem</span>
           <span class="badge">house</span>
           
         </div>
         <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-copy="npx skills find automem">Copy find command</button>
-          <a class="btn btn-ghost" href="/skills/">All skills</a>
-          <a class="btn btn-ghost" href="https://autovault.dev">AutoVault</a>
+          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/automem/SKILL.md --sync-profiles">Copy AutoVault install</button>
+          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/automem/SKILL.md&quot; })">Copy MCP add_skill</button>
+          <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
         </div>
-        <div class="term" style="max-width:42rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install</span></div>
+        <div class="term" style="max-width:48rem">
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · e4889e1</span></div>
           <div class="term-body">
-            <div><span class="dim">$</span> <span class="cmd">npx skills find automem</span></div>
-            <div class="dim"># package lives in AutoVault; this page is the public story</div>
+            <div><span class="dim"># CLI (primary)</span></div>
+            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/automem/SKILL.md --sync-profiles</span></div>
+            <div style="margin-top:0.6rem"><span class="dim"># MCP tool call</span></div>
+            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/automem/SKILL.md&quot; })</div>
+            <div class="ok" style="margin-top:0.6rem">→ vault validates · signs · syncs agent skill dirs</div>
+            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/e4889e1ee4cd124c20120e1e720822fc17fdf37b/skills/automem/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
           </div>
         </div>
       </div>
@@ -73,10 +77,11 @@
 <h2>What it is not</h2>
 <p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p>
         <h2>Related</h2><div class="meta"><a class="tag" href="/skills/session-consolidate/">session-consolidate</a> <a class="tag" href="/skills/entity-dossier/">entity-dossier</a></div>
-        <h2>In the vault</h2>
-        <p class="muted">Category <code>meta</code>
-         · agents: claude-code, codex, autojack
-         · first used 2026-04</p>
+        <h2>Package</h2>
+        <p class="muted">Version <code>1.0.0</code>
+        · install pin <code>e4889e1</code>
+        · SSOT <code>skills/automem/</code> on GitHub
+         · agents: claude-code, codex, autojack</p>
       </div>
     </section>
   </main>
@@ -89,7 +94,7 @@
         <a href="https://automem.ai">AutoMem</a> ·
         <a href="/skills.json">skills.json</a>
       </div>
-      <div class="foot-mono">also answers on skilissue.sh</div>
+      <div class="foot-mono">packages on github · install via AutoVault</div>
     </div>
   </footer>
   <script>

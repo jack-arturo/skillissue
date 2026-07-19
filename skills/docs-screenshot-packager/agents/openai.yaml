@@ -1,0 +1,4 @@
+interface:
+  display_name: "Docs Screenshot Packager"
+  short_description: "Package verified docs screenshots"
+  default_prompt: "Use $docs-screenshot-packager to package and verify documentation screenshots for this repository."

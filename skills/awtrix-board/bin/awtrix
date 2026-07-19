@@ -1,0 +1,168 @@
+#!/usr/bin/env bash
+# awtrix — control Ulanzi TC001 displays running AWTRIX 3 (awtrix-light) over the LAN.
+#
+# AWTRIX 3 speaks a plain JSON HTTP API on port 80: POST http://<ip>/api/<endpoint>,
+# no auth on the local network. This wrapper is DEVICE-ONLY (raw HTTP) — it holds
+# no Home Assistant credentials and needs no secrets.
+#
+# COEXISTENCE: unlike the Divoom Pixoo, an AWTRIX display runs its OWN app loop
+# on-device (Time / Temperature / Humidity / Battery cycle with no external
+# controller). `notify` OVERLAYS that loop and the device auto-returns to it — so
+# there is NO takeover gate and no loop-stall to manage. (As of 2026-06-01 these
+# units are NOT in Home Assistant. If you later add the AWTRIX Light HACS
+# integration, HA will co-control them — milder than the Pixoo, but re-check.)
+#
+# Usage:
+#   awtrix notify "text" [--color "#7AA2F7"] [--duration 5] [--hold] [--icon ID]
+#                        [--rainbow] [--sound MELODY] [--device office|bedroom] [--ip IP]
+#   awtrix dismiss      [--device office|bedroom | --ip IP]   # clear a held notification
+#   awtrix brightness <0-255|auto> [--device|--ip]            # BRI 0-255, or auto-brightness
+#   awtrix state        [--device|--ip]                       # battery / temp / humidity / fw
+#   awtrix locate       [office|bedroom|all]                  # flash a held label to ID a unit
+#   awtrix doctor                                             # reachability + identity of both
+#
+# Targets:  --device office|bedroom (default: office) resolves via the map below;
+#           --ip <addr> overrides. Edit the two lines below (or set the env vars)
+#           AFTER you confirm which physical unit is which — run `awtrix locate`.
+#
+set -uo pipefail
+
+AWTRIX_OFFICE_IP="${AWTRIX_OFFICE_IP:-192.168.2.100}"
+AWTRIX_BEDROOM_IP="${AWTRIX_BEDROOM_IP:-192.168.2.101}"
+
+_ip_for() {  # _ip_for <device-name> -> IP (empty if unknown)
+  case "$1" in
+    office)  printf '%s' "$AWTRIX_OFFICE_IP" ;;
+    bedroom) printf '%s' "$AWTRIX_BEDROOM_IP" ;;
+    *) printf '' ;;
+  esac
+}
+
+_get()  { curl -s -m5 "http://$1$2"; }                          # _get <ip> <path>
+_post() { curl -s -m6 -o /dev/null -w '%{http_code}' -X POST \
+            "http://$1$2" -H "Content-Type: application/json" -d "$3"; }  # -> http code
+_need() { [ -n "${1:-}" ] || { echo "awtrix: $2" >&2; exit 2; }; }
+
+cmd="${1:-}"; shift || true
+
+case "$cmd" in
+  notify)
+    TEXT="${1:-}"; _need "$TEXT" "notify: missing text — awtrix notify \"...\""; shift || true
+    COLOR="#FFFFFF"; DURATION=5; HOLD=0; ICON=""; RAINBOW=0; SOUND=""; DEV="office"; IP=""
+    while [ $# -gt 0 ]; do case "$1" in
+      --color)    COLOR="${2:-}";    shift 2 ;;
+      --duration) DURATION="${2:-5}"; shift 2 ;;
+      --hold)     HOLD=1;            shift ;;
+      --icon)     ICON="${2:-}";     shift 2 ;;
+      --rainbow)  RAINBOW=1;         shift ;;
+      --sound)    SOUND="${2:-}";    shift 2 ;;
+      --device)   DEV="${2:-office}"; shift 2 ;;
+      --ip)       IP="${2:-}";       shift 2 ;;
+      *) shift ;;
+    esac; done
+    [ -z "$IP" ] && IP=$(_ip_for "$DEV")
+    _need "$IP" "notify: unknown --device '$DEV' (office|bedroom) — or pass --ip"
+    esc=$(printf '%s' "$TEXT" | sed 's/\\/\\\\/g; s/"/\\"/g')
+    body="{\"text\":\"${esc}\""
+    [ -n "$COLOR" ] && body="${body},\"color\":\"${COLOR}\""
+    if [ "$HOLD" = 1 ]; then body="${body},\"hold\":true"
+    else body="${body},\"duration\":${DURATION}"; fi
+    [ -n "$ICON" ]     && body="${body},\"icon\":\"${ICON}\""
+    [ "$RAINBOW" = 1 ] && body="${body},\"rainbow\":true"
+    [ -n "$SOUND" ]    && body="${body},\"sound\":\"${SOUND}\""
+    body="${body}}"
+    code=$(_post "$IP" "/api/notify" "$body")
+    if [ "$code" = 200 ]; then echo "ok: notified $DEV ($IP)"
+    else echo "awtrix: notify failed (HTTP $code) to $IP" >&2; exit 1; fi
+    ;;
+
+  dismiss)
+    DEV="office"; IP=""
+    while [ $# -gt 0 ]; do case "$1" in
+      --device) DEV="${2:-office}"; shift 2 ;; --ip) IP="${2:-}"; shift 2 ;; *) shift ;;
+    esac; done
+    [ -z "$IP" ] && IP=$(_ip_for "$DEV"); _need "$IP" "dismiss: unknown --device '$DEV'"
+    code=$(_post "$IP" "/api/notify/dismiss" "")
+    echo "dismiss $DEV ($IP): HTTP $code"
+    ;;
+
+  brightness)
+    VAL="${1:-}"; _need "$VAL" "brightness: missing 0-255 or 'auto' — awtrix brightness 80"; shift || true
+    DEV="office"; IP=""
+    while [ $# -gt 0 ]; do case "$1" in
+      --device) DEV="${2:-office}"; shift 2 ;; --ip) IP="${2:-}"; shift 2 ;; *) shift ;;
+    esac; done
+    [ -z "$IP" ] && IP=$(_ip_for "$DEV"); _need "$IP" "brightness: unknown --device '$DEV'"
+    if [ "$VAL" = auto ]; then
+      code=$(_post "$IP" "/api/settings" '{"ABRI":true}')
+      echo "brightness auto ON for $DEV ($IP): HTTP $code"
+    else
+      case "$VAL" in *[!0-9]*) echo "awtrix: brightness must be 0-255 or 'auto'" >&2; exit 2 ;; esac
+      [ "$VAL" -gt 255 ] && VAL=255
+      code=$(_post "$IP" "/api/settings" "{\"ABRI\":false,\"BRI\":${VAL}}")
+      echo "brightness ${VAL}/255 for $DEV ($IP): HTTP $code"
+    fi
+    ;;
+
+  state)
+    DEV="office"; IP=""
+    while [ $# -gt 0 ]; do case "$1" in
+      --device) DEV="${2:-office}"; shift 2 ;; --ip) IP="${2:-}"; shift 2 ;; *) shift ;;
+    esac; done
+    [ -z "$IP" ] && IP=$(_ip_for "$DEV"); _need "$IP" "state: unknown --device '$DEV'"
+    s=$(_get "$IP" "/api/stats")
+    printf '%s' "$s" | grep -q '"uid"' || { echo "awtrix: no/invalid response from $IP ($DEV)" >&2; exit 1; }
+    num() { printf '%s' "$s" | sed -n "s/.*\"$1\":\([0-9-]*\).*/\1/p"; }
+    str() { printf '%s' "$s" | sed -n "s/.*\"$1\":\"\([^\"]*\)\".*/\1/p"; }
+    echo "device : $DEV ($IP)"
+    echo "uid    : $(str uid)   fw $(str version)"
+    echo "battery: $(num bat)%   temp $(num temp)   hum $(num hum)%   lux $(num lux)"
+    echo "bright : $(num bri)/255"
+    echo "app    : $(str app)   uptime $(num uptime)s"
+    ;;
+
+  locate)
+    which="${1:-all}"
+    _flash() {  # _flash <device-name> <ip>
+      local d="$1" ip="$2" code
+      code=$(_post "$ip" "/api/notify" "{\"text\":\"${d}? ${ip##*.}\",\"color\":\"#BB9AF7\",\"hold\":true}")
+      echo "  flashed '${d}? ${ip##*.}' on $ip (HTTP $code; held — clear with: awtrix dismiss --ip $ip)"
+    }
+    case "$which" in
+      office)  _flash office  "$AWTRIX_OFFICE_IP" ;;
+      bedroom) _flash bedroom "$AWTRIX_BEDROOM_IP" ;;
+      all)     _flash office "$AWTRIX_OFFICE_IP"; _flash bedroom "$AWTRIX_BEDROOM_IP" ;;
+      *) echo "awtrix: locate office|bedroom|all" >&2; exit 2 ;;
+    esac
+    echo "Look at the displays: whichever shows its label is that name. If swapped,"
+    echo "edit AWTRIX_OFFICE_IP / AWTRIX_BEDROOM_IP at the top of this script (or the env)."
+    ;;
+
+  doctor)
+    echo "awtrix doctor"
+    for pair in "office:$AWTRIX_OFFICE_IP" "bedroom:$AWTRIX_BEDROOM_IP"; do
+      d="${pair%%:*}"; ip="${pair#*:}"
+      s=$(_get "$ip" "/api/stats")
+      if printf '%s' "$s" | grep -q '"uid"'; then
+        uid=$(printf '%s' "$s" | sed -n 's/.*"uid":"\([^"]*\)".*/\1/p')
+        ver=$(printf '%s' "$s" | sed -n 's/.*"version":"\([^"]*\)".*/\1/p')
+        bat=$(printf '%s' "$s" | sed -n 's/.*"bat":\([0-9]*\).*/\1/p')
+        echo "  $d ($ip): reachable — uid=$uid fw=$ver bat=${bat}%"
+      else
+        echo "  $d ($ip): NOT reachable — power / Wi-Fi? try: ping $ip"
+      fi
+    done
+    echo "  model: AWTRIX 3 (awtrix-light), 32x8 matrix. notify overlays the on-device"
+    echo "         app loop and the device auto-resumes it — no takeover gate needed."
+    echo "  HA:    not integrated as of 2026-06-01 (no awtrix/ulanzi entities found)."
+    ;;
+
+  ""|-h|--help|help)
+    sed -n '2,34p' "$0" | sed 's/^# \{0,1\}//'
+    ;;
+
+  *)
+    echo "awtrix: unknown command '$cmd' (try: notify dismiss brightness state locate doctor)" >&2
+    exit 2
+    ;;
+esac

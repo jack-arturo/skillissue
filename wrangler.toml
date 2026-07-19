@@ -1,18 +1,16 @@
 # Pages project: skillissue (GitHub-connected). Deploy via git push only.
-# D1: free-tier account is full (10/10). Create skillissue-leads when a slot
-# opens, then set database_id below and apply schema/lead-capture.sql.
 name = "skillissue"
 pages_build_output_dir = "site"
 compatibility_date = "2026-07-19"
 
-# Uncomment when D1 skillissue-leads exists:
-# [[d1_databases]]
-# binding = "LEAD_DB"
-# database_name = "skillissue-leads"
-# database_id = "REPLACE_ME"
+[[d1_databases]]
+binding = "LEAD_DB"
+database_name = "skillissue-leads"
+database_id = "698ae99b-c2d7-4e00-8836-0a11a34ec99c"
 
 [vars]
 BASE_URL = "https://skillissue.sh"
-FROM_EMAIL = "hello@skillissue.sh"
+# Use verified Resend domain until skillissue.sh is added in Resend.
+FROM_EMAIL = "skillissue@autojack.ai"
 FROM_NAME = "skillissue.sh"
 SEND_LEAD_CAPTURE_EMAIL = "true"

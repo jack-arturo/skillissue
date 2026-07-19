@@ -1,9 +1,10 @@
 {
   "public": 30,
-  "internal": 0,
+  "skipped": [],
   "missingNarrative": [],
-  "denied": [],
-  "generatedAt": "2026-07-19T22:48:13.843Z",
+  "missingSkillMd": [],
+  "generatedAt": "2026-07-19T23:52:05.488Z",
+  "installPin": "e4889e1ee4cd124c20120e1e720822fc17fdf37b",
   "publicSkills": [
     "babysit",
     "cloudflare-lead-capture",

@@ -1,26 +1,16 @@
 # Lead capture (skillissue.sh)
 
-Scaffolded from AutoVault skill `cloudflare-lead-capture`.
+- D1: `skillissue-leads` id `698ae99b-c2d7-4e00-8836-0a11a34ec99c`
+- Binding: `LEAD_DB` (production + preview)
+- Secrets (Pages production): `RESEND_API_KEY`, `ADMIN_TOKEN`, `CONFIRM_SECRET`
+- From: `skillissue@autojack.ai` until skillissue.sh is verified in Resend
 
-## Status
-
-- Functions: `functions/api/signup.js`, `lead.js`, unsubscribe, admin
-- Schema: `schema/lead-capture.sql`
-- **D1 not bound yet** — Cloudflare account is at free-tier D1 limit (10/10).
-
-## When a D1 slot opens
+## Smoke
 
 ```bash
-npx wrangler d1 create skillissue-leads
-# paste database_id into wrangler.toml [[d1_databases]]
-npx wrangler d1 execute skillissue-leads --remote --file ./schema/lead-capture.sql
-npx wrangler pages secret put RESEND_API_KEY --project-name skillissue
-npx wrangler pages secret put ADMIN_TOKEN --project-name skillissue
-# optional: CONFIRM_SECRET, TURNSTILE_SECRET_KEY
+curl -sS https://skillissue.sh/api/signup \
+  -H 'Content-Type: application/json' -H 'X-Requested-With: fetch' \
+  -d '{"email":"test@example.com","source":"smoke"}'
 ```
 
-Also bind D1 on the Pages project (dashboard or wrangler.toml) as `LEAD_DB`.
-
-## Binding name
-
-Handlers expect `env.LEAD_DB` or the default from `getDb` — check `functions/lib/lead-capture/http.js`.
+Admin: `lead-capture-admin.html` with Bearer `ADMIN_TOKEN` (local `.dev.vars`, gitignored).

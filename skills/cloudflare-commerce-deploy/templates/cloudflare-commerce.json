@@ -1,0 +1,24 @@
+{
+  "version": 1,
+  "provider": "cloudflare",
+  "profile": "default",
+  "account_id": "",
+  "zone_id": "",
+  "pages_project": "",
+  "worker_name": "",
+  "production_domain": "",
+  "custom_domains": [],
+  "bindings": {
+    "d1": [],
+    "kv": [],
+    "r2": [],
+    "queues": []
+  },
+  "secrets": {
+    "CLOUDFLARE_API_TOKEN": "AUTOVAULT_SECRET:cloudflare-commerce:default:CLOUDFLARE_API_TOKEN"
+  },
+  "billable_actions": {
+    "domain_registration_requires_explicit_confirmation": true,
+    "auto_renew_default": false
+  }
+}
