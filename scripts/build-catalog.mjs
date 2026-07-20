@@ -87,28 +87,79 @@ function mdToHtml(md) {
   const lines = md.split("\n");
   const html = [];
   let inList = false;
+  let listTag = "ul";
   let inCode = false;
   let codeBuf = [];
+  let inTable = false;
+  let tableRows = [];
+  let inBq = false;
+  let bqBuf = [];
+
   const flushList = () => {
     if (inList) {
-      html.push("</ul>");
+      html.push(`</${listTag}>`);
       inList = false;
     }
+  };
+  const flushTable = () => {
+    if (!inTable) return;
+    if (tableRows.length) {
+      const [header, ...rest] = tableRows;
+      const body = rest.filter((r) => !r.every((c) => /^:?-+:?$/.test(c.trim())));
+      html.push("<div class=\"table-wrap\"><table>");
+      html.push(
+        "<thead><tr>" +
+          header.map((c) => `<th>${inline(c.trim())}</th>`).join("") +
+          "</tr></thead>"
+      );
+      html.push("<tbody>");
+      for (const row of body) {
+        html.push(
+          "<tr>" + row.map((c) => `<td>${inline(c.trim())}</td>`).join("") + "</tr>"
+        );
+      }
+      html.push("</tbody></table></div>");
+    }
+    inTable = false;
+    tableRows = [];
+  };
+  const flushBq = () => {
+    if (!inBq) return;
+    html.push(`<blockquote>${bqBuf.map((l) => inline(l)).join("<br>")}</blockquote>`);
+    inBq = false;
+    bqBuf = [];
   };
   const inline = (s) => {
     let t = esc(s);
     t = t.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    t = t.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, "<em>$1</em>");
     t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
     t = t.replace(
-      /\[([^\]]+)\]\((https?:[^)]+)\)/g,
-      '<a href="$2" rel="noopener">$1</a>'
+      /!\[([^\]]*)\]\(([^)]+)\)/g,
+      '<figure class="chart"><img src="$2" alt="$1" loading="lazy" /></figure>'
+    );
+    t = t.replace(
+      /\[([^\]]+)\]\((https?:[^)]+|\/[^)]+)\)/g,
+      (_, label, href) => {
+        const rel = href.startsWith("http") ? ' rel="noopener"' : "";
+        return `<a href="${href}"${rel}>${label}</a>`;
+      }
     );
     return t;
   };
+  const parseRow = (line) =>
+    line
+      .replace(/^\|/, "")
+      .replace(/\|$/, "")
+      .split("|")
+      .map((c) => c.trim());
+
   for (const line of lines) {
     if (line.startsWith("```")) {
+      flushList();
+      flushTable();
+      flushBq();
       if (!inCode) {
-        flushList();
         inCode = true;
         codeBuf = [];
       } else {
@@ -121,6 +172,32 @@ function mdToHtml(md) {
       codeBuf.push(line);
       continue;
     }
+    // Allow raw HTML blocks for inline SVG figures (lines starting with <)
+    if (/^<\/?(figure|div|svg|img|table|section)\b/i.test(line.trim())) {
+      flushList();
+      flushTable();
+      flushBq();
+      html.push(line);
+      continue;
+    }
+    if (/^> /.test(line) || line === ">") {
+      flushList();
+      flushTable();
+      if (!inBq) inBq = true;
+      bqBuf.push(line.replace(/^>\s?/, ""));
+      continue;
+    }
+    if (inBq && !/^>/.test(line)) flushBq();
+
+    if (/^\|/.test(line) && line.includes("|")) {
+      flushList();
+      flushBq();
+      if (!inTable) inTable = true;
+      tableRows.push(parseRow(line));
+      continue;
+    }
+    if (inTable) flushTable();
+
     if (/^### /.test(line)) {
       flushList();
       html.push(`<h3>${esc(line.slice(4))}</h3>`);
@@ -131,19 +208,42 @@ function mdToHtml(md) {
       flushList();
       html.push(`<h2>${esc(line.slice(2))}</h2>`);
     } else if (/^[-*] /.test(line)) {
-      if (!inList) {
+      if (!inList || listTag !== "ul") {
+        flushList();
+        listTag = "ul";
         html.push("<ul>");
         inList = true;
       }
       html.push(`<li>${inline(line.slice(2))}</li>`);
+    } else if (/^\d+\.\s/.test(line)) {
+      if (!inList || listTag !== "ol") {
+        flushList();
+        listTag = "ol";
+        html.push("<ol>");
+        inList = true;
+      }
+      html.push(`<li>${inline(line.replace(/^\d+\.\s/, ""))}</li>`);
+    } else if (/^---+$/.test(line.trim())) {
+      flushList();
+      html.push("<hr>");
     } else if (!line.trim()) {
       flushList();
     } else {
       flushList();
-      html.push(`<p>${inline(line)}</p>`);
+      // Image-only paragraph: unwrap double figure from inline
+      const imgOnly = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+      if (imgOnly) {
+        html.push(
+          `<figure class="chart"><img src="${esc(imgOnly[2])}" alt="${esc(imgOnly[1])}" loading="lazy" /><figcaption>${esc(imgOnly[1])}</figcaption></figure>`
+        );
+      } else {
+        html.push(`<p>${inline(line)}</p>`);
+      }
     }
   }
   flushList();
+  flushTable();
+  flushBq();
   if (inCode) html.push(`<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`);
   return html.join("\n");
 }
@@ -354,6 +454,16 @@ const cssSrc = path.join(__dirname, "site.css");
 fs.mkdirSync(path.join(siteDir, "assets"), { recursive: true });
 if (fs.existsSync(cssSrc)) {
   fs.writeFileSync(path.join(siteDir, "assets/site.css"), fs.readFileSync(cssSrc, "utf8"));
+}
+// Essay charts (SVG) + harvest data for transparency
+const contentAssets = path.join(root, "content/assets");
+if (fs.existsSync(contentAssets)) {
+  fs.cpSync(contentAssets, path.join(siteDir, "assets"), { recursive: true });
+}
+const timelineJson = path.join(root, "content/data/tool-timeline.json");
+if (fs.existsSync(timelineJson)) {
+  fs.mkdirSync(path.join(siteDir, "assets/data"), { recursive: true });
+  fs.copyFileSync(timelineJson, path.join(siteDir, "assets/data/tool-timeline.json"));
 }
 
 // skills.json
@@ -774,7 +884,13 @@ if (essayIndex.length) {
 storyPage(
   "changelog",
   "Changelog",
-  `## 0.3.1 — 2026-07-20
+  `## 0.3.2 — 2026-07-20
+
+- Essay tightened to friendly overview + deep-post link
+- Git-harvested tool timeline JSON + SVG chart suite (floor vs registry, evolution, offline benches)
+- Markdown renderer: tables, blockquotes, figures, ordered lists
+
+## 0.3.1 — 2026-07-20
 
 - Essay: Skills Are the New MCP Bloat
 

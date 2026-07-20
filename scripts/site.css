@@ -200,7 +200,65 @@ a.card { text-decoration: none; color: inherit; }
 .prose h3 { margin-top: 1.25rem; font-size: 1.05rem; }
 .prose p { color: var(--muted); margin: 0 0 0.9rem; }
 .prose strong { color: var(--ink); }
-.prose ul { color: var(--muted); padding-left: 1.2rem; }
+.prose ul, .prose ol { color: var(--muted); padding-left: 1.2rem; margin: 0 0 0.9rem; }
+.prose li { margin: 0.25rem 0; }
+.prose blockquote {
+  margin: 1.25rem 0;
+  padding: 0.85rem 1rem;
+  border-left: 3px solid var(--green);
+  background: rgba(61, 255, 154, 0.06);
+  border-radius: 0 8px 8px 0;
+  color: var(--ink);
+  font-size: 1.02rem;
+}
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 2rem 0;
+}
+.prose .table-wrap { overflow-x: auto; margin: 1rem 0 1.25rem; }
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.prose th, .prose td {
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.65rem;
+  text-align: left;
+}
+.prose th {
+  color: var(--ink);
+  background: var(--bg-elev);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.prose tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+.prose figure.chart {
+  margin: 1.5rem 0;
+  padding: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.prose figure.chart img,
+.prose figure.chart object,
+.prose figure.chart svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+}
+.prose figure.chart figcaption {
+  margin-top: 0.65rem;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--dim);
+}
+.prose a { color: var(--green); text-decoration: none; }
+.prose a:hover { text-decoration: underline; }
 .prose code {
   font-family: var(--mono); font-size: 0.88em; background: var(--bg-elev);
   border: 1px solid var(--line); border-radius: 4px; padding: 0.05em 0.35em;

@@ -1,0 +1,348 @@
+{
+  "generatedAt": "2026-07-20T10:53:28.597583Z",
+  "repo": "verygoodplugins/autohub",
+  "method": "Sample git rev-list --before each date; parse config/tool-filters.json and config/mcp-tools.json. Deduped consecutive identical metric tuples.",
+  "current": {
+    "date": "2026-07-20",
+    "sha": "4920cbb01071",
+    "fullSha": "4920cbb010716700cce19370784ec6483b2a7e1d",
+    "label": "HEAD",
+    "tf_groups": 60,
+    "tf_profiles": 16,
+    "tf_contextRules": 60,
+    "tf_essentialTools": 23,
+    "tf_alwaysEnabled": 5,
+    "tf_disabled": 120,
+    "mcpTools": 813,
+    "mcpServers": 32,
+    "mcpServersConfig": 34
+  },
+  "timeline": [
+    {
+      "date": "2025-09-15",
+      "sha": "a8769428ba1e",
+      "fullSha": "a8769428ba1ea89eacd2af3ab21960b5e556348b",
+      "tf_groups": 12,
+      "tf_profiles": 4,
+      "tf_contextRules": 10,
+      "tf_essentialTools": 5,
+      "tf_alwaysEnabled": 2,
+      "tf_disabled": 65,
+      "mt_missing": true
+    },
+    {
+      "date": "2025-10-01",
+      "sha": "84fec5cd5df2",
+      "fullSha": "84fec5cd5df27e457f593e7be008a054aff32a3d",
+      "tf_groups": 13,
+      "tf_profiles": 4,
+      "tf_contextRules": 12,
+      "tf_essentialTools": 5,
+      "tf_alwaysEnabled": 3,
+      "tf_disabled": 66,
+      "mt_missing": true
+    },
+    {
+      "date": "2025-10-15",
+      "sha": "e8521a4f52ab",
+      "fullSha": "e8521a4f52aba55dbed332ee17489c7af7e7d379",
+      "tf_groups": 18,
+      "tf_profiles": 3,
+      "tf_contextRules": 13,
+      "tf_essentialTools": 14,
+      "tf_alwaysEnabled": 3,
+      "tf_disabled": 75,
+      "mt_missing": true
+    },
+    {
+      "date": "2025-11-01",
+      "sha": "f700dd303cac",
+      "fullSha": "f700dd303caca5d0cd8b9e759a250cc9e7722a73",
+      "tf_groups": 20,
+      "tf_profiles": 3,
+      "tf_contextRules": 15,
+      "tf_essentialTools": 15,
+      "tf_alwaysEnabled": 3,
+      "tf_disabled": 74,
+      "mt_missing": true
+    },
+    {
+      "date": "2025-11-15",
+      "sha": "edb35219d20b",
+      "fullSha": "edb35219d20bc59b517922262315a75db09d9a79",
+      "tf_groups": 21,
+      "tf_profiles": 3,
+      "tf_contextRules": 17,
+      "tf_essentialTools": 15,
+      "tf_alwaysEnabled": 3,
+      "tf_disabled": 74,
+      "mt_missing": true
+    },
+    {
+      "date": "2025-12-15",
+      "sha": "4f4d960994ea",
+      "fullSha": "4f4d960994eae43b4b211b31698d04a345db31bb",
+      "tf_groups": 22,
+      "tf_profiles": 5,
+      "tf_contextRules": 23,
+      "tf_essentialTools": 16,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 347,
+      "mcpTools": 494,
+      "mcpServers": 19
+    },
+    {
+      "date": "2026-01-01",
+      "sha": "366b66a57493",
+      "fullSha": "366b66a57493aee08e51627d50bca58a5d26c2c2",
+      "tf_groups": 23,
+      "tf_profiles": 5,
+      "tf_contextRules": 23,
+      "tf_essentialTools": 17,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 341,
+      "mcpTools": 554,
+      "mcpServers": 22
+    },
+    {
+      "date": "2026-01-15",
+      "sha": "e0b3cef01f83",
+      "fullSha": "e0b3cef01f83a8b7af030a3503bcd9084a6a86c9",
+      "tf_groups": 23,
+      "tf_profiles": 6,
+      "tf_contextRules": 23,
+      "tf_essentialTools": 17,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 339,
+      "mcpTools": 683,
+      "mcpServers": 26
+    },
+    {
+      "date": "2026-02-01",
+      "sha": "2aa66e332f3f",
+      "fullSha": "2aa66e332f3fe50cdc75092ad4781e95fe7a06a1",
+      "tf_groups": 25,
+      "tf_profiles": 10,
+      "tf_contextRules": 23,
+      "tf_essentialTools": 17,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 339,
+      "mcpTools": 746,
+      "mcpServers": 27
+    },
+    {
+      "date": "2026-02-15",
+      "sha": "c5dc9be737d2",
+      "fullSha": "c5dc9be737d2a1df4b19ece156e311aef9ed53c8",
+      "tf_groups": 26,
+      "tf_profiles": 10,
+      "tf_contextRules": 24,
+      "tf_essentialTools": 18,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 339,
+      "mcpTools": 779,
+      "mcpServers": 28
+    },
+    {
+      "date": "2026-03-01",
+      "sha": "24a6ac812c0f",
+      "fullSha": "24a6ac812c0f67c57d26762219ad1f1fa8407cb5",
+      "tf_groups": 33,
+      "tf_profiles": 10,
+      "tf_contextRules": 30,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 337,
+      "mcpTools": 552,
+      "mcpServers": 23
+    },
+    {
+      "date": "2026-03-15",
+      "sha": "d5bc37809389",
+      "fullSha": "d5bc378093892e4754f9573f6bb82b3c9e73be79",
+      "tf_groups": 33,
+      "tf_profiles": 10,
+      "tf_contextRules": 31,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 337,
+      "mcpTools": 553,
+      "mcpServers": 23
+    },
+    {
+      "date": "2026-04-01",
+      "sha": "e62fe2ed8c32",
+      "fullSha": "e62fe2ed8c32d6773249b84b8edbb8ce43db87b1",
+      "tf_groups": 36,
+      "tf_profiles": 10,
+      "tf_contextRules": 32,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 345,
+      "mcpTools": 467,
+      "mcpServers": 26
+    },
+    {
+      "date": "2026-04-15",
+      "sha": "4a55bf888241",
+      "fullSha": "4a55bf888241db9c402ee4ff6632e1d1e86a8165",
+      "tf_groups": 40,
+      "tf_profiles": 11,
+      "tf_contextRules": 34,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 339,
+      "mcpTools": 484,
+      "mcpServers": 27
+    },
+    {
+      "date": "2026-05-01",
+      "sha": "d7db943e27b0",
+      "fullSha": "d7db943e27b083992f037090cf3f1e33122f4e57",
+      "tf_groups": 46,
+      "tf_profiles": 13,
+      "tf_contextRules": 39,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 325,
+      "mcpTools": 528,
+      "mcpServers": 25
+    },
+    {
+      "date": "2026-05-15",
+      "sha": "a91a5a0c223c",
+      "fullSha": "a91a5a0c223c33fc6e797bbb951e6addcd411402",
+      "tf_groups": 51,
+      "tf_profiles": 13,
+      "tf_contextRules": 46,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 325,
+      "mcpTools": 706,
+      "mcpServers": 29
+    },
+    {
+      "date": "2026-06-01",
+      "sha": "d4aec53d4ee8",
+      "fullSha": "d4aec53d4ee8fdab347b14bb14ee967eb82f5f57",
+      "tf_groups": 52,
+      "tf_profiles": 14,
+      "tf_contextRules": 48,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 108,
+      "mcpTools": 719,
+      "mcpServers": 29
+    },
+    {
+      "date": "2026-06-15",
+      "sha": "93d1a0856748",
+      "fullSha": "93d1a08567484d3c4e0feaddf314a1815b1ea842",
+      "tf_groups": 52,
+      "tf_profiles": 14,
+      "tf_contextRules": 52,
+      "tf_essentialTools": 19,
+      "tf_alwaysEnabled": 4,
+      "tf_disabled": 108,
+      "mcpTools": 721,
+      "mcpServers": 29
+    },
+    {
+      "date": "2026-06-26",
+      "sha": "eefe6f61fe7d",
+      "fullSha": "eefe6f61fe7d5402c6acddc2f97c8993c95dcfa5",
+      "tf_groups": 57,
+      "tf_profiles": 15,
+      "tf_contextRules": 57,
+      "tf_essentialTools": 23,
+      "tf_alwaysEnabled": 5,
+      "tf_disabled": 108,
+      "mcpTools": 723,
+      "mcpServers": 29
+    },
+    {
+      "date": "2026-07-01",
+      "sha": "ac9cbe39a744",
+      "fullSha": "ac9cbe39a744a6250438a6e35fae0ff2bc36b0ea",
+      "tf_groups": 58,
+      "tf_profiles": 15,
+      "tf_contextRules": 58,
+      "tf_essentialTools": 23,
+      "tf_alwaysEnabled": 5,
+      "tf_disabled": 108,
+      "mcpTools": 723,
+      "mcpServers": 29
+    },
+    {
+      "date": "2026-07-10",
+      "sha": "bd94d53b2b3f",
+      "fullSha": "bd94d53b2b3f000a98cf7d2f9b6a1640ba7359a8",
+      "tf_groups": 58,
+      "tf_profiles": 15,
+      "tf_contextRules": 58,
+      "tf_essentialTools": 23,
+      "tf_alwaysEnabled": 5,
+      "tf_disabled": 120,
+      "mcpTools": 813,
+      "mcpServers": 32
+    },
+    {
+      "date": "2026-07-20",
+      "sha": "4920cbb01071",
+      "fullSha": "4920cbb010716700cce19370784ec6483b2a7e1d",
+      "tf_groups": 60,
+      "tf_profiles": 16,
+      "tf_contextRules": 60,
+      "tf_essentialTools": 23,
+      "tf_alwaysEnabled": 5,
+      "tf_disabled": 120,
+      "mcpTools": 813,
+      "mcpServers": 32
+    }
+  ],
+  "offlineBenchmarks": {
+    "source": "AutoMem + AutoHub local tool-calling spike notes (2026-06-16, 2026-06-26)",
+    "spike_2026_06_16": {
+      "setup": "13-prompt eval, real stdio MCP (filesystem + everything), curated ~10-tool read-only catalog, M5 Max",
+      "models": [
+        {
+          "name": "hermes3:8b",
+          "correctTool": 0.89,
+          "correctArgs": 0.78,
+          "loopCompletion": 1.0,
+          "abstention": 1.0,
+          "secPerTurn": 1.2,
+          "verdict": "GO"
+        },
+        {
+          "name": "huihui_ai/qwen3.6-abliterated:35b-a3b",
+          "correctTool": 1.0,
+          "correctArgs": 1.0,
+          "loopCompletion": 0.22,
+          "verdict": "NO \u2014 fails to close loop"
+        },
+        {
+          "name": "qwen3-coder:30b",
+          "correctTool": 0.78,
+          "loopCompletion": null,
+          "verdict": "NO \u2014 systematic blind spots, heavier"
+        }
+      ],
+      "conclusion": "Local grunt-work FC feasible only with separate small FC-tuned model + curated catalog"
+    },
+    "voice_core_2026_06_26": {
+      "LOCAL_NATIVE_CORE_TOOLS": 20,
+      "issues_fixed": [
+        "Tool set swung 2\u21925\u219217 starving follow-ups \u2192 fake tool calls",
+        "Changing tool block busts MLX prompt cache",
+        "request_tool_group was server-tool not reachable from offline loop (4th most-used overall, 277 calls)"
+      ],
+      "fix": "Stable ~20-tool core every local native turn + onToolGroupRequest mid-loop merge"
+    }
+  },
+  "skillsBenchExternal": {
+    "note": "External research for skills non-monotonic returns \u2014 cite arXiv, not our numbers",
+    "skillsBench": "https://arxiv.org/html/2602.12670v1",
+    "agentSkillsSurvey": "https://arxiv.org/html/2602.12430v3"
+  }
+}

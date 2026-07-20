@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Skills Are the New MCP Bloat — skillissue.sh</title>
-<meta name="description" content="Progressive disclosure is necessary and not sufficient. Here's what AutoHub learned loading tools by intent — and what that means now that everyone's drowning in SKILL.md files.">
+<meta name="description" content="Progressive disclosure fixes skill bodies. It does not fix skill catalogs. What AutoHub learned starving models of tools — short version, with the lab notebook on drunk.support.">
 <link rel="canonical" href="https://skillissue.sh/essays/skills-are-the-new-mcp-bloat/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0c0f">
 <meta property="og:title" content="Skills Are the New MCP Bloat — skillissue.sh">
-<meta property="og:description" content="Progressive disclosure is necessary and not sufficient. Here's what AutoHub learned loading tools by intent — and what that means now that everyone's drowning in SKILL.md files.">
+<meta property="og:description" content="Progressive disclosure fixes skill bodies. It does not fix skill catalogs. What AutoHub learned starving models of tools — short version, with the lab notebook on drunk.support.">
 <meta property="og:image" content="https://skillissue.sh/assets/og.png">
 <meta property="og:url" content="https://skillissue.sh/essays/skills-are-the-new-mcp-bloat/">
 <meta property="og:type" content="website">
@@ -41,222 +41,80 @@
 <section class="hero" style="padding-bottom:1rem"><div class="wrap">
           <div class="prompt"><span class="dot"></span> essay · 2026-07-20</div>
           <h1>Skills Are the New MCP Bloat</h1>
-          <p class="lede">Progressive disclosure is necessary and not sufficient. Here's what AutoHub learned loading tools by intent — and what that means now that everyone's drowning in SKILL.md files.</p>
+          <p class="lede">Progressive disclosure fixes skill bodies. It does not fix skill catalogs. What AutoHub learned starving models of tools — short version, with the lab notebook on drunk.support.</p>
         </div></section>
         <section style="padding-top:0"><div class="wrap prose"><h2>Skills Are the New MCP Bloat</h2>
 <p>I keep hearing the same story I was telling myself about MCP servers last fall.</p>
 <p>Skills are great. Until you have ten bad ones. Or forty highly optimized ones. Then the model starts guessing wrong, burning tokens on descriptions it will never use, and confidently skipping the skill that would have saved the turn.</p>
 <p><strong>It's the same failure mode. Different file extension.</strong></p>
 <h2>Short version</h2>
-<p>1. <strong>MCP taught us</strong> that &quot;register everything and hope the model picks correctly&quot; dies at scale — tool definitions are expensive, always-on context is radioactive, and selection accuracy falls off a cliff.</p>
-<p>2. <strong>Skills sell progressive disclosure</strong> — name + description always loaded, body on demand. That fixes *definition* bloat. It does <strong>not</strong> fix *selection* bloat when the catalog is huge, cloned, or contradictory.</p>
-<p>3. <strong>AutoHub already solved the MCP side</strong> with a lean baseline, regex intent rules in <code>tool-filters.json</code>, a scanned registry in <code>mcp-tools.json</code>, lazy server start, and <code>request_tool_group</code> as the escape hatch. Voice adds a local model that routes turns before the cloud model ever sees the full toolbox.</p>
-<p>4. <strong>The skills wave is replaying 2025.</strong> Public catalogs are full of clones; research is already measuring non-monotonic returns past a handful of skills; agents that dump every skill description into the system prompt are back at square one.</p>
-<p>5. <strong>The durable pattern:</strong> inventory big, <strong>load small</strong>, escalate only when intent is clear — whether the unit of capability is an MCP tool or a <code>SKILL.md</code>.</p>
-<h2>Backstory: MCP in September</h2>
-<p>When <a href="https://modelcontextprotocol.io/" rel="noopener">Model Context Protocol</a> hit, the pitch was clean: one standard for connecting models to tools. Wire GitHub, memory, browser, home automation, analytics — the agent just *has* capabilities.</p>
-<p>That works until it doesn't.</p>
-<p>Each tool ships a name, description, and JSON schema. Those tokens sit in the context window <strong>whether you use them or not</strong>. Anthropic's own engineering writeups on context (see <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" rel="noopener">Effective context engineering for AI agents</a>) keep hammering the same point: polluted context doesn't just cost money — <strong>it degrades decisions</strong>.</p>
-<p>On AutoHub I didn't have a cute academic problem. I had a working desk agent with home automation, FreeScout, Google Workspace, Stream Deck, Railway, X, GitHub, memory — and a model that would rather invent a plausible answer than request the right group.</p>
-<p>Raw inventory today, for honesty:</p>
-<p>| Surface | Count (this machine, July 2026) |</p>
-<p>|---|---|</p>
-<p>| MCP servers registered in AutoHub | <strong>32</strong> |</p>
-<p>| Tools in the scanned registry (<code>mcp-tools.json</code>) | <strong>~800+</strong> |</p>
-<p>| Tool groups in <code>tool-filters.json</code> | <strong>60</strong> |</p>
-<p>| Context / intent rules | <strong>60</strong> |</p>
-<p>| Profiles (owner, voice, guest, Discord, …) | <strong>16</strong> |</p>
-<p>| Always-on &quot;essential&quot; tools | <strong>23</strong> (not 800) |</p>
-<p>| Local AutoVault skills | <strong>~108</strong> |</p>
-<p>| Public packages on <a href="https://skillissue.sh" rel="noopener">skillissue.sh</a> | <strong>30</strong> |</p>
-<p>If I dumped every MCP tool definition into every turn, the conversation would be over before it started. <code>mcp-tools.json</code> alone is about <strong>1.5 MB</strong> of catalog JSON. That's inventory. <strong>Inventory is not context.</strong></p>
-<h2>The dead end: &quot;just load everything&quot;</h2>
-<p>First instinct with MCP: register it all. Same first instinct with skills: install the marketplace, symlink the whole vault, hope progressive disclosure saves you.</p>
-<p>Progressive disclosure <strong>does</strong> help. Anthropic's <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" rel="noopener">Agent Skills design</a> is explicit: frontmatter (name + description) is cheap; the body loads when triggered; references load on demand. Claude's platform docs describe the same three-level model (<a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" rel="noopener">Agent Skills overview</a>).</p>
+<ol>
+<li><strong>MCP taught us</strong> that &quot;register everything and hope the model picks correctly&quot; dies at scale — tool definitions are expensive, always-on context is radioactive, and selection accuracy falls off a cliff.</li>
+<li><strong>Skills sell progressive disclosure</strong> — name + description always loaded, body on demand. That fixes <em>definition</em> bloat. It does <strong>not</strong> fix <em>selection</em> bloat when the catalog is huge, cloned, or contradictory.</li>
+<li><strong>AutoHub already solved the MCP side</strong> with a lean baseline, intent rules, a scanned registry, lazy server start, and an escape hatch when routing misses.</li>
+<li><strong>The skills wave is replaying 2025.</strong> Public catalogs fill with clones; research is measuring non-monotonic returns past a handful of skills; agents that dump every description into the system prompt are back at square one.</li>
+<li><strong>The durable pattern:</strong> inventory big, <strong>load small</strong>, escalate only when intent is clear — whether the unit is an MCP tool or a <code>SKILL.md</code>.</li>
+</ol>
+<h2>Inventory is not context</h2>
+<p>On this machine's AutoHub config (July 2026), the honest inventory looks like this:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Surface</th><th>Count</th></tr></thead>
+<tbody>
+<tr><td>MCP servers registered</td><td><strong>32</strong></td></tr>
+<tr><td>Tools in the scanned registry</td><td><strong>813</strong></td></tr>
+<tr><td>Tool groups</td><td><strong>60</strong></td></tr>
+<tr><td>Context / intent rules</td><td><strong>60</strong></td></tr>
+<tr><td>Profiles</td><td><strong>16</strong></td></tr>
+<tr><td>Always-on <em>essential</em> tools</td><td><strong>23</strong></td></tr>
+<tr><td>Local AutoVault skills</td><td><strong>~108</strong></td></tr>
+<tr><td>Public packages on <a href="https://skillissue.sh" rel="noopener">skillissue.sh</a></td><td><strong>30</strong></td></tr>
+</tbody></table></div>
+<p>If I dumped every MCP tool definition into every turn, the conversation would be over before it started. The registry file alone is about <strong>1.5 MB</strong> of catalog JSON. That's inventory.</p>
+<p><strong>Inventory is not context.</strong></p>
+<figure class="chart"><img src="/assets/charts/c3-floor-vs-registry.svg" alt="813 tools registered vs 23 always-on" loading="lazy" /><figcaption>813 tools registered vs 23 always-on</figcaption></figure>
+<p>Those counts aren't a marketing slide. They're sampled from git history on the AutoHub repo — <code>tool-filters.json</code> since late August 2025, <code>mcp-tools.json</code> from December 2025. Essential tools barely moved after mid-October (14 → 23 over nine months) while the registry climbed past eight hundred. The full time series and methodology live in the deep writeup.</p>
+<figure class="chart"><img src="/assets/charts/c1-registered-tools.svg" alt="Registered tools and filter surface over time" loading="lazy" /><figcaption>Registered tools and filter surface over time</figcaption></figure>
+<h2>Same movie, skills edition</h2>
+<p>Progressive disclosure <strong>does</strong> help. Anthropic's <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" rel="noopener">Agent Skills design</a> is explicit: frontmatter is cheap; the body loads when triggered. Claude's docs describe the same three-level model.</p>
 <p>That solves &quot;I don't want a 40k-token brand bible in every turn.&quot;</p>
-<p>It does <strong>not</strong> solve:</p>
+<p>It does <strong>not</strong> solve forty skills whose descriptions all vaguely match &quot;deploy,&quot; clone families in public catalogs, or the phase transition where selection accuracy collapses past a critical library size (<a href="https://arxiv.org/html/2602.12430v3" rel="noopener">survey</a>, <a href="https://arxiv.org/html/2602.12670v1" rel="noopener">SkillsBench</a>).</p>
+<blockquote>Skills aren't free because they're markdown. Metadata still competes for attention. Bad catalog design is just MCP bloat wearing a friendlier hat.</blockquote>
+<p>That's also why <a href="https://autovault.dev" rel="noopener">AutoVault</a> is a <strong>filesystem vault with profile sync</strong>, not another skill MCP marketplace — and why its homepage names six problems that compound the more skills you keep around: <strong>drift, supply chain, duplicates, platform forks, context bloat, and no scoping</strong>.</p>
+<h2>What &quot;load small&quot; looks like in practice</h2>
+<p>The hub never pretends the model can see everything:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Layer</th><th>Job</th></tr></thead>
+<tbody>
+<tr><td>Registry</td><td>Know everything</td></tr>
+<tr><td>Profile baseline</td><td>Pay for almost nothing</td></tr>
+<tr><td>Intent rules</td><td>Pay a little when speech matches</td></tr>
+<tr><td>Escape hatch (<code>request_tool_group</code>)</td><td>Pay on demand when the model notices a gap</td></tr>
+<tr><td>Lazy server start</td><td>Don't boot heavy MCP processes until needed</td></tr>
+</tbody></table></div>
+<p>Same shape for skills if you do it right: catalog wide, activate narrow. <a href="https://skillissue.sh" rel="noopener">skillissue.sh</a> is deliberately <strong>not</strong> a dump of all ~108 local vault skills. Thirty public packages with stories. The rest stay offline until they earn a page.</p>
+<p><strong>Publish is not the same as load.</strong></p>
+<h2>The lab notebook</h2>
+<p>This page is the friendly overview.</p>
+<p>The homework — git-derived tool-count timelines, offline model tool-calling benches (hermes3:8b ~89% correct tool / 100% loop completion vs a warm Qwen that selected perfectly and only finished the loop ~22% of the time; stable ~20-tool voice core after we stopped thrashing the tool set mid-conversation), architecture diagrams, and the full mapping onto AutoVault's six pains — is drafted for drunk.support:</p>
+<p><strong><a href="https://drunk.support" rel="noopener">Inventory Is Not Context: How AutoHub Learned to Starve Models of Tools</a></strong> <em>(deep post; permanent slug after publish)</em></p>
+<p>Until that post is live, the data and chart sources are in this repo: <a href="https://github.com/jack-arturo/skillissue/blob/main/content/data/tool-timeline.json" rel="noopener"><code>content/data/tool-timeline.json</code></a> and <a href="https://github.com/jack-arturo/skillissue/tree/main/content/assets/charts" rel="noopener"><code>content/assets/charts/</code></a>.</p>
+<h2>If you're drowning</h2>
+<p>Stop adding. Start routing.</p>
 <ul>
-<li>Forty skills whose descriptions all vaguely match &quot;deploy&quot; or &quot;write&quot; or &quot;fix&quot;</li>
-<li>Clone families where 41% of variants are strictly worse than a sibling (<a href="https://www.researchgate.net/publication/403111607_SkillClone_Multi-Modal_Clone_Detection_and_Clone_Propagation_Analysis_in_the_Agent_Skill_Ecosystem" rel="noopener">SkillClone</a>-style findings floating around the ecosystem — the clone problem is real even if your numbers differ)</li>
-<li>Selection phase transition: past a critical library size, routing accuracy drops hard (surveyed in <a href="https://arxiv.org/html/2602.12430v3" rel="noopener">Agent Skills for Large Language Models</a>, citing Li on skill compilation / library scale)</li>
-<li>SkillsBench-style results where <strong>2–3 skills help most</strong>, <strong>4+ skills help less</strong>, and &quot;comprehensive&quot; skills can <strong>hurt</strong> (<a href="https://arxiv.org/html/2602.12670v1" rel="noopener">SkillsBench</a>)</li>
-</ul>
-<p>&gt; Skills aren't free because they're markdown. Metadata still competes for attention. Bodies still compete once loaded. Bad catalog design is just MCP bloat wearing a friendlier hat.</p>
-<p>I hit the same wall in late 2025 trying to treat skills like another MCP: &quot;register the skill server, call the tool.&quot; <strong>It didn't work</strong> for Claude Code / Codex / Cursor-shaped hosts — they want files on disk, not another always-on tool schema. That dead end is why <a href="https://autovault.dev" rel="noopener">AutoVault</a> exists as a <strong>filesystem vault with profile sync</strong>, not a skill MCP marketplace. (I wrote that launch story on <a href="https://drunk.support" rel="noopener">drunk.support</a> as &quot;Introducing AutoVault.&quot;)</p>
-<h2>How AutoHub actually loads capabilities</h2>
-<p>The hub never pretends the model can see everything. Three files do the real work:</p>
-<h3>1. `config/mcp-servers.json` — process inventory</h3>
-<p>Which MCP servers exist, how to start them, credentials, auto-load vs lazy. This is ops config, not prompt content.</p>
-<h3>2. `config/mcp-tools.json` — scanned tool registry</h3>
-<p>After a scan, every tool name/schema the hub knows about. Large. <strong>Not</strong> dumped into the model every turn. Used to *resolve* names when a group is enabled.</p>
-<h3>3. `config/tool-filters.json` — what the model is allowed to see *now*</h3>
-<p>This is the product.</p>
-<p><strong>Profiles</strong> define a lean baseline. Owner chat (<code>owner-auto</code>) does <strong>not</strong> get Stream Deck, FreeScout, and the kitchen sink on every message. It gets something like:</p>
-<pre><code>{
-  &quot;description&quot;: &quot;Owner profile - contextual filtering with full expansion capabilities&quot;,
-  &quot;groups&quot;: [
-    &quot;essential&quot;,
-    &quot;memory&quot;,
-    &quot;search&quot;,
-    &quot;research&quot;,
-    &quot;github&quot;,
-    &quot;github_pr_write&quot;,
-    &quot;home_assistant&quot;,
-    &quot;railway_read&quot;,
-    &quot;x_api&quot;,
-    &quot;conversation_query&quot;,
-    &quot;task_queue&quot;
-  ],
-  &quot;ownerFeatures&quot;: {
-    &quot;allowFullOnRequest&quot;: true,
-    &quot;expandIntentServers&quot;: true
-  }
-}</code></pre>
-<p><strong>Tool groups</strong> map names → concrete tool IDs (60 groups). <code>essential</code> is ~23 tools. That's the always-on floor.</p>
-<p><strong>Context rules</strong> expand groups when the *user's words* match a pattern — and can <strong>start</strong> lazy MCP servers only then:</p>
-<pre><code>{
-  &quot;id&quot;: &quot;streamdeck-intent&quot;,
-  &quot;pattern&quot;: &quot;\\bstream\\s*deck\\b|\\bstreamdeck\\b&quot;,
-  &quot;enableGroups&quot;: [&quot;streamdeck&quot;],
-  &quot;startServers&quot;: [&quot;streamdeck&quot;],
-  &quot;priority&quot;: 5
-}</code></pre>
-<pre><code>{
-  &quot;id&quot;: &quot;email-intent&quot;,
-  &quot;pattern&quot;: &quot;\\b(email|gmail|inbox|from:|mail)\\b&quot;,
-  &quot;enableGroups&quot;: [&quot;email&quot;, &quot;communication&quot;],
-  &quot;startServers&quot;: [&quot;google_workspace&quot;],
-  &quot;priority&quot;: 5
-}</code></pre>
-<pre><code>{
-  &quot;id&quot;: &quot;artifact-intent&quot;,
-  &quot;pattern&quot;: &quot;\\bartifacts?\\b|\\bcanvas\\b|...&quot;,
-  &quot;enableGroups&quot;: [&quot;artifacts&quot;],
-  &quot;priority&quot;: 4
-}</code></pre>
-<p>Pattern: <strong>registered ≠ callable</strong>. A tool can sit in <code>mcp-tools.json</code> forever and never enter the prompt until a baseline group or an intent rule (or an explicit request) says so.</p>
-<h3>The escape hatch: `request_tool_group`</h3>
-<p>When the baseline is wrong and no regex fired, the model can ask for a group — not invent tools that aren't there. That escape hatch has to stay <strong>eager</strong> in the tool list. We learned the hard way that Anthropic-style tool deferral / BM25 tool-search can bury the hatch under hot positional slots (AutoHub PR #719): native tool search only finds definitions <strong>already in the payload</strong>. It cannot cold-start a lazy MCP server. So <code>request_tool_group</code> is special-cased as always-eager, and low-value groups get kicked out of the owner baseline.</p>
-<p>That's the whole game:</p>
-<p>| Layer | Job |</p>
-<p>|---|---|</p>
-<p>| Registry | Know everything |</p>
-<p>| Profile baseline | Pay for almost nothing |</p>
-<p>| Intent rules | Pay a little when speech matches |</p>
-<p>| <code>request_tool_group</code> | Pay on demand when the model notices a gap |</p>
-<p>| Lazy <code>startServers</code> | Don't boot heavy MCP processes until needed |</p>
-<p>Same shape for <strong>skills</strong> if you do it right: catalog wide, activate narrow.</p>
-<h2>Local fast LLM: route before you bloat</h2>
-<p>Voice made the cost obvious. Cloud Sonnet with full tools is expensive and slow for &quot;set a timer&quot; and &quot;what's on my calendar.&quot; Local Qwen/MLX is cheap and private — but only if you don't hand it the whole toolbox.</p>
-<p>AutoHub's voice path uses <code>config/tool-filters.json</code> as the <strong>intent source of truth</strong> (not a second hard-coded keyword list in router code). <code>local-turn-router.js</code> classifies a turn:</p>
-<ul>
-<li>casual chat → stay local, minimal tools</li>
-<li>memory-shaped → local + memory tools</li>
-<li>search / research / messaging-shaped → escalate to cloud with the right groups</li>
-<li>experimental local tool loop → only groups on an allowlist (<code>memory</code>, <code>home_assistant</code>, timers, …)</li>
-</ul>
-<p>The experimental loop in <code>local-native-tools.js</code> is a small multi-round tool loop <strong>on the local model</strong>: filtered tool definitions only, inject results, force a final spoken answer when the model wants to tool-call forever. Gated by <code>VOICE_LOCAL_NATIVE_TOOLS</code> — default off until live-validated, because tool-trained models will happily claim &quot;timer set&quot; without calling anything if you let them.</p>
-<p>Architecture in one sentence:</p>
-<p>&gt; <strong>A small model decides which package of tools/skills the big model is allowed to see.</strong></p>
-<p>That is highly customized. It is also the only approach that still works when the catalog is hundreds of tools and a hundred skills. &quot;Hope progressive disclosure picks the right description among 200 near-duplicates&quot; is not a strategy — it's a prayer.</p>
-<h2>Skills replaying the MCP movie</h2>
-<p>The public narrative around skills in 2025–2026 is optimistic progressive disclosure: ~30–50 tokens per skill at startup, body on trigger (<a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" rel="noopener">Claude docs</a>, <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" rel="noopener">Anthropic engineering</a>). That's correct as far as it goes.</p>
-<p>What's showing up in the wild:</p>
-<ul>
-<li><strong>Catalog pollution.</strong> Marketplaces and GitHub forks fill with near-clones. If your agent loads every description, you're back to MCP schema spam. One ecosystem writeup put it bluntly: every request carrying tens of KB of skill descriptions whether needed or not (<a href="https://dev.to/imaclaw/how-were-solving-context-window-bloat-in-an-ai-agent-skill-ecosystem-2265" rel="noopener">DEV: context bloat in a skill ecosystem</a>).</li>
-<li><strong>Phase transitions.</strong> Surveys of agent skills note selection accuracy collapsing past critical library size (<a href="https://arxiv.org/html/2602.12430v3" rel="noopener">arXiv:2602.12430</a>).</li>
-<li><strong>Non-monotonic benefit.</strong> SkillsBench: a few skills help a lot; more skills can flatten or reverse gains; &quot;comprehensive&quot; skills can underperform compact ones (<a href="https://arxiv.org/html/2602.12670v1" rel="noopener">arXiv:2602.12670</a>).</li>
-<li><strong>Host differences.</strong> AutoHub chat is filtered. Claude Code / Codex load skill *metadata* from the filesystem skill dir — install 100 skills and you've paid 100 descriptions every session. AutoVault's job is to keep that dir intentional (validated, signed, profile-scoped), not infinite.</li>
-</ul>
-<p><a href="https://skillissue.sh" rel="noopener">skillissue.sh</a> is deliberately <strong>not</strong> a dump of all 108 vault skills. Thirty public packages with stories. The rest stay offline until they earn a page. Same discipline as tool groups: <strong>publish is not the same as load.</strong></p>
-<h2>What &quot;package the right thing&quot; means in practice</h2>
-<p>When I say the local model selects a <strong>package</strong> — tools, skills, or a whole agent profile — I mean a bounded capability set:</p>
-<pre><code>User utterance
-    → intent match (regex / small classifier / both)
-    → enableGroups + optional startServers
-    → tool definitions for THIS turn only
-    → (optional) skill bodies only if those skills are in the package
-    → cloud or local executor</code></pre>
-<p>Concrete AutoHub behaviors that map 1:1 to skills:</p>
-<p>| MCP lesson | Skills analogue |</p>
-<p>|---|---|</p>
-<p>| Don't put all tools in baseline | Don't install every marketplace skill into every agent profile |</p>
-<p>| Intent rule enables a group | Route &quot;deploy Cloudflare&quot; → load <code>cloudflare-ops</code>, not the whole vault |</p>
-<p>| Lazy startServers | Load skill body + references only when selected |</p>
-<p>| <code>request_tool_group</code> | Explicit &quot;use skill X&quot; / router package request when automatic routing misses |</p>
-<p>| Per-profile baselines | AutoVault profiles: Claude Code ≠ guest Discord ≠ voice |</p>
-<p>| Tool-search can't start lazy servers | Metadata search can't invent a skill that isn't on disk / in the package |</p>
-<p>Code-shaped example of the filter contract (simplified from real hub structure):</p>
-<pre><code>// Pseudocode: what the model sees this turn
-function toolsForTurn({ profile, userText, grantedGroups }) {
-  const baseline = profiles[profile].groups; // e.g. owner-auto
-  const matched = contextRules
-    .filter((rule) =&gt; new RegExp(rule.pattern, 'i').test(userText))
-    .flatMap((rule) =&gt; rule.enableGroups || []);
-
-  const groups = unique([...baseline, ...matched, ...grantedGroups]);
-  // request_tool_group may add to grantedGroups mid-conversation
-
-  for (const rule of contextRules) {
-    if (rule.startServers &amp;&amp; groups overlap rule.enableGroups) {
-      ensureMcpStarted(rule.startServers); // lazy
-    }
-  }
-
-  return expandGroupsToToolDefs(groups, mcpToolsRegistry);
-}</code></pre>
-<p>Skills version:</p>
-<pre><code>// Pseudocode: progressive disclosure + intentional install set
-function skillsForTurn({ profileSkillDir, userText, forcedSkills }) {
-  const installed = listSkillFrontmatter(profileSkillDir); // name+description only
-  const selected =
-    forcedSkills.length &gt; 0
-      ? forcedSkills
-      : rankByDescription(installed, userText).slice(0, MAX_SKILLS); // keep this small
-
-  return {
-    metadataTokens: installed, // already in system prompt on some hosts — keep the dir lean
-    bodiesToRead: selected.map((s) =&gt; s.path), // bash-read only these
-  };
-}</code></pre>
-<p>The second function is where most people cheat: <code>MAX_SKILLS = Infinity</code> and a vault the size of npm.</p>
-<h2>What's working</h2>
-<ul>
-<li><strong>Intent-gated MCP on AutoHub</strong> — owner chat stays usable with hundreds of tools registered.</li>
-<li><strong>Lazy MCP processes</strong> — Stream Deck, FreeScout, Google Workspace boot when speech matches, not at hub boot.</li>
-<li><strong>AutoVault</strong> — one vault, multi-agent profile sync, validation before junk lands in <code>~/.claude/skills</code>.</li>
-<li><strong>skillissue as a shelf, not a landfill</strong> — install pins to git SHAs; narratives only for skills that earned them.</li>
-<li><strong>Research catching up</strong> — progressive disclosure is mainstream; selection-at-scale is the open problem everyone is rediscovering.</li>
-</ul>
-<h2>What isn't</h2>
-<ul>
-<li>Regex intent is brittle. Great for &quot;stream deck&quot; and &quot;gmail.&quot; Bad for novel phrasing. That's why the local classifier / tool loop and <code>request_tool_group</code> exist.</li>
-<li>Local models still hallucinate completed actions (&quot;timer set&quot;) without tool calls — we guard that, but it's scars in code, not solved science.</li>
-<li>Skills hosts still differ. What Claude Code loads at startup is not what AutoHub injects into a Slack turn.</li>
-<li>No universal standard for &quot;skill packages as routed units&quot; across vendors yet — everyone invents progressive disclosure, few invent routing discipline.</li>
-</ul>
-<h2>What's next</h2>
-<ul>
-<li>Treat skill catalogs like tool groups: <strong>baseline + intent + request</strong>, not &quot;install all.&quot;</li>
-<li>Keep using a small model (or structured router) to assemble the package before the frontier model runs.</li>
-<li>Publish fewer, better skills. Clone detection and strict public gates (skillissue uniqueness) beat infinite marketplaces.</li>
+<li>Don't install every marketplace skill into every agent profile.</li>
+<li>Keep a baseline. Expand on intent. Give the model an explicit way to ask for more.</li>
+<li>Prefer fewer, better skills over seventeen near-clones of <code>extract-pdf</code>.</li>
 <li>When someone says &quot;skills fixed MCP context bloat,&quot; ask: <strong>for the body, or for the catalog?</strong> Only one of those is automatic.</li>
 </ul>
-<h2>Caveats</h2>
-<p>This is one production hub's design, not a paper. Counts are from this machine's AutoHub config in July 2026 — your numbers will differ. Progressive disclosure remains the right default for skill *bodies*. I'm arguing it was never a complete answer for skill *libraries*, the same way MCP schemas were never free just because the server was &quot;standard.&quot;</p>
-<p>If you're drowning in skills the way I drowned in MCP tools: <strong>stop adding. Start routing.</strong></p>
 <p>— Jack</p>
-<p>---</p>
 <h3>Further reading</h3>
 <ul>
-<li>Anthropic — <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" rel="noopener">Equipping agents for the real world with Agent Skills</a></li>
-<li>Anthropic — <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" rel="noopener">Effective context engineering for AI agents</a></li>
-<li>Claude docs — <a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" rel="noopener">Agent Skills overview</a></li>
-<li>Survey — <a href="https://arxiv.org/html/2602.12430v3" rel="noopener">Agent Skills for Large Language Models</a> (progressive disclosure, selection-at-scale)</li>
-<li>SkillsBench — <a href="https://arxiv.org/html/2602.12670v1" rel="noopener">Benchmarking How Well Agent Skills Work</a></li>
-<li>Context bloat writeup — <a href="https://agenteer.com/blog/the-two-context-bloat-problems-every-ai-agent-builder-must-understand/" rel="noopener">The Two Context Bloat Problems</a></li>
-<li>Ecosystem note — <a href="https://dev.to/imaclaw/how-were-solving-context-window-bloat-in-an-ai-agent-skill-ecosystem-2265" rel="noopener">Solving context window bloat in a skill ecosystem</a></li>
-<li>Products in this story — <a href="https://autovault.dev" rel="noopener">AutoVault</a>, <a href="https://automem.ai" rel="noopener">AutoMem</a>, <a href="https://skillissue.sh" rel="noopener">skillissue.sh</a></li>
+<li>Deep post (this story with charts) — <a href="https://drunk.support" rel="noopener">drunk.support</a> <em>(Inventory Is Not Context)</em></li>
+<li><a href="https://autovault.dev" rel="noopener">AutoVault</a> — the six problems + vault model</li>
+<li>Anthropic — <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" rel="noopener">Agent Skills</a>, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" rel="noopener">context engineering</a></li>
+<li>SkillsBench — <a href="https://arxiv.org/html/2602.12670v1" rel="noopener">arXiv</a></li>
+<li>Survey — <a href="https://arxiv.org/html/2602.12430v3" rel="noopener">Agent Skills for LLMs</a></li>
+<li>Install skills from this site — <a href="/install/">/install/</a></li>
 </ul></div></section>
   </main>
   <footer>

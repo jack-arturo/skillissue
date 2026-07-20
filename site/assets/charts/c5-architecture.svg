@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 360" width="880" height="360" role="img" aria-labelledby="title desc">
+  <title id="title">AutoHub tool exposure architecture</title>
+  <desc id="desc">AutoHub tool exposure architecture — skillissue chart from AutoHub git harvest</desc>
+  <defs>
+    <style type="text/css"><![CDATA[
+      text { font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    ]]></style>
+  </defs>
+  <rect width="880" height="360" fill="#0f1419" rx="8"/>
+  <text x="32" y="28" fill="#e8eaed" font-size="18" font-weight="600">How tools reach the model</text>
+  <text x="32" y="50" fill="#8b949e" font-size="12">Registry → profile floor → intent rules → escape hatch → lazy server start</text>
+  <line x1="180" y1="164" x2="230" y2="164" stroke="#8b949e" stroke-width="1.8"/>
+  <polygon points="230.0,164.0 222.0,168.0 222.0,160.0" fill="#8b949e"/>
+  <line x1="380" y1="164" x2="430" y2="164" stroke="#8b949e" stroke-width="1.8"/>
+  <polygon points="430.0,164.0 422.0,168.0 422.0,160.0" fill="#8b949e"/>
+  <line x1="580" y1="140" x2="630" y2="110" stroke="#f0b429" stroke-width="1.8"/>
+  <polygon points="630.0,110.0 625.2,117.5 621.1,110.7" fill="#f0b429"/>
+  <line x1="580" y1="180" x2="630" y2="230" stroke="#c792ea" stroke-width="1.8"/>
+  <polygon points="630.0,230.0 621.5,227.2 627.2,221.5" fill="#c792ea"/>
+  <rect x="40" y="120" width="140" height="88" fill="#1c2430" stroke="#f07178" stroke-width="2" rx="8"/>
+  <text x="110" y="148" fill="#f07178" font-size="13" font-weight="700" text-anchor="middle">Registry</text>
+  <text x="110" y="170" fill="#8b949e" font-size="11" text-anchor="middle">mcp-tools.json</text>
+  <text x="110" y="186" fill="#8b949e" font-size="11" text-anchor="middle">813 tools · 32 servers</text>
+  <rect x="230" y="120" width="150" height="88" fill="#1c2430" stroke="#5ad6c0" stroke-width="2" rx="8"/>
+  <text x="305" y="148" fill="#5ad6c0" font-size="13" font-weight="700" text-anchor="middle">Profile baseline</text>
+  <text x="305" y="170" fill="#8b949e" font-size="11" text-anchor="middle">16 profiles</text>
+  <text x="305" y="186" fill="#8b949e" font-size="11" text-anchor="middle">23 essential always-on</text>
+  <rect x="430" y="120" width="150" height="88" fill="#1c2430" stroke="#7aa2ff" stroke-width="2" rx="8"/>
+  <text x="505" y="148" fill="#7aa2ff" font-size="13" font-weight="700" text-anchor="middle">Intent rules</text>
+  <text x="505" y="170" fill="#8b949e" font-size="11" text-anchor="middle">60 contextRules</text>
+  <text x="505" y="186" fill="#8b949e" font-size="11" text-anchor="middle">match → expose groups</text>
+  <rect x="630" y="70" width="160" height="80" fill="#1c2430" stroke="#f0b429" stroke-width="2" rx="8"/>
+  <text x="710" y="98" fill="#f0b429" font-size="13" font-weight="700" text-anchor="middle">request_tool_group</text>
+  <text x="710" y="120" fill="#8b949e" font-size="11" text-anchor="middle">escape hatch</text>
+  <text x="710" y="136" fill="#8b949e" font-size="11" text-anchor="middle">mid-loop merge</text>
+  <rect x="630" y="190" width="160" height="80" fill="#1c2430" stroke="#c792ea" stroke-width="2" rx="8"/>
+  <text x="710" y="218" fill="#c792ea" font-size="13" font-weight="700" text-anchor="middle">Lazy startServers</text>
+  <text x="710" y="240" fill="#8b949e" font-size="11" text-anchor="middle">spin up only what</text>
+  <text x="710" y="256" fill="#8b949e" font-size="11" text-anchor="middle">the turn needs</text>
+  <text x="40" y="320" fill="#e8eaed" font-size="12">Floor is intentional. Full registry is available on demand — not dumped into every turn.</text>
+  <text x="32" y="344" fill="#8b949e" font-size="10">Architecture diagram · counts from HEAD 2026-07-20 · conceptual flow (not a runtime trace)</text>
+  <text x="848" y="344" fill="#8b949e" font-size="10" text-anchor="end">skillissue · 2026-07-20</text>
+</svg>

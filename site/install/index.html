@@ -48,9 +48,11 @@
 <pre><code>autovault add jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md --sync-profiles</code></pre>
 <p>The <code>@sha</code> pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
 <h2>3. What AutoVault does</h2>
-<p>1. Fetches the skill bundle at that commit  </p>
-<p>2. Validates / signs into your local vault  </p>
-<p>3. Syncs into agent skill directories (Claude Code, Codex, Cursor, …)</p>
+<ol>
+<li>Fetches the skill bundle at that commit  </li>
+<li>Validates / signs into your local vault  </li>
+<li>Syncs into agent skill directories (Claude Code, Codex, Cursor, …)</li>
+</ol>
 <p>You do <strong>not</strong> need an AutoVault MCP server for day-to-day use after sync — the files land where the agent already looks.</p>
 <h2>MCP form</h2>
 <pre><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md&quot; })</code></pre></div></section>
