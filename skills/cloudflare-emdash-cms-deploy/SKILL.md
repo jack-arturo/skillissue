@@ -6,7 +6,7 @@ tags: [cloudflare, workers, emdash, astro, cms, d1, r2, deployment, autohub]
 agents: [claude-code, codex, autojack]
 category: deployment
 metadata:
-  version: "1.10.0"
+  version: "1.11.0"
 capabilities:
   network: true
   filesystem: readwrite
@@ -186,6 +186,24 @@ How it flows: the integration serializes `config.admin` (`astro/index.mjs`) → 
 Shipped since **v0.19.0** (PR #705 added the `admin` block; PR #851 fixed #835 "manifest always returns null for admin"). Both merged April 2026, before the June 0.19.0 release — so it's in the current line. (Ignore `emdash@1.0.0` on npm: it's an *older* April publish, npm-deprecated, `latest` = 0.19.0. Always check `npm view <pkg> time` + dist-tags before treating a higher semver as newer.) Further login-page white-labeling is tracked in upstream discussions (#1493 RFC, #1241) — search the repo before filing anything; the logo/name/favicon case is already done.
 
 **Lesson:** for admin branding, look at the `config.admin` → `/_emdash/api/manifest` → SPA path, not D1 options. Two passes wrongly concluded "no knob" by inspecting only the options/siteInfo path.
+
+### Client demos: white-label Studio (scare the WordPress operator)
+
+When the audience is a WP agency / membership operator (e.g. MemberFix / Vic), **do not ship default EmDash chrome**. Treat admin white-label as part of the product pitch:
+
+1. **Product name, not CMS name** — `siteName: "<Client> Studio"` (sidebar, login title, browser tab). Avoid leaving "EmDash" visible in the shell.
+2. **Dark-friendly logo assets** — WP header PNGs often wash out on the admin SPA. Ship dedicated SVG:
+   - `public/admin-lockup.svg` — horizontal mark + wordmark (+ optional accent pill) for login/sidebar (`object-fit: contain`)
+   - `public/admin-mark.svg` — square favicon
+   Point `admin.logo` / `admin.favicon` at those paths.
+3. **D1 title matches** — after setup, set `emdash:site_title` to the same Studio string (JSON-quoted) so invites/passkey RP name don't say "EmDash".
+4. **System emails match** — rebrand in `email:deliver` with the Studio name (see above).
+5. **Public footer badge** — quiet flex: `"<Client> Studio · no WordPress runtime"` beats `"Powered by EmDash"`.
+6. **Seed `meta.name` / `settings.title`** — setup wizard "Template: …" line should already say Studio, not the generic CMS.
+
+Reference implementation: `verygoodplugins/memberfix-site` (`docs/admin-branding.md`, `public/admin-lockup.svg`). Rebuild+deploy after `admin.*` changes; D1 title is live without redeploy.
+
+What you *cannot* theme yet (EmDash 0.27): admin CSS tokens / full login page layout beyond logo+name+favicon. Do the rest on the public site + email shell.
 
 ## Verify
 
