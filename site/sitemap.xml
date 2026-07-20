@@ -2,6 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://skillissue.sh/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/essays/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/about/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/install/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/changelog/</loc><changefreq>weekly</changefreq></url>
@@ -37,4 +38,5 @@
   <url><loc>https://skillissue.sh/skills/release-readiness/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/resend-cli/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/triage-autohub-runtime/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/essays/skills-are-the-new-mcp-bloat/</loc><changefreq>weekly</changefreq></url>
 </urlset>

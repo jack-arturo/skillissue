@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Install — skillissue.sh</title>
-<meta name="description" content="Install">
-<link rel="canonical" href="https://skillissue.sh/install/">
+<title>Essays — skillissue.sh</title>
+<meta name="description" content="Long-form writing on skills, MCP, and context discipline.">
+<link rel="canonical" href="https://skillissue.sh/essays/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0c0f">
-<meta property="og:title" content="Install — skillissue.sh">
-<meta property="og:description" content="Install">
+<meta property="og:title" content="Essays — skillissue.sh">
+<meta property="og:description" content="Long-form writing on skills, MCP, and context discipline.">
 <meta property="og:image" content="https://skillissue.sh/assets/og.png">
-<meta property="og:url" content="https://skillissue.sh/install/">
+<meta property="og:url" content="https://skillissue.sh/essays/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="/assets/site.css">
@@ -29,8 +29,8 @@
       <nav class="links" aria-label="Primary">
         <a href="/">home</a>
         <a href="/skills/">skills</a>
-        <a href="/essays/">essays</a>
-        <a href="/install/" aria-current="page">install</a>
+        <a href="/essays/" aria-current="page">essays</a>
+        <a href="/install/">install</a>
         <a href="/about/">about</a>
         <a href="/skills.json">skills.json</a>
         <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
@@ -38,22 +38,12 @@
     </div>
   </header>
   <main>
-<section class="hero" style="padding-bottom:1rem"><div class="wrap"><h1>Install</h1></div></section>
-    <section style="padding-top:0"><div class="wrap prose"><h2>1. Get AutoVault</h2>
-<p>If you don't have it yet:</p>
-<pre><code>curl -fsSL https://autovault.sh | sh</code></pre>
-<p>Or see <a href="https://autovault.dev/quick-start" rel="noopener">autovault.dev quick-start</a>.</p>
-<h2>2. Add a skill from this repo</h2>
-<p>Every public skill page has a copy button. Pattern:</p>
-<pre><code>autovault add jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md --sync-profiles</code></pre>
-<p>The <code>@sha</code> pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
-<h2>3. What AutoVault does</h2>
-<p>1. Fetches the skill bundle at that commit  </p>
-<p>2. Validates / signs into your local vault  </p>
-<p>3. Syncs into agent skill directories (Claude Code, Codex, Cursor, …)</p>
-<p>You do <strong>not</strong> need an AutoVault MCP server for day-to-day use after sync — the files land where the agent already looks.</p>
-<h2>MCP form</h2>
-<pre><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md&quot; })</code></pre></div></section>
+<section class="hero" style="padding-bottom:1.5rem"><div class="wrap"><h1>Essays</h1>
+        <p class="lede">Longer writing about skills, tools, and not drowning your agent.</p></div></section>
+        <section style="padding-top:0"><div class="wrap"><div class="grid"><a class="card featured" href="/essays/skills-are-the-new-mcp-bloat/">
+  <div class="card-top"><h3>Skills Are the New MCP Bloat</h3><span class="tag">2026-07-20</span></div>
+  <p>Progressive disclosure is necessary and not sufficient. Here's what AutoHub learned loading tools by intent — and what that means now that everyone's drowning in SKILL.md files.</p>
+</a></div></div></section>
   </main>
   <footer>
     <div class="wrap foot-inner">

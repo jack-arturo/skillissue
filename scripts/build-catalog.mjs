@@ -164,6 +164,7 @@ function shellLayout({ title, description, path: pagePath, body, active }) {
   const nav = [
     ["/", "home", "home"],
     ["/skills/", "skills", "skills"],
+    ["/essays/", "essays", "essays"],
     ["/install/", "install", "install"],
     ["/about/", "about", "about"],
   ]
@@ -715,10 +716,69 @@ add_skill({ source: "github", identifier: "jack-arturo/skillissue@<sha>:skills/<
   "install"
 );
 
+// Essays from content/essays/*.md
+const essaysDir = path.join(root, "content/essays");
+const essayIndex = [];
+if (fs.existsSync(essaysDir)) {
+  for (const file of fs.readdirSync(essaysDir).filter((f) => f.endsWith(".md")).sort()) {
+    const raw = fs.readFileSync(path.join(essaysDir, file), "utf8");
+    const { fm, body } = parseFrontmatter(raw);
+    if (fm.visibility === "internal") continue;
+    const slug = file.replace(/\.md$/, "");
+    const title = fm.title || slug;
+    const description = fm.description || title;
+    essayIndex.push({ slug, title, description, date: fm.date || "" });
+    const dir = path.join(siteDir, "essays", slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, "index.html"),
+      shellLayout({
+        title: `${title} — skillissue.sh`,
+        description,
+        path: `/essays/${slug}/`,
+        body: `<section class="hero" style="padding-bottom:1rem"><div class="wrap">
+          <div class="prompt"><span class="dot"></span> essay${fm.date ? ` · ${esc(fm.date)}` : ""}</div>
+          <h1>${esc(title)}</h1>
+          ${description ? `<p class="lede">${esc(description)}</p>` : ""}
+        </div></section>
+        <section style="padding-top:0"><div class="wrap prose">${mdToHtml(body)}</div></section>`,
+        active: "essays",
+      })
+    );
+  }
+}
+if (essayIndex.length) {
+  fs.mkdirSync(path.join(siteDir, "essays"), { recursive: true });
+  const cards = essayIndex
+    .map(
+      (e) => `<a class="card featured" href="/essays/${esc(e.slug)}/">
+  <div class="card-top"><h3>${esc(e.title)}</h3>${e.date ? `<span class="tag">${esc(e.date)}</span>` : ""}</div>
+  <p>${esc(e.description)}</p>
+</a>`
+    )
+    .join("\n");
+  fs.writeFileSync(
+    path.join(siteDir, "essays/index.html"),
+    shellLayout({
+      title: "Essays — skillissue.sh",
+      description: "Long-form writing on skills, MCP, and context discipline.",
+      path: "/essays/",
+      body: `<section class="hero" style="padding-bottom:1.5rem"><div class="wrap"><h1>Essays</h1>
+        <p class="lede">Longer writing about skills, tools, and not drowning your agent.</p></div></section>
+        <section style="padding-top:0"><div class="wrap"><div class="grid">${cards}</div></div></section>`,
+      active: "essays",
+    })
+  );
+}
+
 storyPage(
   "changelog",
   "Changelog",
-  `## 0.3.0 — 2026-07-20
+  `## 0.3.1 — 2026-07-20
+
+- Essay: Skills Are the New MCP Bloat
+
+## 0.3.0 — 2026-07-20
 
 - GitHub SSOT: packages under \`skills/<name>/\` (SKILL.md + story.md)
 - AutoVault install rows (CLI + MCP) pinned to build commit
@@ -761,12 +821,14 @@ fs.writeFileSync(path.join(siteDir, "llms.txt"), llms);
 const urls = [
   "/",
   "/skills/",
+  "/essays/",
   "/about/",
   "/install/",
   "/changelog/",
   "/skills.json",
   "/llms.txt",
   ...publicSkills.map((s) => `/skills/${s.name}/`),
+  ...essayIndex.map((e) => `/essays/${e.slug}/`),
 ];
 fs.writeFileSync(
   path.join(siteDir, "sitemap.xml"),
