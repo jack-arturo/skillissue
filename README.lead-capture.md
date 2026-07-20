@@ -3,7 +3,7 @@
 - D1: `skillissue-leads` id `698ae99b-c2d7-4e00-8836-0a11a34ec99c`
 - Binding: `LEAD_DB` (production + preview)
 - Secrets (Pages production): `RESEND_API_KEY`, `ADMIN_TOKEN`, `CONFIRM_SECRET`
-- From: `skillissue@autojack.ai` until skillissue.sh is verified in Resend
+- From: `hello@skillissue.sh` (Resend domain verified)
 
 ## Smoke
 

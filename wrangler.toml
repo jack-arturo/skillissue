@@ -10,7 +10,7 @@ database_id = "698ae99b-c2d7-4e00-8836-0a11a34ec99c"
 
 [vars]
 BASE_URL = "https://skillissue.sh"
-# Use verified Resend domain until skillissue.sh is added in Resend.
-FROM_EMAIL = "skillissue@autojack.ai"
+# Resend domain skillissue.sh verified (id eedbab55-716c-46c6-8df1-f8b815994c4e).
+FROM_EMAIL = "hello@skillissue.sh"
 FROM_NAME = "skillissue.sh"
 SEND_LEAD_CAPTURE_EMAIL = "true"
