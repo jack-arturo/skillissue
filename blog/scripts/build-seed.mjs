@@ -296,10 +296,15 @@ const seed = {
       ],
     },
   ],
+  // EmDash 0.27 seed shape (see southandozarks / automem-website seeds):
+  // - menu items use `url` (not custom_url)
+  // - bylines need `id` + `displayName` (+ optional slug/bio)
+  // - content entries need stable `id`; bylines are [{ byline: "<id>" }]
   bylines: [
     {
+      id: 'byline-jack-arturo',
       slug: 'jack-arturo',
-      name: 'Jack Arturo',
+      displayName: 'Jack Arturo',
       bio: 'Builder of AutoHub, AutoMem, AutoVault, and skillissue.sh.',
     },
   ],
@@ -308,16 +313,16 @@ const seed = {
       name: 'primary',
       label: 'Primary',
       items: [
-        { type: 'custom', label: 'Essays', custom_url: '/essays' },
+        { type: 'custom', label: 'Essays', url: '/essays' },
         {
           type: 'custom',
           label: 'Skills catalog',
-          custom_url: 'https://skillissue.sh/skills/',
+          url: 'https://skillissue.sh/skills/',
         },
         {
           type: 'custom',
           label: 'Install',
-          custom_url: 'https://skillissue.sh/install/',
+          url: 'https://skillissue.sh/install/',
         },
       ],
     },
@@ -325,6 +330,7 @@ const seed = {
   content: {
     posts: [
       {
+        id: 'post-skills-are-the-new-mcp-bloat',
         slug: 'skills-are-the-new-mcp-bloat',
         status: 'published',
         data: {
@@ -334,7 +340,7 @@ const seed = {
             'Progressive disclosure fixes skill bodies. It does not fix skill catalogs.',
           content,
         },
-        bylines: ['jack-arturo'],
+        bylines: [{ byline: 'byline-jack-arturo' }],
         taxonomies: {
           tag: ['mcp', 'skills', 'autohub', 'autovault'],
         },

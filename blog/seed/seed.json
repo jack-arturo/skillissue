@@ -84,8 +84,9 @@
   ],
   "bylines": [
     {
+      "id": "byline-jack-arturo",
       "slug": "jack-arturo",
-      "name": "Jack Arturo",
+      "displayName": "Jack Arturo",
       "bio": "Builder of AutoHub, AutoMem, AutoVault, and skillissue.sh."
     }
   ],
@@ -97,17 +98,17 @@
         {
           "type": "custom",
           "label": "Essays",
-          "custom_url": "/essays"
+          "url": "/essays"
         },
         {
           "type": "custom",
           "label": "Skills catalog",
-          "custom_url": "https://skillissue.sh/skills/"
+          "url": "https://skillissue.sh/skills/"
         },
         {
           "type": "custom",
           "label": "Install",
-          "custom_url": "https://skillissue.sh/install/"
+          "url": "https://skillissue.sh/install/"
         }
       ]
     }
@@ -115,6 +116,7 @@
   "content": {
     "posts": [
       {
+        "id": "post-skills-are-the-new-mcp-bloat",
         "slug": "skills-are-the-new-mcp-bloat",
         "status": "published",
         "data": {
@@ -123,7 +125,7 @@
           "content": [
             {
               "_type": "block",
-              "_key": "7fc3b2c715",
+              "_key": "4b20f07109",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -136,7 +138,7 @@
             },
             {
               "_type": "block",
-              "_key": "3c7d85d508",
+              "_key": "4b5d977ba8",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -149,7 +151,7 @@
             },
             {
               "_type": "block",
-              "_key": "d49a69cb8c",
+              "_key": "df98a6e74e",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -165,7 +167,7 @@
             },
             {
               "_type": "block",
-              "_key": "685e52ffa7",
+              "_key": "3718414211",
               "style": "h2",
               "markDefs": [],
               "children": [
@@ -178,7 +180,7 @@
             },
             {
               "_type": "block",
-              "_key": "5dbcdbdda5",
+              "_key": "86d024d110",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -200,7 +202,7 @@
             },
             {
               "_type": "block",
-              "_key": "a9f33c8c52",
+              "_key": "adc5f3776d",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -235,7 +237,7 @@
             },
             {
               "_type": "block",
-              "_key": "5834dc3458",
+              "_key": "9d39c558a8",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -257,7 +259,7 @@
             },
             {
               "_type": "block",
-              "_key": "c41b307e98",
+              "_key": "2e1adf101a",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -279,7 +281,7 @@
             },
             {
               "_type": "block",
-              "_key": "80a461c220",
+              "_key": "557bb62519",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -327,7 +329,7 @@
             },
             {
               "_type": "block",
-              "_key": "3df7faf035",
+              "_key": "1f931dc541",
               "style": "h2",
               "markDefs": [],
               "children": [
@@ -340,7 +342,7 @@
             },
             {
               "_type": "block",
-              "_key": "faa9a146c6",
+              "_key": "2a0bb64679",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -353,7 +355,7 @@
             },
             {
               "_type": "block",
-              "_key": "0b46feb537",
+              "_key": "89afb2a4e1",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -366,7 +368,7 @@
             },
             {
               "_type": "block",
-              "_key": "ed2c7e9524",
+              "_key": "1d4f1c3d87",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -379,7 +381,7 @@
             },
             {
               "_type": "block",
-              "_key": "10e7c76139",
+              "_key": "503e1d561a",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -405,7 +407,7 @@
             },
             {
               "_type": "block",
-              "_key": "06d4f33905",
+              "_key": "bd01a61eb2",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -431,7 +433,7 @@
             },
             {
               "_type": "block",
-              "_key": "b21e9ce0e0",
+              "_key": "8af0bfaa4a",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -457,7 +459,7 @@
             },
             {
               "_type": "block",
-              "_key": "244b4c65b7",
+              "_key": "63f44d0c19",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -483,7 +485,7 @@
             },
             {
               "_type": "block",
-              "_key": "8ebf5efecd",
+              "_key": "d3aabf4877",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -509,7 +511,7 @@
             },
             {
               "_type": "block",
-              "_key": "315bb1a37c",
+              "_key": "cb0cb4da95",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -535,7 +537,7 @@
             },
             {
               "_type": "block",
-              "_key": "5938b650cc",
+              "_key": "e6c3f72cfa",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -561,7 +563,7 @@
             },
             {
               "_type": "block",
-              "_key": "e27bdba4d2",
+              "_key": "cd106e5594",
               "style": "normal",
               "markDefs": [
                 {
@@ -606,7 +608,7 @@
             },
             {
               "_type": "block",
-              "_key": "23a431aaac",
+              "_key": "2757e65cb5",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -632,7 +634,7 @@
             },
             {
               "_type": "block",
-              "_key": "de27897ba8",
+              "_key": "c4064fc9ab",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -655,7 +657,7 @@
             },
             {
               "_type": "block",
-              "_key": "503b2ee44d",
+              "_key": "4db7bda1e9",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -701,7 +703,7 @@
             },
             {
               "_type": "block",
-              "_key": "2fa9ac06c0",
+              "_key": "0a0523d95f",
               "style": "h2",
               "markDefs": [],
               "children": [
@@ -714,7 +716,7 @@
             },
             {
               "_type": "block",
-              "_key": "7cb35f9f98",
+              "_key": "483b72b379",
               "style": "normal",
               "markDefs": [
                 {
@@ -759,7 +761,7 @@
             },
             {
               "_type": "block",
-              "_key": "fcd11203e3",
+              "_key": "70f42e6b1f",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -772,7 +774,7 @@
             },
             {
               "_type": "block",
-              "_key": "9af25a96a6",
+              "_key": "bf5e560a6f",
               "style": "normal",
               "markDefs": [
                 {
@@ -835,7 +837,7 @@
             },
             {
               "_type": "block",
-              "_key": "01fc6072de",
+              "_key": "054f7ae022",
               "style": "blockquote",
               "markDefs": [],
               "children": [
@@ -848,7 +850,7 @@
             },
             {
               "_type": "block",
-              "_key": "54b4553da7",
+              "_key": "84a6d0aeaf",
               "style": "normal",
               "markDefs": [
                 {
@@ -906,7 +908,7 @@
             },
             {
               "_type": "block",
-              "_key": "22e3a262a6",
+              "_key": "0410f6b578",
               "style": "h2",
               "markDefs": [],
               "children": [
@@ -919,7 +921,7 @@
             },
             {
               "_type": "block",
-              "_key": "3e4453a00b",
+              "_key": "aa8566eb83",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -932,7 +934,7 @@
             },
             {
               "_type": "block",
-              "_key": "0ec5baa044",
+              "_key": "12fb05f728",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -945,7 +947,7 @@
             },
             {
               "_type": "block",
-              "_key": "38903892b2",
+              "_key": "9a3f126e8d",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -958,7 +960,7 @@
             },
             {
               "_type": "block",
-              "_key": "5eb47ba67b",
+              "_key": "c0909147a5",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -971,7 +973,7 @@
             },
             {
               "_type": "block",
-              "_key": "3359ef1faa",
+              "_key": "d9a8cbcaa3",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -984,7 +986,7 @@
             },
             {
               "_type": "block",
-              "_key": "605c35a676",
+              "_key": "98fc397eb1",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -997,7 +999,7 @@
             },
             {
               "_type": "block",
-              "_key": "bdb84691f7",
+              "_key": "e948e292a6",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1023,7 +1025,7 @@
             },
             {
               "_type": "block",
-              "_key": "5e6cc39aba",
+              "_key": "a827066169",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1036,7 +1038,7 @@
             },
             {
               "_type": "block",
-              "_key": "6720c19d10",
+              "_key": "efca5e760b",
               "style": "normal",
               "markDefs": [
                 {
@@ -1081,7 +1083,7 @@
             },
             {
               "_type": "block",
-              "_key": "d28b716dbb",
+              "_key": "ea9122f515",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1097,7 +1099,7 @@
             },
             {
               "_type": "block",
-              "_key": "642a32dcba",
+              "_key": "85005f73e7",
               "style": "h2",
               "markDefs": [],
               "children": [
@@ -1110,7 +1112,7 @@
             },
             {
               "_type": "block",
-              "_key": "c638a1d7f0",
+              "_key": "1b0ff012e2",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1123,7 +1125,7 @@
             },
             {
               "_type": "block",
-              "_key": "35eb0796ea",
+              "_key": "3f92f1db9c",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1136,7 +1138,7 @@
             },
             {
               "_type": "block",
-              "_key": "5aa9e7fcb1",
+              "_key": "8bed21af18",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1157,7 +1159,7 @@
             },
             {
               "_type": "block",
-              "_key": "546923dda4",
+              "_key": "a9254ce69c",
               "style": "normal",
               "markDefs": [
                 {
@@ -1207,7 +1209,7 @@
             },
             {
               "_type": "block",
-              "_key": "bf634c6d95",
+              "_key": "33b6bd7e38",
               "style": "h2",
               "markDefs": [],
               "children": [
@@ -1220,7 +1222,7 @@
             },
             {
               "_type": "block",
-              "_key": "db08ac6dc4",
+              "_key": "9f95196d78",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1233,7 +1235,7 @@
             },
             {
               "_type": "block",
-              "_key": "c03b014e3d",
+              "_key": "ebfc0d89b9",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1247,7 +1249,7 @@
             },
             {
               "_type": "block",
-              "_key": "8224fbaaa6",
+              "_key": "449b30cf4a",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1261,7 +1263,7 @@
             },
             {
               "_type": "block",
-              "_key": "143e3463bc",
+              "_key": "50463592a0",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1288,7 +1290,7 @@
             },
             {
               "_type": "block",
-              "_key": "00243df1b1",
+              "_key": "f51e8cf579",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1315,7 +1317,7 @@
             },
             {
               "_type": "block",
-              "_key": "5cad291af9",
+              "_key": "f77fd227be",
               "style": "normal",
               "markDefs": [],
               "children": [
@@ -1328,7 +1330,7 @@
             },
             {
               "_type": "block",
-              "_key": "7e7638e94d",
+              "_key": "12db5e5010",
               "style": "h3",
               "markDefs": [],
               "children": [
@@ -1341,7 +1343,7 @@
             },
             {
               "_type": "block",
-              "_key": "5467ac1e9e",
+              "_key": "431a9f88eb",
               "style": "normal",
               "markDefs": [
                 {
@@ -1374,7 +1376,7 @@
             },
             {
               "_type": "block",
-              "_key": "07bf96783a",
+              "_key": "d314757ddb",
               "style": "normal",
               "markDefs": [
                 {
@@ -1402,7 +1404,7 @@
             },
             {
               "_type": "block",
-              "_key": "c25ba80d32",
+              "_key": "23f43ee058",
               "style": "normal",
               "markDefs": [
                 {
@@ -1448,7 +1450,7 @@
             },
             {
               "_type": "block",
-              "_key": "4d462d7f92",
+              "_key": "b217876795",
               "style": "normal",
               "markDefs": [
                 {
@@ -1476,7 +1478,7 @@
             },
             {
               "_type": "block",
-              "_key": "3403baedff",
+              "_key": "d70d16d951",
               "style": "normal",
               "markDefs": [
                 {
@@ -1504,7 +1506,7 @@
             },
             {
               "_type": "block",
-              "_key": "40e59c3672",
+              "_key": "c92d69f18c",
               "style": "normal",
               "markDefs": [
                 {
@@ -1533,7 +1535,9 @@
           ]
         },
         "bylines": [
-          "jack-arturo"
+          {
+            "byline": "byline-jack-arturo"
+          }
         ],
         "taxonomies": {
           "tag": [
