@@ -40,7 +40,7 @@
 
     <section class="hero skill-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v2.3.1 · mixed · pin e4889e1</div>
+        <div class="prompt"><span class="dot"></span> skill · v2.3.2 · mixed · pin 1b2e1ce</div>
         <h1><span class="path">resend-cli</span></h1>
         <p class="lede">Operate the Resend platform from the terminal — send emails (including React Email .tsx templates via --react-email), manage domains, contacts, broadcasts, templates, webhooks, API keys, logs, automations, and events via the `resend` CLI. Use when the user wants to run Resend commands in the shell, scripts, or CI/CD pipelines, or send/preview React Email templates. Always load this skill before running `resend` commands — it contains the non-interactive flag contract and gotchas that prevent silent failures.</p>
         <div class="meta" style="margin-bottom:1.25rem"><span class="tag">resend</span><span class="tag">email</span>
@@ -48,19 +48,19 @@
           
         </div>
         <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/resend-cli/SKILL.md --sync-profiles">Copy AutoVault install</button>
-          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/resend-cli/SKILL.md&quot; })">Copy MCP add_skill</button>
+          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@1b2e1ce178f5443f47169d3cf4e91823eaf9b448:skills/resend-cli/SKILL.md --sync-profiles">Copy AutoVault install</button>
+          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@1b2e1ce178f5443f47169d3cf4e91823eaf9b448:skills/resend-cli/SKILL.md&quot; })">Copy MCP add_skill</button>
           <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
         </div>
         <div class="term" style="max-width:48rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · e4889e1</span></div>
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · 1b2e1ce</span></div>
           <div class="term-body">
             <div><span class="dim"># CLI (primary)</span></div>
-            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/resend-cli/SKILL.md --sync-profiles</span></div>
+            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@1b2e1ce178f5443f47169d3cf4e91823eaf9b448:skills/resend-cli/SKILL.md --sync-profiles</span></div>
             <div style="margin-top:0.6rem"><span class="dim"># MCP tool call</span></div>
-            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@e4889e1ee4cd124c20120e1e720822fc17fdf37b:skills/resend-cli/SKILL.md&quot; })</div>
+            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@1b2e1ce178f5443f47169d3cf4e91823eaf9b448:skills/resend-cli/SKILL.md&quot; })</div>
             <div class="ok" style="margin-top:0.6rem">→ vault validates · signs · syncs agent skill dirs</div>
-            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/e4889e1ee4cd124c20120e1e720822fc17fdf37b/skills/resend-cli/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
+            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/1b2e1ce178f5443f47169d3cf4e91823eaf9b448/skills/resend-cli/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
           </div>
         </div>
       </div>
@@ -76,10 +76,13 @@
 <p>Domain verify, send-only key create, piped into wrangler secrets — never print keys.</p>
 <h2>What it is not</h2>
 <p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p>
+<h2>History</h2>
+<h3>Skill patch — Resend project domain (2026-07-20)</h3>
+<p>Agents must create/verify the <strong>project</strong> custom domain in Resend when the zone is on Cloudflare — not silently ship From on a sibling verified domain. See SKILL.md § domain / anti-patterns.</p>
         <h2>Related</h2><div class="meta"><a class="tag" href="/skills/cloudflare-lead-capture/">cloudflare-lead-capture</a></div>
         <h2>Package</h2>
-        <p class="muted">Version <code>2.3.1</code>
-        · install pin <code>e4889e1</code>
+        <p class="muted">Version <code>2.3.2</code>
+        · install pin <code>1b2e1ce</code>
         · SSOT <code>skills/resend-cli/</code> on GitHub
          · agents: autojack</p>
       </div>
