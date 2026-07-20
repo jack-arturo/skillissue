@@ -51,6 +51,24 @@ Trigger async DNS verification.
 
 **Output:** `{"object":"domain","id":"..."}`
 
+Verification is **async**. Domain moves to `pending` while DNS is checked. Poll with `domains get` until `status` is `verified` (or `failed` / `temporary_failure`).
+
+API: `POST /domains/{domain_id}/verify` — see [Verify Domain](https://resend.com/docs/api-reference/domains/verify-domain).
+
+### Cloudflare zone automation (house rule)
+
+When the domain’s zone is already on Cloudflare (`CLOUDFLARE_API_TOKEN` + zone id):
+
+1. `resend domains create --name <apex> --region <region> -q` (or reuse existing id from `domains list`).
+2. For each entry in `records[]`, create a **non-proxied** DNS record on that zone:
+   - DKIM → TXT at `resend._domainkey` (if `value` starts with `p=`, store as `v=DKIM1; k=rsa; ` + value).
+   - SPF MX → MX at `send`, priority from record (usually 10), content = Resend host.
+   - SPF TXT → TXT at `send`.
+3. `resend domains verify <id> -q` then poll `resend domains get <id> -q`.
+4. Set product `FROM_EMAIL` to an address on **this** domain.
+
+**Anti-pattern:** leaving production From on another already-verified Resend domain because it was faster. That is only allowed with an explicit DNS/API blocker reported to the user.
+
 ---
 
 ## domains update

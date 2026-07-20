@@ -14,7 +14,7 @@ metadata:
   author: resend
   # Skill version is independent from the CLI/package.json version —
   # bump it on skill content changes, not CLI releases.
-  version: "2.3.1"
+  version: "2.3.2"
   homepage: https://resend.com/docs/cli-agents
   source: https://github.com/resend/resend-cli
   openclaw:
@@ -197,6 +197,8 @@ Read the matching reference file for detailed flags and output shapes.
 | 7 | **Passing `--events` to `webhooks update` expecting additive behavior** | `--events` replaces the entire subscription list — always pass the complete set |
 | 8 | **Expecting `logs list` to include request/response bodies** | List returns summary fields only — use `logs get <id>` for full `request_body` and `response_body` |
 | 9 | **CSV import fails with `create_error` ("missing required email column")** | `contacts imports create` matches columns case-sensitively by lowercase names (`email`, `first_name`, `last_name`) — use `--column-map` for headers like `Email`/`First Name` |
+| 10 | **Shipping `FROM_EMAIL` on a sibling verified domain** | When the product/custom domain zone is on Cloudflare, run full create → DNS → `domains verify` → poll for that domain. Sibling domains (`*.autojack.ai`, another brand) are temporary fallbacks only with an explicit blocker + TODO — not a permanent “done” |
+| 11 | **Calling `domains verify` without writing DNS first** | Verification is async DNS check. Configure zone records from `domains create`/`get` `records[]` first; then verify and poll `domains get` until `verified` |
 
 ## Common Patterns
 
@@ -210,13 +212,18 @@ resend emails send --from "you@domain.com" --to user@example.com --subject "Hell
 resend emails send --from "you@domain.com" --to user@example.com --subject "Welcome" --react-email ./emails/welcome.tsx
 ```
 
-**Domain setup flow:**
+**Domain setup flow (always prefer the project’s real domain):**
 ```bash
-resend domains create --name example.com --region us-east-1
-# Configure DNS records from output, then:
-resend domains verify <domain-id>
-resend domains get <domain-id>  # check status
+resend domains create --name example.com --region eu-west-1 -q
+# → id + records[] (DKIM TXT, SPF MX on send, SPF TXT on send)
+# If the zone is on Cloudflare, write those DNS records via the Zone DNS API
+# (proxied off for MX/TXT). Do NOT leave production on a sibling verified domain
+# when the project has its own zone (see Common Mistakes #10).
+resend domains verify <domain-id> -q
+resend domains get <domain-id> -q   # poll until status is "verified"
 ```
+
+API equivalent: `POST https://api.resend.com/domains/{domain_id}/verify` with `Authorization: Bearer $RESEND_API_KEY` ([docs](https://resend.com/docs/api-reference/domains/verify-domain)).
 
 **Create and send a broadcast:**
 ```bash

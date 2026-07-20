@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "skill": "cloudflare-lead-capture",
+  "files": {
+    "SKILL.md": "ZHEQ4lCHza5I7WI5K2TGWaAL6BmMocJPWqR217Ukcv/g5NDnidh/vcOeOOt4OMSY06VVsqYmHD5mocJsf105BA==",
+    "bin/doctor": "k3GYOyRnr8K1/rW+p/ERrIKAKfOUpKajGHEVCmDP8bqouFTIMgeh6937Pjs0//PUulBgDXUfC8vsP+C3xc5CCQ==",
+    "bin/scaffold": "Qhvau4pTdy7BfMRo/kVaPlzIbLYN7F1JF6firkNlVoj6dxZsUBLG5LTlldzKorz5TuwC1iMFEleZpbdikG1lDA==",
+    "bin/setup": "Wp6xs3X2ubRfy0lbkTn9F1f6JZWZQ6/STUJM3PuhS+r6OrwmTeCwrvi9O4qI1zdQzqK9xPLki+UEJ3TSctA5Bg==",
+    "templates/astro-ssr/README.astro-ssr.md": "1h6vlLiGdnII0ER9d7H8ftLLaj1iK4FaOHnSDrGM6GWNBzZCLzkvfaimynvhplZyBCactQ5xlMdrbSSQiO8/AA==",
+    "templates/astro-ssr/src/components/ContactForm.astro": "sUAHtukXkW5TJFBv37WTjJrpaUEL4mnDSnn/H+hoA7S4lhEgLu3TDZQWG1x4qhahe0m3zake6YLKPM749ea7Bw==",
+    "templates/astro-ssr/src/pages/api/contact.ts": "dtSjYCcGmsfTR6qYUqJxId81l26SQwQ4T2FQURtiBoRu2rjC3zh7pW1JkvC2qbBBppTNutZApEr/JTW4FcNKBQ==",
+    "templates/project/functions/admin/lead-capture/templates.js": "/oRAx/QvzxJomYNs9ar0ylnIqywNRdjJfaKjZIWIC+5HaItUoEwoxjWnYlpeK0z+sCwPNs0+DxAne1rdT66QAw==",
+    "templates/project/functions/admin/lead-capture/test-email.js": "+tdiQ4RpjQHRxezfB383Zv7kka4t5QtkyRDJMg5PG/vB90sbJLy5SnNWIpkRYQjgylJH9oXilfoRBR6Ge+/yBQ==",
+    "templates/project/functions/admin/lead-capture.js": "FzLgb0w+T8aX7kL+vSyYd+dcDTEZcwrTwiXa30WYgfaYxpOF2AYHnJWH9/Z2BkQBjwiQrjY3o29V8Y3UCww+AA==",
+    "templates/project/functions/api/lead.js": "CcTQBTZUwwoZIGWa6TNd8aD8M9quwOdxmcwLT+3g/kxzAqzEGwNKbludzUf83QdoONRz4Q2YQMXjHI16iekSBA==",
+    "templates/project/functions/api/signup.js": "Tt0Bvld+XQqvhwgtdnbC/Te6xB1zt5yW27Zf1DoZgOyQm/KTnoZYgQer2k27VJrxYtLTeinD4H9Ho01FcBcIDg==",
+    "templates/project/functions/lib/lead-capture/email.js": "SSliCrMxd03Diz5R3gwPCtFRp3rgvaxCqRA6RZyRtMYuomiif3xMMt0/J1Z9CQWH7cu2t8XU2WswTD2eFWr1AQ==",
+    "templates/project/functions/lib/lead-capture/http.js": "m0+ZjwYcxdFlEm7/Im7TAJggHwzLsSoMx7/qFgpTnexq3foLFySYvriBcCnnM2j4S0+ESAYquzADL/8mGY8kAg==",
+    "templates/project/functions/lib/lead-capture/tokens.js": "fJUiqdZpNkfBKo7DwHaZBWxztJU+UB8wR80ZX1aYIfhf6ommPCWA68HaYpqX/AHahPwIVBPrCmF0fZLQKKXqDQ==",
+    "templates/project/functions/lib/lead-capture/turnstile.js": "2tQ+/cCleyVbvwigeFExZpaY1+fMcsRMoJm8a5xgk778pBaP/mM69DUOV1aE0J8ZxNm9DBmd/YHaxKkqaMiMCg==",
+    "templates/project/functions/unsubscribe.js": "7m5UVxssWCjeT3J7LdoDaCcGWvZV6BEHe9LtXyN/VIQRl0pvbca6tTHggkivsf+jvPuxUZYyzxF7gxVzVPnxAA==",
+    "templates/project/lead-capture-admin.html": "XqipXK+TppY838kBIW48umg61aUuBszV9HnrFSqeC4T+LjFMkeEMeDJ94e/4/AtWivUHmH9P/BHlC8Aj+KOSAw==",
+    "templates/project/README.lead-capture.md": "N6p2NLmrnR/EhKbcAzb8DnOeDP9dOw4iP1/POb1k6bGvwtfm4/iVJ1KrAb9fxPry+tfpaaKtMHICX83VTTYtCw==",
+    "templates/project/schema/lead-capture.sql": "5zxzMT4bM2UaPMp+/mjS9Ge0HAq+YfXnF1UvTDrMx26auh46SBXS/c9oFBMNt70LF5cTG3P/ZAzAHYylK8ThAA==",
+    "templates/project/snippets/lead-form.html": "K5Oo0XAolPbw2glJAWSU06o4wU/EImB739mb86p2x2Dyx/n8ASFPXSZggaXNDDYpX1l2eIZ47Lm2RUsN0qlOAw==",
+    "templates/project/wrangler.lead-capture.jsonc": "zaU5/k/TM4FhKWWakCdLMGdPItCYsPDnTLfyxnfip+xbGBpvgl3B73mHA4Wg7sI5P1qNeNlQYawdSlCe68JNAg==",
+    "templates/project/wrangler.toml": "iHbJ19phivockQv/4bMuLQsQk3QpIS3/Q41wn7yPlTz5EtJx8kCR6nAEfL3/b7RRjc/wGnW4EO3C+8FRoETfDA==",
+    ".autovault-source.json": "B0odBQUAoWOIMIFbERC35Ej7JLNNm5gLWvmBUefPUFjIkVQfvlUTSHftwJ+dl7d9a+gvf+ccD0dZj0Xqn/X8Bg=="
+  }
+}

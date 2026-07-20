@@ -6,7 +6,7 @@ tags: [cloudflare, d1, resend, email, lead-capture, forms, turnstile, autovault,
 agents: [claude-code, codex, autojack]
 category: cloudflare
 metadata:
-  version: "1.3.0"
+  version: "1.4.0"
 capabilities:
   network: true
   filesystem: readwrite
@@ -172,6 +172,50 @@ autovault skill setup cloudflare-lead-capture
 
 The setup action can create or record a D1 database and invokes Wrangler secret prompts for `RESEND_API_KEY`, `ADMIN_TOKEN`, optional `TURNSTILE_SECRET_KEY`, and optional `CONFIRM_SECRET`. The agent must not handle the raw secret values.
 
+### 3b. Resend sending domain (project custom domain)
+
+**Hard rule:** When the site has a custom domain on Cloudflare (Pages custom domain or zone already active), **create and verify that exact domain in Resend** before shipping production `FROM_EMAIL`. Do **not** silently set `FROM_EMAIL` to a sibling verified domain (`*.autojack.ai`, another product zone, etc.) as a permanent workaround.
+
+Validated agent path (non-interactive; see **`resend-cli`**):
+
+1. Ensure `RESEND_API_KEY` is in the environment (never print it).
+2. Create the domain (or skip create if `resend domains list` already has it):
+
+```bash
+resend domains create --name example.com --region eu-west-1 -q
+# → id + records[] (DKIM TXT, SPF MX on send, SPF TXT on send)
+```
+
+3. Add DNS on the **project’s Cloudflare zone** (proxied **off** for MX/TXT Resend records):
+
+| Resend record | CF type | CF name (relative OK) | Notes |
+|---|---|---|---|
+| DKIM | TXT | `resend._domainkey` | Prefer value as returned; if value starts with `p=`, prefix `v=DKIM1; k=rsa; ` |
+| SPF | MX | `send` | `content` = Resend host, `priority` = 10 |
+| SPF | TXT | `send` | e.g. `v=spf1 include:amazonses.com ~all` |
+
+Use Zone DNS API or dashboard; zone must already be on Cloudflare (this stack assumes that).
+
+4. Trigger verify and poll until `status == "verified"`:
+
+```bash
+resend domains verify <domain-id> -q
+resend domains get <domain-id> -q   # poll; records[] should all be verified
+```
+
+5. Set production From to an address **on that domain**, e.g. `hello@example.com` / `noreply@example.com`:
+
+- Pages vars: `FROM_EMAIL`, `FROM_NAME` (project PATCH env_vars and/or `wrangler.toml` `[vars]`)
+- Prefer a send-only, domain-scoped Resend API key when rotating keys (`resend api-keys create … --domain-id <id>` — **`resend-cli`**)
+
+**Allowed temporary fallback:** only if DNS cannot be written yet (zone not on CF, no token scope, or user forbids DNS edits). Then:
+
+- State the blocker explicitly in the handoff
+- Use a verified sibling From **and** leave a tracked TODO to flip to the project domain
+- Do not treat the sibling From as “done”
+
+**Reference:** Resend [Verify Domain](https://resend.com/docs/api-reference/domains/verify-domain) (`POST /domains/{id}/verify`); CLI: `resend domains verify <id>`.
+
 ### 4. Apply Schema And Wire The UI
 
 Apply `schema/lead-capture.sql` to the bound D1 database. Then copy the signup or lead form snippet into the site, or adapt the project’s existing form to submit JSON to:
@@ -226,3 +270,4 @@ When finished, report:
 - Do not skip server-side Turnstile validation; the widget alone is not protection.
 - Do not use D1 as a bulk newsletter sender. Store contacts and events in D1, send through a real email provider, and respect unsubscribe state.
 - Do not turn the generated admin UI into a full CRM without explicit scope; it is a small operational surface for early projects.
+- **Do not skip Resend domain verification for the project’s custom domain** when the zone is already on Cloudflare and the agent can write DNS + call Resend. Using a random already-verified domain “because it works” is a failed ship for production From identity (skillissue lesson 2026-07-20).

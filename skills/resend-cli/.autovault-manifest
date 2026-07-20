@@ -1,0 +1,23 @@
+{
+  "version": 2,
+  "skill": "resend-cli",
+  "files": {
+    "SKILL.md": "siZNt5tagZDwrREbbRdKFj3LIfr+lrWsyzaMGAdhtLLnqtOlsSojjz+awuUhhSpJU1X9MsSWGfzIiPCWuSRECw==",
+    "references/api-keys.md": "nL659ExfFDtxhCtpw1c/o1vcS1qsmXI2t1ISVbzgrIk/YCQqwUx17csGuAE6JfL2lGG5jzpdNhzvP/TF6tKhCA==",
+    "references/auth.md": "Dnn/FgIU8BF2N/uGhSKeGJYOcLNeRUhv3CatKW12L3Gf54zM5CbqK4U1n/Ktx0i+UPODJeibc6ewTNTnFv7kBg==",
+    "references/automations.md": "Y3gLMEZYK75tIPhCsWfc1owRC+/NjAUPh98e5IXqvF0kCdPY6Qa13gos8cQJ2NrBk6ysP8wGHHL40Z8N5tVZAw==",
+    "references/broadcasts.md": "O8Dp6Ax0eZW/OW5f5hSLbcjVsveGaUayc9+Z8Sjl9g2i1omdceRacwisDoLWuAb9125K45qVzurcH1OofXsxAA==",
+    "references/contact-properties.md": "jiJ7SbR0JHYxFZHSTiH/V+USEbVXT1eSVsZlvXtxfQomYx89WfdHKnD6E6ihtWnq/pjf9o12IqrFGrWjXQTrAA==",
+    "references/contacts.md": "2ImeQgAfI0r/gsWY2OyD/Tfu7Bmaq/TTuVsj/un4bbR8IsSUQvcchg3y6kvaJnCz19QDpWLs7Ua/0NQ8drBiBA==",
+    "references/domains.md": "D3WTkVWac5VqEUIfv7/yvZTPzfx+3TIj0LTcl/DuJwB00xcseyOps95e1IPYjk1MEzzJmsz8irmA3OLRwb7uDQ==",
+    "references/emails.md": "t9ZWaZtQwRRkSdMREq2W41ko6XqMqOlnwFiTIrCI+dsX2kUaawUUhQT6CBReshky/ZBI9giPFdCd4w237lgzDg==",
+    "references/error-codes.md": "VW6AsDGlf7QNUZ0iSEfi+DPvJd+3WnfIKbxShA6KZdf+bzRhnu0OGPSWD/AuosN2Zba4Fu870eNrHzGTrOSWCQ==",
+    "references/logs.md": "8FXlA0VAyt09+UR/kXdan5iEZyuhJduDB78n42d/hCUOq515LE+AbqDM8mFC0VjmwLgj5TXqUJ09Sn9uwBDnAQ==",
+    "references/segments.md": "bkf1v3JXzNWn6AP62EtkZn2hzTbmlw1JohuxUBEysMQmk6NzA/tBWBYG2LgKZ/9uu2S7DhNd4dyHxQ+xgiStCw==",
+    "references/templates.md": "r9y8ooUiScpKmM99qu2sWx2u6X1ffQwq6IXfl4cCYhrxqG29Jo9KRukI4NKZ4dCArZXZemRiwcXYE1oQ31tIBw==",
+    "references/topics.md": "B7bbniNmL8PiXucaeikX55MxPsWWqzPkafyfrrWHkfUk3UMBwKwXmBFsgbkFm7JGifYr90MVtXH7G+kj95A2Bw==",
+    "references/webhooks.md": "L5zhtuLQGPVEG+ZUKCGt6mENvaMHLVG1Df52QV26BslqxQp5S9k5fZzKmVKpIcivE/u0JFd9lqWdvHPMv78EAw==",
+    "references/workflows.md": "06IQ0XGyCtbxWpb1XP6Z3nhoVWOidtOFwLgioe+92nKYFi8sMK8F98ISia4Ocif2y1FkYEm21Md1gEC7cHs3DQ==",
+    ".autovault-source.json": "PZoXKBZX133LWGxnlx2TH1vlYqeJ0qB8CDkC+dO8gaiidInPzHtK0qXwWU0cXXhVzc1BirivLxNg2kTm1lXCBw=="
+  }
+}
