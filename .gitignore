@@ -16,3 +16,7 @@
 node_modules/
 scratch/
 tmp/
+blog/dist/
+blog/.astro/
+blog/.wrangler/
+blog/data/

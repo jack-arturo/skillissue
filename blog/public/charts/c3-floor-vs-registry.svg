@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 400" width="720" height="400" role="img" aria-labelledby="title desc">
+  <title id="title">Registered tools vs essential always-on floor</title>
+  <desc id="desc">Registered tools vs essential always-on floor — skillissue chart from AutoHub git harvest</desc>
+  <defs>
+    <style type="text/css"><![CDATA[
+      text { font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    ]]></style>
+  </defs>
+  <rect width="720" height="400" fill="#0f1419" rx="8"/>
+  <text x="32" y="28" fill="#e8eaed" font-size="18" font-weight="600">Owner baseline ≠ full registry</text>
+  <text x="32" y="50" fill="#8b949e" font-size="12">July 2026 HEAD · 813 registered tools, 23 essential always-on</text>
+  <line x1="80" y1="320.0" x2="672" y2="320.0" stroke="#1c2430" stroke-width="1"/>
+  <text x="70" y="324.0" fill="#8b949e" font-size="11" text-anchor="end">0</text>
+  <line x1="80" y1="268.9" x2="672" y2="268.9" stroke="#1c2430" stroke-width="1"/>
+  <text x="70" y="272.9" fill="#8b949e" font-size="11" text-anchor="end">200</text>
+  <line x1="80" y1="217.8" x2="672" y2="217.8" stroke="#1c2430" stroke-width="1"/>
+  <text x="70" y="221.8" fill="#8b949e" font-size="11" text-anchor="end">400</text>
+  <line x1="80" y1="166.7" x2="672" y2="166.7" stroke="#1c2430" stroke-width="1"/>
+  <text x="70" y="170.7" fill="#8b949e" font-size="11" text-anchor="end">600</text>
+  <line x1="80" y1="115.6" x2="672" y2="115.6" stroke="#1c2430" stroke-width="1"/>
+  <text x="70" y="119.6" fill="#8b949e" font-size="11" text-anchor="end">800</text>
+  <line x1="80" y1="64.4" x2="672" y2="64.4" stroke="#1c2430" stroke-width="1"/>
+  <text x="70" y="68.4" fill="#8b949e" font-size="11" text-anchor="end">1000</text>
+  <line x1="80" y1="320" x2="672" y2="320" stroke="#2a3441" stroke-width="1.5"/>
+  <rect x="206" y="112.2" width="120" height="207.8" fill="#f07178" rx="4"/>
+  <text x="266" y="100.2" fill="#e8eaed" font-size="22" font-weight="700" text-anchor="middle">813</text>
+  <text x="266" y="342" fill="#8b949e" font-size="12" text-anchor="middle">Registered</text>
+  <text x="266" y="358" fill="#8b949e" font-size="12" text-anchor="middle">mcpTools</text>
+  <rect x="426" y="314.1" width="120" height="5.9" fill="#5ad6c0" rx="4"/>
+  <text x="486" y="302.1" fill="#e8eaed" font-size="22" font-weight="700" text-anchor="middle">23</text>
+  <text x="486" y="342" fill="#8b949e" font-size="12" text-anchor="middle">Essential</text>
+  <text x="486" y="358" fill="#8b949e" font-size="12" text-anchor="middle">always-on</text>
+  <rect x="306" y="102" width="140" height="56" fill="#1c2430" stroke="#2a3441" rx="6"/>
+  <text x="376" y="126" fill="#f0b429" font-size="20" font-weight="700" text-anchor="middle">35.3×</text>
+  <text x="376" y="146" fill="#8b949e" font-size="11" text-anchor="middle">registry / floor</text>
+  <text x="360" y="372" fill="#f0b429" font-size="12" text-anchor="middle" font-style="italic">owner baseline ≠ full registry</text>
+  <text x="32" y="384" fill="#8b949e" font-size="10">Source: current HEAD 4920cbb01071 · tool-filters.json + mcp-tools.json</text>
+  <text x="688" y="384" fill="#8b949e" font-size="10" text-anchor="end">skillissue · 2026-07-20</text>
+</svg>

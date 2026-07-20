@@ -1,0 +1,82 @@
+---
+import { getEmDashEntry, getSeoMeta, decodeSlug } from 'emdash';
+import { PortableText } from 'emdash/ui';
+import Layout from '../../layouts/Layout.astro';
+
+interface CmsPostData {
+  id: string;
+  title: string;
+  excerpt?: string;
+  content?: unknown[];
+  publishedAt?: Date;
+  createdAt?: Date;
+}
+
+const slug = decodeSlug(Astro.params.slug ?? '');
+const { entry: post, isPreview, error, cacheHint } = await getEmDashEntry<
+  'posts',
+  CmsPostData
+>('posts', slug);
+
+if (error || !post) {
+  return new Response(null, { status: 404, statusText: 'Not Found' });
+}
+
+Astro.cache.set(cacheHint);
+if (!isPreview) {
+  Astro.response.headers.set(
+    'Cache-Control',
+    'public, s-maxage=3600, stale-while-revalidate=86400'
+  );
+}
+
+const data = post.data;
+const date = data.publishedAt ?? data.createdAt;
+const formatted = date
+  ? date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    })
+  : '';
+
+const seo = getSeoMeta(post, {
+  siteName: 'skillissue.sh',
+  titleTemplate: '%s — skillissue.sh',
+});
+---
+
+<Layout title={seo.title} description={seo.description ?? data.excerpt}>
+  <article class="article">
+    <div class="wrap article-inner">
+      <header class="article-header">
+        <div class="prompt">
+          <span class="dot"></span>
+          essay{formatted ? ` · ${formatted}` : ''}
+          {isPreview ? ' · preview' : ''}
+        </div>
+        <h1 {...post.edit?.title}>{data.title}</h1>
+        {data.excerpt && (
+          <p class="standfirst" {...post.edit?.excerpt}>
+            {data.excerpt}
+          </p>
+        )}
+        <div class="article-meta">
+          {formatted && <time datetime={date?.toISOString()}>{formatted}</time>}
+          <span>Jack Arturo</span>
+        </div>
+      </header>
+
+      {data.content && (
+        <div class="post-body" {...post.edit?.content}>
+          <PortableText value={data.content} />
+        </div>
+      )}
+
+      <div class="article-foot">
+        <a href="/essays">← all essays</a>
+        <a href="https://skillissue.sh/skills/">skills catalog</a>
+      </div>
+    </div>
+  </article>
+</Layout>

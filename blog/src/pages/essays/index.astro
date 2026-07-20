@@ -1,0 +1,69 @@
+---
+import { getEmDashCollection } from 'emdash';
+import Layout from '../../layouts/Layout.astro';
+
+const { entries: posts, cacheHint } = await getEmDashCollection('posts', {
+  orderBy: { published_at: 'desc' },
+  limit: 50,
+});
+Astro.cache.set(cacheHint);
+
+function formatDate(d?: Date | string | null) {
+  if (!d) return '';
+  const date = d instanceof Date ? d : new Date(d);
+  if (Number.isNaN(date.getTime())) return '';
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}
+---
+
+<Layout
+  title="Essays — skillissue.sh"
+  description="Longer writing about skills, tools, and not drowning your agent."
+>
+  <section class="hero">
+    <div class="wrap">
+      <div class="prompt"><span class="dot"></span> essays · EmDash</div>
+      <h1>Essays</h1>
+      <p class="lede">
+        Longer writing about skills, MCP, and context discipline. The skills catalog
+        stays static on Pages; this is the CMS lane.
+      </p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      {posts.length === 0 ? (
+        <p class="empty">
+          No published essays yet. Complete EmDash setup at
+          <a href="/_emdash/admin/setup">/_emdash/admin/setup</a>, then publish.
+        </p>
+      ) : (
+        <div class="grid">
+          {posts.map((post) => {
+            const data = post.data as {
+              title?: string;
+              excerpt?: string;
+              publishedAt?: Date | string;
+            };
+            return (
+              <a class="card" href={`/essays/${post.id}/`}>
+                <div class="card-top">
+                  <h2>{data.title ?? post.id}</h2>
+                  {data.publishedAt && (
+                    <span class="tag">{formatDate(data.publishedAt)}</span>
+                  )}
+                </div>
+                {data.excerpt && <p>{data.excerpt}</p>}
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>

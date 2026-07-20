@@ -9,7 +9,11 @@
     "build:strict": "node scripts/build-catalog.mjs --strict",
     "harvest:tools": "node scripts/harvest-tool-timeline.mjs",
     "charts": "node scripts/generate-charts.mjs",
-    "preview": "python3 -m http.server 8787 --directory site"
+    "preview": "python3 -m http.server 8787 --directory site",
+    "blog:seed": "npm --prefix blog run seed:build",
+    "blog:dev": "npm --prefix blog run dev",
+    "blog:build": "npm --prefix blog run build",
+    "blog:deploy": "npm --prefix blog run build && npm --prefix blog exec -- wrangler deploy"
   },
   "engines": {
     "node": ">=20"

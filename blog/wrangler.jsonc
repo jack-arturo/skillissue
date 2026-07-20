@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "skillissue-blog",
+  "main": "./src/worker.ts",
+  "compatibility_date": "2026-07-19",
+  "compatibility_flags": ["nodejs_compat"],
+  // D1/R2 IDs are filled after `wrangler d1 create` / `r2 bucket create`.
+  // Until then: local `astro build` still works; remote deploy needs real IDs.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "skillissue-cms",
+      "database_id": "f0dbcf9a-7ee8-4b5b-9018-5a687cbeffa5",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "skillissue-media"
+    }
+  ],
+  "triggers": {
+    "crons": ["*/15 * * * *"]
+  }
+  // Path hybrid (enable AFTER admin setup so live /essays isn't a setup redirect):
+  // "routes": [
+  //   { "pattern": "skillissue.sh/essays", "zone_name": "skillissue.sh" },
+  //   { "pattern": "skillissue.sh/essays/*", "zone_name": "skillissue.sh" },
+  //   { "pattern": "skillissue.sh/_emdash/*", "zone_name": "skillissue.sh" }
+  // ]
+  // Zone id: 2fd968b93f81b2e72f794b9a5d7f01d0
+  // Alternative: custom host blog.skillissue.sh → this Worker only.
+}

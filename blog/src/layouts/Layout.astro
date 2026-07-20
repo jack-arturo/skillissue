@@ -1,0 +1,59 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'Essays on skills, MCP, and context discipline — skillissue.sh',
+} = Astro.props;
+
+const path = Astro.url.pathname;
+const essaysActive = path === '/essays' || path.startsWith('/essays/');
+const catalogOrigin = 'https://skillissue.sh';
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/style.css" />
+    <meta name="color-scheme" content="dark" />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-nav">
+      <div class="wrap inner">
+        <a class="brand" href={`${catalogOrigin}/`}>skill<span>issue</span>.sh</a>
+        <nav class="nav-links" aria-label="Primary">
+          <a href={`${catalogOrigin}/skills/`}>skills</a>
+          <a href="/essays" aria-current={essaysActive ? 'page' : undefined}>essays</a>
+          <a href={`${catalogOrigin}/install/`}>install</a>
+          <a href={`${catalogOrigin}/about/`}>about</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-foot">
+      <div class="wrap inner">
+        <span class="mono">essays · EmDash CMS · hybrid with static catalog</span>
+        <span>
+          <a href={`${catalogOrigin}/`}>catalog</a>
+          ·
+          <a href="https://autovault.dev">AutoVault</a>
+          ·
+          <a href="/_emdash/admin">admin</a>
+        </span>
+      </div>
+    </footer>
+  </body>
+</html>
