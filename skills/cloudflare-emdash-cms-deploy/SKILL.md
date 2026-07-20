@@ -6,7 +6,7 @@ tags: [cloudflare, workers, emdash, astro, cms, d1, r2, deployment, autohub]
 agents: [claude-code, codex, autojack]
 category: deployment
 metadata:
-  version: "1.11.0"
+  version: "1.12.0"
 capabilities:
   network: true
   filesystem: readwrite
@@ -18,6 +18,86 @@ capabilities:
 ## Overview
 
 EmDash (the Astro-based CMS) deploys to **Cloudflare Workers, not Pages**. `@astrojs/cloudflare` v13+ is Workers-only: `astro build` emits `dist/client` + `dist/server` with **no `_worker.js`**. A Cloudflare **Pages** project cannot run that output, so it serves the raw repo — the root URL **downloads `wrangler.jsonc`** (`application/octet-stream`) or **404s** (no `index.html`). The fix is always: deploy as a Worker.
+
+### Repo + package identity (do not confuse)
+
+| Thing | What it is |
+|---|---|
+| **CMS** | GitHub [`emdash-cms/emdash`](https://github.com/emdash-cms/emdash) · npm `emdash` + `@emdash-cms/*` |
+| **Not this** | [`generalaction/emdash`](https://github.com/generalaction/emdash) (agentic IDE on emdash.ai) — different product |
+
+Ignore npm `emdash@1.0.0` as “current”: it is an older April publish; **`npm view emdash version`** is the source of truth for stable CMS releases (tags look like `emdash@0.29.0` on GitHub).
+
+## Version currency — **every new EmDash project** (mandatory)
+
+Do **not** copy `emdash` / `@emdash-cms/cloudflare` versions from the last repo by habit. New sites start on **latest stable**; upgrades research what shipped since the last project’s baseline.
+
+### 1. Resolve latest (run every time)
+
+```bash
+# Stable CMS line (authoritative)
+npm view emdash version
+npm view @emdash-cms/cloudflare version
+npm view emdash dist-tags   # ignore canary/next unless the user opts in
+
+# GitHub release notes (same monorepo tags: emdash@X.Y.Z)
+gh release list -R emdash-cms/emdash --limit 12
+```
+
+Pin new `package.json` deps to that resolved pair (keep `emdash` and `@emdash-cms/cloudflare` **in lockstep** — same minor). Prefer `^X.Y.Z` of current stable, not a hard-coded skill example.
+
+### 2. Baseline from memory + last projects
+
+```bash
+# What we last shipped
+# AutoMem: query "EmDash version" tags emdash / memberfix / southandozarks / automem-website
+# Local package.json survey:
+for p in memberfix-site skillissue/blog southandozarks automem-website; do
+  node -e "const d=require('./$p/package.json').dependencies||{}; console.log('$p', d.emdash, d['@emdash-cms/cloudflare'])"
+done 2>/dev/null
+```
+
+Record `from_version` (max baseline among related projects or memory) and `to_version` (npm latest).
+
+### 3. Delta research (when `from < to`)
+
+```bash
+# Release bodies for each tag between from and to (example 0.27 → 0.29)
+for t in emdash@0.28.0 emdash@0.28.1 emdash@0.29.0; do
+  gh release view "$t" -R emdash-cms/emdash --json name,publishedAt,body \
+    --jq '"\(.name) \(.publishedAt)\n\(.body[0:2000])\n---"'
+done
+```
+
+Summarize for the user (or Autopilot log):
+
+- **Breaking / migration** — config renames, seed shape, env vars, Worker limits  
+- **New capabilities** worth adopting on this site (toolbar modes, WP import, references API, search pagination, taxonomies on MCP writes, …)  
+- **Security fixes** that make upgrade non-optional (e.g. admin cache, plugin route CSRF)  
+- **Skip / later** — features irrelevant to this build  
+
+Write the summary under `docs/emdash-version-delta.md` in the new repo (short: from→to, bullets, decide/adopt/defer).
+
+### 4. Autonomy modes
+
+| User intent | Action |
+|---|---|
+| Default / “new site” | Pin **latest stable**, include delta summary in plan, **propose** which new capabilities to use |
+| “Full autonomy” / “ship it” | Pin latest, **adopt** low-risk upgrades (security, toolbar client mode if public cache, WP import improvements if migrating), implement obvious wins, store outcome in AutoMem, patch skills if patterns changed |
+| “Stay on X” | Honor pin; still document latest and deferred delta |
+
+After a successful first deploy on a new baseline, store AutoMem:
+
+> `EmDash CMS baseline <to_version> on <project>. Adopted: … Deferred: …`  
+> tags: `emdash`, `decision`, `<project-slug>`
+
+### 5. Skill hygiene
+
+When a release changes deploy/seed/admin contracts this skill assumes, **update this SKILL.md** (and `building-emdash-site` if build APIs moved) in the same session — version bump `metadata.version`, drop stale “latest is 0.19” style claims, sync to skillissue package if published there.
+
+### Snapshot (update when you change the ritual, not every release)
+
+As of 2026-07-20 research: **npm latest `emdash@0.29.0`** / `@emdash-cms/cloudflare@0.29.0`. House projects were mostly on `^0.27.0` (SAO on `^0.19.0`). Notable since 0.27: chunked WP import on Workers (0.28), richer WP taxonomy/SEO/ACF import, admin `Cache-Control: private`, plugin route CSRF fix (0.28.1), content references API, search pagination, `toolbar: "client"`, taxonomies on MCP content writes, hreflang helpers (0.29).
 
 ## Symptom → diagnosis
 
@@ -183,7 +263,7 @@ How it flows: the integration serializes `config.admin` (`astro/index.mjs`) → 
 - `emdash({ admin: {...} })` → the **admin panel** (sidebar/login/favicon). Build-time.
 - `emdash:site_title` D1 option (+ public site settings) → **emails, public-site SEO, passkey rpName**. Runtime, per-request. (See the email section above.)
 
-Shipped since **v0.19.0** (PR #705 added the `admin` block; PR #851 fixed #835 "manifest always returns null for admin"). Both merged April 2026, before the June 0.19.0 release — so it's in the current line. (Ignore `emdash@1.0.0` on npm: it's an *older* April publish, npm-deprecated, `latest` = 0.19.0. Always check `npm view <pkg> time` + dist-tags before treating a higher semver as newer.) Further login-page white-labeling is tracked in upstream discussions (#1493 RFC, #1241) — search the repo before filing anything; the logo/name/favicon case is already done.
+Admin `logo` / `siteName` / `favicon` have shipped since **0.19.0**. Always resolve current line with `npm view emdash version` (do **not** assume a number in this skill is latest). Ignore npm `emdash@1.0.0` as current — older publish. Further login-page white-labeling beyond logo/name/favicon is still limited upstream.
 
 **Lesson:** for admin branding, look at the `config.admin` → `/_emdash/api/manifest` → SPA path, not D1 options. Two passes wrongly concluded "no knob" by inspecting only the options/siteInfo path.
 
@@ -203,7 +283,7 @@ When the audience is a WP agency / membership operator (e.g. MemberFix / Vic), *
 
 Reference implementation: `verygoodplugins/memberfix-site` (`docs/admin-branding.md`, `public/admin-lockup.svg`). Rebuild+deploy after `admin.*` changes; D1 title is live without redeploy.
 
-What you *cannot* theme yet (EmDash 0.27): admin CSS tokens / full login page layout beyond logo+name+favicon. Do the rest on the public site + email shell.
+What you *cannot* theme yet (as of 0.29): admin CSS tokens / full login page layout beyond logo+name+favicon. Do the rest on the public site + email shell.
 
 ## Verify
 
