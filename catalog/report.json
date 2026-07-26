@@ -1,10 +1,10 @@
 {
-  "public": 30,
+  "public": 31,
   "skipped": [],
   "missingNarrative": [],
   "missingSkillMd": [],
-  "generatedAt": "2026-07-20T10:11:45.896Z",
-  "installPin": "b12c27b51cd2165d9a2fe69c494f1760e5cfb280",
+  "generatedAt": "2026-07-26T21:22:41.329Z",
+  "installPin": "efd09da503770bce1de134fc485f62e65f1d38c3",
   "publicSkills": [
     "babysit",
     "cloudflare-lead-capture",
@@ -14,6 +14,7 @@
     "long-haul-parallel-repair",
     "session-consolidate",
     "skill-author",
+    "voiceink-2-upgrade",
     "autojack-delegate",
     "automem",
     "autovault-skill",
