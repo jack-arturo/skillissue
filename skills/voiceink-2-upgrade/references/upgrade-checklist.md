@@ -29,7 +29,7 @@ Copy this into the session notes and tick as you go.
 ## Enhancement
 
 - [ ] Cleanup provider is fast (Cerebras/Groq/Gemini flash-class) — not a slow flagship
-- [ ] Clipboard + screen + selected-text context enabled where the prompt needs them
+- [ ] Clipboard + screen + selected-text context enabled only where the prompt needs them — and only if you're OK sending that material to the cleanup provider (hosted Cerebras/Groq/Gemini). Prefer local enhancement or context off for secret-heavy work.
 - [ ] Custom assistant endpoint verified under AI Models → Custom (if used)
 - [ ] History sample: Default rows show prompt name and successful enhance text
 

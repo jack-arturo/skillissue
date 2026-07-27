@@ -117,7 +117,7 @@ Follow [references/upgrade-checklist.md](references/upgrade-checklist.md) in ord
 # VoiceInk → Settings → Backup → Export Settings
 # Also copy prefs if Modes vanished:
 cp ~/Library/Preferences/com.prakashjoshipax.VoiceInk.plist \
-  ~/Desktop/VoiceInk-prefs-pre-tune-$(date +%Y%m%d).plist
+  ~/Desktop/VoiceInk-prefs-pre-tune-$(date +%Y%m%d-%H%M%S).plist
 ```
 
 ### 2. Kill Apple Speech dead-ends

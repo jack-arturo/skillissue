@@ -8,7 +8,10 @@ transcription / enhancement / output / trigger combo.
 - **Transcription:** Parakeet V3, realtime on, language `auto`
 - **Enhancement:** Cerebras `gpt-oss-120b` (or Groq / Gemini flash-class)
 - **Prompt:** your cleanup prompt (see `enhancement-prompt.md`)
-- **Context:** clipboard + selected text + screen
+- **Context:** clipboard + selected text + screen — **opt-in with eyes open**.
+  Hosted cleanup (Cerebras/Groq/Gemini) receives that material with the
+  transcript. Turn context off (or point enhancement at a local endpoint) when
+  the clipboard/screen may contain secrets or unrelated private content.
 - **Output:** Paste
 - **Default:** yes
 - **Triggers:** AI / coding apps (Cursor, Claude, Terminal, VS Code) + Slack
@@ -38,7 +41,8 @@ transcription / enhancement / output / trigger combo.
 ## Email
 
 - **Enhancement:** cleanup prompt
-- **Context:** clipboard + selected + screen
+- **Context:** clipboard + selected + screen (same disclosure as Default —
+  hosted providers see it)
 - **Triggers:** Mail app + `mail.google.com` / Outlook web
 - Word triggers: `draft email`, `write email`
 

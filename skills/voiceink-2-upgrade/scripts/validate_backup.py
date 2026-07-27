@@ -114,6 +114,7 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
         names = ", ".join(str(m.get("name")) for m in defaults)
         _warn(f"multiple default Modes: {names}", warnings)
 
+    seen_mode_ids: set[str] = set()
     for i, mode in enumerate(modes):
         if not isinstance(mode, dict):
             _err(f"modeConfigs[{i}] is not an object", errors)
@@ -138,6 +139,10 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
                 f"(got {type(mid).__name__})",
                 errors,
             )
+        elif mid in seen_mode_ids:
+            _err(f"Mode {label!r}: duplicate id {mid!r}", errors)
+        else:
+            seen_mode_ids.add(mid)
         if not isinstance(name, str) or not name.strip():
             _err(
                 f"Mode {label!r}: name must be a non-empty string "
