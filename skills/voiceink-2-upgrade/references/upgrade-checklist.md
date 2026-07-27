@@ -42,7 +42,7 @@ Copy this into the session notes and tick as you go.
 
 ## Import pack
 
-- [ ] `python3 scripts/validate_backup.py <export.json>` passes
+- [ ] `python3 ~/.autovault/skills/voiceink-2-upgrade/scripts/validate_backup.py <export.json>` passes (or path from `autovault skill which voiceink-2-upgrade validate_backup.py`)
 - [ ] Scrub secrets / hyper-personal replacements before sharing the JSON
 - [ ] Import Modes + Prompts + Dictionary
 - [ ] Re-verify Custom provider after import on a new machine

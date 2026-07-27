@@ -190,13 +190,17 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
                 warnings,
             )
 
-        if mode.get("selectedAIProvider") == "Custom" and not mode.get(
-            "selectedAIModel"
-        ):
-            _warn(
-                f"Mode {label!r}: Custom provider with empty selectedAIModel",
-                warnings,
-            )
+        if mode.get("selectedAIProvider") == "Custom":
+            model_name = mode.get("selectedAIModel")
+            if not isinstance(model_name, str) or not model_name.strip():
+                msg = (
+                    f"Mode {label!r}: Custom provider with empty/invalid "
+                    f"selectedAIModel (got {type(model_name).__name__})"
+                )
+                if enhance:
+                    _err(msg, errors)
+                else:
+                    _warn(msg, warnings)
 
     emoji_keys = [k for k in replacements if "emoji" in str(k).lower()]
     if not emoji_keys:
@@ -204,6 +208,41 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
             "wordReplacements has no '*emoji*' keys — Brief Modes won't convert "
             "spoken emoji without AI",
             warnings,
+        )
+
+    for key, value in replacements.items():
+        if not isinstance(key, str) or not key.strip():
+            _err(
+                f"wordReplacements key must be a non-empty string "
+                f"(got {type(key).__name__})",
+                errors,
+            )
+            continue
+        if not isinstance(value, str):
+            _err(
+                f"wordReplacements[{key!r}] must be a string "
+                f"(got {type(value).__name__})",
+                errors,
+            )
+
+    for i, entry in enumerate(vocab):
+        if isinstance(entry, str):
+            if not entry.strip():
+                _err(f"vocabularyWords[{i}] is an empty string", errors)
+            continue
+        if isinstance(entry, dict):
+            word = entry.get("word", entry.get("text", entry.get("value")))
+            if not isinstance(word, str) or not word.strip():
+                _err(
+                    f"vocabularyWords[{i}] object needs a non-empty string "
+                    f"word/text/value (got {type(word).__name__})",
+                    errors,
+                )
+            continue
+        _err(
+            f"vocabularyWords[{i}] must be a string or object "
+            f"(got {type(entry).__name__})",
+            errors,
         )
 
     ellipsis_keys = {"dot dot dot", "ellipsis", "three dots"}
