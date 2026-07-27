@@ -5,9 +5,9 @@ provenance: house
 featured: true
 title: "VoiceInk 2.0 Upgrade"
 summary: >-
-  Field notes for surviving VoiceInk 2.0: Parakeet V3 Modes, the Apple Speech
-  trap, prompt=<none> enhancement failures, Dictionary emoji/path replacements,
-  and a settings-backup validator.
+  Field notes for surviving VoiceInk 2.0: Parakeet Modes, Apple Speech trap,
+  prompt=<none> failures, Dictionary replacements, Hub Parakeet shared STT, and
+  a settings-backup validator.
 category: desktop
 tags: [voiceink, macos, dictation, migration, parakeet]
 related: [flashspace, raycast]
@@ -33,6 +33,12 @@ replacements, and validate the backup JSON before you re-import it.
 
 ## History
 
+### 1.1.0 — 2026-07
+
+Hub Parakeet path: Custom Transcription → OpenAI
+`/v1/audio/transcriptions` on a warm local MLX server; unload FluidAudio to
+avoid two runtimes; document bare-host 404 and empty Test-probe ffmpeg failures.
+
 ### 1.0.0 — 2026-07
 
 First public cut after a live Mac upgrade to VoiceInk 2.0 (build ~205).
@@ -45,19 +51,20 @@ First public cut after a live Mac upgrade to VoiceInk 2.0 (build ~205).
 
 ## How Jack actually uses it
 
-Default Mode: Parakeet V3 streaming, Cerebras `gpt-oss-120b` cleanup, System
-Default-style prompt, language `auto`. Clipboard + screen context on for
-register detection.
+Default Mode: **Hub Parakeet** (local OpenAI transcriptions on `:8178`) when the
+LaunchAgent/hub server is warm; otherwise FluidAudio Parakeet V3. Cerebras
+`gpt-oss-120b` cleanup, System Default-style prompt, language `auto`. Clipboard +
+screen context on for register detection — eyes open that hosted cleanup sees it.
 
 Brief: enhancement off, messaging apps, Dictionary replacements for emoji so
 WhatsApp stays fast.
 
-Ask AutoJack: Custom OpenAI-compatible endpoint on localhost, Respond output —
-not the same provider as cleanup.
+Ask AutoJack: Custom OpenAI-compatible **chat** endpoint on localhost, Respond
+output — not the same provider as cleanup, and not the same as Hub Parakeet STT.
 
 Dictionary is the shared lexicon other local STT tools can read read-only from
-`dictionary.store`. Don't assume FluidAudio CoreML weights are the same stack as
-parakeet-mlx.
+`dictionary.store`. FluidAudio CoreML weights are **not** the same stack as
+parakeet-mlx; sharing happens at the HTTP server, not the weight files.
 
 ## What it is not
 

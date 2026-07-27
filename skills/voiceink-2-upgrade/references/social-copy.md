@@ -76,10 +76,16 @@ skillissue.sh/skills/voiceink-2-upgrade
 
 ## One-liner for Discord / Slack
 
-VoiceInk 2 upgrade skill — Parakeet V3 Modes, fix `prompt=<none>` decode fails, emoji/path replacements, backup validator: skillissue.sh/skills/voiceink-2-upgrade
+VoiceInk 2 upgrade skill — Parakeet Modes, fix `prompt=<none>`, Hub Parakeet shared STT, emoji/path replacements, backup validator: skillissue.sh/skills/voiceink-2-upgrade
 
 ---
 
 ## Site blurb (short)
 
-Field notes for VoiceInk 2.0: rebuild Modes after onboarding, stay on Parakeet V3, wire a real cleanup prompt, put emoji/path fixes in Dictionary replacements, and validate settings JSON before import.
+Field notes for VoiceInk 2.0: rebuild Modes after onboarding, Parakeet (local or shared hub `/v1/audio/transcriptions`), wire a real cleanup prompt, put emoji/path fixes in Dictionary replacements, and validate settings JSON before import.
+
+---
+
+## Hub Parakeet add-on (X / Bluesky)
+
+Also: one warm Parakeet for VoiceInk + the hub. Custom Transcription → `http://127.0.0.1:8178/v1/audio/transcriptions` — not the bare host. Unload FluidAudio so you’re not paying for two models.

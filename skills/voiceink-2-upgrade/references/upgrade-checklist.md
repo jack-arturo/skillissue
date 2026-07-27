@@ -11,20 +11,27 @@ Copy this into the session notes and tick as you go.
 ## After install / first launch
 
 - [ ] Finish or **dismiss** v2 onboarding (stuck `onboardingStage=model` is a footgun)
-- [ ] AI Models → Local → download **Parakeet V3**
-- [ ] Enable realtime / streaming for V3
-- [ ] Confirm `~/Library/Application Support/FluidAudio/Models/parakeet-tdt-0.6b-v3` exists
+- [ ] AI Models → Local → download **Parakeet V3** *or* plan Hub Parakeet (below)
+- [ ] If using local FluidAudio: enable realtime / streaming for V3; confirm `~/Library/Application Support/FluidAudio/Models/parakeet-tdt-0.6b-v3` exists
 - [ ] Do **not** leave active Modes on Apple Speech unless English (US) asset is downloaded
 
 ## Modes
 
-- [ ] At least one Mode with `isDefault: true`, Paste output, Parakeet V3, language `auto`
+- [ ] At least one Mode with `isDefault: true`, Paste output, Parakeet (local or Hub), language `auto`
 - [ ] Default Mode has AI Enhancement **on** + a real cleanup prompt selected
 - [ ] Brief Mode: enhancement **off**, messaging apps, language `auto`
 - [ ] Optional Assistant Mode: Custom provider, Respond output, word triggers
 - [ ] Optional Submit Mode: Paste + Auto Send Return (Raycast / chat UIs)
 - [ ] Optional Email Mode: Mail/Gmail triggers, cleanup prompt, clipboard context on
 - [ ] No enhancing Mode with empty `selectedPrompt`
+
+## Hub Parakeet (optional shared STT)
+
+- [ ] `curl -sS http://127.0.0.1:8178/health` → `ready: true` (LaunchAgent or hub voice)
+- [ ] Custom Transcription endpoint is the **full** URL `http://127.0.0.1:8178/v1/audio/transcriptions`
+- [ ] Model name `parakeet`, multilingual on; Test succeeds
+- [ ] Modes point at Hub Parakeet; local FluidAudio Parakeet unloaded to avoid double RAM
+- [ ] Note: whole-utterance HTTP ≠ FluidAudio realtime partials
 
 ## Enhancement
 
