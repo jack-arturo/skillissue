@@ -161,7 +161,9 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
                 f"(got {type(enhance_raw).__name__})",
                 errors,
             )
-        if "isDefault" in mode and not isinstance(mode.get("isDefault"), bool):
+        if "isDefault" not in mode:
+            _err(f"Mode {label!r}: missing isDefault", errors)
+        elif not isinstance(mode.get("isDefault"), bool):
             _err(
                 f"Mode {label!r}: isDefault must be a boolean "
                 f"(got {type(mode.get('isDefault')).__name__})",
