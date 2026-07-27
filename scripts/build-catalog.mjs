@@ -67,6 +67,23 @@ function parseFrontmatter(text) {
       fm[key] = parts.join(" ").trim();
       continue;
     }
+    if (!val) {
+      // YAML block sequence: key on its own line, followed by "- item" lines
+      let j = i + 1;
+      const items = [];
+      while (j < lines.length && /^\s*-\s+/.test(lines[j])) {
+        items.push(lines[j].replace(/^\s*-\s+/, "").trim().replace(/^["']|["']$/g, ""));
+        j++;
+      }
+      if (items.length) {
+        fm[key] = items;
+        i = j;
+        continue;
+      }
+      fm[key] = "";
+      i++;
+      continue;
+    }
     if (val.startsWith("[") && val.endsWith("]")) {
       fm[key] = val
         .slice(1, -1)
@@ -568,7 +585,7 @@ const cards = publicSkills
       .slice(0, 4)
       .map((t) => `<span class="tag">${esc(t)}</span>`)
       .join("");
-    return `<a class="card${s.featured ? " featured" : ""}" href="/skills/${esc(s.name)}/">
+    return `<a class="card${s.featured ? " featured" : ""}" href="/skills/${esc(s.name)}/" data-category="${esc(s.category)}">
   <div class="card-top"><h3>${esc(s.name)}</h3>
   ${s.featured ? '<span class="badge">featured</span>' : `<span class="tag">${esc(s.category)}</span>`}
   </div>
@@ -604,7 +621,7 @@ fs.writeFileSync(
     (function(){
       var cards=[].slice.call(document.querySelectorAll('#grid .card'));
       var cats={};cards.forEach(function(c){
-        var t=c.querySelector('.tag'); if(t) cats[t.textContent]=1;
+        var cat=c.getAttribute('data-category'); if(cat) cats[cat]=1;
       });
       var filters=document.getElementById('filters');
       var active='all';
@@ -622,7 +639,7 @@ fs.writeFileSync(
         var qq=(q.value||'').toLowerCase(); var n=0;
         cards.forEach(function(c){
           var text=c.textContent.toLowerCase();
-          var catEl=c.querySelector('.tag'); var cat=catEl?catEl.textContent:'';
+          var cat=c.getAttribute('data-category')||'';
           var ok=(active==='all'||cat===active)&&(!qq||text.indexOf(qq)>=0);
           c.style.display=ok?'':'none'; if(ok)n++;
         });
@@ -636,7 +653,7 @@ fs.writeFileSync(
 );
 
 // home
-const featured = publicSkills.filter((s) => s.featured).slice(0, 8);
+const featured = publicSkills.filter((s) => s.featured);
 const featCards = featured
   .map(
     (s) => `<a class="card featured" href="/skills/${esc(s.name)}/">
