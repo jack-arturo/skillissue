@@ -7,11 +7,11 @@
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
 - Source packages: https://github.com/jack-arturo/skillissue/tree/main/skills
-- Install pin (this build): 836ceed29d890ea6c1260937d1fcd2524b1779aa
+- Install pin (this build): 03ee69a919a1c8629ffd66c261319b9264b0e614
 
 ## Install
 ```
-autovault add jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/<name>/SKILL.md --sync-profiles
+autovault add jack-arturo/skillissue@03ee69a919a1c8629ffd66c261319b9264b0e614:skills/<name>/SKILL.md --sync-profiles
 ```
 
 ## Public skills (31)
@@ -23,7 +23,7 @@ autovault add jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:sk
 - long-haul-parallel-repair (v1.0.0) — Use when the user explicitly authorizes subagents, fan-out, delegation, long-running autonomous work, "work for hours", "iterate until satisfied", or solving every <8/10 confidence item through evidence, fixes, and verification. Also use for deep investigation or repair only when paired with explicit autonomy, fan-out, or subagent authorization.
 - session-consolidate (v1.1.0) — Run at a natural stopping point or via the /consolidate command to harvest durable learnings from the current session into AutoMem (store, associate, update, invalidate) and to create, update, merge, deduplicate, or simplify AutoVault skills. Enumerates candidates for veto first, requires explicit per-item confirmation before any destructive skill change, and ends with a short summary of what was created, updated, and consolidated.
 - skill-author (v2.0.0) — Package and validate an existing skill draft for AutoVault when its frontmatter, resources, capabilities, or admission result need review.
-- voiceink-2-upgrade (v1.0.0) — Field notes for surviving VoiceInk 2.0: Parakeet V3 Modes, the Apple Speech trap, prompt=<none> enhancement failures, Dictionary emoji/path replacements, and a settings-backup validator.
+- voiceink-2-upgrade (v1.1.0) — Field notes for surviving VoiceInk 2.0: Parakeet Modes, Apple Speech trap, prompt=<none> failures, Dictionary replacements, Hub Parakeet shared STT, and a settings-backup validator.
 - autojack-delegate (v1.0.0) — Use when a Claude Code session needs a capability it doesn't have locally (Google Calendar/Gmail/Drive, Slack DM, Discord, WhatsApp, etc.) and the user's AutoHub server has the tool wired in. Delegates one natural-language request to autojack via the local chat API and returns the result.
 - automem (v1.0.0) — Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections ("actually", "no, I prefer", "stop doing X", "we decided X already", "I told you before"), decisions that stabilize after a round of pushback ("let's go with X", "ship it", "yeah that's the plan", "do it that way"), or articulated patterns ("I always X", "every time", "my thing is"). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.
 - autovault-skill (v1.1.0) — Understand AutoVault-managed skills. AutoVault syncs skills into the agent's normal skill directory, so loaded skills can be used directly without an AutoVault MCP server.

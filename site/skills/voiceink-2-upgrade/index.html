@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>voiceink-2-upgrade — skillissue.sh</title>
-<meta name="description" content="Field notes for surviving VoiceInk 2.0: Parakeet V3 Modes, the Apple Speech trap, prompt=&lt;none&gt; enhancement failures, Dictionary emoji/path replacements, and a settings-backup validator.">
+<meta name="description" content="Field notes for surviving VoiceInk 2.0: Parakeet Modes, Apple Speech trap, prompt=&lt;none&gt; failures, Dictionary replacements, Hub Parakeet shared STT, and a settings-backup validator.">
 <link rel="canonical" href="https://skillissue.sh/skills/voiceink-2-upgrade/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0c0f">
 <meta property="og:title" content="voiceink-2-upgrade — skillissue.sh">
-<meta property="og:description" content="Field notes for surviving VoiceInk 2.0: Parakeet V3 Modes, the Apple Speech trap, prompt=&lt;none&gt; enhancement failures, Dictionary emoji/path replacements, and a settings-backup validator.">
+<meta property="og:description" content="Field notes for surviving VoiceInk 2.0: Parakeet Modes, Apple Speech trap, prompt=&lt;none&gt; failures, Dictionary replacements, Hub Parakeet shared STT, and a settings-backup validator.">
 <meta property="og:image" content="https://skillissue.sh/assets/og.png">
 <meta property="og:url" content="https://skillissue.sh/skills/voiceink-2-upgrade/">
 <meta property="og:type" content="website">
@@ -41,27 +41,27 @@
 
     <section class="hero skill-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v1.0.0 · house · pin 836ceed</div>
+        <div class="prompt"><span class="dot"></span> skill · v1.1.0 · house · pin 03ee69a</div>
         <h1><span class="path">voiceink-2-upgrade</span></h1>
-        <p class="lede">Field notes for surviving VoiceInk 2.0: Parakeet V3 Modes, the Apple Speech trap, prompt=&lt;none&gt; enhancement failures, Dictionary emoji/path replacements, and a settings-backup validator.</p>
+        <p class="lede">Field notes for surviving VoiceInk 2.0: Parakeet Modes, Apple Speech trap, prompt=&lt;none&gt; failures, Dictionary replacements, Hub Parakeet shared STT, and a settings-backup validator.</p>
         <div class="meta" style="margin-bottom:1.25rem"><span class="tag">voiceink</span><span class="tag">macos</span><span class="tag">dictation</span><span class="tag">migration</span><span class="tag">parakeet</span>
           <span class="badge">house</span>
           <span class="badge">featured</span>
         </div>
         <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/voiceink-2-upgrade/SKILL.md --sync-profiles">Copy AutoVault install</button>
-          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/voiceink-2-upgrade/SKILL.md&quot; })">Copy MCP add_skill</button>
+          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@03ee69a919a1c8629ffd66c261319b9264b0e614:skills/voiceink-2-upgrade/SKILL.md --sync-profiles">Copy AutoVault install</button>
+          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@03ee69a919a1c8629ffd66c261319b9264b0e614:skills/voiceink-2-upgrade/SKILL.md&quot; })">Copy MCP add_skill</button>
           <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
         </div>
         <div class="term" style="max-width:48rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · 836ceed</span></div>
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · 03ee69a</span></div>
           <div class="term-body">
             <div><span class="dim"># CLI (primary)</span></div>
-            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/voiceink-2-upgrade/SKILL.md --sync-profiles</span></div>
+            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@03ee69a919a1c8629ffd66c261319b9264b0e614:skills/voiceink-2-upgrade/SKILL.md --sync-profiles</span></div>
             <div style="margin-top:0.6rem"><span class="dim"># MCP tool call</span></div>
-            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/voiceink-2-upgrade/SKILL.md&quot; })</div>
+            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@03ee69a919a1c8629ffd66c261319b9264b0e614:skills/voiceink-2-upgrade/SKILL.md&quot; })</div>
             <div class="ok" style="margin-top:0.6rem">→ vault validates · signs · syncs agent skill dirs</div>
-            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/836ceed29d890ea6c1260937d1fcd2524b1779aa/skills/voiceink-2-upgrade/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
+            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/03ee69a919a1c8629ffd66c261319b9264b0e614/skills/voiceink-2-upgrade/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
           </div>
         </div>
       </div>
@@ -82,6 +82,10 @@
 <p>prompt, put deterministic fixes (emoji, ellipsis, <code>mcp-client.js</code>) in word</p>
 <p>replacements, and validate the backup JSON before you re-import it.</p>
 <h2>History</h2>
+<h3>1.1.0 — 2026-07</h3>
+<p>Hub Parakeet path: Custom Transcription → OpenAI</p>
+<p><code>/v1/audio/transcriptions</code> on a warm local MLX server; unload FluidAudio to</p>
+<p>avoid two runtimes; document bare-host 404 and empty Test-probe ffmpeg failures.</p>
 <h3>1.0.0 — 2026-07</h3>
 <p>First public cut after a live Mac upgrade to VoiceInk 2.0 (build ~205).</p>
 <ul>
@@ -92,24 +96,25 @@
 <li>Notes that Custom providers live in prefs + Keychain, not the backup schema</li>
 </ul>
 <h2>How Jack actually uses it</h2>
-<p>Default Mode: Parakeet V3 streaming, Cerebras <code>gpt-oss-120b</code> cleanup, System</p>
-<p>Default-style prompt, language <code>auto</code>. Clipboard + screen context on for</p>
-<p>register detection.</p>
+<p>Default Mode: <strong>Hub Parakeet</strong> (local OpenAI transcriptions on <code>:8178</code>) when the</p>
+<p>LaunchAgent/hub server is warm; otherwise FluidAudio Parakeet V3. Cerebras</p>
+<p><code>gpt-oss-120b</code> cleanup, System Default-style prompt, language <code>auto</code>. Clipboard +</p>
+<p>screen context on for register detection — eyes open that hosted cleanup sees it.</p>
 <p>Brief: enhancement off, messaging apps, Dictionary replacements for emoji so</p>
 <p>WhatsApp stays fast.</p>
-<p>Ask AutoJack: Custom OpenAI-compatible endpoint on localhost, Respond output —</p>
-<p>not the same provider as cleanup.</p>
+<p>Ask AutoJack: Custom OpenAI-compatible <strong>chat</strong> endpoint on localhost, Respond</p>
+<p>output — not the same provider as cleanup, and not the same as Hub Parakeet STT.</p>
 <p>Dictionary is the shared lexicon other local STT tools can read read-only from</p>
-<p><code>dictionary.store</code>. Don't assume FluidAudio CoreML weights are the same stack as</p>
-<p>parakeet-mlx.</p>
+<p><code>dictionary.store</code>. FluidAudio CoreML weights are <strong>not</strong> the same stack as</p>
+<p>parakeet-mlx; sharing happens at the HTTP server, not the weight files.</p>
 <h2>What it is not</h2>
 <p>Not VoiceInk support. Not a dump of anyone's full personal dictionary or API</p>
 <p>keys. Not a promise that settings import recreates Custom provider Keychain</p>
 <p>entries on a fresh Mac — you still Verify under AI Models → Custom.</p>
         <h2>Related</h2><div class="meta"><a class="tag" href="/skills/flashspace/">flashspace</a> <a class="tag" href="/skills/raycast/">raycast</a></div>
         <h2>Package</h2>
-        <p class="muted">Version <code>1.0.0</code>
-        · install pin <code>836ceed</code>
+        <p class="muted">Version <code>1.1.0</code>
+        · install pin <code>03ee69a</code>
         · SSOT <code>skills/voiceink-2-upgrade/</code> on GitHub
          · agents: claude-code, codex, autojack, cursor</p>
       </div>
