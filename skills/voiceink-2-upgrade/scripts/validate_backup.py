@@ -173,7 +173,13 @@ def main(argv: list[str]) -> int:
         return 2
 
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        raw_text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError) as exc:
+        print(f"ERROR cannot read file: {exc}", file=sys.stderr)
+        return 2
+
+    try:
+        data = json.loads(raw_text)
     except json.JSONDecodeError as exc:
         print(f"ERROR invalid JSON: {exc}", file=sys.stderr)
         return 2

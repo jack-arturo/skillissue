@@ -39,6 +39,7 @@ capabilities:
     - Read
     - Edit
     - Write
+    - Python
 requires-secrets: []
 resources:
   - path: references/upgrade-checklist.md
@@ -171,8 +172,13 @@ Vocabulary mainly helps AI enhancement spelling.
 
 ### 7. Validate a backup JSON before import
 
+Find the bundled validator with `autovault skill which voiceink-2-upgrade validate_backup.py`
+or use the installed resource path directly (it must resolve relative to this
+skill's own directory, not the current project's working directory):
+
 ```bash
-python3 scripts/validate_backup.py /path/to/VoiceInk_Settings_Import.json
+python3 ~/.autovault/skills/voiceink-2-upgrade/scripts/validate_backup.py \
+  /path/to/VoiceInk_Settings_Import.json
 ```
 
 Then VoiceInk → Settings → Backup → Import Settings (Modes + Prompts + Dictionary

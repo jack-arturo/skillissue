@@ -2,7 +2,7 @@
 
 URLs (fill once live):
 
-- Skill page: `https://jackscottskills.com/skills/voiceink-2-upgrade`
+- Skill page: `https://skillissue.sh/skills/voiceink-2-upgrade`
 - Install: `npx skillissue.sh voiceink-2-upgrade` (or current skillissue install line)
 
 ---
@@ -13,7 +13,7 @@ VoiceInk 2.0 ate my Modes, blamed Apple Speech for a Parakeet problem, and faile
 
 Packed the fix into a skill: Parakeet V3, Mode map, cleanup prompt, emoji/path replacements, backup validator.
 
-→ jackscottskills.com/skills/voiceink-2-upgrade
+→ skillissue.sh/skills/voiceink-2-upgrade
 
 ---
 
@@ -34,7 +34,7 @@ Custom assistant endpoints don't ride in the settings backup. Modes can point at
 5/
 Runbook + starter replacements + backup validator:
 
-jackscottskills.com/skills/voiceink-2-upgrade
+skillissue.sh/skills/voiceink-2-upgrade
 
 ---
 
@@ -51,7 +51,7 @@ What bit me:
 
 I packaged the operator runbook as an open skill: Mode architecture, cleanup prompt template, starter word replacements (emoji / ellipsis / literal paths), and a small JSON validator before you re-import a backup.
 
-Skill: jackscottskills.com/skills/voiceink-2-upgrade
+Skill: skillissue.sh/skills/voiceink-2-upgrade
 
 If you're mid-upgrade, export settings first, switch active Modes off Apple Speech, and never leave Enhancement enabled without a prompt UUID.
 
@@ -66,13 +66,13 @@ VoiceInk 2.0 upgrade scars, in skill form:
 • emoji → characters belongs in Dictionary replacements
 • Custom providers don't fully survive settings import
 
-jackscottskills.com/skills/voiceink-2-upgrade
+skillissue.sh/skills/voiceink-2-upgrade
 
 ---
 
 ## One-liner for Discord / Slack
 
-VoiceInk 2 upgrade skill — Parakeet V3 Modes, fix `prompt=<none>` decode fails, emoji/path replacements, backup validator: jackscottskills.com/skills/voiceink-2-upgrade
+VoiceInk 2 upgrade skill — Parakeet V3 Modes, fix `prompt=<none>` decode fails, emoji/path replacements, backup validator: skillissue.sh/skills/voiceink-2-upgrade
 
 ---
 

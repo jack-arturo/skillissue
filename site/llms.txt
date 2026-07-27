@@ -7,11 +7,11 @@
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
 - Source packages: https://github.com/jack-arturo/skillissue/tree/main/skills
-- Install pin (this build): efd09da503770bce1de134fc485f62e65f1d38c3
+- Install pin (this build): c0fc5060e4605e64745be7377746d6d2341736b9
 
 ## Install
 ```
-autovault add jack-arturo/skillissue@efd09da503770bce1de134fc485f62e65f1d38c3:skills/<name>/SKILL.md --sync-profiles
+autovault add jack-arturo/skillissue@c0fc5060e4605e64745be7377746d6d2341736b9:skills/<name>/SKILL.md --sync-profiles
 ```
 
 ## Public skills (31)

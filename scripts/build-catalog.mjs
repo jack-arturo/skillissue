@@ -67,6 +67,23 @@ function parseFrontmatter(text) {
       fm[key] = parts.join(" ").trim();
       continue;
     }
+    if (!val) {
+      // YAML block sequence: key on its own line, followed by "- item" lines
+      let j = i + 1;
+      const items = [];
+      while (j < lines.length && /^\s*-\s+/.test(lines[j])) {
+        items.push(lines[j].replace(/^\s*-\s+/, "").trim().replace(/^["']|["']$/g, ""));
+        j++;
+      }
+      if (items.length) {
+        fm[key] = items;
+        i = j;
+        continue;
+      }
+      fm[key] = "";
+      i++;
+      continue;
+    }
     if (val.startsWith("[") && val.endsWith("]")) {
       fm[key] = val
         .slice(1, -1)
@@ -636,7 +653,7 @@ fs.writeFileSync(
 );
 
 // home
-const featured = publicSkills.filter((s) => s.featured).slice(0, 8);
+const featured = publicSkills.filter((s) => s.featured);
 const featCards = featured
   .map(
     (s) => `<a class="card featured" href="/skills/${esc(s.name)}/">
