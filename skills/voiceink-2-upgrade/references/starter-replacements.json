@@ -41,7 +41,7 @@
     "edit dot env": "edit .env",
     "dot env": ".env",
     "slash babysit": "/babysit",
-    "new line": "\n",
+    "newline character": "\n",
     "open paren": "(",
     "close paren": ")",
     "open brace": "{",

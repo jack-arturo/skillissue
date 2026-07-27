@@ -189,6 +189,31 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
                     errors,
                 )
 
+            provider = mode.get("selectedAIProvider")
+            if not isinstance(provider, str) or not provider.strip():
+                _err(
+                    f"Mode {label!r}: AI Enhancement on but selectedAIProvider "
+                    f"is missing or not a non-empty string "
+                    f"(got {type(provider).__name__})",
+                    errors,
+                )
+            model_name = mode.get("selectedAIModel")
+            if not isinstance(model_name, str) or not model_name.strip():
+                _err(
+                    f"Mode {label!r}: AI Enhancement on but selectedAIModel "
+                    f"is missing or not a non-empty string "
+                    f"(got {type(model_name).__name__})",
+                    errors,
+                )
+        elif mode.get("selectedAIProvider") == "Custom":
+            model_name = mode.get("selectedAIModel")
+            if not isinstance(model_name, str) or not model_name.strip():
+                _warn(
+                    f"Mode {label!r}: Custom provider with empty/invalid "
+                    f"selectedAIModel (got {type(model_name).__name__})",
+                    warnings,
+                )
+
         if model and (
             "apple" in model.lower()
             or model.lower() in {
@@ -202,18 +227,6 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
                 f"({model!r}) — 'Download required for English (United States)' risk",
                 warnings,
             )
-
-        if mode.get("selectedAIProvider") == "Custom":
-            model_name = mode.get("selectedAIModel")
-            if not isinstance(model_name, str) or not model_name.strip():
-                msg = (
-                    f"Mode {label!r}: Custom provider with empty/invalid "
-                    f"selectedAIModel (got {type(model_name).__name__})"
-                )
-                if enhance:
-                    _err(msg, errors)
-                else:
-                    _warn(msg, warnings)
 
     emoji_keys = [k for k in replacements if "emoji" in str(k).lower()]
     if not emoji_keys:
