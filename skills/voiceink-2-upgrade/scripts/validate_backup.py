@@ -97,7 +97,11 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
     if not prompt_ids:
         _warn("customPrompts has no prompt ids — enhancing Modes will fail", warnings)
 
-    defaults = [m for m in modes if isinstance(m, dict) and m.get("isDefault")]
+    defaults = [
+        m
+        for m in modes
+        if isinstance(m, dict) and m.get("isDefault") is True
+    ]
     if not defaults:
         _err("no Mode with isDefault=true", errors)
     elif len(defaults) > 1:
@@ -108,20 +112,62 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
         if not isinstance(mode, dict):
             _err(f"modeConfigs[{i}] is not an object", errors)
             continue
-        label = mode.get("name") or mode.get("id") or f"#{i}"
+
         for key in MODE_REQUIRED:
             if key not in mode:
-                _err(f"Mode {label!r}: missing {key}", errors)
+                _err(f"modeConfigs[{i}]: missing {key}", errors)
 
-        enhance = bool(mode.get("isAIEnhancementEnabled"))
+        mid = mode.get("id")
+        name = mode.get("name")
+        model_raw = mode.get("selectedTranscriptionModelName")
+        enhance_raw = mode.get("isAIEnhancementEnabled")
+
+        label = name if isinstance(name, str) and name.strip() else (
+            mid if isinstance(mid, str) and mid.strip() else f"#{i}"
+        )
+
+        if not isinstance(mid, str) or not mid.strip():
+            _err(
+                f"Mode {label!r}: id must be a non-empty string "
+                f"(got {type(mid).__name__})",
+                errors,
+            )
+        if not isinstance(name, str) or not name.strip():
+            _err(
+                f"Mode {label!r}: name must be a non-empty string "
+                f"(got {type(name).__name__})",
+                errors,
+            )
+        if not isinstance(model_raw, str) or not model_raw.strip():
+            _err(
+                f"Mode {label!r}: selectedTranscriptionModelName must be a "
+                f"non-empty string (got {type(model_raw).__name__})",
+                errors,
+            )
+        if not isinstance(enhance_raw, bool):
+            _err(
+                f"Mode {label!r}: isAIEnhancementEnabled must be a boolean "
+                f"(got {type(enhance_raw).__name__})",
+                errors,
+            )
+        if "isDefault" in mode and not isinstance(mode.get("isDefault"), bool):
+            _err(
+                f"Mode {label!r}: isDefault must be a boolean "
+                f"(got {type(mode.get('isDefault')).__name__})",
+                errors,
+            )
+
+        enhance = enhance_raw is True
         prompt = mode.get("selectedPrompt")
-        model = str(mode.get("selectedTranscriptionModelName") or "")
+        model = model_raw if isinstance(model_raw, str) else ""
 
         if enhance:
-            if not prompt:
+            if not isinstance(prompt, str) or not prompt.strip():
                 _err(
-                    f"Mode {label!r}: AI Enhancement on but selectedPrompt is empty "
-                    "(History will show prompt=<none> and decode failures)",
+                    f"Mode {label!r}: AI Enhancement on but selectedPrompt is "
+                    f"missing or not a non-empty string "
+                    f"(got {type(prompt).__name__}; History will show "
+                    "prompt=<none> and decode failures)",
                     errors,
                 )
             elif prompt not in prompt_ids:
@@ -130,11 +176,14 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
                     errors,
                 )
 
-        if "apple" in model.lower() or model.lower() in {
-            "speech",
-            "applespeech",
-            "apple speech",
-        }:
+        if model and (
+            "apple" in model.lower()
+            or model.lower() in {
+                "speech",
+                "applespeech",
+                "apple speech",
+            }
+        ):
             _warn(
                 f"Mode {label!r}: transcription model looks like Apple Speech "
                 f"({model!r}) — 'Download required for English (United States)' risk",
