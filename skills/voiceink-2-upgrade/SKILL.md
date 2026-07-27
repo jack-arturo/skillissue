@@ -17,11 +17,7 @@ tags:
   - parakeet
   - migration
   - productivity
-agents:
-  - claude-code
-  - codex
-  - autojack
-  - cursor
+agents: [claude-code, codex, autojack, cursor]
 category: desktop
 metadata:
   version: "1.0.0"
@@ -155,9 +151,12 @@ Never leave `selectedPrompt` empty on an enhancing Mode.
 
 ### 5. Dictionary: replacements first, vocab second
 
-Merge [references/starter-replacements.json](references/starter-replacements.json)
-into Dictionary → Word Replacements (or into an exported settings JSON's
-`wordReplacements` map). Add personal proper nouns to Vocabulary.
+Open [references/starter-replacements.json](references/starter-replacements.json).
+Merge **only** the `.replacements` object into Dictionary → Word Replacements
+(or into an exported settings JSON's `wordReplacements` map). Do **not** paste
+the whole file — `_comment` and `vocabulary_starters` are not replacement pairs.
+
+Then add `.vocabulary_starters` (plus personal proper nouns) to Vocabulary.
 
 Replacements are deterministic and apply even when enhancement is off.
 Vocabulary mainly helps AI enhancement spelling.

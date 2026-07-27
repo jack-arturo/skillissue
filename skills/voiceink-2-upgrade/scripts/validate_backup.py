@@ -78,9 +78,22 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
     if errors:
         return errors, warnings
 
-    prompt_ids = {
-        p.get("id") for p in prompts if isinstance(p, dict) and p.get("id")
-    }
+    prompt_ids: set[str] = set()
+    for i, prompt in enumerate(prompts):
+        if not isinstance(prompt, dict):
+            _err(f"customPrompts[{i}] is not an object", errors)
+            continue
+        pid = prompt.get("id")
+        if not isinstance(pid, str) or not pid.strip():
+            _err(
+                f"customPrompts[{i}]: id must be a non-empty string "
+                f"(got {type(pid).__name__})",
+                errors,
+            )
+            continue
+        prompt_ids.add(pid)
+    if errors:
+        return errors, warnings
     if not prompt_ids:
         _warn("customPrompts has no prompt ids — enhancing Modes will fail", warnings)
 

@@ -1,9 +1,13 @@
 # Social / launch copy — VoiceInk 2.0 Upgrade skill
 
-URLs (fill once live):
+URLs (live after merge to main):
 
-- Skill page: `https://skillissue.sh/skills/voiceink-2-upgrade`
-- Install: `npx skillissue.sh voiceink-2-upgrade` (or current skillissue install line)
+- Skill page: `https://skillissue.sh/skills/voiceink-2-upgrade/`
+- Install (pin from the skill page — never invent an `npx` package):
+
+```bash
+autovault add jack-arturo/skillissue@<sha>:skills/voiceink-2-upgrade/SKILL.md --sync-profiles
+```
 
 ---
 
