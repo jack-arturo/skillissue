@@ -91,6 +91,12 @@ def validate(data: dict[str, Any]) -> tuple[list[str], list[str]]:
                 errors,
             )
             continue
+        if pid in prompt_ids:
+            _err(
+                f"customPrompts[{i}]: duplicate id {pid!r}",
+                errors,
+            )
+            continue
         prompt_ids.add(pid)
     if errors:
         return errors, warnings
