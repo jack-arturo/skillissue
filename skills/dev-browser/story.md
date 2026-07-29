@@ -2,28 +2,34 @@
 name: dev-browser
 visibility: public
 provenance: house
-featured: true
-title: "Dev Browser"
+featured: false
+title: "Dev Browser (legacy)"
 summary: >-
+  Superseded by browser-hand for real logged-in Chrome. Kept for historical
+  install links; prefer browser-hand.
 category: browser
-tags: [browser, chrome, automation]
-related: [docs-screenshot-packager]
+tags: [browser, chrome, legacy]
+related: [browser-hand]
 first_used: 2026-05
 ---
 
 ## Why it exists
 
-Sandbox Chromium has no cookies. Real work needs the logged-in browser. This skill encodes Path A (extension relay) vs Path B (debug port) so agents stop asking which to use.
+Historical house skill for authenticated Chrome. Product path is now **browser-hand**.
 
 ## History
 
 ### 0.3.x
-Chrome 136+ killed debug ports on the default profile; Path A became structural. Autonomy contract documents gotchas so future runs do not re-ask.
+Path A extension relay vs Path B debug port, heavily AutoHub-coupled.
+
+### 0.6+
+Use [browser-hand](/skills/browser-hand/) and the
+[verygoodplugins/browser-hand](https://github.com/verygoodplugins/browser-hand) repo.
 
 ## How Jack actually uses it
 
-Default Path A. Reach for Path B only for multi-step scripts, file uploads, or dedicated profiles.
+Install **browser-hand** instead.
 
 ## What it is not
 
-Not a generic tutorial. It's the house runbook for this machine and these agents.
+Not the current runbook. See browser-hand.
