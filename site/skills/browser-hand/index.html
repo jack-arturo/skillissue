@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>browser-hand — skillissue.sh</title>
+<meta name="description" content="Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.">
+<link rel="canonical" href="https://skillissue.sh/skills/browser-hand/">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<meta name="theme-color" content="#0a0c0f">
+<meta property="og:title" content="browser-hand — skillissue.sh">
+<meta property="og:description" content="Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.">
+<meta property="og:image" content="https://skillissue.sh/assets/og.png">
+<meta property="og:url" content="https://skillissue.sh/skills/browser-hand/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
+</head>
+<body>
+  <header class="top" id="topbar">
+    <div class="wrap top-inner">
+      <a class="brand" href="/">
+        <span class="brand-mark" aria-hidden="true">$</span>
+        <span>skillissue.sh</span>
+      </a>
+      <nav class="links" aria-label="Primary">
+        <a href="/">home</a>
+        <a href="/skills/" aria-current="page">skills</a>
+        <a href="/essays/">essays</a>
+        <a href="/install/">install</a>
+        <a href="/about/">about</a>
+        <a href="/skills.json">skills.json</a>
+        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
+      </nav>
+    </div>
+  </header>
+  <main>
+
+    <section class="hero skill-hero">
+      <div class="wrap">
+        <div class="prompt"><span class="dot"></span> skill · v0.6.1 · house · pin 2933248</div>
+        <h1><span class="path">browser-hand</span></h1>
+        <p class="lede">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</p>
+        <div class="meta" style="margin-bottom:1.25rem"><span class="tag">browser</span><span class="tag">chrome</span><span class="tag">extension</span><span class="tag">automation</span><span class="tag">agent</span>
+          <span class="badge">house</span>
+          <span class="badge">featured</span>
+        </div>
+        <div class="cta-row">
+          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/browser-hand/SKILL.md --sync-profiles">Copy AutoVault install</button>
+          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/browser-hand/SKILL.md&quot; })">Copy MCP add_skill</button>
+          <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
+        </div>
+        <div class="term" style="max-width:48rem">
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · 2933248</span></div>
+          <div class="term-body">
+            <div><span class="dim"># CLI (primary)</span></div>
+            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/browser-hand/SKILL.md --sync-profiles</span></div>
+            <div style="margin-top:0.6rem"><span class="dim"># MCP tool call</span></div>
+            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/browser-hand/SKILL.md&quot; })</div>
+            <div class="ok" style="margin-top:0.6rem">→ vault validates · signs · syncs agent skill dirs</div>
+            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/29332485bc5adec40eafa1bdca560ab86d372447/skills/browser-hand/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section>
+      <div class="wrap prose">
+        <h2>Why it exists</h2>
+<p>Remote debugging and WebDriver-style attach are a bad fit for everyday Chrome:</p>
+<p>modern Chrome blocks debug ports on the default profile, many sites (including</p>
+<p>Google OAuth) treat debugger sessions as hostile, and automation steals OS focus.</p>
+<p>Sandbox Chromium has none of your cookies.</p>
+<p>Browser Hand uses a small Chrome extension and a local relay so agents drive the</p>
+<p><strong>same profile you already use</strong>. It is a loadable <strong>skill</strong>, not an MCP server —</p>
+<p>no always-on tool tax; agents pull it in when the task needs a real browser.</p>
+<h2>History</h2>
+<h3>0.6.x</h3>
+<p>Public skill package for <a href="https://github.com/verygoodplugins/browser-hand" rel="noopener">verygoodplugins/browser-hand</a>.</p>
+<p>AutoVault-first install, background focus, soft recovery for password-manager</p>
+<p>wedges, agent obstacle course.</p>
+<h3>Earlier (as house `dev-browser`)</h3>
+<p>Extension-relay vs debug-port paths lived under AutoHub-coupled runbooks.</p>
+<p>Productized as Browser Hand under Very Good Plugins.</p>
+<h2>How Jack actually uses it</h2>
+<p>Default to the extension CLI for signed-in work. Install the skill with AutoVault;</p>
+<p>keep the relay and extension running locally. Reach for headless/remote-debug only</p>
+<p>for CI or throwaway profiles.</p>
+<h2>What it is not</h2>
+<p>Not Playwright-in-a-box for empty Chromium. Not an MCP browser server. For durable</p>
+<p>agent memory across sessions, see AutoMem; for skill packaging, see AutoVault.</p>
+        <h2>Related</h2><div class="meta"><a class="tag" href="/skills/autovault-skill/">autovault-skill</a> <a class="tag" href="/skills/docs-screenshot-packager/">docs-screenshot-packager</a> <a class="tag" href="/skills/automem/">automem</a></div>
+        <h2>Package</h2>
+        <p class="muted">Version <code>0.6.1</code>
+        · install pin <code>2933248</code>
+        · SSOT <code>skills/browser-hand/</code> on GitHub
+         · agents: claude-code, codex, grok</p>
+      </div>
+    </section>
+  </main>
+  <footer>
+    <div class="wrap foot-inner">
+      <div>
+        <span class="foot-mono">skillissue.sh</span>
+        · MIT ·
+        <a href="https://autovault.dev">AutoVault</a> ·
+        <a href="https://automem.ai">AutoMem</a> ·
+        <a href="/skills.json">skills.json</a>
+      </div>
+      <div class="foot-mono">packages on github · install via AutoVault</div>
+    </div>
+  </footer>
+  <script>
+    (function(){
+      var t=document.getElementById('topbar');
+      if(!t)return;
+      var on=function(){t.classList.toggle('scrolled',window.scrollY>8)};
+      window.addEventListener('scroll',on,{passive:true});on();
+      document.addEventListener('click',async function(e){
+        var b=e.target.closest('[data-copy]');if(!b)return;
+        try{await navigator.clipboard.writeText(b.getAttribute('data-copy'));
+          var p=b.textContent;b.textContent='copied';b.classList.add('copied');
+          setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
+        }catch(_){b.textContent='failed'}
+      });
+    })();
+  </script>
+</body>
+</html>

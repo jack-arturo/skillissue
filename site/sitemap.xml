@@ -9,9 +9,9 @@
   <url><loc>https://skillissue.sh/skills.json</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/llms.txt</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/babysit/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/skills/browser-hand/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/cloudflare-lead-capture/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/cloudflare-ops/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://skillissue.sh/skills/dev-browser/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/jacks-writing-style/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/long-haul-parallel-repair/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/session-consolidate/</loc><changefreq>weekly</changefreq></url>
@@ -26,6 +26,7 @@
   <url><loc>https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/codex-review/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/commit-message/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/skills/dev-browser/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/docs-screenshot-packager/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/entity-dossier/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/flashspace/</loc><changefreq>weekly</changefreq></url>

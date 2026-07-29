@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>dev-browser — skillissue.sh</title>
-<meta name="description" content="Drive the user's real Chrome end-to-end — doctor, open, snapshot, fill forms, click, type, screenshot, evaluate, navigate, autofill from the local profile. Two paths under one skill — extension-relay CLI (default, no `--remote-debugging-port`, no WebDriver banner) and headless `dev-browser run --connect` (fallback for sandboxed scripting, file uploads, and dedicated-profile authenticated SPA work). Use when the user asks to fill out a form, click on a page, screenshot the current tab, log into a site, automate &quot;this page&quot; / &quot;active tab&quot;, post under an authenticated identity, or run any Playwright-style script against signed-in Chrome.">
+<meta name="description" content="Superseded by browser-hand for real logged-in Chrome. Kept for historical install links; prefer browser-hand.">
 <link rel="canonical" href="https://skillissue.sh/skills/dev-browser/">
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
 <link rel="icon" href="/assets/favicon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
 <meta name="theme-color" content="#0a0c0f">
 <meta property="og:title" content="dev-browser — skillissue.sh">
-<meta property="og:description" content="Drive the user's real Chrome end-to-end — doctor, open, snapshot, fill forms, click, type, screenshot, evaluate, navigate, autofill from the local profile. Two paths under one skill — extension-relay CLI (default, no `--remote-debugging-port`, no WebDriver banner) and headless `dev-browser run --connect` (fallback for sandboxed scripting, file uploads, and dedicated-profile authenticated SPA work). Use when the user asks to fill out a form, click on a page, screenshot the current tab, log into a site, automate &quot;this page&quot; / &quot;active tab&quot;, post under an authenticated identity, or run any Playwright-style script against signed-in Chrome.">
+<meta property="og:description" content="Superseded by browser-hand for real logged-in Chrome. Kept for historical install links; prefer browser-hand.">
 <meta property="og:image" content="https://skillissue.sh/assets/og.png">
 <meta property="og:url" content="https://skillissue.sh/skills/dev-browser/">
 <meta property="og:type" content="website">
@@ -41,27 +41,27 @@
 
     <section class="hero skill-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v0.3.2 · house · pin 836ceed</div>
+        <div class="prompt"><span class="dot"></span> skill · v0.6.1 · house · pin 2933248</div>
         <h1><span class="path">dev-browser</span></h1>
-        <p class="lede">Drive the user's real Chrome end-to-end — doctor, open, snapshot, fill forms, click, type, screenshot, evaluate, navigate, autofill from the local profile. Two paths under one skill — extension-relay CLI (default, no `--remote-debugging-port`, no WebDriver banner) and headless `dev-browser run --connect` (fallback for sandboxed scripting, file uploads, and dedicated-profile authenticated SPA work). Use when the user asks to fill out a form, click on a page, screenshot the current tab, log into a site, automate &quot;this page&quot; / &quot;active tab&quot;, post under an authenticated identity, or run any Playwright-style script against signed-in Chrome.</p>
-        <div class="meta" style="margin-bottom:1.25rem"><span class="tag">browser</span><span class="tag">chrome</span><span class="tag">automation</span>
+        <p class="lede">Superseded by browser-hand for real logged-in Chrome. Kept for historical install links; prefer browser-hand.</p>
+        <div class="meta" style="margin-bottom:1.25rem"><span class="tag">browser</span><span class="tag">chrome</span><span class="tag">legacy</span>
           <span class="badge">house</span>
-          <span class="badge">featured</span>
+          
         </div>
         <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/dev-browser/SKILL.md --sync-profiles">Copy AutoVault install</button>
-          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/dev-browser/SKILL.md&quot; })">Copy MCP add_skill</button>
+          <button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/dev-browser/SKILL.md --sync-profiles">Copy AutoVault install</button>
+          <button type="button" class="btn btn-ghost" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/dev-browser/SKILL.md&quot; })">Copy MCP add_skill</button>
           <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
         </div>
         <div class="term" style="max-width:48rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · 836ceed</span></div>
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · 2933248</span></div>
           <div class="term-body">
             <div><span class="dim"># CLI (primary)</span></div>
-            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/dev-browser/SKILL.md --sync-profiles</span></div>
+            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/dev-browser/SKILL.md --sync-profiles</span></div>
             <div style="margin-top:0.6rem"><span class="dim"># MCP tool call</span></div>
-            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@836ceed29d890ea6c1260937d1fcd2524b1779aa:skills/dev-browser/SKILL.md&quot; })</div>
+            <div class="cmd" style="word-break:break-all">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/dev-browser/SKILL.md&quot; })</div>
             <div class="ok" style="margin-top:0.6rem">→ vault validates · signs · syncs agent skill dirs</div>
-            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/836ceed29d890ea6c1260937d1fcd2524b1779aa/skills/dev-browser/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
+            <div class="dim">source: <a href="https://github.com/jack-arturo/skillissue/blob/29332485bc5adec40eafa1bdca560ab86d372447/skills/dev-browser/SKILL.md" style="color:inherit">jack-arturo/skillissue</a></div>
           </div>
         </div>
       </div>
@@ -69,18 +69,21 @@
     <section>
       <div class="wrap prose">
         <h2>Why it exists</h2>
-<p>Sandbox Chromium has no cookies. Real work needs the logged-in browser. This skill encodes Path A (extension relay) vs Path B (debug port) so agents stop asking which to use.</p>
+<p>Historical house skill for authenticated Chrome. Product path is now <strong>browser-hand</strong>.</p>
 <h2>History</h2>
 <h3>0.3.x</h3>
-<p>Chrome 136+ killed debug ports on the default profile; Path A became structural. Autonomy contract documents gotchas so future runs do not re-ask.</p>
+<p>Path A extension relay vs Path B debug port, heavily AutoHub-coupled.</p>
+<h3>0.6+</h3>
+<p>Use <a href="/skills/browser-hand/">browser-hand</a> and the</p>
+<p><a href="https://github.com/verygoodplugins/browser-hand" rel="noopener">verygoodplugins/browser-hand</a> repo.</p>
 <h2>How Jack actually uses it</h2>
-<p>Default Path A. Reach for Path B only for multi-step scripts, file uploads, or dedicated profiles.</p>
+<p>Install <strong>browser-hand</strong> instead.</p>
 <h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p>
-        <h2>Related</h2><div class="meta"><a class="tag" href="/skills/docs-screenshot-packager/">docs-screenshot-packager</a></div>
+<p>Not the current runbook. See browser-hand.</p>
+        <h2>Related</h2><div class="meta"><a class="tag" href="/skills/browser-hand/">browser-hand</a></div>
         <h2>Package</h2>
-        <p class="muted">Version <code>0.3.2</code>
-        · install pin <code>836ceed</code>
+        <p class="muted">Version <code>0.6.1</code>
+        · install pin <code>2933248</code>
         · SSOT <code>skills/dev-browser/</code> on GitHub
          · agents: claude-code, codex</p>
       </div>
