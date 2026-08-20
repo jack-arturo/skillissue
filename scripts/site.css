@@ -150,6 +150,25 @@ h2 { margin: 0 0 0.75rem; font-size: clamp(1.35rem, 3vw, 1.85rem); letter-spacin
 }
 .search:focus { border-color: rgba(61,255,154,0.45); box-shadow: 0 0 0 3px var(--green-dim); }
 .search::placeholder { color: var(--dim); }
+.catalog-hero { padding-bottom: 0.75rem; }
+.catalog-body { padding-top: 0.5rem; }
+.catalog-tools {
+  position: sticky; top: 3.15rem; z-index: 15;
+  padding: 0.55rem 0 0.9rem;
+  background: linear-gradient(180deg, rgba(10,12,15,0.96) 65%, rgba(10,12,15,0));
+  backdrop-filter: blur(12px);
+}
+.catalog-tools .search-row { margin-bottom: 0.75rem; }
+.catalog-tools .filters { margin-bottom: 0; }
+.chip-n { color: var(--dim); font-size: 0.72em; margin-left: 0.15rem; }
+.chip.active .chip-n { color: var(--green); opacity: 0.75; }
+.skill-group { padding: 1.35rem 0 0.35rem; }
+.skill-group + .skill-group { border-top: 1px solid var(--line); margin-top: 1.15rem; }
+.skill-group .section-head { margin-bottom: 0.9rem; align-items: baseline; }
+.skill-group h2 {
+  margin: 0; font-family: var(--mono); font-size: 0.92rem; font-weight: 600;
+  letter-spacing: -0.02em; color: var(--green);
+}
 .grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.85rem;
 }
@@ -170,13 +189,18 @@ a.card { text-decoration: none; color: inherit; }
 .card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 0.5rem; }
 .card h3 {
   margin: 0; font-family: var(--mono); font-size: 0.98rem; font-weight: 600; letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
 }
 .badge {
   font-family: var(--mono); font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.04em;
   color: var(--green); background: var(--green-dim); border: 1px solid rgba(61,255,154,0.22);
   border-radius: 999px; padding: 0.18rem 0.5rem; white-space: nowrap;
 }
-.card p { margin: 0; color: var(--muted); font-size: 0.92rem; flex: 1; }
+.card p {
+  margin: 0; color: var(--muted); font-size: 0.92rem; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;
+  overflow: hidden; overflow-wrap: break-word;
+}
 .meta { display: flex; flex-wrap: wrap; gap: 0.35rem; }
 .tag {
   font-family: var(--mono); font-size: 0.72rem; color: var(--dim);

@@ -29,7 +29,10 @@ function esc(s) {
 
 function gitSha() {
   try {
-    return execSync("git rev-parse HEAD", { cwd: root, encoding: "utf8" }).trim();
+    return execSync("git rev-parse HEAD", {
+      cwd: root,
+      encoding: "utf8",
+    }).trim();
   } catch {
     return "main";
   }
@@ -60,7 +63,10 @@ function parseFrontmatter(text) {
     if (val === ">" || val === ">-" || val === "|" || val === "|-") {
       const parts = [];
       i++;
-      while (i < lines.length && (/^\s+/.test(lines[i]) || lines[i].trim() === "")) {
+      while (
+        i < lines.length &&
+        (/^\s+/.test(lines[i]) || lines[i].trim() === "")
+      ) {
         if (lines[i].trim()) parts.push(lines[i].replace(/^\s+/, ""));
         i++;
       }
@@ -72,7 +78,12 @@ function parseFrontmatter(text) {
       let j = i + 1;
       const items = [];
       while (j < lines.length && /^\s*-\s+/.test(lines[j])) {
-        items.push(lines[j].replace(/^\s*-\s+/, "").trim().replace(/^["']|["']$/g, ""));
+        items.push(
+          lines[j]
+            .replace(/^\s*-\s+/, "")
+            .trim()
+            .replace(/^["']|["']$/g, ""),
+        );
         j++;
       }
       if (items.length) {
@@ -122,17 +133,21 @@ function mdToHtml(md) {
     if (!inTable) return;
     if (tableRows.length) {
       const [header, ...rest] = tableRows;
-      const body = rest.filter((r) => !r.every((c) => /^:?-+:?$/.test(c.trim())));
-      html.push("<div class=\"table-wrap\"><table>");
+      const body = rest.filter(
+        (r) => !r.every((c) => /^:?-+:?$/.test(c.trim())),
+      );
+      html.push('<div class="table-wrap"><table>');
       html.push(
         "<thead><tr>" +
           header.map((c) => `<th>${inline(c.trim())}</th>`).join("") +
-          "</tr></thead>"
+          "</tr></thead>",
       );
       html.push("<tbody>");
       for (const row of body) {
         html.push(
-          "<tr>" + row.map((c) => `<td>${inline(c.trim())}</td>`).join("") + "</tr>"
+          "<tr>" +
+            row.map((c) => `<td>${inline(c.trim())}</td>`).join("") +
+            "</tr>",
         );
       }
       html.push("</tbody></table></div>");
@@ -142,7 +157,9 @@ function mdToHtml(md) {
   };
   const flushBq = () => {
     if (!inBq) return;
-    html.push(`<blockquote>${bqBuf.map((l) => inline(l)).join("<br>")}</blockquote>`);
+    html.push(
+      `<blockquote>${bqBuf.map((l) => inline(l)).join("<br>")}</blockquote>`,
+    );
     inBq = false;
     bqBuf = [];
   };
@@ -153,14 +170,14 @@ function mdToHtml(md) {
     t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
     t = t.replace(
       /!\[([^\]]*)\]\(([^)]+)\)/g,
-      '<figure class="chart"><img src="$2" alt="$1" loading="lazy" /></figure>'
+      '<figure class="chart"><img src="$2" alt="$1" loading="lazy" /></figure>',
     );
     t = t.replace(
       /\[([^\]]+)\]\((https?:[^)]+|\/[^)]+)\)/g,
       (_, label, href) => {
         const rel = href.startsWith("http") ? ' rel="noopener"' : "";
         return `<a href="${href}"${rel}>${label}</a>`;
-      }
+      },
     );
     return t;
   };
@@ -251,7 +268,7 @@ function mdToHtml(md) {
       const imgOnly = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
       if (imgOnly) {
         html.push(
-          `<figure class="chart"><img src="${esc(imgOnly[2])}" alt="${esc(imgOnly[1])}" loading="lazy" /><figcaption>${esc(imgOnly[1])}</figcaption></figure>`
+          `<figure class="chart"><img src="${esc(imgOnly[2])}" alt="${esc(imgOnly[1])}" loading="lazy" /><figcaption>${esc(imgOnly[1])}</figcaption></figure>`,
         );
       } else {
         html.push(`<p>${inline(line)}</p>`);
@@ -273,8 +290,104 @@ function loadDenylist() {
       .readFileSync(p, "utf8")
       .split("\n")
       .map((l) => l.replace(/#.*$/, "").trim())
-      .filter(Boolean)
+      .filter(Boolean),
   );
+}
+
+/** Catalog groups — aliases collapse ops/operations, meta/hub, etc. */
+const CATALOG_GROUPS = {
+  agents: { label: "agents", order: 1 },
+  cloudflare: { label: "cloudflare", order: 2 },
+  git: { label: "git", order: 3 },
+  browser: { label: "browser", order: 4 },
+  desktop: { label: "desktop", order: 5 },
+  ops: { label: "ops", order: 6 },
+  mcp: { label: "mcp", order: 7 },
+  writing: { label: "writing", order: 8 },
+  workflow: { label: "workflow", order: 9 },
+};
+
+const CATEGORY_TO_GROUP = {
+  analytics: "cloudflare",
+  cloudflare: "cloudflare",
+  deployment: "cloudflare",
+  browser: "browser",
+  desktop: "desktop",
+  git: "git",
+  review: "git",
+  hub: "agents",
+  meta: "agents",
+  orchestration: "agents",
+  iot: "ops",
+  operations: "ops",
+  ops: "ops",
+  mcp: "mcp",
+  docs: "writing",
+  design: "writing",
+  writing: "writing",
+  terminal: "workflow",
+  workflow: "workflow",
+  research: "agents",
+};
+
+function catalogGroup(category) {
+  const key = String(category || "")
+    .toLowerCase()
+    .trim();
+  return CATEGORY_TO_GROUP[key] || key || "ops";
+}
+
+function groupOrderOf(id) {
+  return CATALOG_GROUPS[id]?.order ?? 99;
+}
+
+function clampBlurb(text, max = 180) {
+  const t = String(text || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (t.length <= max) return t;
+  const cut = t.slice(0, max);
+  const sp = cut.lastIndexOf(" ");
+  return `${(sp > 80 ? cut.slice(0, sp) : cut).replace(/[,;:]\s*$/, "")}…`;
+}
+
+function extractWhy(body) {
+  const m = String(body || "").match(
+    /##\s+Why[^\n]*\n+([\s\S]*?)(?=\n##\s|$)/i,
+  );
+  if (!m) return "";
+  const para = m[1]
+    .split(/\n\n+/)
+    .map((p) =>
+      p
+        .replace(/^#+\s+.*$/gm, "")
+        .replace(/\s+/g, " ")
+        .trim(),
+    )
+    .find((p) => p.length > 24);
+  return para || "";
+}
+
+function cardSummary(storyFm, storyBody, skillFm, name) {
+  const fromStory = String(storyFm.summary || "").trim();
+  if (fromStory) return clampBlurb(fromStory);
+  const why = extractWhy(storyBody);
+  if (why) return clampBlurb(why);
+  return clampBlurb(skillFm.description || name);
+}
+
+function skillCard(s) {
+  const tags = (s.tags || [])
+    .slice(0, 3)
+    .map((t) => `<span class="tag">${esc(t)}</span>`)
+    .join("");
+  return `<a class="card${s.featured ? " featured" : ""}" href="/skills/${esc(s.name)}/" data-category="${esc(s.category)}" data-featured="${s.featured ? "1" : "0"}">
+  <div class="card-top"><h3>${esc(s.name)}</h3>
+  ${s.featured ? '<span class="badge">featured</span>' : ""}
+  </div>
+  <p>${esc(s.summary)}</p>
+  <div class="meta">${tags}<span class="tag">v${esc(s.version)}</span></div>
+</a>`;
 }
 
 function shellLayout({ title, description, path: pagePath, body, active }) {
@@ -287,7 +400,7 @@ function shellLayout({ title, description, path: pagePath, body, active }) {
   ]
     .map(
       ([href, id, label]) =>
-        `<a href="${href}"${active === id ? ' aria-current="page"' : ""}>${label}</a>`
+        `<a href="${href}"${active === id ? ' aria-current="page"' : ""}>${label}</a>`,
     )
     .join("\n        ");
   return `<!doctype html>
@@ -366,7 +479,12 @@ const sha = gitSha();
 const shortSha = sha.slice(0, 7);
 const publicSkills = [];
 const errors = [];
-const report = { public: 0, skipped: [], missingNarrative: [], missingSkillMd: [] };
+const report = {
+  public: 0,
+  skipped: [],
+  missingNarrative: [],
+  missingSkillMd: [],
+};
 
 if (!fs.existsSync(skillsDir)) {
   console.error("Missing skills/ directory — GitHub SSOT required");
@@ -402,10 +520,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     report.skipped.push(name);
     continue;
   }
-  const summary =
-    storyFm.summary ||
-    (skillFm.description || "").replace(/\s+/g, " ").trim() ||
-    name;
+  const summary = cardSummary(storyFm, storyBody, skillFm, name);
   const version = skillFm.version || storyFm.version_pin || "1.0.0";
   const provenance = storyFm.provenance || "house";
   const featured = storyFm.featured === true || storyFm.featured === "true";
@@ -430,7 +545,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     name: skillFm.name || name,
     title: storyFm.title || skillFm.name || name,
     summary,
-    category: storyFm.category || skillFm.category || "uncategorized",
+    category: catalogGroup(storyFm.category || skillFm.category),
     version,
     tags: storyFm.tags || skillFm.tags || [],
     agents: skillFm.agents || [],
@@ -448,7 +563,11 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
 }
 
 publicSkills.sort((a, b) => {
-  if (!!b.featured - !!a.featured) return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
+  const ga = groupOrderOf(a.category);
+  const gb = groupOrderOf(b.category);
+  if (ga !== gb) return ga - gb;
+  if (a.category !== b.category) return a.category.localeCompare(b.category);
+  if (!!b.featured !== !!a.featured) return b.featured ? 1 : -1;
   return a.name.localeCompare(b.name);
 });
 
@@ -470,7 +589,10 @@ for (const ent of fs.readdirSync(siteDir, { withFileTypes: true })) {
 const cssSrc = path.join(__dirname, "site.css");
 fs.mkdirSync(path.join(siteDir, "assets"), { recursive: true });
 if (fs.existsSync(cssSrc)) {
-  fs.writeFileSync(path.join(siteDir, "assets/site.css"), fs.readFileSync(cssSrc, "utf8"));
+  fs.writeFileSync(
+    path.join(siteDir, "assets/site.css"),
+    fs.readFileSync(cssSrc, "utf8"),
+  );
 }
 // Essay charts (SVG) + harvest data for transparency
 const contentAssets = path.join(root, "content/assets");
@@ -480,7 +602,10 @@ if (fs.existsSync(contentAssets)) {
 const timelineJson = path.join(root, "content/data/tool-timeline.json");
 if (fs.existsSync(timelineJson)) {
   fs.mkdirSync(path.join(siteDir, "assets/data"), { recursive: true });
-  fs.copyFileSync(timelineJson, path.join(siteDir, "assets/data/tool-timeline.json"));
+  fs.copyFileSync(
+    timelineJson,
+    path.join(siteDir, "assets/data/tool-timeline.json"),
+  );
 }
 
 // skills.json
@@ -515,7 +640,10 @@ const skillsJson = {
     url: `https://skillissue.sh/skills/${s.name}/`,
   })),
 };
-fs.writeFileSync(path.join(siteDir, "skills.json"), JSON.stringify(skillsJson, null, 2) + "\n");
+fs.writeFileSync(
+  path.join(siteDir, "skills.json"),
+  JSON.stringify(skillsJson, null, 2) + "\n",
+);
 
 // per-skill pages
 for (const s of publicSkills) {
@@ -525,7 +653,9 @@ for (const s of publicSkills) {
     .filter((n) => publicSkills.some((p) => p.name === n))
     .map((n) => `<a class="tag" href="/skills/${esc(n)}/">${esc(n)}</a>`)
     .join(" ");
-  const tags = (s.tags || []).map((t) => `<span class="tag">${esc(t)}</span>`).join("");
+  const tags = (s.tags || [])
+    .map((t) => `<span class="tag">${esc(t)}</span>`)
+    .join("");
   const body = `
     <section class="hero skill-hero">
       <div class="wrap">
@@ -573,25 +703,40 @@ for (const s of publicSkills) {
       path: `/skills/${s.name}/`,
       body,
       active: "skills",
-    })
+    }),
   );
 }
 
 // catalog
 fs.mkdirSync(path.join(siteDir, "skills"), { recursive: true });
-const cards = publicSkills
-  .map((s) => {
-    const tags = (s.tags || [])
-      .slice(0, 4)
-      .map((t) => `<span class="tag">${esc(t)}</span>`)
-      .join("");
-    return `<a class="card${s.featured ? " featured" : ""}" href="/skills/${esc(s.name)}/" data-category="${esc(s.category)}">
-  <div class="card-top"><h3>${esc(s.name)}</h3>
-  ${s.featured ? '<span class="badge">featured</span>' : `<span class="tag">${esc(s.category)}</span>`}
-  </div>
-  <p>${esc(s.summary)}</p>
-  <div class="meta">${tags}<span class="tag">v${esc(s.version)}</span></div>
-</a>`;
+const grouped = new Map();
+for (const s of publicSkills) {
+  if (!grouped.has(s.category)) grouped.set(s.category, []);
+  grouped.get(s.category).push(s);
+}
+const groupIds = [...grouped.keys()].sort((a, b) => {
+  const oa = groupOrderOf(a);
+  const ob = groupOrderOf(b);
+  if (oa !== ob) return oa - ob;
+  return a.localeCompare(b);
+});
+const groupMeta = groupIds.map((id) => ({
+  id,
+  label: CATALOG_GROUPS[id]?.label || id,
+  n: grouped.get(id).length,
+}));
+const featuredCount = publicSkills.filter((s) => s.featured).length;
+const catalogHtml = groupIds
+  .map((id) => {
+    const items = grouped.get(id);
+    const label = CATALOG_GROUPS[id]?.label || id;
+    return `<div class="skill-group" data-group="${esc(id)}">
+    <div class="section-head">
+      <h2>${esc(label)}</h2>
+      <span class="section-note">${items.length}</span>
+    </div>
+    <div class="grid">${items.map(skillCard).join("\n")}</div>
+  </div>`;
   })
   .join("\n");
 
@@ -599,67 +744,104 @@ fs.writeFileSync(
   path.join(siteDir, "skills/index.html"),
   shellLayout({
     title: "Skills — skillissue.sh",
-    description: "Jack Arturo's public agent skills — packages on GitHub, install via AutoVault.",
+    description:
+      "Jack Arturo's public agent skills — packages on GitHub, install via AutoVault.",
     path: "/skills/",
     body: `
-    <section class="hero" style="padding-bottom:1.5rem">
+    <section class="hero catalog-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · pin ${esc(shortSha)}</div>
+        <div class="prompt"><span class="dot"></span> <span id="result-count">${publicSkills.length} public</span> · pin ${esc(shortSha)}</div>
         <h1>Skills</h1>
         <p class="lede">Each page is a story plus a real <code>autovault add</code> for the package living in this repo.</p>
-        <div class="search-row"><input class="search" id="q" type="search" placeholder="filter…" autocomplete="off" spellcheck="false"></div>
-        <div class="filters" id="filters"></div>
+        <div class="catalog-tools">
+          <div class="search-row"><input class="search" id="q" type="search" placeholder="filter by name, tag, or blurb…" autocomplete="off" spellcheck="false"></div>
+          <div class="filters" id="filters" aria-label="Skill groups"></div>
+        </div>
       </div>
     </section>
-    <section style="padding-top:0">
-      <div class="wrap">
-        <div class="grid" id="grid">${cards}</div>
+    <section class="catalog-body">
+      <div class="wrap" id="catalog">
+        ${catalogHtml}
         <div class="empty" id="empty">No skills match.</div>
       </div>
     </section>
     <script>
     (function(){
-      var cards=[].slice.call(document.querySelectorAll('#grid .card'));
-      var cats={};cards.forEach(function(c){
-        var cat=c.getAttribute('data-category'); if(cat) cats[cat]=1;
-      });
+      var groups=[].slice.call(document.querySelectorAll('.skill-group'));
+      var cards=[].slice.call(document.querySelectorAll('#catalog .card'));
       var filters=document.getElementById('filters');
+      var q=document.getElementById('q');
+      var countEl=document.getElementById('result-count');
+      var empty=document.getElementById('empty');
+      var total=${publicSkills.length};
+      var cats=${JSON.stringify(groupMeta)};
+      var featuredN=${featuredCount};
       var active='all';
+      function chip(id, label, n){
+        var on=id===active;
+        return '<button type="button" class="chip'+(on?' active':'')+'" data-cat="'+id+'" aria-pressed="'+on+'">'+label+' <span class="chip-n">'+n+'</span></button>';
+      }
       function paint(){
-        filters.innerHTML=['all'].concat(Object.keys(cats).sort()).map(function(c){
-          return '<button type="button" class="chip'+(c===active?' active':'')+'" data-cat="'+c+'">'+c+'</button>';
+        filters.innerHTML=chip('all','all',total)+chip('featured','featured',featuredN)+cats.map(function(c){
+          return chip(c.id,c.label,c.n);
         }).join('');
       }
-      paint();
-      filters.addEventListener('click',function(e){
-        var b=e.target.closest('[data-cat]'); if(!b)return; active=b.getAttribute('data-cat'); paint(); filter();
-      });
-      var q=document.getElementById('q');
+      function setActive(id, push){
+        active=id;
+        if(push!==false){
+          var hash=id==='all'?'':('#'+encodeURIComponent(id));
+          if((location.hash||'')!==hash) history.replaceState(null,'',hash||(location.pathname+location.search));
+        }
+        paint();
+        filter();
+      }
       function filter(){
-        var qq=(q.value||'').toLowerCase(); var n=0;
+        var qq=(q.value||'').toLowerCase();
+        var n=0;
         cards.forEach(function(c){
           var text=c.textContent.toLowerCase();
           var cat=c.getAttribute('data-category')||'';
-          var ok=(active==='all'||cat===active)&&(!qq||text.indexOf(qq)>=0);
-          c.style.display=ok?'':'none'; if(ok)n++;
+          var feat=c.getAttribute('data-featured')==='1';
+          var okCat=active==='all'||(active==='featured'&&feat)||cat===active;
+          var ok=okCat&&(!qq||text.indexOf(qq)>=0);
+          c.hidden=!ok;
+          if(ok)n++;
         });
-        document.getElementById('empty').classList.toggle('show',n===0);
+        groups.forEach(function(g){
+          var vis=g.querySelectorAll('.card:not([hidden])').length;
+          g.hidden=vis===0;
+          var note=g.querySelector('.section-note');
+          if(note) note.textContent=vis;
+        });
+        if(countEl) countEl.textContent=n===total?(n+' public'):(n+' of '+total);
+        empty.classList.toggle('show',n===0);
       }
+      filters.addEventListener('click',function(e){
+        var b=e.target.closest('[data-cat]'); if(!b)return;
+        setActive(b.getAttribute('data-cat'));
+      });
       q.addEventListener('input',filter);
+      var initial=decodeURIComponent((location.hash||'').replace(/^#/,'')).toLowerCase();
+      var known=initial==='featured'||cats.some(function(c){return c.id===initial});
+      paint();
+      if(known) setActive(initial,false);
+      else filter();
     })();
     </script>`,
     active: "skills",
-  })
+  }),
 );
 
 // home
-const featured = publicSkills.filter((s) => s.featured);
+const featured = publicSkills
+  .filter((s) => s.featured)
+  .sort((a, b) => a.name.localeCompare(b.name));
 const featCards = featured
   .map(
     (s) => `<a class="card featured" href="/skills/${esc(s.name)}/">
   <div class="card-top"><h3>${esc(s.name)}</h3><span class="badge">featured</span></div>
   <p>${esc(s.summary)}</p>
-</a>`
+</a>`,
   )
   .join("\n");
 
@@ -758,7 +940,7 @@ fs.writeFileSync(
     })();
     </script>`,
     active: "home",
-  })
+  }),
 );
 
 function storyPage(slug, fallbackTitle, fallbackMd, active) {
@@ -781,7 +963,7 @@ function storyPage(slug, fallbackTitle, fallbackMd, active) {
       body: `<section class="hero" style="padding-bottom:1rem"><div class="wrap"><h1>${esc(title)}</h1></div></section>
     <section style="padding-top:0"><div class="wrap prose">${mdToHtml(bodyMd)}</div></section>`,
       active,
-    })
+    }),
   );
 }
 
@@ -800,7 +982,7 @@ I build tools for agents the way I used to build WordPress plugins — ship some
 
 This site is not a registry and not a clone of autovault.dev. It's a shelf with install pins into the same git tree you can read on GitHub.
 `,
-  "about"
+  "about",
 );
 
 storyPage(
@@ -840,14 +1022,17 @@ You do **not** need an AutoVault MCP server for day-to-day use after sync — th
 add_skill({ source: "github", identifier: "jack-arturo/skillissue@<sha>:skills/<name>/SKILL.md" })
 \`\`\`
 `,
-  "install"
+  "install",
 );
 
 // Essays from content/essays/*.md
 const essaysDir = path.join(root, "content/essays");
 const essayIndex = [];
 if (fs.existsSync(essaysDir)) {
-  for (const file of fs.readdirSync(essaysDir).filter((f) => f.endsWith(".md")).sort()) {
+  for (const file of fs
+    .readdirSync(essaysDir)
+    .filter((f) => f.endsWith(".md"))
+    .sort()) {
     const raw = fs.readFileSync(path.join(essaysDir, file), "utf8");
     const { fm, body } = parseFrontmatter(raw);
     if (fm.visibility === "internal") continue;
@@ -870,7 +1055,7 @@ if (fs.existsSync(essaysDir)) {
         </div></section>
         <section style="padding-top:0"><div class="wrap prose">${mdToHtml(body)}</div></section>`,
         active: "essays",
-      })
+      }),
     );
   }
 }
@@ -881,7 +1066,7 @@ if (essayIndex.length) {
       (e) => `<a class="card featured" href="/essays/${esc(e.slug)}/">
   <div class="card-top"><h3>${esc(e.title)}</h3>${e.date ? `<span class="tag">${esc(e.date)}</span>` : ""}</div>
   <p>${esc(e.description)}</p>
-</a>`
+</a>`,
     )
     .join("\n");
   fs.writeFileSync(
@@ -894,7 +1079,7 @@ if (essayIndex.length) {
         <p class="lede">Longer writing about skills, tools, and not drowning your agent.</p></div></section>
         <section style="padding-top:0"><div class="wrap"><div class="grid">${cards}</div></div></section>`,
       active: "essays",
-    })
+    }),
   );
 }
 
@@ -926,7 +1111,7 @@ storyPage(
 
 - Initial hub on Cloudflare Pages
 `,
-  "home"
+  "home",
 );
 
 // llms + sitemap + robots + headers
@@ -967,13 +1152,16 @@ fs.writeFileSync(
   path.join(siteDir, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
     urls
-      .map((u) => `  <url><loc>https://skillissue.sh${u}</loc><changefreq>weekly</changefreq></url>`)
+      .map(
+        (u) =>
+          `  <url><loc>https://skillissue.sh${u}</loc><changefreq>weekly</changefreq></url>`,
+      )
       .join("\n") +
-    `\n</urlset>\n`
+    `\n</urlset>\n`,
 );
 fs.writeFileSync(
   path.join(siteDir, "robots.txt"),
-  `User-agent: *\nAllow: /\n\nSitemap: https://skillissue.sh/sitemap.xml\n`
+  `User-agent: *\nAllow: /\n\nSitemap: https://skillissue.sh/sitemap.xml\n`,
 );
 fs.writeFileSync(
   path.join(siteDir, "_headers"),
@@ -992,17 +1180,20 @@ fs.writeFileSync(
 
 /llms.txt
   Cache-Control: public, max-age=300
-`
+`,
 );
 
 report.generatedAt = new Date().toISOString();
 report.installPin = sha;
 report.publicSkills = publicSkills.map((s) => s.name);
 fs.mkdirSync(path.join(root, "catalog"), { recursive: true });
-fs.writeFileSync(path.join(root, "catalog/report.json"), JSON.stringify(report, null, 2) + "\n");
+fs.writeFileSync(
+  path.join(root, "catalog/report.json"),
+  JSON.stringify(report, null, 2) + "\n",
+);
 
 console.log(
-  `Built site: ${report.public} public from skills/ · pin ${shortSha}`
+  `Built site: ${report.public} public from skills/ · pin ${shortSha}`,
 );
 if (report.missingNarrative.length) {
   console.warn("Missing narrative:", report.missingNarrative.join(", "));
