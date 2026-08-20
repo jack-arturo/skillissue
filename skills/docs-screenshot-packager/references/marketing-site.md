@@ -32,7 +32,7 @@ hosted docs such as Astro/Starlight, Next, or static docs.
 
 ## Authenticated Dashboards
 
-- Use `dev-browser` for authenticated dashboards or already-open real Chrome
+- Use `browser-hand` for authenticated dashboards or already-open real Chrome
   sessions.
 - Redact service IDs, account IDs, private URLs, tokens, emails, and billing
   information before packaging.

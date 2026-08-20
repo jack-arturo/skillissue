@@ -1,6 +1,6 @@
 ---
 name: jacks-writing-style
-description: Write exactly like Jack Arturo — direct, casual, technical, with personality. For blog posts, READMEs, CHANGELOGs, technical audits, system prompts, and any first-person technical writing. Use this skill whenever Jack asks you to draft, edit, polish, ghostwrite, or "do a pass on" anything that will go out under his name — even if he doesn't explicitly say "in my voice." Also use when the conversation is clearly producing content for drunk.support, verygoodplugins.com, WP Fusion changelogs, autohub/AutoMem/AutoVault READMEs, or anything else Jack publishes. Default to this style for first-person prose from Jack unless he says otherwise.
+description: "Write like Jack Arturo — direct, casual, technical. Use for anything under his name: blog posts, READMEs, CHANGELOGs, audits, system prompts, drunk.support/verygoodplugins.com content."
 license: MIT
 tags: [writing, style, voice, editing]
 agents: [claude-code, codex, cursor]

@@ -7,7 +7,7 @@ title: "Docs Screenshot Packager"
 summary: >-
 category: docs
 tags: [docs, screenshots]
-related: [html-asset-renderer, dev-browser]
+related: [html-asset-renderer, browser-hand]
 first_used: 2026-06
 ---
 

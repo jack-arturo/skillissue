@@ -1,13 +1,10 @@
 ---
 name: resend-cli
 description: >
-  Operate the Resend platform from the terminal — send emails (including React Email
-  .tsx templates via --react-email), manage domains, contacts, broadcasts, templates,
-  webhooks, API keys, logs, automations, and events via the `resend` CLI. Use when the
-  user wants to run Resend commands in the shell, scripts, or CI/CD pipelines, or
-  send/preview React Email templates. Always load this skill before running `resend`
-  commands — it contains the non-interactive flag contract and gotchas that prevent
-  silent failures.
+  Use when operating Resend from the terminal: send or preview email, including
+  React Email templates, or manage domains, contacts, broadcasts, templates,
+  webhooks, keys, logs, automations, and events. Defines the non-interactive
+  CLI contract needed for shell scripts and CI.
 license: MIT
 agents: [autojack]
 metadata:

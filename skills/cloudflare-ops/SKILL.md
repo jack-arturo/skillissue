@@ -1,13 +1,10 @@
 ---
 name: cloudflare-ops
 description: >-
-  Use when the user asks to deploy an AutoHub-style project to Cloudflare, run
-  Pages or Worker preflights, operate D1 migrations/sync, manage the local
-  Cloudflare tunnel helper, standardize repo-local Cloudflare hacks, or add a
-  simple DNS TXT/CNAME on a VGP zone (e.g. wpfusion.com Wordfence
-  wfvendor=… verification). Assume CLOUDFLARE_API_TOKEN + ACCOUNT_ID are already
-  in the shell / System Configuration secrets — do not ask Jack to paste Wrangler
-  creds.
+  Use for AutoHub-style Cloudflare runtime operations: Pages and Worker
+  preflights, preview D1/KV pairs, migrations, data sync, or local tunnels. Use
+  cloudflare-commerce-deploy instead for general app deployment, DNS, custom
+  domains, secrets, environment configuration, or Registrar work.
 license: MIT
 tags: [cloudflare, ops, pages, workers, d1, kv, tunnel, dns, autovault, autohub]
 agents: [claude-code, codex, autojack, cursor]
@@ -39,8 +36,9 @@ the local Cloudflare tunnel helper, pair preview D1+KV resources for safe PR
 previews, or standardize repo-local Cloudflare hacks.
 
 For full one-shot Clerk + Stripe + Cloudflare commerce builds, drive this skill
-from `clerk-cloudflare-commerce-bootstrap`. For per-environment Pages env vars
-and DNS/registrar work, see `cloudflare-commerce-deploy`.
+from `clerk-cloudflare-commerce-bootstrap`. Route general app deployment,
+per-environment Pages variables and secrets, DNS/custom domains, logs, cache,
+and Registrar work to `cloudflare-commerce-deploy`.
 
 This skill's deploy path is **Pages-centric**. For an Astro/EmDash site that runs
 as a **Worker** (`output: 'server'` + `@astrojs/cloudflare`, shipped with

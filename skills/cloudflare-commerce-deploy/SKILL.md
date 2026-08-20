@@ -1,6 +1,10 @@
 ---
 name: cloudflare-commerce-deploy
-description: Deploy and operate commerce apps on Cloudflare when a user wants Pages or Workers deployment, DNS/custom domains, storage bindings, secrets, logs, per-environment env vars, or optional Registrar domain registration handled by an agent.
+description: >-
+  Use for general Cloudflare app delivery: Pages or Workers deployment, DNS and
+  custom domains, bindings, secrets, per-environment variables, logs, cache, or
+  optional Registrar work. Route AutoHub preview D1/KV pairs, migrations, data
+  sync, and local tunnels to cloudflare-ops.
 license: MIT
 tags: [cloudflare, commerce, deployment, dns, pages, workers, registrar, autovault]
 agents: [claude-code, codex, autojack]
@@ -46,8 +50,9 @@ D1/KV/R2/Queues setup, environment variables, secrets, logs, cache operations,
 or optional domain registration through Cloudflare Registrar.
 
 For full one-shot Clerk + Stripe + Cloudflare builds, drive this skill from
-`clerk-cloudflare-commerce-bootstrap`. For preview D1 + KV pair provisioning
-and migrations, see `cloudflare-ops`.
+`clerk-cloudflare-commerce-bootstrap`. Route AutoHub runtime operations —
+preview D1 + KV pairs, migrations, data sync, and local tunnels — to
+`cloudflare-ops`.
 
 ## Preconditions
 

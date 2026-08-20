@@ -14,7 +14,12 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const strict = process.argv.includes("--strict");
-const siteDir = path.join(root, "site");
+const siteDir = process.env.SKILLISSUE_SITE_DIR
+  ? path.resolve(process.env.SKILLISSUE_SITE_DIR)
+  : path.join(root, "site");
+const reportPath = process.env.SKILLISSUE_REPORT_PATH
+  ? path.resolve(process.env.SKILLISSUE_REPORT_PATH)
+  : path.join(root, "catalog", "report.json");
 const skillsDir = path.join(root, "skills");
 const contentStory = path.join(root, "content/story");
 const REPO = "jack-arturo/skillissue";
@@ -294,6 +299,16 @@ function loadDenylist() {
   );
 }
 
+function loadPublicationRegistry() {
+  const registryPath = path.join(root, "catalog/autovault-publication.json");
+  if (!fs.existsSync(registryPath)) return null;
+  const registry = JSON.parse(fs.readFileSync(registryPath, "utf8"));
+  if (registry.schemaVersion !== 1 || !registry.skills) {
+    throw new Error(`Invalid publication registry: ${registryPath}`);
+  }
+  return registry;
+}
+
 /** Catalog groups — aliases collapse ops/operations, meta/hub, etc. */
 const CATALOG_GROUPS = {
   agents: { label: "agents", order: 1 },
@@ -475,6 +490,7 @@ ${body}
 
 // --- load skills from repo tree ---
 const deny = loadDenylist();
+const publicationRegistry = loadPublicationRegistry();
 const sha = gitSha();
 const shortSha = sha.slice(0, 7);
 const publicSkills = [];
@@ -494,6 +510,11 @@ if (!fs.existsSync(skillsDir)) {
 for (const name of fs.readdirSync(skillsDir).sort()) {
   const dir = path.join(skillsDir, name);
   if (!fs.statSync(dir).isDirectory()) continue;
+  const publication = publicationRegistry?.skills?.[name];
+  if (publicationRegistry && publication?.visibility !== "public") {
+    report.skipped.push(name);
+    continue;
+  }
   if (deny.has(name)) {
     report.skipped.push(name);
     continue;
@@ -689,8 +710,8 @@ for (const s of publicSkills) {
     </section>
     <section>
       <div class="wrap prose">
-        ${s.bodyHtml}
-        ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
+${s.bodyHtml}
+${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
         <h2>Package</h2>
         <p class="muted">Version <code>${esc(s.version)}</code>
         · install pin <code>${esc(shortSha)}</code>
@@ -1166,6 +1187,12 @@ fs.writeFileSync(
   path.join(siteDir, "robots.txt"),
   `User-agent: *\nAllow: /\n\nSitemap: https://skillissue.sh/sitemap.xml\n`,
 );
+const redirects = Object.entries(publicationRegistry?.skills || {})
+  .filter(([, entry]) => entry.visibility === "hidden" && entry.replacement)
+  .sort(([a], [b]) => a.localeCompare(b))
+  .map(([name, entry]) => `/skills/${name}/ /skills/${entry.replacement}/ 301`)
+  .join("\n");
+fs.writeFileSync(path.join(siteDir, "_redirects"), redirects ? `${redirects}\n` : "");
 fs.writeFileSync(
   path.join(siteDir, "_headers"),
   `/*
@@ -1189,9 +1216,9 @@ fs.writeFileSync(
 report.generatedAt = new Date().toISOString();
 report.installPin = sha;
 report.publicSkills = publicSkills.map((s) => s.name);
-fs.mkdirSync(path.join(root, "catalog"), { recursive: true });
+fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 fs.writeFileSync(
-  path.join(root, "catalog/report.json"),
+  reportPath,
   JSON.stringify(report, null, 2) + "\n",
 );
 

@@ -3,23 +3,21 @@
   "url": "https://skillissue.sh",
   "description": "Jack Arturo's personal/agent skills collection — packages on GitHub, install via AutoVault.",
   "updated": "2026-08-20",
-  "installPin": "37c6ffc4e358741696c187bb48ad0bb8c23ec868",
-  "installPinShort": "37c6ffc",
+  "installPin": "eb295b4c051837775d44536f5eada7524428d59e",
+  "installPinShort": "eb295b4",
   "repo": "jack-arturo/skillissue",
-  "publicCount": 32,
+  "publicCount": 25,
   "install": {
-    "autovault": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/<name>/SKILL.md --sync-profiles",
+    "autovault": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/<name>/SKILL.md --sync-profiles",
     "bootstrap": "https://autovault.sh"
   },
   "featured": [
     "long-haul-parallel-repair",
-    "session-consolidate",
     "skill-author",
     "cloudflare-lead-capture",
     "cloudflare-ops",
     "babysit",
     "browser-hand",
-    "voiceink-2-upgrade",
     "jacks-writing-style"
   ],
   "skills": [
@@ -27,8 +25,8 @@
       "name": "long-haul-parallel-repair",
       "title": "Long-Haul Parallel Repair",
       "category": "agents",
-      "description": "Use when the user explicitly authorizes subagents, fan-out, delegation, long-running autonomous work, \"work for hours\", \"iterate until satisfied\", or solving every <8/10 confidence item through evidence, fixes, and verification. Also use for deep investigation or repair only when paired with explicit autonomy, fan-out, or subagent authorization.",
-      "version": "1.0.0",
+      "description": "Use for multi-slice SDD when ≥2 independent streams exist, or when the user authorizes subagents, fan-out, delegation, long-running autonomous work, \"work for hours\", \"iterate until satisfied\", or solving every <8/10 confidence item through evidence, fixes, and verification. Deep investigation alone is not enough unless streams or autonomy language are present.",
+      "version": "1.1.0",
       "tags": [
         "subagents",
         "autonomy"
@@ -36,35 +34,15 @@
       "agents": [
         "claude-code",
         "codex",
-        "autojack"
+        "autojack",
+        "grok"
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/long-haul-parallel-repair/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/long-haul-parallel-repair/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/long-haul-parallel-repair/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/long-haul-parallel-repair/SKILL.md",
       "url": "https://skillissue.sh/skills/long-haul-parallel-repair/"
-    },
-    {
-      "name": "session-consolidate",
-      "title": "Session Consolidate",
-      "category": "agents",
-      "description": "Run at a natural stopping point or via the /consolidate command to harvest durable learnings from the current session into AutoMem (store, associate, update, invalidate) and to create, update, merge, deduplicate, or simplify AutoVault skills. Enumerates candidates for veto first, requires explicit per-item confirmation before any destructive skill change, and ends with a short summary of what was created, updated, and consolidated.",
-      "version": "1.1.0",
-      "tags": [
-        "automem",
-        "autovault"
-      ],
-      "agents": [
-        "claude-code",
-        "codex"
-      ],
-      "featured": true,
-      "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/session-consolidate/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/session-consolidate/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/session-consolidate/SKILL.md",
-      "url": "https://skillissue.sh/skills/session-consolidate/"
     },
     {
       "name": "skill-author",
@@ -83,37 +61,17 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/skill-author/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/skill-author/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/skill-author/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/skill-author/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/skill-author/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/skill-author/SKILL.md",
       "url": "https://skillissue.sh/skills/skill-author/"
-    },
-    {
-      "name": "autojack-delegate",
-      "title": "AutoJack Delegate",
-      "category": "agents",
-      "description": "Use when a Claude Code session needs a capability it doesn't have locally (Google Calendar/Gmail/Drive, Slack DM, Discord, WhatsApp, etc.) and the user's AutoHub server has the tool wired in. Delegates one natural-language request to autojack via the local chat API and returns the result.",
-      "version": "1.0.0",
-      "tags": [
-        "autohub",
-        "delegation"
-      ],
-      "agents": [
-        "claude-code"
-      ],
-      "featured": false,
-      "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/autojack-delegate/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/autojack-delegate/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/autojack-delegate/SKILL.md",
-      "url": "https://skillissue.sh/skills/autojack-delegate/"
     },
     {
       "name": "automem",
       "title": "AutoMem",
       "category": "agents",
-      "description": "Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections (\"actually\", \"no, I prefer\", \"stop doing X\", \"we decided X already\", \"I told you before\"), decisions that stabilize after a round of pushback (\"let's go with X\", \"ship it\", \"yeah that's the plan\", \"do it that way\"), or articulated patterns (\"I always X\", \"every time\", \"my thing is\"). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.",
-      "version": "1.0.0",
+      "description": "Recall/store/associate via AutoMem (mcp__memory__*). Invoke on corrections (\\\"actually\\\", \\\"no, I prefer\\\", \\\"stop doing X\\\"), settled decisions (\\\"let's go with X\\\", \\\"ship it\\\"), or named patterns (\\\"I always X\\\", \\\"every time\\\"). Also to persist facts, or update/associate memories.",
+      "version": "1.1.0",
       "tags": [
         "memory",
         "automem"
@@ -125,9 +83,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/automem/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/automem/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/automem/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/automem/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/automem/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/automem/SKILL.md",
       "url": "https://skillissue.sh/skills/automem/"
     },
     {
@@ -146,9 +104,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/autovault-skill/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/autovault-skill/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/autovault-skill/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/autovault-skill/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/autovault-skill/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/autovault-skill/SKILL.md",
       "url": "https://skillissue.sh/skills/autovault-skill/"
     },
     {
@@ -167,9 +125,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/entity-dossier/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/entity-dossier/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/entity-dossier/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/entity-dossier/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/entity-dossier/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/entity-dossier/SKILL.md",
       "url": "https://skillissue.sh/skills/entity-dossier/"
     },
     {
@@ -191,16 +149,16 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-lead-capture/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-lead-capture/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/cloudflare-lead-capture/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-lead-capture/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-lead-capture/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-lead-capture/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-lead-capture/"
     },
     {
       "name": "cloudflare-ops",
       "title": "Cloudflare Ops",
       "category": "cloudflare",
-      "description": "Use when the user asks to deploy an AutoHub-style project to Cloudflare, run Pages or Worker preflights, operate D1 migrations/sync, manage the local Cloudflare tunnel helper, standardize repo-local Cloudflare hacks, or add a simple DNS TXT/CNAME on a VGP zone (e.g. wpfusion.com Wordfence wfvendor=… verification). Assume CLOUDFLARE_API_TOKEN + ACCOUNT_ID are already in the shell / System Configuration secrets — do not ask Jack to paste Wrangler creds.",
+      "description": "Use for AutoHub-style Cloudflare runtime operations: Pages and Worker preflights, preview D1/KV pairs, migrations, data sync, or local tunnels. Use cloudflare-commerce-deploy instead for general app deployment, DNS, custom domains, secrets, environment configuration, or Registrar work.",
       "version": "1.0.5",
       "tags": [
         "cloudflare",
@@ -215,16 +173,16 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-ops/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-ops/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/cloudflare-ops/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-ops/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-ops/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-ops/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-ops/"
     },
     {
       "name": "cloudflare-commerce-deploy",
       "title": "Cloudflare Commerce Deploy",
       "category": "cloudflare",
-      "description": "Deploy and operate commerce apps on Cloudflare when a user wants Pages or Workers deployment, DNS/custom domains, storage bindings, secrets, logs, per-environment env vars, or optional Registrar domain registration handled by an agent.",
+      "description": "Use for general Cloudflare app delivery: Pages or Workers deployment, DNS and custom domains, bindings, secrets, per-environment variables, logs, cache, or optional Registrar work. Route AutoHub preview D1/KV pairs, migrations, data sync, and local tunnels to cloudflare-ops.",
       "version": "1.0.3",
       "tags": [
         "cloudflare",
@@ -238,17 +196,17 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-commerce-deploy/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/cloudflare-commerce-deploy/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-commerce-deploy/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-commerce-deploy/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-commerce-deploy/"
     },
     {
       "name": "cloudflare-emdash-cms-deploy",
       "title": "Cloudflare EmDash CMS Deploy",
       "category": "cloudflare",
-      "description": "Use when deploying an Astro + EmDash CMS site to Cloudflare, when a site serves raw source / downloads wrangler.jsonc / 404s at the root after an Astro migration, when every page redirects to /_emdash/admin/setup even after setup is complete, when CMS posts render with an empty title/body, when an admin preview link 404s, when adding a custom API route/contact form to an EmDash/Astro worker, when adding a second/new content collection to an already-live EmDash site (schema create/add-field), or when standing up EmDash with D1 + R2 and an admin login. EmDash/Astro deploys to Cloudflare Workers, NOT Pages.",
-      "version": "1.12.0",
+      "description": "Use when deploying an Astro + EmDash CMS site to Cloudflare — build downloads wrangler.jsonc / 404s at root, setup-redirect loops, blank CMS content, new collections, or D1+R2 admin setup. Deploys to Workers, not Pages.",
+      "version": "1.13.0",
       "tags": [
         "emdash",
         "astro",
@@ -261,9 +219,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/cloudflare-emdash-cms-deploy/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-emdash-cms-deploy/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/"
     },
     {
@@ -283,17 +241,17 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/pirsch-analytics-bootstrap/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/pirsch-analytics-bootstrap/SKILL.md",
       "url": "https://skillissue.sh/skills/pirsch-analytics-bootstrap/"
     },
     {
       "name": "babysit",
       "title": "Babysit",
       "category": "git",
-      "description": "Create or take over a GitHub pull request, require Codex review on the current head, address valid Codex P0/P1 review threads, fix scoped CI failures, and leave the PR merge-ready without merging. Maintains exclusive babysit:* PR labels (active, waiting-codex, waiting-ci, blocked, ready) so status is visible from the PR list without opening each PR. Use when the user asks to babysit a PR, create a PR and review it, address Codex comments, or get a PR green.",
-      "version": "1.2.0",
+      "description": "Use when babysitting a GitHub PR toward merge-ready — create/take over a PR, work Codex review threads, triage CI failures, manage babysit:* status labels. Never merges the PR.",
+      "version": "1.7.0",
       "tags": [
         "github",
         "pr",
@@ -306,32 +264,10 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/babysit/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/babysit/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/babysit/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/babysit/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/babysit/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/babysit/SKILL.md",
       "url": "https://skillissue.sh/skills/babysit/"
-    },
-    {
-      "name": "codex-review",
-      "title": "Codex Review",
-      "category": "git",
-      "description": "Compatibility alias for babysit. Use when the user says \"address Codex comments\", \"fix Codex feedback\", or passes a PR number/URL with Codex review context; route to the unified babysit PR workflow.",
-      "version": "2.0.1",
-      "tags": [
-        "codex",
-        "pr"
-      ],
-      "agents": [
-        "claude-code",
-        "codex",
-        "cursor"
-      ],
-      "featured": false,
-      "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/codex-review/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/codex-review/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/codex-review/SKILL.md",
-      "url": "https://skillissue.sh/skills/codex-review/"
     },
     {
       "name": "commit-message",
@@ -350,17 +286,17 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/commit-message/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/commit-message/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/commit-message/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/commit-message/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/commit-message/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/commit-message/SKILL.md",
       "url": "https://skillissue.sh/skills/commit-message/"
     },
     {
       "name": "browser-hand",
       "title": "Browser Hand",
       "category": "browser",
-      "description": "Drive the user's already-open, logged-in Chrome — forms, clicks, screenshots, evaluate, authenticated admin UIs and real cookies/tabs. Prefer this whenever work needs the normal Chrome profile (Gmail, GitHub, OAuth-backed sites, open tabs). Do NOT use for disposable headless pages or plain HTTP fetches. Trigger phrases: signed-in Chrome, logged-in browser, real session, existing tabs, cookies, fill this form on my browser, screenshot my account, use my Chrome, authenticated site, without remote debugging.",
-      "version": "0.6.1",
+      "description": "Use when work needs the user's already-open, signed-in Chrome: existing tabs, real cookies, forms, screenshots, OAuth-backed sites, or authenticated admin UIs. Includes an extension-first workflow plus a documented low-level headless/CDP fallback for disposable or dedicated-profile automation.",
+      "version": "0.6.2",
       "tags": [
         "browser",
         "chrome",
@@ -375,64 +311,16 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/browser-hand/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/browser-hand/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/browser-hand/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/browser-hand/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/browser-hand/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/browser-hand/SKILL.md",
       "url": "https://skillissue.sh/skills/browser-hand/"
-    },
-    {
-      "name": "dev-browser",
-      "title": "Dev Browser (legacy)",
-      "category": "browser",
-      "description": "Compatibility alias. Prefer skill \"browser-hand\" for driving the user's logged-in Chrome (extension bridge, no remote-debug on default profile).",
-      "version": "0.6.1",
-      "tags": [
-        "browser",
-        "chrome",
-        "legacy"
-      ],
-      "agents": [
-        "claude-code",
-        "codex"
-      ],
-      "featured": false,
-      "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/dev-browser/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/dev-browser/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/dev-browser/SKILL.md",
-      "url": "https://skillissue.sh/skills/dev-browser/"
-    },
-    {
-      "name": "voiceink-2-upgrade",
-      "title": "VoiceInk 2.0 Upgrade",
-      "category": "desktop",
-      "description": "Migrate and harden a VoiceInk 1.x setup onto VoiceInk 2.0: Modes, Parakeet V3, enhancement providers, custom OpenAI-compatible assistants, dictionary/word replacements (emoji, ellipsis, literal paths), bilingual auto language, and a settings-backup import pack. Use when someone upgraded to VoiceInk 2, lost Modes/Power Modes, hits \"Download required for English (United States)\", sees \"Enhancement failed: Failed to decode response\", wants emoji-from-speech, German/EN mixed dictation, or a Custom endpoint for an assistant Mode.",
-      "version": "1.0.0",
-      "tags": [
-        "voiceink",
-        "macos",
-        "dictation",
-        "migration",
-        "parakeet"
-      ],
-      "agents": [
-        "claude-code",
-        "codex",
-        "autojack",
-        "cursor"
-      ],
-      "featured": true,
-      "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/voiceink-2-upgrade/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/voiceink-2-upgrade/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/voiceink-2-upgrade/SKILL.md",
-      "url": "https://skillissue.sh/skills/voiceink-2-upgrade/"
     },
     {
       "name": "flashspace",
       "title": "FlashSpace",
       "category": "desktop",
-      "description": "Operate FlashSpace virtual workspaces on Jack's Mac via the installed `flashspace` CLI (v1.0.0 from FlashSpace.app). Switch profiles and workspaces, assign/unassign apps, manage floating apps, focus windows, inventory displays, and clean unassigned apps. Use when Jack says \"switch workspace/space\", \"go to Code/Web/Chat/Terminal\", \"FlashSpace\", \"assign this app\", \"float/unfloat\", \"list workspaces\", \"hide unassigned\", or wants a dual-display workspace change. Prefer this over reinventing Mission Control / yabai / AeroSpace scripts.",
+      "description": "Use when operating FlashSpace virtual workspaces on Jack's Mac: switch profiles or spaces, assign apps, manage floating windows, focus a window, inventory displays, or clean unassigned apps through the installed `flashspace` CLI.",
       "version": "1.0.0",
       "tags": [
         "macos",
@@ -445,16 +333,16 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/flashspace/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/flashspace/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/flashspace/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/flashspace/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/flashspace/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/flashspace/SKILL.md",
       "url": "https://skillissue.sh/skills/flashspace/"
     },
     {
       "name": "raycast",
       "title": "Raycast",
       "category": "desktop",
-      "description": "Operate and partially configure Raycast on Jack's Mac via deeplinks, Script Commands, file-based AI providers/skills, and AI Command import packs. Use when Jack says \"open in Raycast\", \"run the X Raycast command\", \"deeplink\", \"Script Command\", \"AI Command/Agent/Skill\", \"providers.yaml\", \"Import AI Commands\", \"PromptLab\", clipboard history, Superwhisper toggle, or wants Autohub Raycast scripts installed (delegate install/sync to raycast-autojack). Prefer this over inventing osascript launchers. Not a full settings API — see Supported config surfaces.",
+      "description": "Operate Raycast on Jack's Mac via deeplinks, Script Commands, AI providers.yaml/Skills/Commands/Agents, PromptLab, clipboard history, or Superwhisper toggle. Delegate Autohub script install to raycast-autojack.",
       "version": "1.0.0",
       "tags": [
         "raycast",
@@ -467,16 +355,16 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/raycast/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/raycast/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/raycast/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/raycast/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/raycast/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/raycast/SKILL.md",
       "url": "https://skillissue.sh/skills/raycast/"
     },
     {
       "name": "awtrix-board",
       "title": "AWTRIX Board",
       "category": "ops",
-      "description": "Control Jack's two Ulanzi TC001 LED matrix displays (32×8 pixels each) running AWTRIX 3 over the LAN — push notifications (scrolling text + color + icon + optional sound), set brightness, read battery / temperature / humidity, or identify which physical unit is which. Device-direct via the bundled `bin/awtrix` helper (raw HTTP, no Home Assistant, no secrets). Because AWTRIX runs its own app loop on-device and notifications overlay then auto-dismiss, there is NO takeover gate to manage (unlike the Divoom Pixoo). Trigger when Jack says \"notify/show X on the awtrix\", \"put X on the office/bedroom display\", \"what's the battery/temp on the clock\", or \"locate the awtrix displays\".",
+      "description": "Use when controlling Jack's two AWTRIX 3 Ulanzi TC001 displays: show a notification, set brightness, read battery or sensor data, or identify a physical unit. Uses the bundled direct-LAN helper without Home Assistant or stored secrets.",
       "version": "1.0.0",
       "tags": [
         "awtrix",
@@ -489,9 +377,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/awtrix-board/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/awtrix-board/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/awtrix-board/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/awtrix-board/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/awtrix-board/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/awtrix-board/SKILL.md",
       "url": "https://skillissue.sh/skills/awtrix-board/"
     },
     {
@@ -510,36 +398,16 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/home-assistant-operator/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/home-assistant-operator/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/home-assistant-operator/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/home-assistant-operator/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/home-assistant-operator/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/home-assistant-operator/SKILL.md",
       "url": "https://skillissue.sh/skills/home-assistant-operator/"
-    },
-    {
-      "name": "inbox-triage",
-      "title": "Inbox Triage",
-      "category": "ops",
-      "description": "Triage Jack's Gmail unread inbox into action buckets (!Action / !AI Handle / !Waiting On / archive) using the google_workspace MCP, then post one digest. Use this whenever Jack asks to triage, clear, sort, process, or \"do\" his email or inbox — \"inbox triage\", \"clear the unread pile\", \"go through my gmail\", \"sort my inbox\", \"process my email\", \"deal with my unread\" — even if he never says the word \"skill\". It enumerates all unread, runs a small parallel read-only classifier fan-out, shows the buckets for approval, then applies Gmail labels SEQUENTIALLY and posts a \"Worth your attention\" + \"Security roundup\" digest. It mutates the live inbox, so it always gets approval before writing.",
-      "version": "1.1.0",
-      "tags": [
-        "email",
-        "gmail"
-      ],
-      "agents": [
-        "claude-code"
-      ],
-      "featured": false,
-      "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/inbox-triage/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/inbox-triage/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/inbox-triage/SKILL.md",
-      "url": "https://skillissue.sh/skills/inbox-triage/"
     },
     {
       "name": "resend-cli",
       "title": "Resend CLI",
       "category": "ops",
-      "description": "Operate the Resend platform from the terminal — send emails (including React Email .tsx templates via --react-email), manage domains, contacts, broadcasts, templates, webhooks, API keys, logs, automations, and events via the `resend` CLI. Use when the user wants to run Resend commands in the shell, scripts, or CI/CD pipelines, or send/preview React Email templates. Always load this skill before running `resend` commands — it contains the non-interactive flag contract and gotchas that prevent silent failures.",
+      "description": "Use when operating Resend from the terminal: send or preview email, including React Email templates, or manage domains, contacts, broadcasts, templates, webhooks, keys, logs, automations, and events. Defines the non-interactive CLI contract needed for shell scripts and CI.",
       "version": "2.3.2",
       "tags": [
         "resend",
@@ -550,9 +418,9 @@
       ],
       "featured": false,
       "provenance": "mixed",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/resend-cli/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/resend-cli/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/resend-cli/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/resend-cli/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/resend-cli/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/resend-cli/SKILL.md",
       "url": "https://skillissue.sh/skills/resend-cli/"
     },
     {
@@ -560,7 +428,7 @@
       "title": "Triage AutoHub Runtime",
       "category": "ops",
       "description": "Diagnose recent AutoHub runtime incidents from logs and live health evidence, separating first causes from retry cascades, process-local database poison, credential-copy drift, platform recipient or permission failures, and intentional fallbacks. Use when AutoHub logs show repeated errors, stuck writes, webhook retry storms, MCP authentication failures, or regressions after a restart.",
-      "version": "1.0.1",
+      "version": "1.0.4",
       "tags": [
         "autohub",
         "ops"
@@ -573,9 +441,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/triage-autohub-runtime/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/triage-autohub-runtime/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/triage-autohub-runtime/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/triage-autohub-runtime/SKILL.md",
       "url": "https://skillissue.sh/skills/triage-autohub-runtime/"
     },
     {
@@ -593,9 +461,9 @@
       ],
       "featured": false,
       "provenance": "mixed",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/mcp-builder/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/mcp-builder/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/mcp-builder/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-builder/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-builder/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/mcp-builder/SKILL.md",
       "url": "https://skillissue.sh/skills/mcp-builder/"
     },
     {
@@ -615,16 +483,16 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/mcp-registry-maintainer/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/mcp-registry-maintainer/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/mcp-registry-maintainer/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-registry-maintainer/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-registry-maintainer/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/mcp-registry-maintainer/SKILL.md",
       "url": "https://skillissue.sh/skills/mcp-registry-maintainer/"
     },
     {
       "name": "jacks-writing-style",
       "title": "Jack's Writing Style",
       "category": "writing",
-      "description": "Write exactly like Jack Arturo — direct, casual, technical, with personality. For blog posts, READMEs, CHANGELOGs, technical audits, system prompts, and any first-person technical writing. Use this skill whenever Jack asks you to draft, edit, polish, ghostwrite, or \"do a pass on\" anything that will go out under his name — even if he doesn't explicitly say \"in my voice.\" Also use when the conversation is clearly producing content for drunk.support, verygoodplugins.com, WP Fusion changelogs, autohub/AutoMem/AutoVault READMEs, or anything else Jack publishes. Default to this style for first-person prose from Jack unless he says otherwise.",
+      "description": "Write like Jack Arturo — direct, casual, technical. Use for anything under his name: blog posts, READMEs, CHANGELOGs, audits, system prompts, drunk.support/verygoodplugins.com content.",
       "version": "1.0.0",
       "tags": [
         "writing",
@@ -638,9 +506,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/jacks-writing-style/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/jacks-writing-style/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/jacks-writing-style/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/jacks-writing-style/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/jacks-writing-style/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/jacks-writing-style/SKILL.md",
       "url": "https://skillissue.sh/skills/jacks-writing-style/"
     },
     {
@@ -660,9 +528,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/docs-screenshot-packager/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/docs-screenshot-packager/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/docs-screenshot-packager/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/docs-screenshot-packager/SKILL.md",
       "url": "https://skillissue.sh/skills/docs-screenshot-packager/"
     },
     {
@@ -682,9 +550,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/html-asset-renderer/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/html-asset-renderer/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/html-asset-renderer/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/html-asset-renderer/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/html-asset-renderer/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/html-asset-renderer/SKILL.md",
       "url": "https://skillissue.sh/skills/html-asset-renderer/"
     },
     {
@@ -704,30 +572,10 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cli-installer-ux/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cli-installer-ux/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/cli-installer-ux/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cli-installer-ux/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cli-installer-ux/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cli-installer-ux/SKILL.md",
       "url": "https://skillissue.sh/skills/cli-installer-ux/"
-    },
-    {
-      "name": "release-readiness",
-      "title": "Release Readiness",
-      "category": "workflow",
-      "description": "Use when preparing to tag or cut a release of a WordPress plugin (or any repo that carries its version in readme.txt \"Stable tag\" and tags releases as bare semver). Triggers on \"is this ready to tag\", \"prep the release\", \"release readiness\", \"get the release ready\", \"release preflight\", \"what's left before we ship X.Y.Z\", or any moment just before a release tag. Audits everything merged since the last git tag, surfaces the gaps (undocumented features, missing changelog entries, dirty working tree, stale branches/worktrees, open PRs, version not bumped, failing tests), then — after one approval — closes the in-repo gaps it can (drafts the changelog, bumps the version, dispatches the repo's docs/verification agents, runs the suite behind a safety guard) and stops at a green \"ready to tag\" state. It NEVER pushes, tags, or publishes anything: every action that leaves the repo stays the human's decision.",
-      "version": "1.0.0",
-      "tags": [
-        "wordpress",
-        "release"
-      ],
-      "agents": [
-        "claude-code"
-      ],
-      "featured": false,
-      "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/release-readiness/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/release-readiness/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/37c6ffc4e358741696c187bb48ad0bb8c23ec868/skills/release-readiness/SKILL.md",
-      "url": "https://skillissue.sh/skills/release-readiness/"
     }
   ]
 }

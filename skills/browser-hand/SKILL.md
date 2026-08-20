@@ -1,13 +1,10 @@
 ---
 name: browser-hand
 description: >
-  Drive the user's already-open, logged-in Chrome — forms, clicks, screenshots,
-  evaluate, authenticated admin UIs and real cookies/tabs. Prefer this whenever
-  work needs the normal Chrome profile (Gmail, GitHub, OAuth-backed sites, open
-  tabs). Do NOT use for disposable headless pages or plain HTTP fetches.
-  Trigger phrases: signed-in Chrome, logged-in browser, real session, existing
-  tabs, cookies, fill this form on my browser, screenshot my account, use my
-  Chrome, authenticated site, without remote debugging.
+  Use when work needs the user's already-open, signed-in Chrome: existing tabs,
+  real cookies, forms, screenshots, OAuth-backed sites, or authenticated admin
+  UIs. Includes an extension-first workflow plus a documented low-level
+  headless/CDP fallback for disposable or dedicated-profile automation.
 license: MIT
 compatibility: Requires local Chrome with the Browser Hand extension and relay.
 category: browser
@@ -15,7 +12,7 @@ tags: [browser, chrome, extension, automation, authenticated-sessions, agent]
 agents: [claude-code, codex, grok]
 metadata:
   author: verygoodplugins
-  version: "0.6.1"
+  version: "0.6.2"
 resources:
   - path: references/setup.md
     type: file
@@ -61,19 +58,23 @@ This is a **skill**, not an MCP server: no always-on tool list and no extra MCP 
 
 | Piece | Command / path |
 |---|---|
-| CLI | `browser-hand` or `node path-a/src/cli.js` |
+| CLI | `browser-hand` or `node cli-js/src/cli.js` |
 | Relay | `browser-hand-relay` / `npm run relay` — `ws://127.0.0.1:9333` |
-| Extension | Load unpacked `extension/.output/chrome-mv3` |
+| Extension | Load unpacked `extension/dist/chrome-mv3` (name: Browser Hand) |
 | Challenges | `extension/challenges/` (default gym port **8766**) |
 
 ## Setup (once)
 
 ```bash
-npm run install:extension
-# Chrome → Load unpacked → extension/.output/chrome-mv3
+npm run setup
+# Chrome → Load unpacked → extension/dist/chrome-mv3
+# NOT extension/.output/ — that is a stale WXT build whose manifest still
+# says "dev-browser"; loading it is why Chrome shows the old name.
 npm run relay    # leave running
 npm run doctor   # want status: tab_bootstrap_works
 ```
+
+Switching from old `dev-browser` skill/extension? `npm run setup -- --cleanup-legacy`
 
 Details: `references/setup.md`.
 
@@ -95,6 +96,10 @@ Full reference: `references/extension-cli.md`.
 ## Agent rules
 
 - Prefer **named pages** (`--page-name`) for multi-step work.
+- `open/goto/snapshot/screenshot/evaluate` create a named tab if missing;
+  `click/type/fill/autofill-profile` attach to an existing one and error
+  instead. Pass the same `--page-name` you opened with — omitting it acts on
+  whichever tab is active.
 - **Do not** request window focus for ordinary fill/click/snapshot. Only use `focus --focus window --reason "…"` when a human must act (2FA, captcha, confirm).
 - Snapshot or screenshot **before and after** writes; verify with evaluate when critical.
 - On username/password manager weirdness, soft recovery is built in — retry evaluate/fill; re-open the named page if screenshot still fails.

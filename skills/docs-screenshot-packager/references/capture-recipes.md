@@ -25,7 +25,7 @@ Use this reference before planning capture state, redactions, and visual QA.
 ## Browser Choices
 
 - Public/local web pages: Playwright, Browser plugin, or in-app browser.
-- Authenticated SaaS/dashboard pages: `dev-browser`.
+- Authenticated SaaS/dashboard pages: `browser-hand`.
 - WebGL/canvas apps: wait for API responses, page idle/settle, and nonblank
   canvas pixels or image entropy before capture.
 

@@ -11,6 +11,7 @@ counting downstream failures.
 - Telegram retry storms and payload drift
 - Credential provenance and recipient resolution
 - Metal EPIPE
+- Voice audio: identify which gate failed first
 - SQLite corruption
 - Intentional fallbacks
 - Motivating-incident acceptance
@@ -114,6 +115,59 @@ status.
 Treat the Metal failure as the first cause and the STT/voice errors as its
 cascade. Restart the affected voice/Parakeet stack, then run sustained
 multi-turn hardware verification. One green turn is insufficient.
+
+## Voice audio: identify which gate failed first
+
+"Voice is broken" is three unrelated failures with three different fixes. Name
+the gate before touching config; the wrong gate's knobs will look like they do
+nothing, because they do.
+
+| Symptom | Gate | Arms when |
+|---|---|---|
+| Text streams, no sound | audio output player | every reply |
+| Replies cut off mid-sentence | barge-in decider | only while the assistant speaks |
+| Assistant answers something nobody said | turn-start (VAD + wake-anchored turn gate) | only while idle |
+
+**Silent output — `playback=true` with no audio.** The keep-warm player stays
+bound to a CoreAudio stream that can go stale after an idle gap. `isPlayerStale()`
+checks only PROCESS liveness (stdin destroyed/ended/closed, killed, exitCode,
+signalCode), so a live process on a dead stream is invisible: stdin writes
+succeed, `ASSISTANT_PLAYBACK` logs `playback=true`, nothing is audible. Tell-tale
+signs: one long-lived `player_pid` across many turns, zero
+`player_stale_discarded`, zero `route_degraded`, and recovery only when the
+operator flips the output device (which forces a `route_change` respawn).
+Mitigation is `VOICE_AUDIO_RECYCLE_PLAYER_AFTER_DRAIN=true`, at the cost of
+per-utterance HAL-client churn; idle-only recycling is the real fix.
+
+**`ASSISTANT_PLAYBACK` is a result marker, not a start-of-speech one.** It is
+logged once the playback task reports, immediately before `lastPlaybackEndTime`
+and `markAssistantPlaybackComplete()`. Never read it as "playback was
+dispatched", and never treat `playback=true` as proof sound was produced.
+
+**Barge-in.** Enable `VOICE_BARGE_TRACE=1` and read the trace before changing
+anything — it records per-frame `rms`, `threshold`, `source`, `armed`, `fired`.
+Two traps:
+
+- `VOICE_BARGE_ADAPTIVE=false` does not merely swap the threshold source; it
+  disables the whole trusted-AEC path, so every `VOICE_TRUSTED_AEC_BARGE_IN_*`
+  key becomes inert and the gate falls back to a percentage threshold plus
+  `VOICE_INTERRUPT_MIN_DURATION`.
+- `trustedAec` can resolve false even on matching hardware, with the same
+  effect. Confirm by reading `source`/`threshold` in the trace rather than
+  trusting the configured value.
+
+Raising the threshold breaks the CONSECUTIVE-FRAME STREAK, not just the level,
+so a value that looks safe by RMS headroom can drop every real barge-in. Sweep
+the recorded trace against candidate values first. The streak — not amplitude —
+is what separates the operator from background dialogue, and the owner profile
+that scales the threshold drifts between sessions, so any fraction is only
+correct for one profile state.
+
+**Turn-start.** Background dialogue transcribed as a real user turn is NOT a
+barge failure — the barge decider never armed. No level or duration threshold
+fixes it, because television dialogue is sustained conversational speech.
+The only discriminator is speaker identity (owner voiceprint / embedding
+sidecar). Do not spend a tuning cycle on thresholds for this symptom.
 
 ## SQLite corruption
 

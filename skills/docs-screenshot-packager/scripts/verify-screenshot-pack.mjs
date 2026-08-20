@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 import process from 'node:process';
 import Module from 'node:module';
@@ -29,7 +30,7 @@ function parseArgs(argv) {
 }
 
 function loadSharp() {
-  const fallback = '<HOME>';
+  const fallback = path.join(os.homedir(), '.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules');
   const paths = [process.env.NODE_PATH, fs.existsSync(fallback) ? fallback : null].filter(Boolean);
   process.env.NODE_PATH = [...new Set(paths.join(':').split(':').filter(Boolean))].join(':');
   Module._initPaths();

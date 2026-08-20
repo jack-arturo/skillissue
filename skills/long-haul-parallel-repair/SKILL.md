@@ -1,12 +1,17 @@
 ---
 name: long-haul-parallel-repair
-description: Use when the user explicitly authorizes subagents, fan-out, delegation, long-running autonomous work, "work for hours", "iterate until satisfied", or solving every <8/10 confidence item through evidence, fixes, and verification. Also use for deep investigation or repair only when paired with explicit autonomy, fan-out, or subagent authorization.
+description: >
+  Use for multi-slice SDD when ≥2 independent streams exist, or when the user
+  authorizes subagents, fan-out, delegation, long-running autonomous work,
+  "work for hours", "iterate until satisfied", or solving every <8/10 confidence
+  item through evidence, fixes, and verification. Deep investigation alone is
+  not enough unless streams or autonomy language are present.
 license: MIT
 tags: [parallel, subagents, orchestration, investigation, repair, verification, confidence, codex]
-agents: [claude-code, codex, autojack]
+agents: [claude-code, codex, autojack, grok]
 category: orchestration
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 capabilities:
   network: false
   filesystem: readwrite
@@ -21,13 +26,22 @@ resources:
 
 ## Activation Contract
 
-Use this skill only when the user explicitly authorizes subagents,
-delegation, fan-out, or long-running autonomous work. Requests for
-"thoroughness" or "deep investigation" alone are not enough.
+**Authorized when any of these hold:**
 
-If authorization is ambiguous, ask one concise question before spawning
-agents. If the user says "fan out", "dispatch agents", "subagents", "work
-for hours", or gives a long-haul time budget, treat that as authorization.
+1. **≥2 independent streams** that materially advance the goal (default
+   multi-slice / SDD posture — no special phrase required).
+2. The user authorizes subagents, delegation, fan-out, or long-running
+   autonomous work (phrases: "fan out", "dispatch agents", "subagents",
+   "work for hours", "full autonomy", "no human input", long-haul time budget).
+3. Solving every item under 8/10 confidence through evidence, fixes, and
+   verification was explicitly requested.
+
+Requests for "thoroughness" or "deep investigation" **alone** are not enough
+if there is only one stream and no autonomy language.
+
+If authorization is still ambiguous (single stream, no fan-out language, and
+spawning would be optional polish), ask one concise question before spawning.
+Otherwise spawn without re-asking.
 
 ## Operating Model
 

@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "target": "skillissue",
+  "skills": [
+    {
+      "name": "automem",
+      "version": "1.1.0",
+      "contentHash": "31688d3efac9adbc81702895e22a87be3d5ce6593453b36ea7cdd8735286fb03"
+    },
+    {
+      "name": "autovault-skill",
+      "version": "1.1.0",
+      "contentHash": "ef381a8a703e87238cbd4083ae1d0e9a1208d5faff6ce1b5c4ca1eaa1d446ede"
+    },
+    {
+      "name": "awtrix-board",
+      "version": "1.0.0",
+      "contentHash": "79edbdd099b1d8724d0c15438434f2e8a5b528e4e96cc6b0513329553850b3c7"
+    },
+    {
+      "name": "babysit",
+      "version": "1.7.0",
+      "contentHash": "1628b0f8296b5b218aa99d8b40dec52641c542b2247f012577f2740b2195c437"
+    },
+    {
+      "name": "browser-hand",
+      "version": "0.6.2",
+      "contentHash": "73d793a0810b7a91887a6d55e475ae1514a7ad3b9ca1490f0260faeb7944b5b4"
+    },
+    {
+      "name": "cli-installer-ux",
+      "version": "1.0.0",
+      "contentHash": "568d6dc64d813407e84a712b1cbafa25dca9bf50cb26775f85df451b6b1b3791"
+    },
+    {
+      "name": "cloudflare-commerce-deploy",
+      "version": "1.0.3",
+      "contentHash": "b4b1232e5615aa75ce4bfc7bbaa0554bf41aef44cd9fc52bbd39d9f0b0c1d560"
+    },
+    {
+      "name": "cloudflare-emdash-cms-deploy",
+      "version": "1.13.0",
+      "contentHash": "9ebeddc21e810725032160fc54edd58a545960eba0e6eae3933318b5e091d177"
+    },
+    {
+      "name": "cloudflare-lead-capture",
+      "version": "1.4.0",
+      "contentHash": "7bc40b9d05559b49a138968224fb325db618136bd222793bea59c5bc727a0b83"
+    },
+    {
+      "name": "cloudflare-ops",
+      "version": "1.0.5",
+      "contentHash": "cc5899a09eb6b4fb1828165fa593d50c25c415d5dab79544293965fa1a1a8743"
+    },
+    {
+      "name": "commit-message",
+      "version": "1.0.0",
+      "contentHash": "e2ca59007ca5f518560e895047d95838fe64f0b30601f9747079ef82440ca318"
+    },
+    {
+      "name": "docs-screenshot-packager",
+      "version": "1.0.0",
+      "contentHash": "f32b5ee7e289cb103e30efd933f3ef3f3745d2aa1cefecf335e3d783ce37eb74"
+    },
+    {
+      "name": "entity-dossier",
+      "version": "0.1.0",
+      "contentHash": "0489e3dbcc461129d052b5b0d645d97c04264fd30f8d8e3f0e226e976ca56825"
+    },
+    {
+      "name": "flashspace",
+      "version": "1.0.0",
+      "contentHash": "aa9abf37699047c589b436f0aa287e93bdcbc4fd82b2b40895f78b77c8aa729d"
+    },
+    {
+      "name": "home-assistant-operator",
+      "version": "1.0.0",
+      "contentHash": "5f7d25bf82777a647e6e1d42478c4f87728339ba4d7d6a1db49de821c4c2ee25"
+    },
+    {
+      "name": "html-asset-renderer",
+      "version": "1.0.0",
+      "contentHash": "b79aa62f7a1b3c484ba6bc7d5f5444a4979e7c951498fe507d222995c4bbc5a9"
+    },
+    {
+      "name": "jacks-writing-style",
+      "version": "1.0.0",
+      "contentHash": "b015872358a94dc987121b49254b83b0ec041e4665cbaff6a5e7c0fdb380e6cc"
+    },
+    {
+      "name": "long-haul-parallel-repair",
+      "version": "1.1.0",
+      "contentHash": "98df644254aede2856a5f3974b2b267ae7dac684212635e23c133e39efe5f411"
+    },
+    {
+      "name": "mcp-builder",
+      "version": "1.0.0",
+      "contentHash": "2419e4c331202b55bdc3670fb3815047d1afcb00f4415d18c1f4829bfeb3ac69"
+    },
+    {
+      "name": "mcp-registry-maintainer",
+      "version": "1.0.0",
+      "contentHash": "326445ac0baaeec5cc610bba2906f5ef16e32ccf71a65daffa4d10e01681758d"
+    },
+    {
+      "name": "pirsch-analytics-bootstrap",
+      "version": "1.1.0",
+      "contentHash": "f3ce01619b361937ba32f585c45e4204a718c353d5e6d037c4328b07e4198195"
+    },
+    {
+      "name": "raycast",
+      "version": "1.0.0",
+      "contentHash": "ef1ec20a1578c308a2c5afe9a55b12e8071c909f73b3616dedfb8ba898f35330"
+    },
+    {
+      "name": "resend-cli",
+      "version": "2.3.2",
+      "contentHash": "d13efd06284ecd7745bc816dcc2be1fba9d32ab2f35a5d8f9a16d84e7427cbc1"
+    },
+    {
+      "name": "skill-author",
+      "version": "2.0.0",
+      "contentHash": "dcf0c9cdc33c408191c0e2b55530e3cc2128bdcd14ec7d07eadf4925abd3d13b"
+    },
+    {
+      "name": "triage-autohub-runtime",
+      "version": "1.0.4",
+      "contentHash": "a2a60b24e552ff37d4173d71dff7d9160b7e7b09815ba97919a77cbd2115cafc"
+    }
+  ]
+}

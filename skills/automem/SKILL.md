@@ -1,12 +1,12 @@
 ---
 name: automem
-description: Recall, store, and associate memories via the AutoMem MCP server (mcp__memory__*). Invoke on user corrections ("actually", "no, I prefer", "stop doing X", "we decided X already", "I told you before"), decisions that stabilize after a round of pushback ("let's go with X", "ship it", "yeah that's the plan", "do it that way"), or articulated patterns ("I always X", "every time", "my thing is"). Also invoke when storing any fact that needs to outlive the session, or when a recalled memory needs to be updated, invalidated, or associated. Covers storage discipline, the atomic recall-store-verify-associate ritual, temporal validity, the never-store list, and the silent-fail verification workaround.
+description: "Recall/store/associate via AutoMem (mcp__memory__*). Invoke on corrections (\"actually\", \"no, I prefer\", \"stop doing X\"), settled decisions (\"let's go with X\", \"ship it\"), or named patterns (\"I always X\", \"every time\"). Also to persist facts, or update/associate memories."
 license: MIT
 tags: [memory, automem, mcp, meta]
 agents: [claude-code, codex, autojack]
 category: meta
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 capabilities:
   network: false
   filesystem: readonly
@@ -24,6 +24,26 @@ This skill does **not** cover session-start recall. That is delivered by the
 runtime: a shell hook (`~/.claude/hooks/automem-session-start.sh`) in Claude
 Code, or prose at the top of `~/.codex/AGENTS.md` in Codex. Both fire before
 any skill can load.
+
+## Recall mid-conversation, not just at session start
+
+Session start delivers two recalls via a hook, and CLAUDE.md says not to
+re-recall after that unless something genuinely shifts. The shift that's
+easiest to miss is a bug report arriving mid-conversation — the pull to
+start reading code is immediate, and the recall gets skipped entirely.
+
+Treat "the user just described a symptom, error, or unexpected behavior" as
+a literal trigger, not a judgment call: recall with the symptom as a
+semantic query (no tags — a tag gate hides cross-corpus fixes) *before*
+opening a file or invoking a debugging skill. If `systematic-debugging` is
+about to run, the recall belongs in its Phase 1 — see that skill's own copy
+of this rule — not squeezed in afterward once the investigation is already
+underway.
+
+(Cost of skipping this, confirmed live: an AppDaemon `init_commands`
+multiline-payload failure mode was already in memory from April 2026 and
+got rediscovered the hard way — a broken add-on boot — on 2026-07-29,
+because this recall didn't happen before the fix was written.)
 
 ## When to use
 

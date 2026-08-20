@@ -1,15 +1,10 @@
 ---
 name: awtrix-board
 description: >-
-  Control Jack's two Ulanzi TC001 LED matrix displays (32×8 pixels each)
-  running AWTRIX 3 over the LAN — push notifications (scrolling text + color +
-  icon + optional sound), set brightness, read battery / temperature / humidity,
-  or identify which physical unit is which. Device-direct via the bundled
-  `bin/awtrix` helper (raw HTTP, no Home Assistant, no secrets). Because AWTRIX
-  runs its own app loop on-device and notifications overlay then auto-dismiss,
-  there is NO takeover gate to manage (unlike the Divoom Pixoo). Trigger when
-  Jack says "notify/show X on the awtrix", "put X on the office/bedroom display",
-  "what's the battery/temp on the clock", or "locate the awtrix displays".
+  Use when controlling Jack's two AWTRIX 3 Ulanzi TC001 displays: show a
+  notification, set brightness, read battery or sensor data, or identify a
+  physical unit. Uses the bundled direct-LAN helper without Home Assistant or
+  stored secrets.
 tags:
   - awtrix
   - ulanzi
