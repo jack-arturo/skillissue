@@ -521,6 +521,8 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     continue;
   }
   const summary = cardSummary(storyFm, storyBody, skillFm, name);
+  const description =
+    (skillFm.description || "").replace(/\s+/g, " ").trim() || summary || name;
   const version = skillFm.version || storyFm.version_pin || "1.0.0";
   const provenance = storyFm.provenance || "house";
   const featured = storyFm.featured === true || storyFm.featured === "true";
@@ -545,6 +547,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     name: skillFm.name || name,
     title: storyFm.title || skillFm.name || name,
     summary,
+    description,
     category: catalogGroup(storyFm.category || skillFm.category),
     version,
     tags: storyFm.tags || skillFm.tags || [],
@@ -628,7 +631,7 @@ const skillsJson = {
     name: s.name,
     title: s.title,
     category: s.category,
-    description: s.summary,
+    description: s.description,
     version: s.version,
     tags: s.tags,
     agents: s.agents,
@@ -753,14 +756,14 @@ fs.writeFileSync(
         <div class="prompt"><span class="dot"></span> <span id="result-count">${publicSkills.length} public</span> · pin ${esc(shortSha)}</div>
         <h1>Skills</h1>
         <p class="lede">Each page is a story plus a real <code>autovault add</code> for the package living in this repo.</p>
-        <div class="catalog-tools">
-          <div class="search-row"><input class="search" id="q" type="search" placeholder="filter by name, tag, or blurb…" autocomplete="off" spellcheck="false"></div>
-          <div class="filters" id="filters" aria-label="Skill groups"></div>
-        </div>
       </div>
     </section>
     <section class="catalog-body">
       <div class="wrap" id="catalog">
+        <div class="catalog-tools">
+          <div class="search-row"><input class="search" id="q" type="search" placeholder="filter by name, tag, or blurb…" autocomplete="off" spellcheck="false"></div>
+          <div class="filters" id="filters" aria-label="Skill groups"></div>
+        </div>
         ${catalogHtml}
         <div class="empty" id="empty">No skills match.</div>
       </div>
@@ -1132,7 +1135,7 @@ autovault add jack-arturo/skillissue@${sha}:skills/<name>/SKILL.md --sync-profil
 \`\`\`
 
 ## Public skills (${publicSkills.length})
-${publicSkills.map((s) => `- ${s.name} (v${s.version}) — ${s.summary}`).join("\n")}
+${publicSkills.map((s) => `- ${s.name} (v${s.version}) — ${s.description}`).join("\n")}
 `;
 fs.writeFileSync(path.join(siteDir, "llms.txt"), llms);
 
