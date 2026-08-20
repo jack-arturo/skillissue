@@ -307,12 +307,19 @@ codex_needs_baseline() {
     && [[ -z "$(codex_any_prior_review)" ]]
 }
 
-# Any Codex review/comment ever on this PR, regardless of head.
+# Any actual Codex completion ever on this PR, regardless of head. Informational
+# connector posts (including quota-limit comments) do not count: the baseline
+# request is still owed when Codex has not completed a review.
 codex_any_prior_review() {
   gh pr view "$PR_NUMBER" --json comments,reviews \
     | jq -r '
-        ([.reviews[]?  | select((.author.login // "") | test("chatgpt-codex-connector"))]
-         + [.comments[]? | select((.author.login // "") | test("chatgpt-codex-connector"))])
+        ([.reviews[]?
+          | select((.author.login // "") | test("chatgpt-codex-connector"))
+          | select(((.body // "") | strings | test("Reviewed commit:"; "i")))]
+         + [.comments[]?
+            | select((.author.login // "") | test("chatgpt-codex-connector"))
+            | select(((.body // "") | strings
+                      | test("Reviewed commit:|no (major|critical) issues"; "i")))])
         | if length > 0 then "yes" else "" end
       '
 }
