@@ -144,9 +144,9 @@ codex_current_reaction() {
   head_date=$(gh pr view "$PR_NUMBER" --json commits \
                 --jq '.commits[-1].committedDate')
   observed_at="${CURRENT_HEAD_OBSERVED_AT:?record when this head was first observed}"
-  gh api "repos/$OWNER/$REPO/issues/$PR_NUMBER/reactions?per_page=100" \
+  gh api --paginate --slurp "repos/$OWNER/$REPO/issues/$PR_NUMBER/reactions?per_page=100" \
     | jq -r --arg since "$head_date" --arg observed "$observed_at" '
-        [.[]
+        [.[][]
          | select((.user.login // "") | test("chatgpt-codex-connector"))
          | {content, at: .created_at}
          | select(.at >= $since and .at >= $observed)]

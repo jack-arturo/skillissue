@@ -86,8 +86,9 @@ list shows loop state at a glance — no need to open each PR.
   defect, not thoroughness.
 - Human comments, Bugbot comments, and subjective comments are reported, not
   resolved, unless the user explicitly puts them in scope.
-- Do not treat an empty review-thread list as green until Codex has completed
-  a review for the current `headRefOid`.
+- Do not treat an empty review-thread list as green until Codex has reviewed
+  the PR at least once and the current `headRefOid` is review-settled: reviewed
+  directly, or past the later-head grace window without an auto-review.
 - Resolve a Codex thread only after replying and only when the fix landed,
   the concern is demonstrably moot, or it is out of scope under the target
   repo's AGENTS.md Threat Model (see step 5's triage gate) — that last case

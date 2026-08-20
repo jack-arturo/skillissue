@@ -108,14 +108,16 @@ Labels are cleared when babysit itself sees a PR close, but the human owner
 merges PRs while no run is watching — those keep their last `babysit:*` label
 forever and rot the list view (at one audit, 25 PRs wore `babysit:blocked`
 while only 6 were genuinely blocked and open). Sweep once per run, right after
-`ensure_babysit_labels`; `--state closed` includes merged PRs:
+`ensure_babysit_labels`, across both closed and merged PRs:
 
 ```bash
 sweep_stale_babysit_labels() {
   local n
   for l in "${BABYSIT_LABELS[@]}"; do
-    gh pr list --state closed --label "$l" --limit 100 --json number \
-      --jq '.[].number'
+    for state in closed merged; do
+      gh pr list --state "$state" --label "$l" --limit 100 --json number \
+        --jq '.[].number'
+    done
   done | sort -u | while read -r n; do
     [[ -n "$n" ]] || continue
     for l in "${BABYSIT_LABELS[@]}"; do
@@ -175,4 +177,3 @@ Typical cycle (cheap — ~one label write per phase, not per poll):
 
 Exactly one `@codex review` comment appears in that whole cycle, at the first
 arrow. Every later `waiting-codex` is a passive wait on smart auto-review.
-
