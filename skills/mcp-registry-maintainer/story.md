@@ -5,7 +5,7 @@ provenance: house
 featured: false
 title: "MCP Registry Maintainer"
 summary: >-
-category: operations
+category: mcp
 tags: [mcp, autohub]
 related: [mcp-builder]
 first_used: 2026-05

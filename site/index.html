@@ -41,7 +41,7 @@
 
     <section class="hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> live · 32 public skills · pin 2933248</div>
+        <div class="prompt"><span class="dot"></span> live · 32 public skills · pin 37c6ffc</div>
         <h1><span class="path">skillissue</span>.sh<span class="cursor" aria-hidden="true"></span></h1>
         <p class="lede">
           Jack Arturo’s personal/agent skills —
@@ -56,7 +56,7 @@
         <div class="term" aria-label="Example terminal session">
           <div class="term-bar"><i></i><i></i><i></i><span class="term-title">zsh · skillissue</span></div>
           <div class="term-body">
-            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@29332485bc5adec40eafa1bdca560ab86d372447:skills/cloudflare-ops/SKILL.md --sync-profiles</span></div>
+            <div><span class="dim">$</span> <span class="cmd">autovault add jack-arturo/skillissue@37c6ffc4e358741696c187bb48ad0bb8c23ec868:skills/cloudflare-ops/SKILL.md --sync-profiles</span></div>
             <div class="ok">✓ package from github · vault syncs claude-code · codex · cursor</div>
             <div class="amber"># if your agent still can't ship… skill issue</div>
           </div>
@@ -64,7 +64,7 @@
         <div class="stats">
           <div class="stat"><b>32</b><span>public skill pages</span></div>
           <div class="stat"><b>9</b><span>featured</span></div>
-          <div class="stat"><b>2933248</b><span>install pin (this build)</span></div>
+          <div class="stat"><b>37c6ffc</b><span>install pin (this build)</span></div>
         </div>
       </div>
     </section>
@@ -73,7 +73,7 @@
         <div class="section-head"><h2>Featured</h2><div class="section-note">house skills that pull weight</div></div>
         <div class="grid"><a class="card featured" href="/skills/babysit/">
   <div class="card-top"><h3>babysit</h3><span class="badge">featured</span></div>
-  <p>Create or take over a GitHub pull request, require Codex review on the current head, address valid Codex P0/P1 review threads, fix scoped CI failures, and leave the PR merge-ready without merging. Maintains exclusive babysit:* PR labels (active, waiting-codex, waiting-ci, blocked, ready) so status is visible from the PR list without opening each PR. Use when the user asks to babysit a PR, create a PR and review it, address Codex comments, or get a PR green.</p>
+  <p>PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</p>
 </a>
 <a class="card featured" href="/skills/browser-hand/">
   <div class="card-top"><h3>browser-hand</h3><span class="badge">featured</span></div>
@@ -81,31 +81,31 @@
 </a>
 <a class="card featured" href="/skills/cloudflare-lead-capture/">
   <div class="card-top"><h3>cloudflare-lead-capture</h3><span class="badge">featured</span></div>
-  <p>Scaffold Cloudflare Pages or Workers lead-capture systems (Pages Functions OR Astro SSR API routes) with D1 contacts, web forms, Resend email templates, unsubscribe links, Turnstile checks, exports, and a small admin UI when a project needs repeatable email database infrastructure.</p>
+  <p>Hat Trick / waitlist work kept being rewritten. Packaged as scaffold + doctor + setup.</p>
 </a>
 <a class="card featured" href="/skills/cloudflare-ops/">
   <div class="card-top"><h3>cloudflare-ops</h3><span class="badge">featured</span></div>
-  <p>Use when the user asks to deploy an AutoHub-style project to Cloudflare, run Pages or Worker preflights, operate D1 migrations/sync, manage the local Cloudflare tunnel helper, standardize repo-local Cloudflare hacks, or add a simple DNS TXT/CNAME on a VGP zone (e.g. wpfusion.com Wordfence wfvendor=… verification). Assume CLOUDFLARE_API_TOKEN + ACCOUNT_ID are already in the shell / System Configuration secrets — do not ask Jack to paste Wrangler creds.</p>
+  <p>Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</p>
 </a>
 <a class="card featured" href="/skills/jacks-writing-style/">
   <div class="card-top"><h3>jacks-writing-style</h3><span class="badge">featured</span></div>
-  <p>Write exactly like Jack Arturo — direct, casual, technical, with personality. For blog posts, READMEs, CHANGELOGs, technical audits, system prompts, and any first-person technical writing. Use this skill whenever Jack asks you to draft, edit, polish, ghostwrite, or &quot;do a pass on&quot; anything that will go out under his name — even if he doesn't explicitly say &quot;in my voice.&quot; Also use when the conversation is clearly producing content for drunk.support, verygoodplugins.com, WP Fusion changelogs, autohub/AutoMem/AutoVault READMEs, or anything else Jack publishes. Default to this style for first-person prose from Jack unless he says otherwise.</p>
+  <p>Every public surface under my name was drifting into assistant-voice: hedged, bland, &quot;it's worth noting.&quot; This skill is the fix — examples from real READMEs, blogs, and changelogs.</p>
 </a>
 <a class="card featured" href="/skills/long-haul-parallel-repair/">
   <div class="card-top"><h3>long-haul-parallel-repair</h3><span class="badge">featured</span></div>
-  <p>Use when the user explicitly authorizes subagents, fan-out, delegation, long-running autonomous work, &quot;work for hours&quot;, &quot;iterate until satisfied&quot;, or solving every &lt;8/10 confidence item through evidence, fixes, and verification. Also use for deep investigation or repair only when paired with explicit autonomy, fan-out, or subagent authorization.</p>
+  <p>Agents would either under-delegate or fan out without authorization. This skill is the contract for when &quot;work for hours&quot; is real.</p>
 </a>
 <a class="card featured" href="/skills/session-consolidate/">
   <div class="card-top"><h3>session-consolidate</h3><span class="badge">featured</span></div>
-  <p>Run at a natural stopping point or via the /consolidate command to harvest durable learnings from the current session into AutoMem (store, associate, update, invalidate) and to create, update, merge, deduplicate, or simplify AutoVault skills. Enumerates candidates for veto first, requires explicit per-item confirmation before any destructive skill change, and ends with a short summary of what was created, updated, and consolidated.</p>
+  <p>Sessions produced gold that evaporated. Consolidate is the checkpoint: memory pass + skill pass with human veto on destructive skill changes.</p>
 </a>
 <a class="card featured" href="/skills/skill-author/">
   <div class="card-top"><h3>skill-author</h3><span class="badge">featured</span></div>
-  <p>Package and validate an existing skill draft for AutoVault when its frontmatter, resources, capabilities, or admission result need review.</p>
+  <p>Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</p>
 </a>
 <a class="card featured" href="/skills/voiceink-2-upgrade/">
   <div class="card-top"><h3>voiceink-2-upgrade</h3><span class="badge">featured</span></div>
-  <p>Field notes for surviving VoiceInk 2.0: Parakeet V3 Modes, the Apple Speech trap, prompt=&lt;none&gt; enhancement failures, Dictionary emoji/path replacements, and a settings-backup validator.</p>
+  <p>Field notes for surviving VoiceInk 2.0: Parakeet V3 Modes, the Apple Speech trap, prompt=&lt;none&gt; enhancement failures, Dictionary emoji/path replacements, and a settings-backup…</p>
 </a></div>
       </div>
     </section>
