@@ -16,7 +16,7 @@ agents:
   - autojack
 category: operations
 metadata:
-  version: 1.0.1
+  version: 1.0.4
 capabilities:
   network: true
   filesystem: readwrite
@@ -62,31 +62,33 @@ operational failure from current logs and health evidence.
    and the active `.env`. Do not assume the current shell cwd is the runtime
    cwd.
 
-## 2. Recall once, early
+## 2. Recall one incident context, early
 
-Perform exactly the standard two AutoMem recalls before analysis:
+Before analysis, perform exactly one broad AutoMem recall. Its purpose is to
+surface recent incident decisions, verified root causes, prior fixes, and
+workflow outcomes that could explain or constrain the present signature. Do
+not perform a separate preferences recall and do not issue additional recalls
+during this workflow.
 
 ```javascript
 mcp__memory__recall_memory({
-  tags: ['preference'],
-  limit: 20,
-  sort: 'updated_desc',
-  format: 'detailed',
-});
-
-mcp__memory__recall_memory({
   query:
-    '<AutoHub modules, exact error strings, platform names, and incident nouns>',
+    'AutoHub runtime incident: <exact error signatures, affected modules, platform names, and symptoms>. Find prior verified fixes, root causes, incident decisions, and workflow outcomes relevant to this failure.',
   tags: ['autohub'],
   language: 'javascript',
-  time_query: 'last 90 days',
-  limit: 30,
+  time_query: 'last 7 days',
+  limit: 20,
   format: 'detailed',
+  recency_bias: 'on',
+  expand_relations: true,
+  relation_limit: 20,
 });
 ```
 
-Use one additional bugfix/solution recall only when a concrete error signature
-needs historical disambiguation.
+Use the retrieved results as leads, not proof. Confirm any earlier diagnosis
+against current structural evidence before acting. Memory storage remains
+selective: only a verified durable root cause, repair pattern, or decision
+deserves a new or updated memory.
 
 ## 3. Collect structural evidence
 
@@ -132,7 +134,9 @@ Prefer the earliest mechanism that explains every later cluster. Count repeated
 signatures, but do not let a high-volume retry cascade outrank its first cause.
 
 Consult `references/failure-signatures.md` before classifying SQLite, Telegram,
-Metal, or corruption signatures.
+Metal, voice-audio, or corruption signatures. For voice, name the failing gate
+(audio output player, barge-in, or turn-start) before touching any config —
+each has a distinct signature, and the wrong gate's knobs are inert.
 
 ## 6. Classify before changing code
 
@@ -198,11 +202,39 @@ unavailable; do not substitute a mock.
 
 ## 9. Store only the durable outcome
 
-Invoke the `automem` skill after the root cause and repair survive
-verification. Follow its atomic recall → store/update → verify → associate
-ritual. Store one durable root-cause/fix memory, not a session summary, log
-dump, progress note, PID, token hash, or test transcript. Associate it with the
-most relevant prior incident or decision.
+After the root cause and repair survive verification, invoke the `automem`
+skill only when the registered `mcp__memory__*` tools are available in the
+current task. Follow its atomic recall → store/update → verify → associate
+ritual. Store one durable root-cause/fix memory only when it will help future
+incident triage. Do not store a session summary, log dump, progress note, PID,
+token hash, or test transcript. Associate it with the most relevant prior
+incident or decision when plausible.
+
+When the Memory MCP tools are unavailable, the repair remains verified and
+complete. Record one concise workflow note — `Durable memory association
+skipped: Memory MCP tools unavailable in this task` — and do not describe this
+as an AutoMem storage failure, a repair blocker, or an incident symptom. Do
+not retry, substitute runtime calls, or expose configuration details.
+
+
+## 10. Babysit the verified pull request
+
+When the incident repair has a normal pull request and all local verification
+passes, invoke the `babysit` skill against that pull request. This handoff is
+required for repair PRs; it moves the change through cloud review and CI until
+it is merge-ready or a defined blocker requires human direction.
+
+Use babysit only after a PR exists. Preserve its guardrails: wait for smart
+Codex auto-review first, post at most one guarded baseline review fallback if
+needed, address only direct review-contract breaches or regressions introduced
+by the repair, and cap automated remediation at two fix pushes. Track its
+exclusive `babysit:*` status label.
+
+Babysit must never merge, enable auto-merge, deploy, alter credentials, or
+expand the repair beyond the incident's approved scope. Green means
+`babysit:ready` and ready for the user to merge, not merged by the agent.
+If review, CI, or scope is blocked, report the current babysit label and
+blocker rather than continuing unattended.
 
 ## Incident acceptance check
 

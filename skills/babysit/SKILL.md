@@ -1,18 +1,27 @@
 ---
 name: babysit
-description: Create or take over a GitHub pull request, require Codex review on the current head, address valid Codex P0/P1 review threads, fix scoped CI failures, and leave the PR merge-ready without merging. Maintains exclusive babysit:* PR labels (active, waiting-codex, waiting-ci, blocked, ready) so status is visible from the PR list without opening each PR. Use when the user asks to babysit a PR, create a PR and review it, address Codex comments, or get a PR green.
+description: Use when babysitting a GitHub PR toward merge-ready — create/take over a PR, work Codex review threads, triage CI failures, manage babysit:* status labels. Never merges the PR.
 license: MIT
 tags: [git, github, pull-request, codex, ci, review, automation, general, labels]
 agents: [claude-code, codex, cursor]
 category: git
 metadata:
-  version: "1.2.0"
+  version: "1.7.0"
 capabilities:
   network: true
   filesystem: readwrite
   tools: [Bash, Read, Edit, Grep, Glob]
 requires-secrets: []
-argument-hint: "[pr-number-or-url] [--dry-run] [--wait-cap <duration>] [--only <path-glob>]"
+argument-hint: "[pr-number-or-url] [--dry-run] [--wait-cap <duration>] [--only <path-glob>] [--request-review] [--codex-grace <duration>] [--reset-budget] [--allow-large] [--adversarial [focus...]] [--skip-local-review]"
+resources:
+  - path: references/pr-labels.md
+    type: file
+  - path: references/preflight-and-pr-creation.md
+    type: file
+  - path: references/codex-review-threads.md
+    type: file
+  - path: references/ci-and-final-readiness.md
+    type: file
 ---
 
 # Babysit
@@ -34,10 +43,28 @@ list shows loop state at a glance — no need to open each PR.
 
 1. Current directory is inside a git repository with a GitHub remote.
 2. `gh auth status` succeeds.
-3. Codex review is enabled for the repository. If Codex does not react within
-   the wait cap, stop and report that blocker.
+3. Codex review is enabled for the repository. Babysit first waits for smart
+   auto-review; only an initial PR with neither a human request nor a Codex
+   completion may receive one guarded baseline fallback request.
 4. Default wait cap is 45 minutes per external review/check wait unless
    `--wait-cap` is supplied.
+5. Codex **smart auto-review** is expected to be on in the repo/org Codex
+   settings. It — not this skill — is what reviews later pushes.
+
+## Arguments
+
+| Argument | Default | Effect |
+|----------|---------|--------|
+| `[pr-number-or-url]` | current branch's PR | Target PR; otherwise create-PR mode |
+| `--dry-run` | off | No labels, no comments, no pushes |
+| `--wait-cap <duration>` | `45m` | Cap on each *required* external wait (baseline Codex review, CI) |
+| `--only <path-glob>` | — | Narrow the related-path set |
+| `--request-review` | off | Post **one** extra `@codex review` on the current head at run start, even if a baseline request already exists. The escape hatch for "review this again now" |
+| `--codex-grace <duration>` | `10m` | How long to wait for Codex **smart auto-review** on the initial PR head and after a fix push. Later-head expiry is a pass, not a blocker. |
+| `--reset-budget` | off | Explicitly grant a fresh remediation budget on a PR whose **lifetime** budget is spent. Records a budget-reset marker comment on the PR so every later run counts from it. Only a human ask justifies this flag. |
+| `--allow-large` | off | Proceed on a PR whose diff exceeds the 700-changed-line size gate. Without it, oversized PRs stop at preflight with a recommendation to split. |
+| `--adversarial [focus...]` | off | Create-PR mode only: additionally run one local Codex **adversarial review** (design/approach challenge) before opening the PR, with optional focus text. Findings are reported for the human; design concerns are never auto-fixed. |
+| `--skip-local-review` | off | Skip the local Codex review gates (pre-PR and pre-push). They are also skipped silently when the codex CLI or plugin is unavailable. |
 
 ## Guardrails
 
@@ -47,14 +74,84 @@ list shows loop state at a glance — no need to open each PR.
   related-path set is ambiguous.
 - Codex is the automated review gate. Do not request Copilot or Bugbot review
   unless the user explicitly asks.
+- **Review-request cadence (hard limit):** automatic-first: on an initial PR
+  head, wait the Codex grace period. Post **at most one** `@codex review`
+  baseline fallback only if no Codex completion and no human request exists;
+  **never re-tag `@codex` because the head moved.** A fix push is not a reason
+  to comment. Codex smart auto-review decides whether a later head warrants a
+  review; babysit only *waits* for it. The single exception is an explicit
+  human ask (`--request-review`, or a `@codex review` / `/codex review` comment
+  from a human), and each such ask buys exactly one comment. Before posting
+  anything, run `codex_review_already_requested` — a per-push tag loop is a
+  defect, not thoroughness.
 - Human comments, Bugbot comments, and subjective comments are reported, not
   resolved, unless the user explicitly puts them in scope.
 - Do not treat an empty review-thread list as green until Codex has completed
   a review for the current `headRefOid`.
-- Resolve a Codex thread only after replying and only when the fix landed or
-  the concern is demonstrably moot.
-- If a Codex thread is security-sensitive, subjective, or requires a broad
-  refactor outside PR scope, stop for human input.
+- Resolve a Codex thread only after replying and only when the fix landed,
+  the concern is demonstrably moot, or it is out of scope under the target
+  repo's AGENTS.md Threat Model (see step 5's triage gate) — that last case
+  closes automatically with the canned rationale, it does not stop the run.
+- Auto-fix only a direct Review Contract breach or a regression introduced by
+  an earlier babysit fix. A valid scope expansion, subjective finding, or broad
+  refactor is a human decision: leave its thread open, set `babysit:blocked`,
+  and stop without creating follow-up work or broadening the PR.
+- **Stop on convergence, not on a round count.** A flat ceiling is the wrong
+  instrument in both directions, and measurably was: #1139 was halted at the
+  ceiling with *zero* open threads while actively converging (the human override
+  then closed everything in three commits), while #1085 burned 8 rounds and
+  #1255 burned 12 re-litigating one unmade decision. Each round, record threads
+  closed, threads opened, and the file+mechanism of each new finding, then:
+  - **Continue** while the round closed findings *and* the new findings land in
+    new territory. That loop is winning; do not stop it because a counter says so.
+  - **Stop immediately** when the same file *and* mechanism resurfaces across two
+    consecutive rounds, even with budget left. More rounds cannot fix an unmade
+    decision — name it and hand it over.
+  - **Absolute safety ceiling: 6 review windows**, so a pathological loop still
+    terminates. A product, deployment, secret, or architecture decision stops the
+    run immediately regardless of anything above.
+- **The budget is per-PR lifetime, not per-run.** Derive it from the PR's own
+  history at preflight (distinct Codex reviewed-commit markers since the last
+  budget-reset marker — see step 5), so a re-invocation on a previously blocked
+  PR inherits what that history already spent rather than resetting the counter.
+  Only an explicit human `--reset-budget` grants more, and it records a marker
+  comment so the next run counts from it.
+- **Trivial-fix exception.** When Codex re-raises a finding babysit previously
+  closed, and the fix is small, mechanical, and already known, apply it instead
+  of escalating — escalate only when the re-raise implies a genuine policy
+  disagreement. #1258 stopped on a fix its own stop comment described as "one
+  import plus one line"; #1109 left three near-one-liners unfixed for the same
+  reason.
+- **No silent blocks.** Post the stop comment naming the blocker class and the
+  exact decision or reason **before** setting `babysit:blocked`. A blocked
+  label with no explanation on the PR is a defect.
+- **Never hand off a finding by claiming it is tracked — verify the tracker.**
+  The observed failure mode is not blocking, it is findings *evaporating* at the
+  stop boundary: #1266's residual findings were declared "tracked in #1267" when
+  #1267 covered entirely different files (both defects then sat live on `main`),
+  and #1254's answered decision was reported implemented in commit `8958d8b`,
+  which does not exist. When handing off a residual finding as tracked work,
+  `gh issue create` it — quoting the finding, its `file:line`, and the repro —
+  then read it back by number to confirm it exists, and link that number in both
+  the stop comment and the thread reply. A scope-expansion decision is not a
+  handoff: leave its review thread open and do not create follow-up work. A
+  claim is not a handoff.
+- **Residual findings set the label by class, not by budget.** With a verified
+  issue attached: a residual *non-correctness* finding (coverage gap, hardening)
+  sets `babysit:ready` with an advisory note, since it does not change the merge
+  decision. A residual *real correctness* finding still sets `babysit:blocked` —
+  but now with durable tracking rather than a claim.
+- **Size gate:** at preflight, a diff over 700 changed lines (additions +
+  deletions) stops the run with a recommendation to split (e.g. the
+  split-to-prs skill) unless `--allow-large` is passed; 400-700 proceeds with
+  a warning in the report. Review-loop data: no sub-100-line PR was ever
+  blocked; 700+ lines take 3+ review rounds 58-84% of the time.
+- **Local Codex review gates are bounded and optional.** The pre-PR gate runs
+  at most two local review-fix iterations; the pre-push check is one pass per
+  remediation batch, never a loop. Local findings go through the same Review
+  Contract / Threat Model triage as GitHub threads. When the codex CLI or
+  plugin is unavailable (or `--skip-local-review`), skip silently and note it
+  in the report — the gates are an accelerant, not a precondition.
 - **Labels:** keep exactly one of the exclusive `babysit:*` status labels on
   the PR while babysitting (or none only when labels cannot be written). Never
   leave a stale waiting/active label after the agent stops. Skip all label
@@ -63,369 +160,102 @@ list shows loop state at a glance — no need to open each PR.
   poll tick. Cache the last applied status in the working note and no-op when
   unchanged.
 
-## Status labels (list-view SSOT)
+## Model Dispatch
 
-These five labels are **mutually exclusive**. Always remove the other four when
-setting one. Create them on first use if missing.
+Babysit's phases differ enormously in judgment density, and running all of them
+at the orchestrating model's tier is the main avoidable cost. Split by tier —
+the roles are fixed, the concrete model IDs are yours to set:
 
-| Label | Color | Meaning | When to set |
-|-------|-------|---------|-------------|
-| `babysit:active` | `1D76DB` | Agent is **working** (reading threads, coding, local checks, committing/pushing, resolving) | Ownership start; while fixing findings or conflicts; while applying local work |
-| `babysit:waiting-codex` | `FBCA04` | **Waiting on Codex** for the current head | After `@codex review` (or when review is missing/stale) and while polling for a review of `headRefOid` |
-| `babysit:waiting-ci` | `BFDADC` | **Waiting on CI** | After a push when checks are pending/queued/in progress, or while re-polling CI before final readiness |
-| `babysit:blocked` | `D93F0B` | **Non-looping, unresolved** — needs human | Agent stops without green: wait-cap, human decision, out-of-scope Codex finding, unrelated CI, merge conflict of intent, missing Codex reaction, draft/closed surprise, ambiguous related-path set |
-| `babysit:ready` | `0E8A16` | **Codex all clear** + gates pass; human may merge | Final readiness criteria all met (step 7). Agent still does **not** merge |
+| Tier | Phases | Runs on |
+|------|--------|---------|
+| **A — no model** | poll for review/CI, label writes, thread fetch, size gate, budget derivation | `scripts/` — zero tokens |
+| **B — cheap executor** | apply an *already-specified* fix, run the focused test, run the formatter/linter | cheap tier, low effort |
+| **C — strong** | triage findings against the Review Contract and Threat Model, decide fix-vs-escalate, author replies and escalations | the orchestrating session |
 
-Filter without opening PRs:
-
-```bash
-gh pr list --label 'babysit:active' --state open
-gh pr list --label 'babysit:waiting-codex' --state open
-gh pr list --label 'babysit:waiting-ci' --state open
-gh pr list --label 'babysit:blocked' --state open
-gh pr list --label 'babysit:ready' --state open
-# or combined:
-gh pr list --state open --search 'label:babysit:active OR label:babysit:waiting-codex OR label:babysit:waiting-ci OR label:babysit:blocked OR label:babysit:ready'
+```
+# Tier mapping — override per environment. Roles above are the contract;
+# these IDs are not. Leave TIER_B_HARNESS unset to keep everything in-harness.
+TIER_B_MODEL="${BABYSIT_TIER_B_MODEL:-sonnet}"   # cheap executor
+TIER_B_HARNESS="${BABYSIT_TIER_B_HARNESS:-}"     # "", "codex", or "grok"
 ```
 
-### Ensure labels exist
-
-Run once per repo (or whenever a create fails with "not found"). Prefer
-`--force` so color/description stay canonical:
-
-```bash
-BABYSIT_LABELS=(
-  'babysit:active'
-  'babysit:waiting-codex'
-  'babysit:waiting-ci'
-  'babysit:blocked'
-  'babysit:ready'
-)
-
-ensure_babysit_labels() {
-  gh label create 'babysit:active' \
-    --color '1D76DB' \
-    --description 'Babysit agent is actively working this PR' \
-    --force
-  gh label create 'babysit:waiting-codex' \
-    --color 'FBCA04' \
-    --description 'Babysit waiting for Codex review on current head' \
-    --force
-  gh label create 'babysit:waiting-ci' \
-    --color 'BFDADC' \
-    --description 'Babysit waiting for CI checks on current head' \
-    --force
-  gh label create 'babysit:blocked' \
-    --color 'D93F0B' \
-    --description 'Babysit stopped; unresolved blocker needs human' \
-    --force
-  gh label create 'babysit:ready' \
-    --color '0E8A16' \
-    --description 'Codex all clear + gates pass; human may merge' \
-    --force
-}
-```
-
-### Set exclusive status (transition-only)
-
-```bash
-# status is one of: active | waiting-codex | waiting-ci | blocked | ready
-# Keep LAST_BABYSIT_STATUS in the working note; no-op if unchanged.
-set_babysit_status() {
-  local status="$1"
-  local label="babysit:${status}"
-  if [[ "${LAST_BABYSIT_STATUS:-}" == "$status" ]]; then
-    return 0
-  fi
-  # Tolerate missing labels on remove (gh exits non-zero if not present).
-  for l in "${BABYSIT_LABELS[@]}"; do
-    gh pr edit "$PR_NUMBER" --remove-label "$l" 2>/dev/null || true
-  done
-  gh pr edit "$PR_NUMBER" --add-label "$label" || return 1
-  LAST_BABYSIT_STATUS="$status"
-}
-```
-
-If label create/edit fails (permissions), log once and continue the review loop —
-labels are UX, not a hard gate. Do **not** invent alternate label names.
-
-When clearing all babysit labels (merged/closed PR with no follow-up):
-
-```bash
-clear_babysit_labels() {
-  for l in "${BABYSIT_LABELS[@]}"; do
-    gh pr edit "$PR_NUMBER" --remove-label "$l" 2>/dev/null || true
-  done
-  LAST_BABYSIT_STATUS=""
-}
-```
-
-### Transition rules
-
-| Event | Label action |
-|-------|----------------|
-| PR number resolved and babysit starts (create or take over) | `ensure_babysit_labels` then `set_babysit_status active` |
-| Entering step 3 wait: review missing/stale; after `@codex review` | `set_babysit_status waiting-codex` **once** when wait begins — not each 60s poll |
-| Codex review for current head arrives; reading/classifying threads or coding fixes | `set_babysit_status active` |
-| After push, CI checks pending/queued/in_progress | `set_babysit_status waiting-ci` **once** when wait begins |
-| CI finished (pass/fail/skip) and agent is fixing or re-checking | `active` on fix work; after a failing-but-in-scope CI fix push, may return to `waiting-ci` then later `waiting-codex` |
-| Agent stops without final readiness (any blocker or wait-cap) | `set_babysit_status blocked` **before** the final report |
-| Final readiness green (step 7) | `set_babysit_status ready` |
-| Target PR already **merged/closed** mid-flow and work ends (or follow-up PR opened) | `clear_babysit_labels` on the closed/merged PR; set status on the follow-up if one is opened |
-| `--dry-run` | never create, add, or remove labels |
-
-Typical cycle (cheap — ~one label write per phase, not per poll):
-
-`active` → `waiting-codex` → `active` (fix) → push → `waiting-ci` → `waiting-codex` → … → `ready`
-
-## Workflow
-
-### 1. Preflight
-
-Run the inspection commands and keep a short working note of repo, branch,
-dirty paths, PR number, wait cap, last babysit label status, and whether this
-is existing-PR mode or create-PR mode.
-
-```bash
-git status --short --branch
-git remote -v
-git branch --show-current
-gh auth status
-gh repo view --json nameWithOwner,owner,name,defaultBranchRef --jq '.'
-git diff --stat
-git diff --cached --stat
-git diff
-git diff --cached
-git ls-files --others --exclude-standard
-```
-
-Resolve the PR target in this order:
-
-1. PR number or URL from arguments.
-2. Existing PR for the current branch: `gh pr view --json number,url,state,isDraft,headRefName,headRefOid,baseRefName`.
-3. If no PR exists and local related work exists, use create-PR mode.
-
-Stop if the existing PR is draft, closed, or not from the current local branch
-unless the user explicitly asked to work that PR. If stopping here after a PR
-number was resolved, set `babysit:blocked` (unless dry-run).
-
-If the target PR was **merged mid-flow** (the human owner can merge while you
-work, sometimes before review findings are addressed), do not try to reopen or
-re-push it — its branch is usually deleted. Instead check whether valid Codex
-P0/P1 findings are still unresolved: those changes are now live on the base
-branch. If so, treat it as create-PR mode — branch off the updated base,
-cherry-pick or re-apply only the corrective commit, and open a clean follow-up
-PR that references the merged one and the finding it closes. Reply on the
-merged PR's threads pointing at the follow-up. Clear all `babysit:*` labels
-from the merged PR; put `babysit:active` on the follow-up. If nothing valid is
-unaddressed, report the merge, clear `babysit:*` on the merged PR, and stop.
-
-Once a live PR number exists and babysit owns it, call
-`ensure_babysit_labels` and `set_babysit_status active` (skip in dry-run).
-
-### 2. Create a PR When Needed
-
-Build an explicit related-path list from status, diffs, and the user request.
-Leave unrelated dirty files unstaged.
-
-Run focused local checks that match the changed files. If the repo has no
-obvious focused check, run the narrowest existing test/lint command or record
-`local checks not configured`.
-
-Create a short conventional branch from the default branch unless the current
-branch is already an appropriate feature branch. Commit only related paths,
-push, and open a ready PR:
-
-```bash
-git add -- <related paths>
-git commit -m "<type>(<scope>): <imperative summary>"
-git push -u origin "$BRANCH"
-gh pr create --base "$BASE_REF" --head "$BRANCH" \
-  --title "<type>(<scope>): <imperative summary>" \
-  --body "<summary, tests, risk notes>"
-```
-
-Then resolve:
-
-```bash
-gh pr view "$BRANCH" --json number,url,headRefOid,isDraft,state,mergeable --jq '.'
-```
-
-Immediately after the PR number is known: `ensure_babysit_labels` and
-`set_babysit_status active`.
-
-### 3. Require Codex Review on Current Head
-
-Codex completion can appear as:
-
-- a PR review by `chatgpt-codex-connector` or
-  `chatgpt-codex-connector[bot]` whose body contains `Reviewed commit: <sha>`;
-- an issue comment by either connector login with the same reviewed-commit
-  marker;
-- a clean-result Codex issue comment without a reviewed-commit marker when it
-  clearly says there are no major issues and was created after the current head
-  commit.
-
-Fetch PR state:
-
-```bash
-gh pr view "$PR_NUMBER" --json headRefOid,commits,reviews,latestReviews,comments --jq '.'
-```
-
-Match the reviewed commit to the current `headRefOid` by prefix. If the review
-is missing or stale, request exactly one fresh review with:
-
-```bash
-gh pr comment "$PR_NUMBER" --body "@codex review"
-```
-
-When entering the wait (review missing/stale after the request, or already
-waiting for current head), call `set_babysit_status waiting-codex` **once**.
-Poll every 60 seconds until the wait cap — **do not** re-apply the label each
-tick. If Codex still has not reviewed the current head, set
-`babysit:blocked`, stop, and report the blocker.
-
-When a matching review for the current head is present, move on (typically
-`set_babysit_status active` when starting thread work in step 4/5).
-
-### 4. Fetch Active Codex Threads
-
-Fetch every review-thread page; never stop at the first 100 threads.
-
-```bash
-gh api graphql -F owner="$OWNER" -F repo="$REPO" -F pr="$PR_NUMBER" -f query='
-query($owner:String!, $repo:String!, $pr:Int!, $cursor:String) {
-  repository(owner:$owner, name:$repo) {
-    pullRequest(number:$pr) {
-      headRefOid
-      reviewThreads(first:100, after:$cursor) {
-        nodes {
-          id
-          isResolved
-          isOutdated
-          path
-          line
-          comments(first:10) {
-            nodes {
-              id
-              databaseId
-              author { login }
-              body
-              diffHunk
-              createdAt
-              url
-            }
-          }
-        }
-        pageInfo { hasNextPage endCursor }
-      }
-    }
-  }
-}'
-```
-
-Repeat with `-F cursor="$END_CURSOR"` until `hasNextPage` is false.
-
-Filter to active Codex root threads:
-
-- `isResolved == false`
-- `isOutdated == false`
-- root comment author is `chatgpt-codex-connector` or
-  `chatgpt-codex-connector[bot]`
-
-### 5. Resolve Valid Codex P0/P1 Findings
-
-While classifying and fixing, keep `babysit:active` (set once when work starts).
-
-For each active Codex thread:
-
-1. Read the cited file, surrounding code, `diffHunk`, and any relevant tests.
-2. Classify the finding as correct, partial, not applicable, or out of scope.
-3. Apply the smallest correct fix for valid P0/P1 issues.
-4. Run focused local checks.
-5. Reply with the specific fix or the concrete code path that makes it moot.
-6. Resolve only after the reply and fix/mootness are in place.
-
-Reply to a thread using the root comment `databaseId`. The route needs the PR
-number as well as the comment id. `pulls/comments/{id}/replies` — without
-`$PR_NUMBER` — is not a GitHub route and returns 404:
-
-```bash
-gh api -X POST \
-  "repos/$OWNER/$REPO/pulls/$PR_NUMBER/comments/$COMMENT_DATABASE_ID/replies" \
-  -f body="$REPLY_BODY"
-```
-
-Resolve the review thread:
-
-```bash
-gh api graphql -F thread="$THREAD_ID" -f query='
-mutation($thread:ID!) {
-  resolveReviewThread(input:{threadId:$thread}) {
-    thread { id isResolved }
-  }
-}'
-```
-
-After any code change, commit and push the scoped fix, then return to step 3
-for a fresh Codex review on the new head. After push, prefer step 6 CI wait
-(`waiting-ci`) when checks are still running before re-requesting Codex; once
-ready to wait on review, `waiting-codex`.
-
-If stopping for human input on an out-of-scope / security / subjective finding,
-set `babysit:blocked` before reporting.
-
-### 6. CI and Mergeability Gate
-
-Check PR checks:
-
-```bash
-gh pr checks "$PR_NUMBER" --json name,bucket,state,link
-```
-
-- If checks are pending/queued/in progress, `set_babysit_status waiting-ci`
-  once, poll with a bounded wait, and do not re-label each tick.
-- If checks pass or skip, continue (set `active` only if more agent work
-  follows immediately; otherwise proceed toward step 7 / Codex as needed).
-- If checks fail and are caused by the PR scope, set `active`, inspect logs,
-  fix locally, verify, push, and return to step 3 (or re-enter `waiting-ci`
-  after push).
-- If checks fail for an unrelated reason, set `babysit:blocked` and report.
-- If no checks appear after bounded discovery, report `CI not configured` and
-  continue (not a block by itself).
-
-Check mergeability:
-
-```bash
-gh pr view "$PR_NUMBER" --json state,isDraft,mergeable,reviewDecision,headRefOid,url,title --jq '.'
-```
-
-If `mergeable` is `CONFLICTING`, set `active`, merge the latest base into the
-PR branch, and resolve conflicts while preserving both intents. If the intents
-conflict, abort the merge, set `babysit:blocked`, and ask for clarification.
-Do not force-push. After conflict resolution, push and return to step 3.
-
-### 7. Final Readiness
-
-Final handoff is green only when:
-
-- PR is open and not draft.
-- Codex reviewed the current head.
-- No unresolved, non-outdated valid Codex P0/P1 threads remain.
-- CI passes, skips, or is explicitly `CI not configured`.
-- `mergeable` is not `CONFLICTING`.
-- No merge was performed by the agent.
-
-When all of the above hold, set `babysit:ready` (clears active / waiting /
-blocked). That label is the list-view signal that Codex gave the all clear
-and the human can merge.
+The largest saving is **Tier A, not the model swap**: polling inside the
+conversation and pulling full review-thread bodies into the orchestrating
+context cost more than the fixes do. Move those to scripts first.
+
+Tier B's contract, whichever harness runs it: **input** is `file:line` + the
+required change + the acceptance test; **output** is a diff. It never
+classifies a finding, never decides scope, never resolves a thread — those are
+Tier C by definition. If a "fix" cannot be specified that precisely, it is not a
+Tier B task; diagnose it at Tier C first, then hand the spec down.
+
+Delegating Tier B to the *same* vendor that produced the review trades away
+independent checking — a second opinion from the author is not a second opinion.
+Prefer a different vendor, or keep it in-harness.
+
+## Workflow at a Glance
+
+Seven steps, grouped into four reference files. Work through them in order;
+each file covers the bash helpers, `gh`/`gh api` calls, and gotchas for its
+steps in full.
+
+| Steps | What happens | Reference |
+|-------|--------------|-----------|
+| 1-2 | Resolve or create the target PR, take babysit ownership, sweep stale babysit labels repo-wide, apply the size gate and lifetime-budget derivation, run the local pre-PR review gate, open a fresh PR when there's local work but no PR yet | [references/preflight-and-pr-creation.md](references/preflight-and-pr-creation.md) |
+| 3-5 | Automatic-first review grace, then at most one guarded baseline fallback; detect announced quota skips; fetch active review threads; sweep deployed integration boundaries when applicable; classify each against the Review Contract and Threat Model, batch direct breaches and fix regressions, run the local pre-push check, and stop for decisions or scope expansions | [references/codex-review-threads.md](references/codex-review-threads.md) |
+| 6-7 | Combined post-push CI + Codex wait, in-scope failure triage, and the final all-green readiness checklist | [references/ci-and-final-readiness.md](references/ci-and-final-readiness.md) |
+| throughout | Keep exactly one exclusive `babysit:*` label current on the PR (`active`, `waiting-codex`, `waiting-ci`, `blocked`, `ready`) | [references/pr-labels.md](references/pr-labels.md) |
+
+The Guardrails above (review-request cadence, never merge, label discipline)
+apply across all four files and are not repeated in them.
+
+## Reference Map
+
+- `references/pr-labels.md` — the five exclusive `babysit:*` labels, when to
+  set each, the stale-label sweep, and the `ensure_babysit_labels` /
+  `set_babysit_status` / `clear_babysit_labels` /
+  `sweep_stale_babysit_labels` bash helpers every other step calls.
+- `references/preflight-and-pr-creation.md` — resolving the target PR
+  (existing branch, PR number/URL, or create-PR mode), the size gate, the
+  lifetime-budget derivation, the merged-mid-flow recovery path, the local
+  pre-PR review gate, and opening a new PR into automatic-review grace.
+- `references/codex-review-threads.md` — automatic-first vs. guarded-baseline
+  requests, the reviewed-commit marker/timestamp-field parsing gotchas (the
+  #1 cause of false timeouts), announced quota-skip detection, fetching
+  review threads, the Threat Model triage gate, the local pre-push check,
+  and the fix/reply/resolve loop for valid P0/P1 findings.
+- `references/ci-and-final-readiness.md` — the combined post-push CI + Codex
+  wait, in-scope failure triage, conflict resolution, and the step-7
+  checklist that must all hold before `babysit:ready`.
 
 ## Output
 
 Report branch, PR URL/title, mode used, local checks run, Codex review cycles,
 Codex threads fixed/addressed/skipped, CI status, final mergeability, **current
 `babysit:*` label**, files touched, commits pushed, and explicitly state that
-no merge was performed.
+no merge was performed. Also record the number of babysit-authored remediation
+pushes **this run and per the PR's lifetime budget derivation**, the
+per-round convergence verdict (`converging` / `respawn` / `clean`), which tier
+ran each phase (and any Tier B harness used), the issue number filed for every
+tracked residual finding — or that scope-expansion decisions were left open —
+or plainly that filing failed — whether the trivial-fix
+exception was applied, whether `--reset-budget` was recorded, and the
+terminal blocker class (`decision`, `scope`, `nonconvergent`, `wait`, `ci`,
+`conflict`, `quota`, or `size`) when the run is not ready. Labels are live
+status, not historical loop telemetry.
+
+Also report the local review gates: whether the pre-PR gate and each pre-push
+check ran (model used), findings fixed locally, and gates skipped (CLI absent,
+`--skip-local-review`). Report any announced Codex quota skip and which heads
+it affected.
+
+Also report the review-request cadence, so a regression back to per-push tagging
+is visible in the transcript:
+
+- `@codex review` comments babysit posted this run — expected **0 or 1**. More
+  than one means the one-shot guard failed; say so plainly.
+- For each later head: whether Codex auto-reviewed it, or the grace window
+  expired with no review (auto-review skip).
 
 Suggested closing line when green:
 

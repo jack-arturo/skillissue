@@ -51,7 +51,7 @@ marketing/docs sites.
 2. Capture or select source screenshots.
    - Keep raw/proof captures in scratch until approved.
    - For public or local web pages, use Playwright, the Browser plugin, or the
-     in-app browser. For authenticated SaaS dashboards, use `dev-browser`.
+     in-app browser. For authenticated SaaS dashboards, use `browser-hand`.
    - Read `references/capture-recipes.md` before capture planning, WebGL/canvas
      QA, token handling, or product-state selection.
 

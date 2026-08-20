@@ -1,15 +1,13 @@
 {
-  "public": 32,
+  "public": 25,
   "skipped": [],
   "missingNarrative": [],
   "missingSkillMd": [],
-  "generatedAt": "2026-08-20T01:09:40.820Z",
-  "installPin": "37c6ffc4e358741696c187bb48ad0bb8c23ec868",
+  "generatedAt": "2026-08-20T04:38:18.576Z",
+  "installPin": "ead4583c62863f6a06788796d0baa9905a3a32ae",
   "publicSkills": [
     "long-haul-parallel-repair",
-    "session-consolidate",
     "skill-author",
-    "autojack-delegate",
     "automem",
     "autovault-skill",
     "entity-dossier",
@@ -19,16 +17,12 @@
     "cloudflare-emdash-cms-deploy",
     "pirsch-analytics-bootstrap",
     "babysit",
-    "codex-review",
     "commit-message",
     "browser-hand",
-    "dev-browser",
-    "voiceink-2-upgrade",
     "flashspace",
     "raycast",
     "awtrix-board",
     "home-assistant-operator",
-    "inbox-triage",
     "resend-cli",
     "triage-autohub-runtime",
     "mcp-builder",
@@ -36,7 +30,6 @@
     "jacks-writing-style",
     "docs-screenshot-packager",
     "html-asset-renderer",
-    "cli-installer-ux",
-    "release-readiness"
+    "cli-installer-ux"
   ]
 }

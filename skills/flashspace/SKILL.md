@@ -1,14 +1,10 @@
 ---
 name: flashspace
 description: >-
-  Operate FlashSpace virtual workspaces on Jack's Mac via the installed
-  `flashspace` CLI (v1.0.0 from FlashSpace.app). Switch profiles and
-  workspaces, assign/unassign apps, manage floating apps, focus windows,
-  inventory displays, and clean unassigned apps. Use when Jack says
-  "switch workspace/space", "go to Code/Web/Chat/Terminal", "FlashSpace",
-  "assign this app", "float/unfloat", "list workspaces", "hide unassigned",
-  or wants a dual-display workspace change. Prefer this over reinventing
-  Mission Control / yabai / AeroSpace scripts.
+  Use when operating FlashSpace virtual workspaces on Jack's Mac: switch
+  profiles or spaces, assign apps, manage floating windows, focus a window,
+  inventory displays, or clean unassigned apps through the installed
+  `flashspace` CLI.
 license: MIT
 tags:
   - flashspace

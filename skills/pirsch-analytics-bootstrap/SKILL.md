@@ -47,8 +47,8 @@ PostHog, etc. as the only analytics tool.
   point (VitePress `.vitepress/config.{ts,js}` `head[]`, Next.js
   `_document.tsx`, Astro `<Head>`, plain HTML `<head>`, etc.).
 - The user has a Pirsch account at <https://dashboard.pirsch.io/>.
-- The dashboard is reachable in a logged-in browser. Use the current
-  `dev-browser` workflow only when explicitly authorized — see step 2.
+- The dashboard is reachable in a logged-in browser. Use `browser-hand` only
+  when explicitly authorized — see step 2.
 
 ## Workflow
 
@@ -83,7 +83,7 @@ organization-level API permissions that domain-scoped API clients do
 not have. Expect a 403 if you try.
 
 **The right path is the dashboard.** If account writes are explicitly
-authorized, use `dev-browser` against the already signed-in tab and verify each
+authorized, use `browser-hand` against the already signed-in tab and verify each
 saved value. Use target IDs when multiple Pirsch tabs are open. Otherwise ask
 the user to:
 
@@ -96,7 +96,7 @@ the user to:
 5. Paste the snippet — or just the `data-code` value — back into the
    chat.
 
-**Do not** drive the dashboard via `dev-browser` unless the user
+**Do not** drive the dashboard via `browser-hand` unless the user
 explicitly authorizes UI clicks under their logged-in session. The
 auto-mode classifier blocks browser-driven account writes by default;
 attempting them produces a denial that interrupts the workflow.
@@ -178,22 +178,17 @@ Build (or run dev/preview), then:
 curl -sf http://127.0.0.1:<port>/ | grep -o '<script[^>]*pianjs[^>]*>'
 ```
 
-For a deeper check, attach to a browser and watch network:
+For a deeper check, fetch the loaded Pirsch script from the same browser page
+and assert its response status:
 
 ```bash
-dev-browser --connect --timeout 20 <<'EOF'
-const page = await browser.getPage("verify");
-const log = [];
-page.on("response", (r) => {
-  if (r.url().includes("pirsch")) log.push({ status: r.status(), url: r.url() });
-});
-await page.goto("http://127.0.0.1:<port>/", { waitUntil: "domcontentloaded" });
-await page.waitForTimeout(2500);
-console.log(JSON.stringify(log));
-EOF
+browser-hand open --url http://127.0.0.1:<port>/ --page-name pirsch-verify
+browser-hand evaluate --page-name pirsch-verify \
+  --code '(async () => { const url = performance.getEntriesByType("resource").map(e => e.name).find(name => name.includes("pirsch")); if (!url) return { ok: false, error: "Pirsch resource was not requested" }; const response = await fetch(url, { cache: "no-store" }); return { ok: response.ok, status: response.status, url: response.url }; })()'
 ```
 
-Expected output: `pa.js` returns 200. **No tracking POST will fire on
+Expected output: `ok: true` with `status: 200`; otherwise stop and diagnose the
+load failure. **No tracking POST will fire on
 localhost** — Pirsch's `pa.js` skips local hostnames by design. To
 confirm hits in the dashboard, you must check after deploying to the
 real domain.
@@ -269,7 +264,7 @@ If nothing appears, common causes:
 - **Do not try `POST /api/v1/domain` from a domain-scoped API client.**
   It returns 403. The dashboard is the only viable path for most
   users.
-- **Do not driver-click the Pirsch dashboard via `dev-browser` without
+- **Do not driver-click the Pirsch dashboard via `browser-hand` without
   explicit user authorization for UI writes.** The auto-mode
   classifier denies this by default — attempting it stalls the
   workflow.

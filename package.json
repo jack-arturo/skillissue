@@ -5,6 +5,7 @@
   "description": "skillissue.sh — Jack Arturo's personal/agent skills collection",
   "type": "module",
   "scripts": {
+    "test": "node --test tests/*.test.mjs",
     "build": "node scripts/build-catalog.mjs",
     "build:strict": "node scripts/build-catalog.mjs --strict",
     "harvest:tools": "node scripts/harvest-tool-timeline.mjs",

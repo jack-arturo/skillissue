@@ -5,7 +5,7 @@ description: >-
   enable LLMs to interact with external services through well-designed tools.
   Use when building MCP servers to integrate external APIs or services, whether
   in Python (FastMCP) or Node/TypeScript (MCP SDK).
-license: Complete terms in LICENSE.txt
+license: Apache-2.0
 resources:
   - path: LICENSE.txt
     type: file
@@ -27,6 +27,8 @@ resources:
     type: file
 agents:
   - claude-code
+metadata:
+  version: "1.0.0"
 ---
 
 # MCP Server Development Guide
