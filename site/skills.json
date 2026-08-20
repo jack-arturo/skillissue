@@ -3,12 +3,12 @@
   "url": "https://skillissue.sh",
   "description": "Jack Arturo's personal/agent skills collection — packages on GitHub, install via AutoVault.",
   "updated": "2026-08-20",
-  "installPin": "ead4583c62863f6a06788796d0baa9905a3a32ae",
-  "installPinShort": "ead4583",
+  "installPin": "678d8c9ec77af47cbf12312da23ab3d8420b02cb",
+  "installPinShort": "678d8c9",
   "repo": "jack-arturo/skillissue",
   "publicCount": 25,
   "install": {
-    "autovault": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/<name>/SKILL.md --sync-profiles",
+    "autovault": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/<name>/SKILL.md --sync-profiles",
     "bootstrap": "https://autovault.sh"
   },
   "featured": [
@@ -39,9 +39,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/long-haul-parallel-repair/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/long-haul-parallel-repair/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/long-haul-parallel-repair/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/long-haul-parallel-repair/SKILL.md",
       "url": "https://skillissue.sh/skills/long-haul-parallel-repair/"
     },
     {
@@ -61,9 +61,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/skill-author/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/skill-author/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/skill-author/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/skill-author/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/skill-author/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/skill-author/SKILL.md",
       "url": "https://skillissue.sh/skills/skill-author/"
     },
     {
@@ -83,9 +83,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/automem/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/automem/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/automem/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/automem/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/automem/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/automem/SKILL.md",
       "url": "https://skillissue.sh/skills/automem/"
     },
     {
@@ -104,9 +104,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/autovault-skill/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/autovault-skill/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/autovault-skill/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/autovault-skill/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/autovault-skill/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/autovault-skill/SKILL.md",
       "url": "https://skillissue.sh/skills/autovault-skill/"
     },
     {
@@ -125,9 +125,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/entity-dossier/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/entity-dossier/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/entity-dossier/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/entity-dossier/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/entity-dossier/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/entity-dossier/SKILL.md",
       "url": "https://skillissue.sh/skills/entity-dossier/"
     },
     {
@@ -149,9 +149,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-lead-capture/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-lead-capture/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/cloudflare-lead-capture/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-lead-capture/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-lead-capture/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/cloudflare-lead-capture/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-lead-capture/"
     },
     {
@@ -173,9 +173,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-ops/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-ops/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/cloudflare-ops/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-ops/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-ops/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/cloudflare-ops/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-ops/"
     },
     {
@@ -196,9 +196,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-commerce-deploy/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/cloudflare-commerce-deploy/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-commerce-deploy/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/cloudflare-commerce-deploy/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-commerce-deploy/"
     },
     {
@@ -219,9 +219,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/cloudflare-emdash-cms-deploy/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/cloudflare-emdash-cms-deploy/SKILL.md",
       "url": "https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/"
     },
     {
@@ -241,9 +241,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/pirsch-analytics-bootstrap/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/pirsch-analytics-bootstrap/SKILL.md",
       "url": "https://skillissue.sh/skills/pirsch-analytics-bootstrap/"
     },
     {
@@ -264,9 +264,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/babysit/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/babysit/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/babysit/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/babysit/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/babysit/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/babysit/SKILL.md",
       "url": "https://skillissue.sh/skills/babysit/"
     },
     {
@@ -286,9 +286,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/commit-message/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/commit-message/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/commit-message/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/commit-message/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/commit-message/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/commit-message/SKILL.md",
       "url": "https://skillissue.sh/skills/commit-message/"
     },
     {
@@ -311,9 +311,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/browser-hand/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/browser-hand/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/browser-hand/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/browser-hand/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/browser-hand/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/browser-hand/SKILL.md",
       "url": "https://skillissue.sh/skills/browser-hand/"
     },
     {
@@ -333,9 +333,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/flashspace/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/flashspace/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/flashspace/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/flashspace/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/flashspace/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/flashspace/SKILL.md",
       "url": "https://skillissue.sh/skills/flashspace/"
     },
     {
@@ -355,9 +355,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/raycast/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/raycast/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/raycast/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/raycast/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/raycast/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/raycast/SKILL.md",
       "url": "https://skillissue.sh/skills/raycast/"
     },
     {
@@ -377,9 +377,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/awtrix-board/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/awtrix-board/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/awtrix-board/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/awtrix-board/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/awtrix-board/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/awtrix-board/SKILL.md",
       "url": "https://skillissue.sh/skills/awtrix-board/"
     },
     {
@@ -398,9 +398,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/home-assistant-operator/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/home-assistant-operator/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/home-assistant-operator/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/home-assistant-operator/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/home-assistant-operator/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/home-assistant-operator/SKILL.md",
       "url": "https://skillissue.sh/skills/home-assistant-operator/"
     },
     {
@@ -418,9 +418,9 @@
       ],
       "featured": false,
       "provenance": "mixed",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/resend-cli/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/resend-cli/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/resend-cli/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/resend-cli/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/resend-cli/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/resend-cli/SKILL.md",
       "url": "https://skillissue.sh/skills/resend-cli/"
     },
     {
@@ -441,9 +441,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/triage-autohub-runtime/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/triage-autohub-runtime/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/triage-autohub-runtime/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/triage-autohub-runtime/SKILL.md",
       "url": "https://skillissue.sh/skills/triage-autohub-runtime/"
     },
     {
@@ -461,9 +461,9 @@
       ],
       "featured": false,
       "provenance": "mixed",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/mcp-builder/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/mcp-builder/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/mcp-builder/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/mcp-builder/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/mcp-builder/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/mcp-builder/SKILL.md",
       "url": "https://skillissue.sh/skills/mcp-builder/"
     },
     {
@@ -483,9 +483,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/mcp-registry-maintainer/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/mcp-registry-maintainer/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/mcp-registry-maintainer/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/mcp-registry-maintainer/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/mcp-registry-maintainer/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/mcp-registry-maintainer/SKILL.md",
       "url": "https://skillissue.sh/skills/mcp-registry-maintainer/"
     },
     {
@@ -506,9 +506,9 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/jacks-writing-style/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/jacks-writing-style/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/jacks-writing-style/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/jacks-writing-style/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/jacks-writing-style/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/jacks-writing-style/SKILL.md",
       "url": "https://skillissue.sh/skills/jacks-writing-style/"
     },
     {
@@ -528,9 +528,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/docs-screenshot-packager/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/docs-screenshot-packager/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/docs-screenshot-packager/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/docs-screenshot-packager/SKILL.md",
       "url": "https://skillissue.sh/skills/docs-screenshot-packager/"
     },
     {
@@ -550,9 +550,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/html-asset-renderer/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/html-asset-renderer/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/html-asset-renderer/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/html-asset-renderer/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/html-asset-renderer/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/html-asset-renderer/SKILL.md",
       "url": "https://skillissue.sh/skills/html-asset-renderer/"
     },
     {
@@ -572,9 +572,9 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cli-installer-ux/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@ead4583c62863f6a06788796d0baa9905a3a32ae:skills/cli-installer-ux/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/ead4583c62863f6a06788796d0baa9905a3a32ae/skills/cli-installer-ux/SKILL.md",
+      "cliInstall": "autovault add jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cli-installer-ux/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@678d8c9ec77af47cbf12312da23ab3d8420b02cb:skills/cli-installer-ux/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/678d8c9ec77af47cbf12312da23ab3d8420b02cb/skills/cli-installer-ux/SKILL.md",
       "url": "https://skillissue.sh/skills/cli-installer-ux/"
     }
   ]
