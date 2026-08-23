@@ -3,6 +3,7 @@ set -euo pipefail
 
 skill_root="${MJ_ITER_SKILL_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 chrome_debug_port="${MJ_ITER_CHROME_PORT:-9222}"
+browser_mode="${MJ_ITER_BROWSER_MODE:-prompt}"
 profile_dir="${MJ_ITER_CHROME_PROFILE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/midjourney-iteration/chrome-profile}"
 
 redact() {
@@ -64,6 +65,9 @@ Or relaunch manually with the same dedicated profile:
   open -a 'Google Chrome' --args --remote-debugging-port=$chrome_debug_port --user-data-dir="$profile_dir"
 
 TEXT
+    if ! MJ_ITER_BROWSER_MODE="$browser_mode" "$skill_root/bin/relaunch-chrome"; then
+      print_fail "Chrome launcher failed (MJ_ITER_BROWSER_MODE=$browser_mode)."
+    fi
     return 1
   fi
   product="$(printf '%s' "$resp" | redact | sed -n 's/.*"Browser":[[:space:]]*"\([^"]*\)".*/\1/p')"
