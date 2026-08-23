@@ -1,0 +1,96 @@
+# Phala H200 GPU TEE deploy — public ai-dock ComfyUI image, NO build context, NO file mounts,
+# NO external URLs. The checkpoint is fetched by an init sidecar into a shared volume, so the
+# whole deploy is self-contained in this compose (deployed into the private TEE; nothing public).
+#
+# Reserve the GPU via the dashboard GPU-TEE flow (On-Demand + a prod dstack-nvidia image), paste
+# this compose, add Encrypted Secrets CIVITAI_TOKEN + COMFYUI_BEARER_TOKEN. Iterate in place with:
+#   phala deploy --cvm-id <app_id> -c <thisfile> -e .env
+#
+# Architecture: only Caddy:8780 is published. Caddy bearer-gates every request → ai-dock ComfyUI
+# (WEB_ENABLE_AUTH=false so OUR bearer is the single gate). Shell `$` is escaped `$$` so compose
+# does not interpolate it.
+services:
+  # One-shot: download the checkpoint into the shared volume, then exit. ComfyUI waits for this.
+  # Idempotent via exact-size check. Explicit curl — NOT ai-dock's downloader (issue #137).
+  model-init:
+    image: curlimages/curl:8.11.1
+    user: "0:0"                                   # run as root: curlimages/curl defaults to uid 100, but the
+                                                  # fresh named volume mounts root-owned 755 → non-root curl
+                                                  # can't create the output file → curl exit 23 (write error).
+    environment:
+      - CIVITAI_TOKEN=${CIVITAI_TOKEN}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        CKPT=/checkpoints/model.safetensors
+        EXPECTED=7105348856                       # exact byte size of the target checkpoint
+        have=$$(wc -c < "$$CKPT" 2>/dev/null || echo 0)
+        if [ "$$have" = "$$EXPECTED" ]; then
+          echo "[init] checkpoint present at expected size — skip"
+        else
+          echo "[init] downloading checkpoint…"
+          curl -fL --retry 3 --retry-delay 5 -o "$$CKPT" \
+            "https://civitai.com/api/download/models/<VERSION_ID>?token=$${CIVITAI_TOKEN}"
+          got=$$(wc -c < "$$CKPT")
+          [ "$$got" = "$$EXPECTED" ] || { echo "[init] size $$got != $$EXPECTED" >&2; exit 1; }
+          echo "[init] downloaded OK ($$got bytes)"
+        fi
+    volumes:
+      - checkpoints:/checkpoints
+    networks: [tee]
+
+  comfyui:
+    image: ghcr.io/ai-dock/comfyui:latest-cuda   # pin @sha256:… for reproducible attestation
+    depends_on:
+      model-init:
+        condition: service_completed_successfully
+    environment:
+      - WEB_ENABLE_AUTH=false                     # disable ai-dock basic-auth; Caddy is the only gate
+    volumes:
+      # ai-dock runs from /opt/ComfyUI and centralizes models at /opt/storage/stable_diffusion/models
+      # (checkpoints subdir = "ckpt"), NOT /workspace/ComfyUI/models. Mount at both real paths.
+      - checkpoints:/opt/storage/stable_diffusion/models/ckpt
+      - checkpoints:/opt/ComfyUI/models/checkpoints
+    expose:
+      - "8188"                                    # internal only; never published
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks: [tee]
+
+  caddy:
+    image: caddy:2
+    depends_on: [comfyui]
+    ports:
+      - "8780:8780"                               # the ONLY exposed surface
+    environment:
+      COMFYUI_BEARER_TOKEN: ${COMFYUI_BEARER_TOKEN}
+    command:
+      - sh
+      - -c
+      - |
+        cat > /etc/caddy/Caddyfile <<'EOF'
+        {
+          admin off
+          auto_https off
+        }
+        :8780 {
+          @unauthorized not header Authorization "Bearer {$$COMFYUI_BEARER_TOKEN}"
+          respond @unauthorized "Unauthorized" 401
+          reverse_proxy comfyui:8188
+        }
+        EOF
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    networks: [tee]
+
+volumes:
+  checkpoints:
+
+networks:
+  tee:
+    driver: bridge
