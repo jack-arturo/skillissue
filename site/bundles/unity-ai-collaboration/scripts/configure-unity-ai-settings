@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+"""Audit or explicitly apply the reviewed Unity/Meta AI user-settings baseline."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import shutil
+import subprocess
+import sys
+from pathlib import Path
+from typing import Any
+
+
+DEFAULT_BASELINE = Path(__file__).resolve().parents[1] / "references/unity-ai-settings-baseline.json"
+PROTECTED_KEY_FRAGMENTS = (
+    "accesstoken",
+    "apikey",
+    "credential",
+    "disclaimeraccepted",
+    "selectedmodel",
+    "providerenabled",
+    "provider",
+    "selectedservice",
+    "serviceid",
+)
+SUPPORTED_TYPES = {"bool", "int", "string"}
+
+
+class ConfigurationError(ValueError):
+    pass
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Audit or apply reviewed Unity Assistant and Meta XR AI user defaults."
+    )
+    parser.add_argument("--project", required=True, type=Path, help="Unity project path")
+    parser.add_argument("--baseline", type=Path, default=DEFAULT_BASELINE)
+    parser.add_argument("--apply", action="store_true", help="Explicitly write reviewed non-secret EditorPrefs")
+    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON")
+    return parser.parse_args()
+
+
+def load_baseline(path: Path) -> dict[str, Any]:
+    try:
+        baseline = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ConfigurationError(f"cannot read baseline {path}: {exc}") from exc
+    if baseline.get("schema_version") != 1 or not isinstance(baseline.get("settings"), list):
+        raise ConfigurationError("baseline schema_version 1 with a settings array is required")
+
+    seen: set[str] = set()
+    for item in baseline["settings"]:
+        if not isinstance(item, dict):
+            raise ConfigurationError("every baseline setting must be an object")
+        setting_id = item.get("id")
+        key = item.get("editor_prefs_key")
+        kind = item.get("type")
+        if not isinstance(setting_id, str) or not setting_id or setting_id in seen:
+            raise ConfigurationError(f"invalid or duplicate setting id: {setting_id!r}")
+        if not isinstance(key, str) or not key:
+            raise ConfigurationError(f"missing EditorPrefs key for {setting_id}")
+        lowered = key.lower()
+        if any(fragment in lowered for fragment in PROTECTED_KEY_FRAGMENTS):
+            raise ConfigurationError(f"protected EditorPrefs key is not allowed in a baseline: {setting_id}")
+        if kind not in SUPPORTED_TYPES:
+            raise ConfigurationError(f"unsupported type for {setting_id}: {kind!r}")
+        value = item.get("value")
+        if kind == "bool" and not isinstance(value, bool):
+            raise ConfigurationError(f"{setting_id} must have a boolean value")
+        if kind == "int" and (not isinstance(value, int) or isinstance(value, bool)):
+            raise ConfigurationError(f"{setting_id} must have an integer value")
+        if kind == "string" and not isinstance(value, str):
+            raise ConfigurationError(f"{setting_id} must have a string value")
+        seen.add(setting_id)
+    return baseline
+
+
+def csharp_literal(value: Any, kind: str) -> str:
+    if kind == "bool":
+        return "true" if value else "false"
+    if kind == "int":
+        return str(value)
+    return json.dumps(value)
+
+
+def build_csharp(settings: list[dict[str, Any]], apply: bool) -> str:
+    lines = [
+        "using System.Collections.Generic;",
+        "using UnityEditor;",
+        "public static class ReviewedUnityAiSettingsBaseline",
+        "{",
+        "    public static string Run()",
+        "    {",
+    ]
+    if apply:
+        for item in settings:
+            kind = item["type"]
+            method = {"bool": "SetBool", "int": "SetInt", "string": "SetString"}[kind]
+            lines.append(
+                f"        EditorPrefs.{method}({json.dumps(item['editor_prefs_key'])}, "
+                f"{csharp_literal(item['value'], kind)});"
+            )
+    lines.append("        var values = new List<string>();")
+    for item in settings:
+        kind = item["type"]
+        method = {"bool": "GetBool", "int": "GetInt", "string": "GetString"}[kind]
+        default = csharp_literal(item.get("runtime_default", item["value"]), kind)
+        expression = f"EditorPrefs.{method}({json.dumps(item['editor_prefs_key'])}, {default})"
+        if kind == "bool":
+            expression += ".ToString().ToLowerInvariant()"
+        elif kind == "int":
+            expression += ".ToString()"
+        lines.append(f"        values.Add({json.dumps(item['id'] + '=')} + {expression});")
+    lines.extend(["        return string.Join(\";\", values);", "    }", "}"])
+    return "\n".join(lines)
+
+
+def invoke_unity(project: Path, code: str) -> dict[str, str]:
+    cli = os.environ.get("UNITY_MCP_CLI") or shutil.which("unity-mcp-cli")
+    if not cli:
+        raise ConfigurationError("unity-mcp-cli is required and was not found")
+    request = {
+        "csharpCode": code,
+        "className": "ReviewedUnityAiSettingsBaseline",
+        "methodName": "Run",
+        "isMethodBody": False,
+    }
+    try:
+        result = subprocess.run(
+            [
+                cli,
+                "run-tool",
+                "script-execute",
+                str(project),
+                "--input-file",
+                "-",
+                "--raw",
+                "--timeout",
+                "30000",
+            ],
+            input=json.dumps(request),
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=40,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise ConfigurationError(f"Unity MCP invocation failed: {exc}") from exc
+    if result.returncode != 0:
+        detail = (result.stderr or result.stdout).strip()
+        raise ConfigurationError(f"Unity MCP invocation failed: {detail}")
+    try:
+        response = json.loads(result.stdout)
+        payload = response["structured"]["result"]["value"]
+    except (json.JSONDecodeError, KeyError, TypeError) as exc:
+        raise ConfigurationError("Unity MCP returned an unexpected response") from exc
+    values: dict[str, str] = {}
+    for field in payload.split(";"):
+        if "=" in field:
+            key, value = field.split("=", 1)
+            values[key] = value
+    return values
+
+
+def normalize(value: Any, kind: str) -> str:
+    if kind == "bool":
+        return str(value).lower()
+    return str(value)
+
+
+def main() -> int:
+    args = parse_args()
+    project = args.project.expanduser().resolve()
+    try:
+        if not (project / "ProjectSettings/ProjectVersion.txt").is_file() or not (
+            project / "Packages/manifest.json"
+        ).is_file():
+            raise ConfigurationError(f"not a Unity project: {project}")
+        baseline_path = args.baseline.expanduser().resolve()
+        baseline = load_baseline(baseline_path)
+        settings = baseline["settings"]
+        actual = invoke_unity(project, build_csharp(settings, args.apply))
+    except ConfigurationError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    drift = []
+    for item in settings:
+        expected = normalize(item["value"], item["type"])
+        observed = actual.get(item["id"])
+        if observed != expected:
+            drift.append({"id": item["id"], "expected": expected, "actual": observed})
+
+    report = {
+        "project": str(project),
+        "baseline": str(baseline_path),
+        "baseline_version": baseline.get("baseline_version"),
+        "mode": "apply" if args.apply else "audit",
+        "compliant": not drift,
+        "drift": drift,
+        "protected_values": "not read or written",
+    }
+    if args.json:
+        print(json.dumps(report, indent=2, sort_keys=True))
+    else:
+        print(f"Unity AI settings baseline: {report['baseline_version']}")
+        print(f"Project: {project}")
+        print(f"Mode: {report['mode']}")
+        if drift:
+            print("DRIFT")
+            for item in drift:
+                print(f"  {item['id']}: expected {item['expected']}, actual {item['actual']}")
+        else:
+            print("COMPLIANT")
+        print("Protected credentials, disclaimers, providers, and model choices were not read or written.")
+    return 0 if not drift else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

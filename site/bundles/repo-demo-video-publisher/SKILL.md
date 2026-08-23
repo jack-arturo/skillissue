@@ -1,0 +1,283 @@
+---
+name: repo-demo-video-publisher
+description: Create and publish short repository README demo videos with mandatory human review gates, using screenshots, terminal clips, ElevenLabs audio, the Remotion plugin when available, verified GitHub user-attachments upload, and README-only diff hygiene. Use when a repo needs a Remotion/product demo video embedded in README via a GitHub-hosted user-attachments URL.
+license: MIT
+tags: [video, remotion, github, readme, marketing, browser-hand, screenshots, terminal, audio, elevenlabs]
+agents: [claude-code, codex, autojack]
+category: media
+metadata:
+  version: "1.6.0"
+capabilities:
+  network: true
+  filesystem: readwrite
+  tools: [Bash, Read, Edit]
+requires-secrets: []
+resources:
+  - path: story.md
+    type: file
+---
+
+# Repo Demo Video Publisher
+
+Create and publish short product/demo videos for repository READMEs while keeping generated video projects, dependency trees, audio archives, MP4s, screenshots, terminal clips, posters, and other generated assets out of git history by default. The repo PR should normally contain only the README embed/link that points at a GitHub-hosted MP4 URL.
+
+Use `repo-demo-video-director` before this skill when a video still needs story, claims, screenshots, terminal/session visuals, audio direction, simulated data, or visual direction. This skill owns rendering scratch hygiene, screenshot/terminal capture, optional audio generation, Remotion implementation, upload, README embed mechanics, and final verification.
+
+Two human review gates are mandatory: script/storyboard/audio approval before rendering or generating final assets, and finished-video approval before uploading, anchoring, or editing README.
+
+## When to use
+
+- A user asks for a GitHub/README/product demo video for a repository.
+- A rendered demo MP4 already exists and the user wants it embedded without committing media.
+- A prior demo PR committed Remotion/Suno/media artifacts and needs to be cleaned up.
+- A `repo-demo-video-director` handoff brief is approved and ready for render and README publishing.
+
+## Mandatory Human Review Gates
+
+### Gate A: Script/storyboard/audio approval before production
+
+Before rendering a new repo demo or generating final audio, require explicit human approval of the proposed video direction. Acceptable evidence is a `repo-demo-video-director` handoff, or an equivalent inline brief, that includes:
+
+```yaml
+script_review_status: approved
+reviewer: human user
+approved_at: <date or message reference>
+approved_scope: <short description of the approved script/storyboard/audio plan>
+```
+
+If approval evidence is missing, pending, stale, or ambiguous, stop and ask the user to review the proposed script/storyboard/audio plan. Do not render, generate final audio, upload, edit README, post GitHub comments, or continue into production work until the user explicitly approves the proposed video.
+
+### Gate B: Finished-video approval before upload
+
+After rendering and local verification, stop again and present the exact finished MP4 for human review. Include the absolute MP4 path, duration, resolution, frame-0 and early-frame checks, screenshot/terminal asset notes, audio/mix notes, and any local preview/still paths available in the current environment.
+
+Do not upload to GitHub, anchor the asset in a comment, edit README, push, or open/update a PR until the user explicitly approves that exact finished MP4. If the video is re-rendered after feedback, the approval is invalidated and Gate B must run again.
+
+For an already-rendered MP4, ask whether the human has reviewed and approved that exact file. If not, present it for review before upload or README work.
+
+## Remotion Plugin Reference
+
+Before writing, modifying, previewing, or rendering Remotion code:
+
+- If `remotion:remotion-best-practices` is available, load and follow it. This is the preferred technical reference for Remotion work.
+- In Codex, the same capability may be available via the `@remotion` plugin. Use the plugin-backed skill rather than relying only on memory.
+- Load only the relevant Remotion rule files for the job, such as animations, sequencing, assets/images, measuring text, audio, captions, video trimming, or FFmpeg.
+- If the plugin is unavailable, proceed with normal Remotion documentation, existing project conventions, and direct CLI commands. Record the fallback in scratch notes or the user update.
+- Use Remotion's `<Img>` and `staticFile()` patterns for screenshots and still assets so renders wait for images before frame capture.
+- Keep the Remotion project in scratch. Do not commit Remotion source, dependency trees, package lockfiles, screenshots, rendered media, stills, audio, or generated assets unless the user explicitly asks.
+
+## Screenshot and Terminal Capture
+
+Screenshots and terminal clips are production assets for the video, but they stay in scratch by default.
+
+- Use real screenshots wherever possible when they truthfully show the repo or product: web UI, docs, README, GitHub pages, generated API docs, dashboard screens, setup pages, or local demo apps.
+- Use `browser-hand` when available for browser screenshots, especially authenticated Chrome, already-open tabs, GitHub web UI, or any workflow where the user's real browser state matters. If unavailable, use Playwright, the in-app browser, or another screenshot tool available to the agent.
+- Capture only approved states from the director handoff unless the user approves a change. Store raw and cropped screenshots under the scratch directory, not the repo.
+- Redact or avoid secrets, callback URLs, access tokens, local paths, phone numbers, personal messages, private repo data, and account-specific content before screenshots enter the video.
+- Prefer deterministic terminal clips over live manual recordings. Use Charmbracelet VHS when available for scripted terminal/agent-session visuals; it renders `.tape` scripts into video/GIF outputs and should be backed by `ttyd` and `ffmpeg` on PATH.
+- If VHS is unavailable, consider asciinema for real terminal recordings and `agg` for GIF conversion when installed. Use terminalizer only for GIF/web-player workflows that need its customization. Avoid termtosvg as a default because it is archived.
+
+## ElevenLabs Audio Handling
+
+Audio is optional, review-gated, and scratch-only by default.
+
+Preferred order:
+
+1. Use an exposed ElevenLabs MCP namespace if the current agent session provides one.
+2. If no MCP tools are exposed, use local ElevenLabs skills when available: `music` for background tracks, `sound-effects` for UI/ambient cues, and `text-to-speech` for approved voiceover.
+3. If skills are unavailable but `ELEVENLABS_API_KEY` is configured, use the official ElevenLabs SDK or cURL API workflow directly.
+4. If ElevenLabs is unavailable, use an approved existing local/royalty-free track or render the video silent.
+5. Use Suno or `suno-track-archiver` only when the user explicitly requests Suno or an existing Suno asset has already been approved.
+
+Rules:
+
+- Do not generate final audio until Gate A approves the audio plan, including any voiceover text.
+- Voiceover is not a default requirement. Use it only when it materially improves clarity and the user approves the narration script.
+- Keep prompts generic and rights-safe: no specific artist, band, copyrighted lyric, celebrity voice, private voice/persona, or protected content references.
+- For background music, specify mood, duration, loop/fade behavior, and whether it should sit under captions without competing with text.
+- For sound effects, keep cues subtle and product-relevant: clicks, soft confirmations, ambient room tone, short transitions, or low-level UI texture.
+- Store generated audio, prompts, response metadata, composition plans, and provenance notes in scratch only. Do not commit audio files or prompt archives to the repo.
+- Never persist API keys, `xi-api-key` headers, signed/transient media URLs, callback URLs, or local absolute paths in README or repo files.
+- If audio is embedded in the final MP4, retain a short provenance/usage note in scratch and report it in the finished-video review.
+- Use `video-toolkit` only when voiceover, generated imagery, or extra media-generation orchestration is explicitly needed beyond the direct ElevenLabs skills/API path.
+
+## Director Handoff Contract
+
+Before rendering a new repo demo, require a compact brief containing:
+
+- Audience and overview-first angle.
+- Claim ledger with source files, commits, tags, PRs, README sections, or docs.
+- Avoided claims and out-of-scope behaviors.
+- Screenshot and terminal asset plan, including capture sources, tool choices, privacy redactions, and whether each asset is real, staged, or simulated.
+- Audio plan, including silent/music/sound-effects/voiceover choice, generation path, prompts or prompt constraints, voiceover text, timing cues, and provenance requirements.
+- Simulated data plan with no real credentials, accounts, messages, balances, customer records, private repo data, raw agent logs, or local paths.
+- Storyboard beats, including a deliberate frame-0 title/product slate.
+- Script or on-screen copy approved by a human.
+- Visual direction using the repository or organization branding; do not impose an unrelated house style.
+- README placement and caption/disclaimer copy.
+- Remotion plugin note: use `remotion:remotion-best-practices` if available, otherwise use a documented fallback.
+- Human approval evidence for the script/storyboard/audio review gate.
+
+If the brief is missing or unapproved, create it first with `repo-demo-video-director` or produce an equivalent inline proposal, then stop for human review. Do not render from an unapproved brief.
+
+## Handoff Completeness Guards
+
+Reject a director handoff, script, README copy plan, or render brief that still contains unresolved repo-truth slots. Examples include `TODO`, `TBD`, `unknown`, `[verify]`, `[repo truth]`, `<fill in>`, unchecked questions, or claims not connected to the claim ledger.
+
+If a repo fact cannot be verified, remove the claim or label it as unsupported in scratch notes. Do not leave a placeholder in the script, storyboard, README copy, PR text, or generated video copy.
+
+## Release and Comparison Wording
+
+When a repo uses release-please or any human-gated release process, distinguish unreleased repository state from a shipped release.
+
+- Do not say `today's release`, `release focus`, or `now released` just because commits exist after the latest tag.
+- Prefer accurate wording such as `changes since vX.Y.Z`, `unreleased changes since the last release tag`, or `current main as of <YYYY-MM-DD>` unless an actual release has been approved and published.
+- Use release-please tags, manifest files, changelog entries, GitHub releases, and `git describe --tags --abbrev=0` as source truth. Do not hand-edit release-please changelogs, manifests, tags, or versions as part of README demo work.
+- If the approved handoff compares `v0.2.1..HEAD`, phrase it as `since v0.2.1` or `unreleased changes since v0.2.1` unless the user explicitly confirms that the release was cut.
+
+## Defaults
+
+- Work in a user-controlled scratch directory such as `${TMPDIR:-/tmp}/repo-demo-video/<owner>-<repo>/<yyyy-mm-dd>-<slug>/`.
+- Use Remotion as a build tool only; do not commit its source, `node_modules`, package lockfiles, rendered MP4s, posters, screenshots, terminal recordings, audio, or generated assets unless explicitly requested.
+- Use real screenshots where feasible, browser-captured via `browser-hand` when available, with redactions and simulation where needed.
+- Use VHS as the preferred terminal/agent-session renderer when available; fall back to asciinema/agg or browser-rendered xterm.js-style simulated terminal scenes as appropriate.
+- Use ElevenLabs as the preferred generated-audio stack when approved and available; keep silence as an acceptable default.
+- Use the Remotion plugin skill when available before implementing Remotion code; fall back cleanly when unavailable.
+- Use GitHub user-attachments as the default media host. Release assets and Pages assets are fallbacks only.
+- Commit README changes only. A normal PR diff should be exactly `README.md`.
+- Keep copy honest: simulated data, read-only/research-only cues, no real credentials, no real account data, no trade-execution implication.
+- The README must show one playable video, not two. GitHub may auto-render bare or markdown MP4 links as media, so fallback links must not duplicate the embed.
+- The video's first visible frame must be a deliberate title/product frame. Do not ship a README video whose first frame is blank, white, black, or a loading-only screen.
+- Human review gates are mandatory milestones, not optional status updates.
+
+## Workflow
+
+1. **Scope and inspect.** Identify repo owner/name, default branch, README path, current branch/PR if any, existing rendered MP4, approved director handoff, screenshot/terminal asset plan, audio plan, release process, and latest release tag. Run `git status --short --branch`, `git diff --name-only origin/<base>...HEAD`, and `git ls-files --modified --others --exclude-standard` before touching history.
+2. **Enforce Gate A.** Confirm script/storyboard/audio approval exists for the current video direction and asset plan. Reject unresolved repo-truth slots before production. If approval is missing, invoke or produce the director-style brief and stop for human review.
+3. **Load the Remotion reference.** If the Remotion plugin skill `remotion:remotion-best-practices` is available, use it before scaffolding, editing, previewing, or rendering Remotion code. Load relevant rule files only. If unavailable, record the fallback and proceed with normal Remotion practices.
+4. **Stage scratch workspace.** Create the scratch directory and copy or render all assets there. If using Remotion, scaffold/render under scratch, not in the repo. If using generated music/audio, archive it under scratch or another non-repo archive root.
+5. **Capture visual assets.** Take approved screenshots with `browser-hand` or the available browser tool, generate approved terminal clips with VHS/asciinema/xterm.js-style simulation, and store raw/cropped/derived assets in scratch. Record provenance and redaction notes in scratch only.
+6. **Generate approved audio if needed.** Use ElevenLabs MCP, local ElevenLabs skills, or direct API fallback according to availability. Store audio and provenance in scratch only. If audio generation fails or is unavailable, either use the approved fallback or return to the user before changing the audio direction.
+7. **Render from the approved brief.** Keep the first frame meaningful, use screenshots/terminal clips/audio where approved, bake simulation cues into privacy-sensitive demos, and preserve concise provenance notes for generated audio, screenshots, terminal clips, or imagery in scratch only.
+8. **Verify the local video.** Extract or render frame 0 and another early frame such as frame 15. Reject blank, black, white, loading-only, or low-information thumbnails. Check duration, resolution, screenshot readability, terminal text legibility, audio presence/absence, mix level, and basic playability before asking for approval.
+9. **Enforce Gate B.** Present the finished MP4 and verification notes to the user. Stop until the user approves uploading and README embedding for that exact MP4.
+10. **Sanitize generated metadata.** Persist no local absolute paths, callback endpoints, API keys, signed/transient media URLs, upload policy JSON, browser cookies, GitHub authenticity tokens, or account data. If audio is embedded in the final video, retain a short provenance/usage note in scratch and report it.
+11. **Upload the approved MP4.** Use the `browser-hand` skill against authenticated Chrome to upload the MP4 to GitHub user-attachments. Prefer the direct policy flow when the GitHub page exposes a `file-attachment` element; otherwise fall back to the PR/issue comment composer. If the unsent composer URL is not stable or returns 404, post one minimal asset-anchor comment or use an approved README/PR reference. Capture the `https://github.com/user-attachments/assets/...` URL.
+12. **Verify the URL.** Start with `curl -I <url>`. If GitHub redirects to a signed S3 URL that rejects `HEAD` with 403, verify with a tiny ranged GET instead: `curl -L -r 0-0 -D headers.txt -o byte.bin <url>`. Require a successful video/media content header before editing README.
+13. **Edit README only.** Add one compact video embed near the top and a short caption/disclaimer. Do not add local media paths unless the user explicitly asked for committed assets.
+14. **Guard the rendered README.** Preview the README on GitHub or with an equivalent rendered markdown view. Confirm there is exactly one playable video block and that its still frame looks clickable.
+15. **Guard the diff.** Before commit, require `git diff --name-only origin/<base>...HEAD` or the staged equivalent to be exactly `README.md`; require `git ls-files --modified --others --exclude-standard` to show no generated media or source artifacts in the repo. If cleanup is needed, preserve scratch assets first, then reset/rewrite the branch with `--force-with-lease` only when the user has authorized history replacement.
+16. **PR loop.** Run repo checks appropriate for README-only changes, push if requested, request Copilot review if requested by the workflow, and stop before merge unless the user explicitly authorizes merging.
+
+## README attachment pattern
+
+Upload the approved MP4 through GitHub's issue, pull-request, or README editor attachment UI. GitHub generates the native `https://github.com/user-attachments/assets/...` URL; retain that exact generated URL and paste it into the README as the attachment URL on its own line. GitHub renders that native attachment as video.
+
+Do not hand-author stripped video HTML, fabricate an attachment URL, or add a second MP4 link as fallback. If context is needed, add a plain-text caption below the single native attachment. Keep the first frame meaningful because GitHub uses it as the playable preview.
+
+## Thumbnail and First-Frame Rules
+
+The most robust README thumbnail is baked into the MP4 itself:
+
+- Start at frame 0 with a 0.5-1.0 second title slate or product dashboard state that includes the repo/product name and a visible play-worthy scene.
+- Avoid white/black fade-ins as the first frame. Fade from the title slate into the demo, not from blank into the title.
+- Render/check frame 0 and another early frame, such as frame 15, before upload.
+- Keep any separate poster PNG in scratch unless it is uploaded to GitHub user-attachments and referenced from README. Do not commit poster files by default.
+- Prefer fixing the MP4 over relying only on HTML `poster`, because GitHub and mirrors can fall back to the video's first frame.
+
+## GitHub User-Attachments Upload
+
+Use `browser-hand` because GitHub does not expose a normal public REST endpoint for arbitrary user-attachments upload. Default to its extension relay for navigation/probing. If the page has a `file-attachment` element, use the authenticated page to obtain the upload policy and perform the actual file transfer with `curl`; escalate to the upstream `dev-browser --connect` CLI (headless/CI fallback only) or a native composer upload only when the policy flow is unavailable.
+
+- Probe authenticated Chrome first; confirm the target PR/issue composer is open before uploading.
+- Upload from an absolute scratch path, not the repo path.
+- Capture the repository database ID if GitHub's upload policy endpoint requires it. Do not guess when a numeric/internal ID is required; read it from the authenticated page or policy request context.
+- After upload, extract the markdown URL GitHub inserts into the composer or `policy.asset.href` from the finalized policy flow.
+- A `https://github.com/user-attachments/assets/...` URL can return 404 until it is anchored from a GitHub issue, PR comment, release note, or README. A pre-anchor 404 does not prove upload failure.
+- If the URL cannot be verified while the comment is unsent, post one minimal asset-anchor comment such as `Demo video asset: <url>`, or use an approved README/PR reference, then verify again. Close the anchor issue only when that is appropriate and approved by repo workflow.
+- Do not store screenshots, audio, policy payloads, browser cookies, authenticity tokens, or verification-code-like values in the repo.
+
+### Direct Policy Flow
+
+When `document.querySelector("file-attachment")` exists on a GitHub PR/issue page:
+
+1. In the authenticated page, create a fake `File` with the same name, size, and content type as the scratch MP4.
+2. Temporarily wrap `window.fetch` to capture the `/upload/policies/assets` JSON and wrap `XMLHttpRequest` to block the browser's automatic S3 upload.
+3. Call `fileAttachment.attach(dataTransfer)` and save the returned policy only in temporary scratch, not in the repo.
+4. POST the real scratch MP4 to `policy.upload_url` with every `policy.form` field plus `file=@<scratch-mp4>;type=video/mp4`.
+5. In the authenticated page, finalize with `PUT policy.asset_upload_url`, a `FormData` body containing `authenticity_token=policy.asset_upload_authenticity_token`, and the current GitHub verified-fetch request headers observed from the authenticated page. The required header set has included:
+   - `Accept: application/json`
+   - `X-Requested-With: XMLHttpRequest`
+   - `GitHub-Verified-Fetch: true`
+   - `Origin: https://github.com`
+   - `Referer: <current GitHub issue or PR URL>`
+6. Preserve the authenticated browser session for the in-page finalize request. If using `curl` for any browser-authenticated request, keep cookies/tokens in temporary scratch only and delete them after verification.
+7. Use `policy.asset.href` as the public URL, then verify. If it is still 404, anchor it with one minimal PR/issue comment or approved README/PR reference and verify again.
+
+Do not persist S3 policy JSON, signed URLs, cookies, authenticity tokens, upload IDs, or verified-fetch request captures beyond temporary scratch files; they contain short-lived signatures and account/session context.
+
+## Diff Hygiene With git ls-files
+
+Use `git ls-files` alongside `git diff` because generated media can be untracked and invisible to diff-only checks.
+
+Required checks before staging or reporting completion:
+
+```bash
+git diff --name-only origin/<base>...HEAD
+git status --short
+git ls-files --modified --others --exclude-standard
+git ls-files --error-unmatch README.md
+```
+
+For a README-only demo PR, the branch diff should be exactly `README.md`. `git status --short` may show pre-existing unrelated dirty files; report them and leave them untouched. `git ls-files --modified --others --exclude-standard` must not include scratch media, Remotion projects, generated audio, screenshots, terminal recordings, package lockfiles, `node_modules`, or render outputs inside the repo.
+
+Useful artifact scan patterns:
+
+```bash
+git ls-files --modified --others --exclude-standard | rg '(^|/)(repo-demo-video|remotion|node_modules|package-lock\.json|pnpm-lock\.yaml|yarn\.lock)|\.(mp4|mp3|wav|m4a|opus|png|jpg|jpeg|webm|gif|cast|tape)$'
+```
+
+If the scan finds generated artifacts in the repo, move them to scratch or remove them from the working tree only if they are your own generated files. Do not delete or revert unrelated user files.
+
+## Verification
+
+- Script/storyboard, audio plan, and screenshot/terminal asset approval evidence exists before render.
+- No unresolved repo-truth slots remain in script, storyboard, README copy, PR text, or video copy.
+- Release/recent-change copy is accurate for the repo's actual release state; release-please repos distinguish `since vX.Y.Z` from a shipped release unless the release is published.
+- Remotion plugin skill was used before Remotion implementation/render work when available, or the fallback was recorded when unavailable.
+- Browser screenshots and terminal clips match the approved plan, live in scratch, and contain no secrets, raw private data, local paths, or unredacted personal/account content.
+- ElevenLabs MCP, skills, or API usage followed the approved audio plan; generated audio lives in scratch; no API key, `xi-api-key`, signed URL, callback URL, or prompt archive is committed.
+- Finished-video approval exists before GitHub upload, asset-anchor comment, README edit, push, or PR update.
+- GitHub upload finalization uses the current verified-fetch/authenticated-page requirements, including `GitHub-Verified-Fetch: true` when required by the observed request flow.
+- `curl -I <github-user-attachments-url>` succeeds, or a ranged GET succeeds when the redirected S3 URL rejects `HEAD`.
+- If the user-attachments URL returns 404 before anchoring, it is anchored from an approved issue/comment/README reference and verified again.
+- README preview or rendered markdown shows exactly one video embed plus one optional text fallback link.
+- The first frame or poster visible in the README preview is not blank and clearly presents the demo.
+- `git diff --name-only origin/<base>...HEAD` is exactly `README.md` for the normal README-only workflow.
+- `git ls-files --modified --others --exclude-standard` contains no generated source/media artifacts inside the repo.
+- Run a secret scanner against the README and confirm that no absolute paths, keys, signed URLs, callback endpoints, or tokens remain.
+- `rg -n "marketing/|media/|library/tracks|package-lock|node_modules|\.mp4|\.mp3|\.wav|\.m4a|\.opus|\.png|\.jpg|\.webm|\.gif|\.cast|\.tape" <diff-file-list>` finds nothing outside intentional README text.
+
+## Anti-patterns
+
+- Rendering before a claim ledger exists for a new repo demo.
+- Rendering from a script/storyboard, audio plan, screenshot/terminal asset plan, or repo-truth brief that has not been explicitly approved by a human.
+- Leaving `TODO`, `TBD`, `[verify]`, `[repo truth]`, or similar placeholders in video or README copy.
+- Calling unreleased commits `today's release` in a release-please repo without confirming that the release was actually published.
+- Generating final music, sound effects, or voiceover before the audio plan and any narration script are approved.
+- Skipping `remotion:remotion-best-practices` when it is available for Remotion implementation work.
+- Blocking the workflow solely because the Remotion plugin, ElevenLabs MCP, or ElevenLabs skills are unavailable to a different agent; use a documented fallback.
+- Inventing abstract UI when a safe real screenshot is available and more truthful.
+- Capturing real secrets, private messages, phone numbers, account balances, raw agent logs, callback URLs, or local paths in screenshots or terminal clips.
+- Uploading, anchoring, editing README, pushing, or opening/updating a PR before the finished MP4 has been reviewed and approved by a human.
+- Treating approval for an older render as approval for a newly rendered MP4.
+- Committing Remotion projects, `node_modules`, package lockfiles, generated audio archives, screenshots, terminal recordings, posters, or rendered MP4s for a README demo.
+- Embedding `media/foo.mp4` in README when the file is not meant to be committed.
+- Adding more than one native attachment URL or a fallback MP4 link that renders as a duplicate video block on GitHub.
+- Shipping an MP4 whose first frame is blank, white, black, or otherwise low-information.
+- Persisting callback endpoints, local workstation paths, upload policy payloads, cookies, signed download URLs, API keys, or secrets in metadata.
+- Assuming a 404 user-attachments URL means upload failure before checking whether the asset is anchored.
+- Using Suno as the default host/generator for README demo audio; only use it when explicitly requested or already approved.
+- Using release assets as the default host for README demos.
+- Applying an unrelated house style to a repository.
+- Force-pushing cleanup without first copying the rendered MP4 to scratch and confirming the target branch is an unmerged PR branch.

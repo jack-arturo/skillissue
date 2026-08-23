@@ -1,0 +1,61 @@
+<form data-lead-capture-signup>
+  <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+  <input name="name" type="text" autocomplete="name" placeholder="Name">
+  <input name="source" type="hidden" value="landing-signup">
+  <!-- Optional Turnstile widget should write cf-turnstile-response into this form. -->
+  <button type="submit">Join List</button>
+  <p role="status" data-lead-capture-status></p>
+</form>
+
+<form data-lead-capture-form>
+  <input name="form_id" type="hidden" value="lead">
+  <input name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+  <input name="name" type="text" autocomplete="name" placeholder="Name">
+  <input name="organization" type="text" autocomplete="organization" placeholder="Organization">
+  <textarea name="message" placeholder="How can we help?" required></textarea>
+  <!-- Optional Turnstile widget should write cf-turnstile-response into this form. -->
+  <button type="submit">Send</button>
+  <p role="status" data-lead-capture-status></p>
+</form>
+
+<script>
+  function payloadFromForm(form) {
+    return Object.fromEntries(new FormData(form).entries());
+  }
+
+  async function submitLeadCapture(form, endpoint) {
+    const status = form.querySelector('[data-lead-capture-status]');
+    const button = form.querySelector('button[type="submit"]');
+    status.textContent = 'Sending...';
+    button.disabled = true;
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payloadFromForm(form)),
+      });
+      const data = await response.json();
+      if (!response.ok || !data.success) throw new Error(data.error || 'Submission failed.');
+      status.textContent = data.message || 'Captured.';
+      form.reset();
+    } catch (error) {
+      status.textContent = error.message || 'Submission failed.';
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  document.querySelectorAll('[data-lead-capture-signup]').forEach(form => {
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      submitLeadCapture(form, '/api/signup');
+    });
+  });
+
+  document.querySelectorAll('[data-lead-capture-form]').forEach(form => {
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      submitLeadCapture(form, '/api/lead');
+    });
+  });
+</script>

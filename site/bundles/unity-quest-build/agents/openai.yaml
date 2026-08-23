@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity Quest Build"
+  short_description: "Build and verify Unity Meta Quest apps"
+  default_prompt: "Use $unity-quest-build to audit, simulate, build, and verify this Unity Meta Quest project."

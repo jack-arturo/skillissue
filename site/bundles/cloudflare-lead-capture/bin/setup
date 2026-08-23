@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ ! -t 0 ]; then
+  printf 'cloudflare-lead-capture setup requires an interactive terminal.\n' >&2
+  exit 1
+fi
+
+if ! command -v wrangler >/dev/null 2>&1; then
+  printf 'Wrangler was not found on PATH. Install it or run through npx before setup.\n' >&2
+  exit 1
+fi
+
+slugify() {
+  printf '%s' "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//'
+}
+
+project_default="$(slugify "${PWD##*/}")"
+if [ -z "$project_default" ]; then
+  project_default="lead-capture-site"
+fi
+
+database_default="${project_default}-leads"
+binding_default="LEAD_DB"
+
+cat <<'TEXT'
+Cloudflare lead-capture setup
+
+This action helps configure non-repo Cloudflare state for the generated lead
+capture layer. It may run Wrangler commands, and Wrangler will prompt for secret
+values directly. Do not paste secrets into agent chat.
+TEXT
+
+printf '\nCloudflare Pages project name [%s]: ' "$project_default"
+read -r pages_project
+pages_project="${pages_project:-$project_default}"
+
+printf 'D1 database name [%s]: ' "$database_default"
+read -r database_name
+database_name="${database_name:-$database_default}"
+
+printf 'D1 binding name [%s]: ' "$binding_default"
+read -r binding_name
+binding_name="${binding_name:-$binding_default}"
+
+printf 'Create the D1 database with Wrangler now? [y/N]: '
+read -r create_d1
+case "${create_d1:-}" in
+  y|Y|yes|YES)
+    wrangler d1 create "$database_name"
+    printf '\nCopy the database_id from the Wrangler output above.\n'
+    ;;
+esac
+
+printf 'D1 database_id (optional, press enter if you will fill it later): '
+read -r database_id
+
+printf '\nSet RESEND_API_KEY for this Pages project now? [y/N]: '
+read -r set_resend
+case "${set_resend:-}" in
+  y|Y|yes|YES)
+    wrangler pages secret put RESEND_API_KEY --project-name "$pages_project"
+    ;;
+esac
+
+printf 'Set ADMIN_TOKEN for admin endpoints now? [y/N]: '
+read -r set_admin
+case "${set_admin:-}" in
+  y|Y|yes|YES)
+    wrangler pages secret put ADMIN_TOKEN --project-name "$pages_project"
+    ;;
+esac
+
+printf 'Set optional TURNSTILE_SECRET_KEY now? [y/N]: '
+read -r set_turnstile
+case "${set_turnstile:-}" in
+  y|Y|yes|YES)
+    wrangler pages secret put TURNSTILE_SECRET_KEY --project-name "$pages_project"
+    ;;
+esac
+
+printf 'Set optional CONFIRM_SECRET for unsubscribe tokens now? [y/N]: '
+read -r set_confirm
+case "${set_confirm:-}" in
+  y|Y|yes|YES)
+    wrangler pages secret put CONFIRM_SECRET --project-name "$pages_project"
+    ;;
+esac
+
+printf '\nNext scaffold command:\n'
+printf 'autovault skill scaffold cloudflare-lead-capture -- --project-name=%s --database-name=%s --binding=%s' "$pages_project" "$database_name" "$binding_name"
+if [ -n "$database_id" ]; then
+  printf ' --database-id=%s' "$database_id"
+fi
+printf '\n\nAfter scaffolding, apply the schema with:\n'
+printf 'wrangler d1 execute %s --remote --file ./schema/lead-capture.sql\n' "$database_name"
+printf '\nSetup complete. Secret values were handled by Wrangler, not stored by this skill.\n'
