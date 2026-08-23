@@ -1,0 +1,14 @@
+name = "__PROJECT_NAME__"
+pages_build_output_dir = "."
+compatibility_date = "__COMPATIBILITY_DATE__"
+
+[[d1_databases]]
+binding = "__D1_BINDING__"
+database_name = "__DATABASE_NAME__"
+database_id = "__DATABASE_ID__"
+
+[vars]
+BASE_URL = "__BASE_URL__"
+FROM_EMAIL = "__FROM_EMAIL__"
+FROM_NAME = "__FROM_NAME__"
+SEND_LEAD_CAPTURE_EMAIL = "true"

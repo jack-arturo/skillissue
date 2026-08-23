@@ -1,0 +1,75 @@
+---
+// Drop this component into any Astro page: `<ContactForm />`.
+// It posts to /api/contact (the SSR endpoint in src/pages/api/contact.ts).
+// Progressive enhancement: works without JS via a 303 -> ?sent=1 redirect.
+const sent = Astro.url.searchParams.get('sent') === '1';
+---
+
+<form id="leadForm" action="/api/contact" method="POST" style={sent ? 'display:none' : ''}>
+  <p>
+    <label for="lf-name">Name</label>
+    <input id="lf-name" type="text" name="name" autocomplete="name" maxlength="200" />
+  </p>
+  <p>
+    <label for="lf-email">Email *</label>
+    <input id="lf-email" type="email" name="email" required autocomplete="email" maxlength="254" />
+  </p>
+  <p>
+    <label for="lf-org">Organization</label>
+    <input id="lf-org" type="text" name="organization" maxlength="200" />
+  </p>
+  <p>
+    <label for="lf-msg">Message *</label>
+    <textarea id="lf-msg" name="message" rows="6" required maxlength="5000"></textarea>
+  </p>
+  <!-- Honeypot: hidden from people, tempting to bots. Real users leave it empty. -->
+  <div aria-hidden="true" style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden">
+    <label for="lf-company">Company</label>
+    <input id="lf-company" type="text" name="company" tabindex="-1" autocomplete="off" />
+  </div>
+  <p id="leadError" role="alert" style="display:none;color:#b91c1c"></p>
+  <button type="submit">Send Message</button>
+</form>
+
+<div id="leadSuccess" style={sent ? '' : 'display:none'}>
+  <p><strong>Thank you.</strong> We will be in touch as soon as possible.</p>
+</div>
+
+<script>
+  const form = document.getElementById('leadForm') as HTMLFormElement | null;
+  const success = document.getElementById('leadSuccess');
+  const errorBox = document.getElementById('leadError');
+
+  form?.addEventListener('submit', async event => {
+    event.preventDefault();
+    const button = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+    if (errorBox) errorBox.style.display = 'none';
+    if (button) {
+      button.disabled = true;
+      button.textContent = 'Sending…';
+    }
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'X-Requested-With': 'fetch', Accept: 'application/json' },
+        body: new FormData(form),
+      });
+      const result = (await res.json().catch(() => ({}))) as { ok?: boolean; error?: string };
+      if (res.ok && result.ok) {
+        form.style.display = 'none';
+        if (success) success.style.display = 'block';
+        return;
+      }
+      throw new Error(result.error || 'Something went wrong. Please try again.');
+    } catch (err) {
+      if (errorBox) {
+        errorBox.textContent = err instanceof Error ? err.message : 'Something went wrong. Please try again.';
+        errorBox.style.display = 'block';
+      }
+      if (button) {
+        button.disabled = false;
+        button.textContent = 'Send Message';
+      }
+    }
+  });
+</script>

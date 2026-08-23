@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+storage_root="${AUTOVAULT_STORAGE_PATH:-$HOME/.autovault}"
+credentials_file="$storage_root/credentials/cloudflare-commerce.json"
+profile="${AUTOVAULT_CLOUDFLARE_PROFILE:-default}"
+
+redact() {
+  sed -E \
+    -e 's/cf[a-z]*_[A-Za-z0-9_-]{20,}/<redacted-cloudflare-token>/g' \
+    -e 's/Bearer[[:space:]]+[A-Za-z0-9._~+\/=-]{20,}/Bearer <redacted>/g'
+}
+
+load_profile() {
+  if [ ! -f "$credentials_file" ]; then
+    printf 'No Cloudflare credential file found at %s\n' "$credentials_file" >&2
+    printf 'Run: autovault skill setup cloudflare-commerce-deploy\n' >&2
+    exit 1
+  fi
+  if ! profile_data="$(
+    PROFILE="$profile" CREDENTIALS_FILE="$credentials_file" node <<'NODE'
+const fs = require("fs");
+const data = JSON.parse(fs.readFileSync(process.env.CREDENTIALS_FILE, "utf8"));
+const item = data.profiles && data.profiles[process.env.PROFILE || "default"];
+if (!item) process.exit(2);
+process.stdout.write([
+  item.account_id || "",
+  item.zone_id || "",
+  item.api_token || ""
+].map(String).join("\t"));
+NODE
+  )"; then
+    printf 'Failed to load Cloudflare profile "%s" from %s\n' "$profile" "$credentials_file" >&2
+    exit 1
+  fi
+  IFS=$'\t' read -r cloudflare_account_id cloudflare_zone_id cloudflare_api_token <<< "$profile_data"
+}
+
+api_request() {
+  method="$1"
+  url="$2"
+  body="${3:-}"
+  if [ -n "$body" ]; then
+    curl -fsS --request "$method" --config - --data "$body" "$url" <<EOF
+header = "Authorization: Bearer $cloudflare_api_token"
+header = "Content-Type: application/json"
+EOF
+  else
+    curl -fsS --request "$method" --config - "$url" <<EOF
+header = "Authorization: Bearer $cloudflare_api_token"
+header = "Content-Type: application/json"
+EOF
+  fi
+}
+
+load_profile
+
+printf 'Cloudflare commerce dry run for profile "%s"\n\n' "$profile"
+printf 'This action performs only read-only or no-reservation checks. It does not deploy, mutate DNS, create storage, or register a domain.\n\n'
+
+printf 'Checking token and account...\n'
+api_request GET "https://api.cloudflare.com/client/v4/user/tokens/verify" 2>&1 | redact >/dev/null
+api_request GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}" 2>&1 | redact >/dev/null
+
+printf 'Checking Pages visibility...\n'
+api_request GET "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/pages/projects?per_page=1" 2>&1 | redact >/dev/null
+
+if [ -n "$cloudflare_zone_id" ]; then
+  printf 'Checking zone and DNS visibility...\n'
+  api_request GET "https://api.cloudflare.com/client/v4/zones/${cloudflare_zone_id}" 2>&1 | redact >/dev/null
+  api_request GET "https://api.cloudflare.com/client/v4/zones/${cloudflare_zone_id}/dns_records?per_page=1" 2>&1 | redact >/dev/null
+fi
+
+printf 'Checking Registrar availability endpoint without reserving anything...\n'
+api_request POST "https://api.cloudflare.com/client/v4/accounts/${cloudflare_account_id}/registrar/domain-check" '{"domains":["autovault-commerce-dry-run.dev"]}' 2>&1 | redact >/dev/null || {
+  printf 'Registrar check is unavailable for this token/account. Domain registration may require additional permissions or dashboard setup.\n' >&2
+}
+
+if command -v wrangler >/dev/null 2>&1; then
+  printf 'Wrangler found: '
+  wrangler --version
+else
+  printf 'Wrangler not found on PATH. Agents can still use Cloudflare REST APIs, but Pages/Workers workflows are smoother with Wrangler installed.\n'
+fi
+
+printf '\nDry run complete. No Cloudflare resources were changed.\n'

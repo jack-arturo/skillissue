@@ -1,0 +1,4 @@
+interface:
+  display_name: "Long-Haul Parallel Repair"
+  short_description: "Parallel long-run repair loop"
+  default_prompt: "Use $long-haul-parallel-repair when explicitly authorized to fan out subagents, keep a confidence ledger, and continue until every sub-8/10 finding is fixed, evidence-solved, or explicitly blocked."

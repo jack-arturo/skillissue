@@ -1,0 +1,389 @@
+#!/usr/bin/env python3
+"""Read-only Unity/Meta Quest toolchain inventory."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import plistlib
+import re
+import shutil
+import subprocess
+import sys
+import urllib.request
+from pathlib import Path
+from typing import Any
+
+
+PACKAGE_KEYS = (
+    "com.meta.xr.sdk.core",
+    "com.meta.xr.sdk.interaction",
+    "com.meta.xr.sdk.interaction.ovr",
+    "com.meta.xr.mrutilitykit",
+    "com.unity.xr.openxr",
+    "com.unity.ai.assistant",
+    "com.unity.ai.inference",
+    "com.ivanmurzak.unity.mcp",
+    "com.ivanmurzak.unity.mcp.particlesystem",
+)
+
+SUPPORTED_PLATFORM = "darwin"
+
+
+def read_json(path: Path) -> dict[str, Any]:
+    try:
+        value = json.loads(path.read_text(encoding="utf-8-sig"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return value if isinstance(value, dict) else {}
+
+
+def plist_version(path: Path) -> str | None:
+    try:
+        with path.open("rb") as handle:
+            data = plistlib.load(handle)
+    except (OSError, plistlib.InvalidFileException):
+        return None
+    return data.get("CFBundleShortVersionString") or data.get("CFBundleVersion")
+
+
+def command_output(command: list[str]) -> str | None:
+    try:
+        result = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=8,
+            env={"PATH": os.environ.get("PATH", "")},
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    text = (result.stdout or result.stderr).strip()
+    return text.splitlines()[0] if text else None
+
+
+def command_version(command: list[str]) -> str | None:
+    try:
+        result = subprocess.run(
+            command,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=8,
+            env={"PATH": os.environ.get("PATH", "")},
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    lines = (result.stdout or result.stderr).splitlines()
+    for line in lines:
+        if line.startswith("Version:"):
+            return line.partition(":")[2].strip() or None
+    return lines[0].strip() if lines else None
+
+
+def server_metadata_version(binary: Path) -> str | None:
+    """Read Ivan server version metadata without executing the server binary."""
+    version_file = binary.parent / "version"
+    try:
+        version = version_file.read_text(encoding="utf-8-sig").strip()
+    except OSError:
+        version = ""
+    if version:
+        return version.splitlines()[0].strip() or None
+
+    metadata = read_json(binary.parent / "server.json")
+    value = metadata.get("version")
+    return value.strip() if isinstance(value, str) and value.strip() else None
+
+
+def app_entry(label: str, env_name: str, default_path: str) -> dict[str, Any]:
+    path = Path(os.environ.get(env_name, default_path)).expanduser()
+    return {"name": label, "path": str(path), "installed": path.exists(),
+            "version": plist_version(path / "Contents/Info.plist") if path.exists() else None}
+
+
+def registry_latest(url: str) -> str | None:
+    try:
+        with urllib.request.urlopen(url, timeout=8) as response:
+            data = json.load(response)
+    except Exception:
+        return None
+    tags = data.get("dist-tags", {}) if isinstance(data, dict) else {}
+    return tags.get("latest") if isinstance(tags, dict) else None
+
+
+def wrapper_inventory(project: Path, directory: str) -> dict[str, Any]:
+    root = project / directory
+    files = sorted(root.glob("*/SKILL.md")) if root.exists() else []
+    digest = hashlib.sha256()
+    for path in files:
+        # Hash the live tool name plus wrapper bytes so equivalent forests for
+        # different agents produce the same schema digest.
+        digest.update(path.parent.name.encode())
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+        digest.update(b"\0")
+    return {"path": directory, "count": len(files),
+            "sha256": digest.hexdigest() if files else None}
+
+
+def git_tracked(project: Path, relative: str) -> bool:
+    result = subprocess.run(
+        ["git", "-C", str(project), "ls-files", "--error-unmatch", relative],
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+    return result.returncode == 0
+
+
+def credential_shape(path: Path) -> bool:
+    try:
+        text = path.read_text(encoding="utf-8-sig")
+    except OSError:
+        return False
+    return bool(re.search(r'(?i)"(?:authorization|x-api-key)"\s*:|bearer\s+[A-Za-z0-9_.-]+', text))
+
+
+def unity_project_link(path: Path) -> dict[str, Any]:
+    try:
+        text = path.read_text(encoding="utf-8-sig")
+    except OSError:
+        text = ""
+
+    def field(name: str) -> str | None:
+        match = re.search(rf"^\s*{re.escape(name)}:\s*(.*?)\s*$", text, re.MULTILINE)
+        return match.group(1) or None if match else None
+
+    cloud_project_id = field("cloudProjectId")
+    organization_id = field("organizationId")
+    return {
+        "cloud_project_id": cloud_project_id,
+        "organization_id": organization_id,
+        "linked": bool(cloud_project_id and organization_id),
+    }
+
+
+def unity_license_inventory() -> dict[str, Any]:
+    def inventory(client_path: str | None, products: list[str]) -> dict[str, Any]:
+        paid_editor_product = any(
+            re.search(r"(?i)\b(pro|industry|enterprise)\b", product)
+            for product in products
+        )
+        return {
+            "client_path": client_path,
+            "scope": "local_editor_entitlements_only",
+            "products": products,
+            "paid_editor_product_active": paid_editor_product,
+        }
+
+    configured = os.environ.get("UNITY_LICENSING_CLIENT")
+    candidates = [
+        Path(configured).expanduser() if configured else None,
+        Path(
+            "/Applications/Unity Hub.app/Contents/Frameworks/"
+            "UnityLicensingClient_V1.app/Contents/MacOS/Unity.Licensing.Client"
+        ),
+    ]
+    client = next((path for path in candidates if path and path.is_file()), None)
+    if client is None:
+        return inventory(None, [])
+    try:
+        result = subprocess.run(
+            [str(client), "--showEntitlements"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=8,
+            env={"PATH": os.environ.get("PATH", "")},
+        )
+    except (OSError, subprocess.SubprocessError):
+        return inventory(str(client), [])
+    products = sorted(
+        {
+            match.group(1).strip()
+            for line in (result.stdout or result.stderr).splitlines()
+            if (match := re.match(r"^Product Name:\s*(.+?)\s*$", line))
+        }
+    )
+    return inventory(str(client), products)
+
+
+def collect(project: Path, offline: bool) -> dict[str, Any]:
+    version_file = project / "ProjectSettings/ProjectVersion.txt"
+    manifest_file = project / "Packages/manifest.json"
+    if not version_file.is_file() or not manifest_file.is_file():
+        raise ValueError(f"not a Unity project: {project}")
+
+    match = re.search(r"^m_EditorVersion:\s*(.+)$", version_file.read_text(), re.MULTILINE)
+    editor_version = match.group(1).strip() if match else None
+    manifest = read_json(manifest_file).get("dependencies", {})
+    manifest = manifest if isinstance(manifest, dict) else {}
+    lock_dependencies = read_json(project / "Packages/packages-lock.json").get("dependencies", {})
+    lock_dependencies = lock_dependencies if isinstance(lock_dependencies, dict) else {}
+
+    editors_root = Path(os.environ.get("UNITY_EDITORS_ROOT", "/Applications/Unity/Hub/Editor"))
+    installed_editors = sorted(p.name for p in editors_root.iterdir() if p.is_dir()) if editors_root.exists() else []
+    pinned_editor = editors_root / (editor_version or "")
+    android_root = pinned_editor / "PlaybackEngines/AndroidPlayer"
+
+    adb = os.environ.get("ADB") or shutil.which("adb")
+    adb_version = command_output([adb, "version"]) if adb else None
+    device_counts: dict[str, int] = {}
+    if adb:
+        try:
+            result = subprocess.run([adb, "devices"], check=False, capture_output=True, text=True, timeout=8)
+            for line in result.stdout.splitlines()[1:]:
+                parts = line.split()
+                if len(parts) >= 2:
+                    device_counts[parts[1]] = device_counts.get(parts[1], 0) + 1
+        except (OSError, subprocess.SubprocessError):
+            pass
+
+    relay_root = Path(os.environ.get("UNITY_RELAY_ROOT", str(Path.home() / ".unity/relay"))).expanduser()
+    relay_candidates = sorted(
+        p for pattern in ("**/relay", "**/unity-ai-relay", "**/relay_mac_arm64", "**/relay_mac_x64")
+        for p in relay_root.glob(pattern) if p.is_file()
+    ) if relay_root.exists() else []
+    relay = relay_candidates[-1] if relay_candidates else None
+
+    unity_mcp_cli = shutil.which("unity-mcp-cli")
+    if not unity_mcp_cli:
+        local_cli = Path.home() / ".local/bin/unity-mcp-cli"
+        bun_cli = Path.home() / ".bun/bin/unity-mcp-cli"
+        if local_cli.is_file():
+            unity_mcp_cli = str(local_cli)
+        elif bun_cli.is_file():
+            unity_mcp_cli = str(bun_cli)
+    server_candidates = sorted(
+        p for pattern in ("**/gamedev-mcp-server", "**/unity-mcp-server")
+        for p in (project / "Library/mcp-server").glob(pattern) if p.is_file()
+    ) if (project / "Library/mcp-server").exists() else []
+    ivan_server = server_candidates[-1] if server_candidates else None
+
+    local_mcp = project / ".mcp.json"
+    packages = {key: manifest.get(key) for key in PACKAGE_KEYS if key in manifest}
+    resolved_packages = {
+        key: entry.get("version")
+        for key in PACKAGE_KEYS
+        if isinstance((entry := lock_dependencies.get(key)), dict)
+    }
+    package_resolution_drift = {
+        key: {"manifest": version, "resolved": resolved_packages.get(key)}
+        for key, version in packages.items()
+        if resolved_packages.get(key) != version
+    }
+    latest: dict[str, str | None] = {}
+    if not offline:
+        latest = {
+            "com.unity.ai.assistant": registry_latest("https://packages.unity.com/com.unity.ai.assistant"),
+            "com.unity.ai.inference": registry_latest("https://packages.unity.com/com.unity.ai.inference"),
+            "com.ivanmurzak.unity.mcp": registry_latest("https://package.openupm.com/com.ivanmurzak.unity.mcp"),
+        }
+
+    return {
+        "project": str(project),
+        "project_link": unity_project_link(project / "ProjectSettings/ProjectSettings.asset"),
+        "unity_license": unity_license_inventory(),
+        "editor": {
+            "pinned": editor_version,
+            "installed": editor_version in installed_editors if editor_version else False,
+            "installed_versions": installed_editors,
+            "android_modules": {
+                "android_player": android_root.is_dir(),
+                "sdk": (android_root / "SDK").is_dir(),
+                "ndk": (android_root / "NDK").is_dir(),
+                "openjdk": (android_root / "OpenJDK").is_dir(),
+            },
+        },
+        "applications": [
+            app_entry("Unity Hub", "UNITY_HUB_APP", "/Applications/Unity Hub.app"),
+            app_entry("Meta Quest Developer Hub", "MQDH_APP", "/Applications/Meta Quest Developer Hub.app"),
+            app_entry("Meta XR Simulator", "META_XR_SIMULATOR_APP", "/Applications/MetaXRSimulator.app"),
+        ],
+        "packages": packages,
+        "resolved_packages": resolved_packages,
+        "package_resolution_drift": package_resolution_drift,
+        "latest_packages": latest,
+        "unity_relay": {"path": str(relay) if relay else None,
+                         "version": command_version([str(relay), "--version"]) if relay else None},
+        "ivan_mcp": {
+            "cli_path": unity_mcp_cli,
+            "cli_version": command_version([unity_mcp_cli, "--version"]) if unity_mcp_cli else None,
+            "server_path": str(ivan_server) if ivan_server else None,
+            "server_version": server_metadata_version(ivan_server) if ivan_server else None,
+        },
+        "adb": {"path": adb, "version": adb_version, "device_states": device_counts},
+        "generated_wrappers": [
+            wrapper_inventory(project, ".agents/skills"),
+            wrapper_inventory(project, ".claude/skills"),
+        ],
+        "mcp_config": {
+            "present": local_mcp.exists(),
+            "tracked": git_tracked(project, ".mcp.json"),
+            "credential_like_header": credential_shape(local_mcp),
+        },
+    }
+
+
+def print_human(data: dict[str, Any]) -> None:
+    editor = data["editor"]
+    print(f"Project: {data['project']}")
+    link = data["project_link"]
+    print(
+        "Unity Cloud link: "
+        f"linked={link['linked']} organization={link['organization_id']} "
+        f"project={link['cloud_project_id']}"
+    )
+    license_inventory = data["unity_license"]
+    print(
+        "Local Unity Editor entitlements: "
+        f"paid_editor_product_active={license_inventory['paid_editor_product_active']} "
+        f"products={license_inventory['products']}"
+    )
+    print(f"Unity: {editor['pinned']} (installed={editor['installed']})")
+    modules = editor["android_modules"]
+    print("Android modules: " + ", ".join(f"{k}={v}" for k, v in modules.items()))
+    for app in data["applications"]:
+        print(f"{app['name']}: {app['version'] or 'not installed'}")
+    print("Packages:")
+    for key, value in sorted(data["packages"].items()):
+        latest = data["latest_packages"].get(key)
+        suffix = f" (latest {latest})" if latest else ""
+        print(f"  {key}: {value}{suffix}")
+    if data["package_resolution_drift"]:
+        print(f"Package resolution drift: {data['package_resolution_drift']}")
+    adb = data["adb"]
+    print(f"ADB: {adb['version'] or 'not installed'}; states={adb['device_states']}")
+    ivan = data["ivan_mcp"]
+    print(f"Ivan MCP CLI: {ivan['cli_version'] or 'not installed'}; server={ivan['server_path'] or 'not generated'}")
+    for wrappers in data["generated_wrappers"]:
+        print(f"{wrappers['path']}: {wrappers['count']} generated skills; sha256={wrappers['sha256']}")
+    mcp = data["mcp_config"]
+    print(f".mcp.json: present={mcp['present']} tracked={mcp['tracked']} credential_like_header={mcp['credential_like_header']}")
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--project", required=True, type=Path)
+    parser.add_argument("--json", action="store_true", dest="as_json")
+    parser.add_argument("--offline", action="store_true", help=argparse.SUPPRESS)
+    args = parser.parse_args()
+    if sys.platform != SUPPORTED_PLATFORM:
+        parser.error("this audit currently supports macOS only; it inspects macOS Unity, Hub, and Meta Quest application layouts")
+    try:
+        data = collect(args.project.expanduser().resolve(), args.offline)
+    except ValueError as error:
+        parser.error(str(error))
+    if args.as_json:
+        print(json.dumps(data, indent=2, sort_keys=True))
+    else:
+        print_human(data)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,167 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+storage_root="${AUTOVAULT_STORAGE_PATH:-$HOME/.autovault}"
+credentials_dir="$storage_root/credentials"
+credentials_file="$credentials_dir/cloudflare-commerce.json"
+profile="${AUTOVAULT_CLOUDFLARE_PROFILE:-default}"
+
+redact() {
+  sed -E \
+    -e 's/cf[a-z]*_[A-Za-z0-9_-]{20,}/<redacted-cloudflare-token>/g' \
+    -e 's/Bearer[[:space:]]+[A-Za-z0-9._~+\/=-]{20,}/Bearer <redacted>/g'
+}
+
+open_url_silent() {
+  url="$1"
+  if command -v open >/dev/null 2>&1; then
+    open "$url" >/dev/null 2>&1 || true
+  elif command -v xdg-open >/dev/null 2>&1; then
+    xdg-open "$url" >/dev/null 2>&1 || true
+  fi
+}
+
+offer_browser_open() {
+  label="$1"
+  shift
+  printf '\n%s:\n' "$label"
+  for url in "$@"; do
+    printf '  %s\n' "$url"
+  done
+
+  browser_mode="${AUTOVAULT_BROWSER_MODE:-prompt}"
+  case "$browser_mode" in
+    always|open|yes|true|1)
+      for url in "$@"; do open_url_silent "$url"; done
+      return
+      ;;
+    never|manual|no|false|0)
+      printf 'Browser open skipped by AUTOVAULT_BROWSER_MODE=%s.\n' "$browser_mode"
+      return
+      ;;
+  esac
+
+  printf 'Open these pages in your browser now? [Y/n]: '
+  read -r open_browser
+  case "$open_browser" in
+    n|N|no|NO|No)
+      printf 'Skipping browser open. Copy the URLs above when you need them.\n'
+      ;;
+    *)
+      for url in "$@"; do open_url_silent "$url"; done
+      ;;
+  esac
+}
+
+require_node() {
+  if ! command -v node >/dev/null 2>&1; then
+    printf 'Node.js is required for AutoVault credential setup.\n' >&2
+    exit 1
+  fi
+}
+
+api_get() {
+  url="$1"
+  curl -fsS --config - "$url" <<EOF
+header = "Authorization: Bearer $cloudflare_api_token"
+header = "Content-Type: application/json"
+EOF
+}
+
+mkdir -p "$credentials_dir"
+chmod 700 "$credentials_dir" 2>/dev/null || true
+require_node
+
+cat <<'TEXT'
+Cloudflare commerce deploy setup
+
+Create a broad USER API token, not an account API token. Registrar is not
+currently compatible with Cloudflare account API tokens, and this skill may need
+Registrar, DNS, Pages, Workers, D1, KV, R2, Queues, logs, analytics, and account
+settings.
+
+Recommended user-token permissions:
+- Account: Account Settings Read/Write, Billing Read, Account Analytics Read
+- Account: Pages Write, Workers Scripts Write, Workers KV Storage Write,
+  Workers R2 Storage Write, D1 Write, Queues Write, Workers Tail Read,
+  Workers Observability/Logs Read where shown
+- Zone: Zone Read/Edit, Zone Settings Edit, DNS Write, Analytics Read,
+  Logs Read/Write, SSL and Certificates Edit, Cache Purge
+- Registrar write permissions where available
+
+The token secret will be hidden while you type and stored outside the repo with
+0600 permissions.
+TEXT
+
+offer_browser_open "Cloudflare API token page" \
+  "https://dash.cloudflare.com/profile/api-tokens"
+
+printf '\nProfile name [%s]: ' "$profile"
+read -r entered_profile
+if [ -n "$entered_profile" ]; then
+  profile="$entered_profile"
+fi
+
+printf 'Cloudflare account ID: '
+read -r cloudflare_account_id
+if [ -z "$cloudflare_account_id" ]; then
+  printf 'Cloudflare account ID is required.\n' >&2
+  exit 1
+fi
+
+printf 'Default zone ID (optional, press enter to skip): '
+read -r cloudflare_zone_id
+
+printf 'Cloudflare user API token: '
+IFS= read -rs cloudflare_api_token
+printf '\n'
+if [ -z "$cloudflare_api_token" ]; then
+  printf 'Cloudflare API token is required.\n' >&2
+  exit 1
+fi
+
+offer_browser_open "Registrar and billing prerequisite pages" \
+  "https://dash.cloudflare.com/${cloudflare_account_id}/domains/registrations" \
+  "https://dash.cloudflare.com/${cloudflare_account_id}/billing/payment-info"
+
+printf '\nVerifying token status...\n'
+if ! verify_json="$(api_get "https://api.cloudflare.com/client/v4/user/tokens/verify" 2>&1 | redact)"; then
+  printf '%s\n' "$verify_json" >&2
+  printf 'Token verification failed. Nothing was stored.\n' >&2
+  exit 1
+fi
+printf '%s\n' "$verify_json" | redact
+
+tmp_file="${credentials_file}.tmp.$$"
+CLOUDFLARE_PROFILE="$profile" \
+CLOUDFLARE_ACCOUNT_ID="$cloudflare_account_id" \
+CLOUDFLARE_ZONE_ID="$cloudflare_zone_id" \
+CLOUDFLARE_API_TOKEN="$cloudflare_api_token" \
+CREDENTIALS_FILE="$credentials_file" \
+node > "$tmp_file" <<'NODE'
+const fs = require("fs");
+const file = process.env.CREDENTIALS_FILE;
+let current = { version: 1, provider: "cloudflare", profiles: {} };
+try {
+  current = JSON.parse(fs.readFileSync(file, "utf8"));
+  if (!current || typeof current !== "object") current = {};
+} catch {}
+current.version = 1;
+current.provider = "cloudflare";
+current.updated_at = new Date().toISOString();
+current.profiles = current.profiles && typeof current.profiles === "object" ? current.profiles : {};
+current.profiles[process.env.CLOUDFLARE_PROFILE || "default"] = {
+  account_id: process.env.CLOUDFLARE_ACCOUNT_ID || "",
+  zone_id: process.env.CLOUDFLARE_ZONE_ID || "",
+  api_token: process.env.CLOUDFLARE_API_TOKEN || "",
+  secret_ref: `AUTOVAULT_SECRET:cloudflare-commerce:${process.env.CLOUDFLARE_PROFILE || "default"}:CLOUDFLARE_API_TOKEN`,
+  updated_at: new Date().toISOString()
+};
+process.stdout.write(JSON.stringify(current, null, 2) + "\n");
+NODE
+chmod 600 "$tmp_file"
+mv "$tmp_file" "$credentials_file"
+chmod 600 "$credentials_file"
+
+printf '\nStored Cloudflare profile "%s" at %s\n' "$profile" "$credentials_file"
+printf 'Run: autovault skill doctor cloudflare-commerce-deploy\n'

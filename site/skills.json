@@ -53,7 +53,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/skill-author/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 7304,
+      "bundleSize": 6650,
       "resources": [],
       "capabilities": {
         "network": "false",
@@ -86,7 +86,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-04",
-      "references": 2,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/automem/SKILL.md",
@@ -96,7 +96,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 10476,
+      "bundleSize": 9810,
       "resources": [],
       "capabilities": {
         "network": "false",
@@ -128,7 +128,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-04",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-skill/SKILL.md",
@@ -138,7 +138,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 9391,
+      "bundleSize": 8785,
       "resources": [],
       "capabilities": {
         "network": "false",
@@ -172,7 +172,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/long-haul-parallel-repair/SKILL.md",
@@ -182,7 +182,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md",
       "resourceCount": 1,
       "bundleFileCount": 2,
-      "bundleSize": 5953,
+      "bundleSize": 5223,
       "resources": [
         {
           "path": "agents/openai.yaml",
@@ -230,7 +230,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/entity-dossier/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 4371,
+      "bundleSize": 3791,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -238,7 +238,7 @@
         "tools": "[Bash, Read]"
       },
       "requiresSecrets": [
-        "name: AUTOMEM_API_KEY"
+        "AUTOMEM_API_KEY"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -265,7 +265,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/pirsch-analytics-bootstrap/SKILL.md",
@@ -275,7 +275,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 11451,
+      "bundleSize": 10845,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -283,7 +283,8 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: PIRSCH_CLIENT_ID"
+        "PIRSCH_CLIENT_ID",
+        "PIRSCH_CLIENT_SECRET"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -322,7 +323,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-lead-capture/SKILL.md",
       "resourceCount": 22,
       "bundleFileCount": 23,
-      "bundleSize": 94983,
+      "bundleSize": 94042,
       "resources": [
         {
           "path": "bin/doctor",
@@ -468,7 +469,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 2,
+      "references": 6,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md",
@@ -478,7 +479,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md",
       "resourceCount": 1,
       "bundleFileCount": 2,
-      "bundleSize": 14323,
+      "bundleSize": 13407,
       "resources": [
         {
           "path": "bin/cloudflare-ops",
@@ -518,7 +519,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 2,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-commerce-deploy/SKILL.md",
@@ -528,7 +529,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md",
       "resourceCount": 4,
       "bundleFileCount": 5,
-      "bundleSize": 27322,
+      "bundleSize": 26597,
       "resources": [
         {
           "path": "bin/doctor",
@@ -583,7 +584,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-emdash-cms-deploy/SKILL.md",
@@ -593,7 +594,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md",
       "resourceCount": 6,
       "bundleFileCount": 7,
-      "bundleSize": 43473,
+      "bundleSize": 42745,
       "resources": [
         {
           "path": "references/branding.md",
@@ -659,7 +660,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md",
@@ -669,7 +670,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md",
       "resourceCount": 2,
       "bundleFileCount": 3,
-      "bundleSize": 18955,
+      "bundleSize": 18072,
       "resources": [
         {
           "path": "scripts/validate-model-file",
@@ -688,7 +689,7 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: COMFYUI_BEARER_TOKEN"
+        "COMFYUI_BEARER_TOKEN"
       ],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -726,7 +727,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/babysit/SKILL.md",
       "resourceCount": 4,
       "bundleFileCount": 5,
-      "bundleSize": 69851,
+      "bundleSize": 69141,
       "resources": [
         {
           "path": "references/ci-and-final-readiness.md",
@@ -780,7 +781,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 1,
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/commit-message/SKILL.md",
@@ -790,7 +791,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 4442,
+      "bundleSize": 3932,
       "resources": [],
       "capabilities": {
         "network": "false",
@@ -826,7 +827,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-07",
-      "references": 3,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md",
@@ -836,7 +837,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md",
       "resourceCount": 6,
       "bundleFileCount": 7,
-      "bundleSize": 57030,
+      "bundleSize": 55242,
       "resources": [
         {
           "path": "references/extension-cli.md",
@@ -906,11 +907,14 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/flashspace/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 11725,
+      "bundleSize": 11185,
       "resources": [],
       "capabilities": {
         "network": "false",
-        "filesystem": "readonly"
+        "filesystem": "readonly",
+        "tools": [
+          "Bash"
+        ]
       },
       "requiresSecrets": [],
       "runnable": false,
@@ -938,7 +942,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-07",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/raycast/SKILL.md",
@@ -948,7 +952,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md",
       "resourceCount": 3,
       "bundleFileCount": 4,
-      "bundleSize": 18357,
+      "bundleSize": 17761,
       "resources": [
         {
           "path": "references/ai-config.md",
@@ -968,7 +972,11 @@
       ],
       "capabilities": {
         "network": "false",
-        "filesystem": "readwrite"
+        "filesystem": "readwrite",
+        "tools": [
+          "Bash",
+          "Python"
+        ]
       },
       "requiresSecrets": [],
       "runnable": false,
@@ -1006,7 +1014,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/awtrix-board/SKILL.md",
       "resourceCount": 1,
       "bundleFileCount": 2,
-      "bundleSize": 16585,
+      "bundleSize": 16019,
       "resources": [
         {
           "path": "bin/awtrix",
@@ -1016,7 +1024,10 @@
       ],
       "capabilities": {
         "network": "true",
-        "filesystem": "readonly"
+        "filesystem": "readonly",
+        "tools": [
+          "Bash"
+        ]
       },
       "requiresSecrets": [],
       "runnable": true,
@@ -1053,7 +1064,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/home-assistant-operator/SKILL.md",
       "resourceCount": 1,
       "bundleFileCount": 2,
-      "bundleSize": 3982,
+      "bundleSize": 3414,
       "resources": [
         {
           "path": "bin/home-assistant-operator",
@@ -1093,7 +1104,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-07",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/triage-autohub-runtime/SKILL.md",
@@ -1103,7 +1114,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md",
       "resourceCount": 2,
       "bundleFileCount": 3,
-      "bundleSize": 35194,
+      "bundleSize": 34586,
       "resources": [
         {
           "path": "references/failure-signatures.md",
@@ -1118,7 +1129,11 @@
       ],
       "capabilities": {
         "network": "true",
-        "filesystem": "readwrite"
+        "filesystem": "readwrite",
+        "tools": [
+          "Bash",
+          "Read"
+        ]
       },
       "requiresSecrets": [],
       "runnable": true,
@@ -1154,7 +1169,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/resend-cli/SKILL.md",
       "resourceCount": 15,
       "bundleFileCount": 16,
-      "bundleSize": 64212,
+      "bundleSize": 63341,
       "resources": [
         {
           "path": "references/api-keys.md",
@@ -1267,7 +1282,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-builder/SKILL.md",
       "resourceCount": 9,
       "bundleFileCount": 10,
-      "bundleSize": 122977,
+      "bundleSize": 122266,
       "resources": [
         {
           "path": "LICENSE.txt",
@@ -1352,7 +1367,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-registry-maintainer/SKILL.md",
       "resourceCount": 1,
       "bundleFileCount": 2,
-      "bundleSize": 4687,
+      "bundleSize": 4144,
       "resources": [
         {
           "path": "bin/mcp-registry-maintainer",
@@ -1402,7 +1417,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/brand-bible-author/SKILL.md",
       "resourceCount": 11,
       "bundleFileCount": 12,
-      "bundleSize": 58320,
+      "bundleSize": 57623,
       "resources": [
         {
           "path": "bin/coherence-lint",
@@ -1491,7 +1506,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 1,
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/html-asset-renderer/SKILL.md",
@@ -1501,7 +1516,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md",
       "resourceCount": 1,
       "bundleFileCount": 2,
-      "bundleSize": 20606,
+      "bundleSize": 20037,
       "resources": [
         {
           "path": "scripts/render-html-assets.mjs",
@@ -1541,7 +1556,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/midjourney-iteration/SKILL.md",
@@ -1551,7 +1566,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md",
       "resourceCount": 7,
       "bundleFileCount": 8,
-      "bundleSize": 20021,
+      "bundleSize": 19184,
       "resources": [
         {
           "path": "bin/preflight",
@@ -1620,7 +1635,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/tui-design/SKILL.md",
@@ -1630,7 +1645,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md",
       "resourceCount": 2,
       "bundleFileCount": 3,
-      "bundleSize": 45625,
+      "bundleSize": 44781,
       "resources": [
         {
           "path": "references/app-patterns.md",
@@ -1674,7 +1689,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/docs-screenshot-packager/SKILL.md",
@@ -1684,7 +1699,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md",
       "resourceCount": 8,
       "bundleFileCount": 9,
-      "bundleSize": 27031,
+      "bundleSize": 26430,
       "resources": [
         {
           "path": "agents/openai.yaml",
@@ -1759,7 +1774,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/jacks-writing-style/SKILL.md",
@@ -1769,7 +1784,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md",
       "resourceCount": 4,
       "bundleFileCount": 5,
-      "bundleSize": 61370,
+      "bundleSize": 60489,
       "resources": [
         {
           "path": "references/blog_examples.md",
@@ -1824,7 +1839,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md",
@@ -1834,7 +1849,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 10099,
+      "bundleSize": 9365,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -1867,7 +1882,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 1,
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cli-installer-ux/SKILL.md",
@@ -1877,7 +1892,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md",
       "resourceCount": 4,
       "bundleFileCount": 5,
-      "bundleSize": 10059,
+      "bundleSize": 9500,
       "resources": [
         {
           "path": "examples/clack-ui.ts",
@@ -1932,7 +1947,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/context-engineering-audit/SKILL.md",
@@ -1942,7 +1957,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md",
       "resourceCount": 3,
       "bundleFileCount": 4,
-      "bundleSize": 13492,
+      "bundleSize": 12751,
       "resources": [
         {
           "path": "references/coupling-check.md",
@@ -1992,7 +2007,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md",
@@ -2002,7 +2017,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 4769,
+      "bundleSize": 3893,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -2010,7 +2025,7 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: CLERK_SECRET_KEY"
+        "CLERK_SECRET_KEY"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2038,7 +2053,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-brand-system/SKILL.md",
@@ -2048,7 +2063,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md",
       "resourceCount": 10,
       "bundleFileCount": 11,
-      "bundleSize": 26457,
+      "bundleSize": 25654,
       "resources": [
         {
           "path": "agents/openai.yaml",
@@ -2067,12 +2082,12 @@
         },
         {
           "path": "assets/brand-mark-animated.svg",
-          "kind": "resource",
+          "kind": "svg",
           "bytes": 4146
         },
         {
           "path": "assets/brand-mark.svg",
-          "kind": "resource",
+          "kind": "svg",
           "bytes": 763
         },
         {
@@ -2133,7 +2148,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 3,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
@@ -2143,7 +2158,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 5449,
+      "bundleSize": 4499,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -2151,7 +2166,10 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: CLOUDFLARE_API_TOKEN"
+        "CLOUDFLARE_API_TOKEN",
+        "CLERK_SECRET_KEY",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2178,7 +2196,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/ci-cost-audit/SKILL.md",
@@ -2188,7 +2206,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 6006,
+      "bundleSize": 5313,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -2232,7 +2250,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-director/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 13507,
+      "bundleSize": 12665,
       "resources": [],
       "capabilities": {
         "network": "false",
@@ -2276,7 +2294,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-publisher/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 28872,
+      "bundleSize": 28020,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -2321,7 +2339,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/video-toolkit/SKILL.md",
       "resourceCount": 5,
       "bundleFileCount": 6,
-      "bundleSize": 4994,
+      "bundleSize": 4097,
       "resources": [
         {
           "path": "references/asset-generation.md",
@@ -2381,7 +2399,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md",
@@ -2391,7 +2409,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md",
       "resourceCount": 2,
       "bundleFileCount": 3,
-      "bundleSize": 10210,
+      "bundleSize": 9241,
       "resources": [
         {
           "path": "templates/cloudflare-pages-checkout.js",
@@ -2410,7 +2428,8 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: STRIPE_SECRET_KEY"
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2437,7 +2456,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/award-travel-research/SKILL.md",
@@ -2447,14 +2466,14 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 4685,
+      "bundleSize": 3914,
       "resources": [],
       "capabilities": {
         "network": "true",
         "filesystem": "readonly"
       },
       "requiresSecrets": [
-        "name: SEATS_AERO_API_KEY"
+        "SEATS_AERO_API_KEY"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2492,7 +2511,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-ai-collaboration/SKILL.md",
       "resourceCount": 7,
       "bundleFileCount": 8,
-      "bundleSize": 39637,
+      "bundleSize": 38758,
       "resources": [
         {
           "path": "agents/openai.yaml",
@@ -2562,7 +2581,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/elevenlabs-automem-memory/SKILL.md",
@@ -2572,7 +2591,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 5241,
+      "bundleSize": 4507,
       "resources": [],
       "capabilities": {
         "network": "true",
@@ -2580,7 +2599,8 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: ELEVENLABS_API_KEY"
+        "ELEVENLABS_API_KEY",
+        "AUTOMEM_API_TOKEN"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2609,7 +2629,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/building-emdash-site/SKILL.md",
@@ -2619,7 +2639,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md",
       "resourceCount": 5,
       "bundleFileCount": 6,
-      "bundleSize": 48252,
+      "bundleSize": 47437,
       "resources": [
         {
           "path": "references/configuration.md",
@@ -2690,7 +2710,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/creating-plugins/SKILL.md",
       "resourceCount": 7,
       "bundleFileCount": 8,
-      "bundleSize": 74666,
+      "bundleSize": 73902,
       "resources": [
         {
           "path": "references/admin-ui.md",
@@ -2761,7 +2781,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/emdash-cli/SKILL.md",
@@ -2771,7 +2791,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md",
       "resourceCount": 1,
       "bundleFileCount": 2,
-      "bundleSize": 16087,
+      "bundleSize": 15350,
       "resources": [
         {
           "path": "EDITING-FLOW.md",
@@ -2785,7 +2805,7 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: EMDASH_TOKEN"
+        "EMDASH_TOKEN"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2814,7 +2834,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/wordpress-theme-to-emdash/SKILL.md",
@@ -2824,7 +2844,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md",
       "resourceCount": 29,
       "bundleFileCount": 30,
-      "bundleSize": 131157,
+      "bundleSize": 130337,
       "resources": [
         {
           "path": "phases/1-discovery.md",
@@ -2898,7 +2918,7 @@
         },
         {
           "path": "scaffold/public/favicon.svg",
-          "kind": "resource",
+          "kind": "svg",
           "bytes": 257
         },
         {
@@ -3013,7 +3033,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md",
       "resourceCount": 0,
       "bundleFileCount": 1,
-      "bundleSize": 5982,
+      "bundleSize": 5100,
       "resources": [],
       "capabilities": {
         "network": "false",
@@ -3057,7 +3077,7 @@
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-quest-build/SKILL.md",
       "resourceCount": 5,
       "bundleFileCount": 6,
-      "bundleSize": 40178,
+      "bundleSize": 39316,
       "resources": [
         {
           "path": "agents/openai.yaml",

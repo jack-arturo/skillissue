@@ -1,0 +1,12 @@
+interface:
+  display_name: "AutoVault Brand System"
+  short_description: "AutoVault identity, motion, and surface adaptation assets"
+  icon_small: "./assets/brand-mark.svg"
+  icon_large: "./assets/brand-mark-animated.svg"
+  brand_color: "#5ad6c0"
+  default_prompt: "Use $autovault-brand-system to adapt this AutoVault surface across web, terminal, mascot, and video contexts."
+policy:
+  allow_implicit_invocation: true
+  canonical_brand: "AutoVault"
+  reference_only_assets:
+    - "assets/mascot-checkout-logo-draft.png"

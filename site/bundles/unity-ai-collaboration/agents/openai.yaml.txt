@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unity AI Collaboration"
+  short_description: "Coordinate Unity Assistant and external agents"
+  default_prompt: "Use $unity-ai-collaboration to coordinate Unity Assistant, MCP tools, and external agents safely."

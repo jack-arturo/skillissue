@@ -1,0 +1,232 @@
+#!/usr/bin/env node
+const fs = require('fs');
+const path = require('path');
+
+function slugify(value) {
+  return String(value || 'lead-capture-site')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'lead-capture-site';
+}
+
+function humanize(value) {
+  return slugify(value)
+    .split('-')
+    .filter(Boolean)
+    .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ') || 'Lead Capture';
+}
+
+function parseArgs(argv) {
+  const cwdSlug = slugify(path.basename(process.cwd()));
+  const options = {
+    dir: process.cwd(),
+    projectName: cwdSlug,
+    databaseName: `${cwdSlug}-leads`,
+    databaseId: 'replace-with-d1-database-id',
+    binding: 'LEAD_DB',
+    baseUrl: `https://${cwdSlug}.pages.dev`,
+    fromName: humanize(cwdSlug),
+    fromEmail: 'hello@example.com',
+    force: false,
+    mode: null, // 'pages' | 'astro-ssr' | null (auto-detect)
+  };
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+    if (arg === '--help' || arg === '-h') {
+      options.help = true;
+      continue;
+    }
+    if (arg === '--force') {
+      options.force = true;
+      continue;
+    }
+    const [rawKey, inlineValue] = arg.startsWith('--') ? arg.slice(2).split('=') : [null, null];
+    if (!rawKey) {
+      throw new Error(`Unknown argument: ${arg}`);
+    }
+    const key = rawKey.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+    const value = inlineValue !== undefined ? inlineValue : argv[index + 1];
+    if (inlineValue === undefined) {
+      index += 1;
+    }
+    if (!value) {
+      throw new Error(`Missing value for --${rawKey}`);
+    }
+    if (!(key in options)) {
+      throw new Error(`Unsupported option: --${rawKey}`);
+    }
+    options[key] = value;
+    if (key === 'binding') options.bindingExplicit = true;
+  }
+
+  options.projectName = slugify(options.projectName);
+  options.databaseName = options.databaseName || `${options.projectName}-leads`;
+  options.binding = String(options.binding || 'LEAD_DB').replace(/[^A-Za-z0-9_]/g, '_').toUpperCase();
+  if (options.mode && !['pages', 'astro-ssr'].includes(options.mode)) {
+    throw new Error(`Unsupported --mode "${options.mode}" (use "pages" or "astro-ssr")`);
+  }
+  return options;
+}
+
+function usage() {
+  console.log(`Usage: autovault skill scaffold cloudflare-lead-capture -- [options]\n\nOptions:\n  --project-name <name>     Cloudflare Pages project name\n  --database-name <name>    D1 database name\n  --database-id <id>        D1 database id for Wrangler config\n  --binding <name>          D1 binding name (default LEAD_DB; DB for astro-ssr)\n  --base-url <url>          Production base URL\n  --from-name <name>        Friendly sender name\n  --from-email <email>      Sender email address\n  --mode <pages|astro-ssr>  Target shape (default: auto-detect Astro SSR vs Pages Functions)\n  --dir <path>              Target project directory\n  --force                   Overwrite generated files if they already exist`);
+}
+
+function replacePlaceholders(content, options) {
+  return content
+    .replaceAll('__PROJECT_NAME__', options.projectName)
+    .replaceAll('__DATABASE_NAME__', options.databaseName)
+    .replaceAll('__DATABASE_ID__', options.databaseId)
+    .replaceAll('__D1_BINDING__', options.binding)
+    .replaceAll('__BASE_URL__', options.baseUrl)
+    .replaceAll('__FROM_NAME__', options.fromName)
+    .replaceAll('__FROM_EMAIL__', options.fromEmail)
+    .replaceAll('__COMPATIBILITY_DATE__', new Date().toISOString().slice(0, 10));
+}
+
+function writeTextFile(targetRoot, relativePath, content, force, results) {
+  const targetPath = path.join(targetRoot, relativePath);
+  fs.mkdirSync(path.dirname(targetPath), { recursive: true });
+  if (fs.existsSync(targetPath) && !force) {
+    results.skipped.push(relativePath);
+    return false;
+  }
+  fs.writeFileSync(targetPath, content);
+  results.written.push(relativePath);
+  return true;
+}
+
+function copyTemplates(templateRoot, targetRoot, options, results, relativeBase = '') {
+  for (const entry of fs.readdirSync(path.join(templateRoot, relativeBase), { withFileTypes: true })) {
+    const relativePath = path.join(relativeBase, entry.name);
+    if (entry.isDirectory()) {
+      copyTemplates(templateRoot, targetRoot, options, results, relativePath);
+      continue;
+    }
+    if (relativePath === 'wrangler.toml' || relativePath === 'wrangler.lead-capture.jsonc') {
+      continue;
+    }
+    const sourcePath = path.join(templateRoot, relativePath);
+    const content = replacePlaceholders(fs.readFileSync(sourcePath, 'utf8'), options);
+    writeTextFile(targetRoot, relativePath, content, options.force, results);
+  }
+}
+
+function appendTomlIfNeeded(targetRoot, templateRoot, options, results) {
+  const tomlPath = path.join(targetRoot, 'wrangler.toml');
+  const jsoncPath = path.join(targetRoot, 'wrangler.jsonc');
+  const varsSnippet = `[vars]\nBASE_URL = "${options.baseUrl}"\nFROM_EMAIL = "${options.fromEmail}"\nFROM_NAME = "${options.fromName}"\nSEND_LEAD_CAPTURE_EMAIL = "true"\n`;
+  const d1Snippet = `\n# BEGIN cloudflare-lead-capture\n[[d1_databases]]\nbinding = "${options.binding}"\ndatabase_name = "${options.databaseName}"\ndatabase_id = "${options.databaseId}"\n# END cloudflare-lead-capture\n`;
+
+  if (fs.existsSync(tomlPath)) {
+    let current = fs.readFileSync(tomlPath, 'utf8');
+    let changed = false;
+    if (!current.includes(`binding = "${options.binding}"`) && !current.includes(`binding='${options.binding}'`)) {
+      current = `${current.trimEnd()}\n${d1Snippet}`;
+      changed = true;
+    }
+    if (!/^\s*\[vars\]\s*$/m.test(current)) {
+      current = `${current.trimEnd()}\n\n${varsSnippet}`;
+      changed = true;
+    } else {
+      writeTextFile(targetRoot, 'wrangler.lead-capture-vars.toml', varsSnippet, options.force, results);
+    }
+    if (changed) {
+      fs.writeFileSync(tomlPath, current);
+      results.updated.push('wrangler.toml');
+    } else {
+      results.skipped.push('wrangler.toml');
+    }
+    return;
+  }
+
+  if (fs.existsSync(jsoncPath)) {
+    const jsoncTemplate = replacePlaceholders(
+      fs.readFileSync(path.join(templateRoot, 'wrangler.lead-capture.jsonc'), 'utf8'),
+      options
+    );
+    writeTextFile(targetRoot, 'wrangler.lead-capture.jsonc', jsoncTemplate, options.force, results);
+    return;
+  }
+
+  const tomlTemplate = replacePlaceholders(fs.readFileSync(path.join(templateRoot, 'wrangler.toml'), 'utf8'), options);
+  writeTextFile(targetRoot, 'wrangler.toml', tomlTemplate, options.force, results);
+}
+
+// Auto-detect: an Astro project using the Cloudflare adapter wants the SSR variant
+// (no `functions/` runtime there); everything else gets Pages Functions.
+function detectMode(targetRoot) {
+  for (const c of ['astro.config.mjs', 'astro.config.ts', 'astro.config.js', 'astro.config.mts', 'astro.config.cjs']) {
+    const p = path.join(targetRoot, c);
+    if (fs.existsSync(p)) {
+      try {
+        if (/@astrojs\/cloudflare/.test(fs.readFileSync(p, 'utf8'))) return 'astro-ssr';
+      } catch {
+        /* unreadable config — fall through */
+      }
+    }
+  }
+  return 'pages';
+}
+
+// Astro SSR variant: the shared D1 schema + an Astro API route and form component.
+// Reuses templates/project/schema/lead-capture.sql so the admin UI / exports see these leads too.
+function copyAstroSsr(targetRoot, templateRoot, options, results) {
+  const schema = replacePlaceholders(
+    fs.readFileSync(path.join(templateRoot, 'schema', 'lead-capture.sql'), 'utf8'),
+    options
+  );
+  writeTextFile(targetRoot, 'schema/lead-capture.sql', schema, options.force, results);
+  const astroRoot = path.resolve(__dirname, '..', 'templates', 'astro-ssr');
+  if (!fs.existsSync(astroRoot)) {
+    throw new Error(`Astro SSR template directory not found: ${astroRoot}`);
+  }
+  copyTemplates(astroRoot, targetRoot, options, results);
+}
+
+try {
+  const options = parseArgs(process.argv.slice(2));
+  if (options.help) {
+    usage();
+    process.exit(0);
+  }
+  const targetRoot = path.resolve(options.dir);
+  const templateRoot = path.resolve(__dirname, '..', 'templates', 'project');
+  if (!fs.existsSync(templateRoot)) {
+    throw new Error(`Template directory not found: ${templateRoot}`);
+  }
+  fs.mkdirSync(targetRoot, { recursive: true });
+
+  const results = { written: [], updated: [], skipped: [] };
+  const mode = options.mode || detectMode(targetRoot);
+  if (mode === 'astro-ssr' && !options.bindingExplicit) {
+    options.binding = 'DB'; // EmDash/Astro projects bind D1 as DB by convention
+  }
+  if (mode === 'astro-ssr') {
+    copyAstroSsr(targetRoot, templateRoot, options, results);
+  } else {
+    copyTemplates(templateRoot, targetRoot, options, results);
+    appendTomlIfNeeded(targetRoot, templateRoot, options, results);
+  }
+
+  console.log('cloudflare-lead-capture scaffold complete');
+  console.log(`Mode: ${mode}`);
+  console.log(`Target: ${targetRoot}`);
+  console.log(`D1 binding: ${options.binding}`);
+  console.log(`D1 database: ${options.databaseName}`);
+  if (results.written.length) console.log(`Written: ${results.written.join(', ')}`);
+  if (results.updated.length) console.log(`Updated: ${results.updated.join(', ')}`);
+  if (results.skipped.length) console.log(`Skipped existing: ${results.skipped.join(', ')}`);
+  if (mode === 'astro-ssr') {
+    console.log('\nNext (astro-ssr): apply schema/lead-capture.sql to your D1; set RESEND_API_KEY (Worker secret)');
+    console.log('plus NOTIFY_FROM/NOTIFY_TO vars; render <ContactForm /> on a page; then `wrangler deploy`.');
+    console.log('See README.astro-ssr.md.');
+  } else {
+    console.log('\nNext: apply schema/lead-capture.sql to D1 and set RESEND_API_KEY, ADMIN_TOKEN, and optional TURNSTILE_SECRET_KEY.');
+  }
+} catch (error) {
+  console.error(`scaffold failed: ${error.message}`);
+  process.exit(1);
+}

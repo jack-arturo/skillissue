@@ -204,6 +204,12 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(browserHand.cliInstall, new RegExp(`@${packageSourcePin}:skills/browser-hand/SKILL\\.md`));
     assert.match(browserHand.sourceUrl, new RegExp(`/blob/${packageSourcePin}/skills/browser-hand/SKILL\\.md`));
     assert.match(browserHand.rawSourceUrl, new RegExp(`raw.githubusercontent.com/${metadata.repo}/${packageSourcePin}/skills/browser-hand/SKILL\\.md`));
+    const stripeCheckout = metadata.skills.find((skill) => skill.name === "stripe-commerce-checkout");
+    const awtrixBoard = metadata.skills.find((skill) => skill.name === "awtrix-board");
+    const cloudflareOps = metadata.skills.find((skill) => skill.name === "cloudflare-ops");
+    assert.deepEqual(stripeCheckout.requiresSecrets, ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"]);
+    assert.deepEqual(awtrixBoard.capabilities.tools, ["Bash"]);
+    assert.equal(cloudflareOps.references, 6, "reference sort uses inbound public links");
 
     const explorer = fs.readFileSync(path.join(siteDir, "skills", "index.html"), "utf-8");
     assert.match(explorer, /data-catalog-explorer/);
@@ -242,12 +248,41 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(browserHandPage, /7 files · 6 resources · runnable/);
     const babysitPage = fs.readFileSync(path.join(siteDir, "skills", "babysit", "index.html"), "utf8");
     assert.match(babysitPage, /class="package-overview"/);
-    assert.match(babysitPage, /data-install-mode="cli"/);
+    assert.match(babysitPage, /data-package-detail/);
+    assert.match(babysitPage, /data-package-tab="bundle"/);
+    assert.match(babysitPage, /data-package-file="references\/pr-labels\.md"/);
+    assert.match(babysitPage, /data-package-preview/);
+    assert.match(babysitPage, /data-package-preview-raw href="\/bundles\/babysit\/SKILL\.md\.txt"/);
     assert.match(babysitPage, /id="bundle"/);
     assert.match(babysitPage, /id="permissions"/);
     assert.match(babysitPage, /id="provenance"/);
     assert.match(babysitPage, /id="source"/);
     assert.match(babysitPage, /references\/pr-labels\.md/);
+    const detailAsset = babysitPage.match(/src="\/assets\/(skill-detail\.[a-f0-9]{12}\.js)"/)?.[1];
+    assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
+    assert.equal(fs.existsSync(path.join(siteDir, "assets", detailAsset)), true);
+    assert.equal(
+      fs.readFileSync(path.join(siteDir, "bundles", "babysit", "references", "pr-labels.md.txt"), "utf8"),
+      fs.readFileSync(path.join(root, "skills", "babysit", "references", "pr-labels.md"), "utf8"),
+    );
+    assert.equal(
+      fs.existsSync(path.join(siteDir, "bundles", "cloudflare-lead-capture", "templates", "project", "snippets", "lead-form.html")),
+      false,
+      "active HTML is never served as a same-origin raw bundle file",
+    );
+    assert.equal(
+      fs.readFileSync(path.join(siteDir, "bundles", "cloudflare-lead-capture", "templates", "project", "snippets", "lead-form.html.txt"), "utf8"),
+      fs.readFileSync(path.join(root, "skills", "cloudflare-lead-capture", "templates", "project", "snippets", "lead-form.html"), "utf8"),
+      "raw bundle sources are served as inert text",
+    );
+    const brandPage = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
+    assert.match(brandPage, /assets\/brand-mark\.svg\.txt/);
+    assert.match(brandPage, /<span class="package-file-kind">svg<\/span>/);
+    const babysit = metadata.skills.find((skill) => skill.name === "babysit");
+    const publishedBabysitBytes = publicBundleFiles(path.join(root, "skills", "babysit"))
+      .filter((file) => file.path !== "story.md")
+      .reduce((total, file) => total + fs.statSync(file.absolute).size, 0);
+    assert.equal(babysit.bundleSize, publishedBabysitBytes, "bundle size excludes the site-only narrative");
     const deployment = metadata.skills.find((skill) => skill.name === "cloudflare-commerce-deploy");
     const design = metadata.skills.find((skill) => skill.name === "brand-bible-author");
     assert.equal(deployment.category, "deployment");
