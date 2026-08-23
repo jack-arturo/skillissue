@@ -700,6 +700,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   const cliInstall = `autovault add ${installId} --sync-profiles`;
   const mcpInstall = `add_skill({ source: "github", identifier: "${installId}" })`;
   const sourceUrl = `https://github.com/${REPO}/blob/${packageSourcePin}/skills/${name}/SKILL.md`;
+  const rawSourceUrl = `https://raw.githubusercontent.com/${REPO}/${packageSourcePin}/skills/${name}/SKILL.md`;
   const storyUrl = `https://skillissue.sh/skills/${name}/`;
   const bundleFiles = listBundleFiles(dir);
   const resourceFiles = bundleFiles.filter(
@@ -733,6 +734,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     cliInstall,
     mcpInstall,
     sourceUrl,
+    rawSourceUrl,
     storyUrl,
     installId,
     resourceCount,
@@ -823,6 +825,7 @@ const skillsJson = {
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
+    rawSourceUrl: s.rawSourceUrl,
     storyUrl: s.storyUrl,
     url: s.storyUrl,
     installId: s.installId,
@@ -861,7 +864,7 @@ for (const s of publicSkills) {
           </div>
           <aside class="skill-install-card">
             <span>Pinned install</span><code>${esc(s.cliInstall)}</code>
-            <div><button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy install</button><a class="btn btn-ghost" href="${esc(s.sourceUrl)}" rel="noopener">Raw</a></div>
+            <div><button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy install</button><a class="btn btn-ghost" href="${esc(s.rawSourceUrl)}" rel="noopener">Raw</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
@@ -915,6 +918,7 @@ const explorerData = {
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
+    rawSourceUrl: s.rawSourceUrl,
     packageSourcePin,
   })),
 };
@@ -939,7 +943,7 @@ function fallbackExplorerCard(skill) {
   </header>
   <p class="explorer-card-summary">${esc(skill.summary)}</p>
   <div class="explorer-agent-row" aria-label="Agent targets">${explorerAgentPills(skill)}</div>
-  <footer class="explorer-card-footer"><span>v${esc(skill.version)} · ${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</span><div><a href="${esc(skill.sourceUrl)}" rel="noopener">Raw</a><button type="button" class="explorer-copy" data-copy="${esc(skill.cliInstall)}">Copy install</button></div></footer>
+  <footer class="explorer-card-footer"><span>v${esc(skill.version)} · ${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</span><div><a href="${esc(skill.rawSourceUrl)}" rel="noopener">Raw</a><button type="button" class="explorer-copy" data-copy="${esc(skill.cliInstall)}">Copy install</button></div></footer>
 </article>`;
 }
 

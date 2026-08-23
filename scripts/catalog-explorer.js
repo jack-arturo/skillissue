@@ -134,7 +134,7 @@ function renderCard(skill) {
   bundle.textContent = `v${skill.version || "1.0.0"} · ${resourceLabel(skill)}${skill.runnable ? " · runnable" : ""}`;
   const actions = document.createElement("div");
   const source = document.createElement("a");
-  source.href = skill.sourceUrl;
+  source.href = skill.rawSourceUrl;
   source.rel = "noopener";
   source.textContent = "Raw";
   actions.append(source, copyButton("Copy install", skill.cliInstall));
