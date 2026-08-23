@@ -1,0 +1,205 @@
+#!/usr/bin/env -S uv run --quiet --script
+# /// script
+# requires-python = ">=3.11"
+# dependencies = []
+# ///
+"""coherence-lint — deterministic partial check of coherence-check.md procedure.
+
+Tokenizes IS-NOT bullets from <project>/brand/identity.md, locates each
+significant token in visual-language.md, applies several
+intentional-vocabulary filters, and reports the remainder as CANDIDATE
+contradictions for human review. Always exit 0 — these are flags, not
+auto-failures.
+
+Filters applied (in order):
+1. Stopwords (common English).
+2. Token length < 4 chars.
+3. Token appears in §3 banned-vocabulary table — that's the explicit ban.
+4. Token appears in §4 preferred-vocabulary substitutions — explicit "use instead".
+5. Token appears in the Changelog section — revision notes, not visual claims.
+6. Every occurrence of the token is inside backticks — it's a quoted
+   vocabulary declaration, not a visual claim.
+
+Usage:
+  bin/coherence-lint <brand-dir>
+  bin/coherence-lint --json <brand-dir>
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+
+STOPWORDS = set("""
+a an and or the in on at of for to with from by is are was were be been being
+not no if then else any all some each every other another such only just
+that this these those it its they them their there here who whom which what
+when where why how than but as so do does did doing done have has had can may
+might must should would could will shall about above below up down out off
+real really very make made making them too into onto upon since while where
+asking having looking giving taking saying being going coming been still also
+own way well even less more most much many same other yes know like need want
+""".split())
+
+
+def section_ranges(md_lines: list[str]) -> dict[str, tuple[int, int]]:
+    """Return {section_name: (start_line_1based, end_line_1based)} for H2 sections."""
+    headings = []
+    for i, line in enumerate(md_lines, start=1):
+        m = re.match(r"^##\s+(.+?)\s*$", line)
+        if m:
+            headings.append((i, m.group(1).strip()))
+    out: dict[str, tuple[int, int]] = {}
+    for idx, (line_num, name) in enumerate(headings):
+        end = headings[idx + 1][0] - 1 if idx + 1 < len(headings) else len(md_lines)
+        out[name] = (line_num, end)
+    return out
+
+
+def in_range(line_num: int, ranges: list[tuple[int, int]]) -> bool:
+    return any(start <= line_num <= end for start, end in ranges)
+
+
+def find_section_starting_with(sections: dict[str, tuple[int, int]], prefix: str) -> tuple[int, int] | None:
+    for name, rng in sections.items():
+        if name.startswith(prefix):
+            return rng
+    return None
+
+
+def extract_is_not_bullets(identity_text: str) -> list[str]:
+    pattern = re.compile(r"(?ms)^##\s+What\s+\S+\s+IS NOT.*?\n(.*?)(?=^##\s|\Z)")
+    m = pattern.search(identity_text)
+    if not m:
+        return []
+    body = m.group(1)
+    return [line[2:].strip() for line in body.splitlines() if line.startswith("- ")]
+
+
+# Matches "Banned register words: cute, kawaii, bubblegum." style explicit ban lists.
+BAN_LIST_RE = re.compile(r"[Bb]anned\s+[\w-]+(?:\s+words)?\s*:\s*([^.]+)")
+
+
+def tokens_for_bullet(bullet: str) -> set[str]:
+    """If the bullet has an explicit 'Banned X: a, b, c' list, use ONLY those tokens.
+    Otherwise fall back to tokenizing the whole bullet. Carve-out language ('worn
+    deadpan, paired with destruction props') is real prose, not a contradiction
+    list — it would otherwise produce massive false positives."""
+    m = BAN_LIST_RE.search(bullet)
+    if m:
+        items = re.split(r"[,\s]+", m.group(1).strip())
+        return {w.lower() for w in items if len(w) >= 4 and w.lower() not in STOPWORDS}
+    return tokenize(bullet)
+
+
+def tokenize(text: str) -> set[str]:
+    raw = re.findall(r"[a-zA-Z][a-zA-Z0-9-]{3,}", text.lower())
+    return {t for t in raw if t not in STOPWORDS}
+
+
+def all_in_backticks(visual_text: str, token: str, hit_lines: set[int]) -> bool:
+    """True if every line in hit_lines uses the token only inside backticks."""
+    lines = visual_text.splitlines()
+    rx_word = re.compile(rf"\b{re.escape(token)}\b", re.IGNORECASE)
+    for ln in hit_lines:
+        line = lines[ln - 1]
+        # Find every word match; check if each is inside backticks.
+        for m in rx_word.finditer(line):
+            start = m.start()
+            # Count backticks before start; if odd, we're inside a code span.
+            ticks_before = line[:start].count("`")
+            if ticks_before % 2 == 0:
+                return False
+    return True
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description="Coherence lint for a locked brand bible.")
+    p.add_argument("brand_dir", help="Path to <project>/brand/")
+    p.add_argument("--json", action="store_true")
+    args = p.parse_args()
+
+    brand = Path(args.brand_dir)
+    identity_path = brand / "identity.md"
+    visual_path = brand / "visual-language.md"
+
+    for f in (identity_path, visual_path):
+        if not f.exists():
+            print(f"missing required file: {f}", file=sys.stderr)
+            return 2
+
+    identity_text = identity_path.read_text()
+    visual_text = visual_path.read_text()
+    visual_lines = visual_text.splitlines()
+    sections = section_ranges(visual_lines)
+
+    # Build "intentional vocabulary" line ranges to ignore.
+    ignore_ranges: list[tuple[int, int]] = []
+    for prefix in ("3.", "4.", "Changelog"):
+        rng = find_section_starting_with(sections, prefix)
+        if rng:
+            ignore_ranges.append(rng)
+
+    is_not_bullets = extract_is_not_bullets(identity_text)
+    if not is_not_bullets:
+        print("no IS-NOT bullets found in identity.md", file=sys.stderr)
+        return 2
+
+    tokens = set()
+    for bullet in is_not_bullets:
+        tokens.update(tokens_for_bullet(bullet))
+
+    # Drop tokens that name brand colors or signature items (these are
+    # *expected* to appear in both files — they describe what's banned in a
+    # way that's only meaningful by referencing real elements).
+    BRAND_TERMS = {"pink", "chrome", "shrapnel", "magenta", "ombre", "platinum",
+                   "fashion", "editorial", "luxury", "perfume", "iphone",
+                   "satirical", "performance", "performer", "performing", "character"}
+    tokens -= BRAND_TERMS
+
+    candidates: list[dict] = []
+    for tok in sorted(tokens):
+        rx = re.compile(rf"\b{re.escape(tok)}\b", re.IGNORECASE)
+        hits = [(i, ln) for i, ln in enumerate(visual_lines, start=1) if rx.search(ln)]
+        if not hits:
+            continue
+        # Drop hits inside intentional-vocab ranges.
+        hits = [(i, ln) for (i, ln) in hits if not in_range(i, ignore_ranges)]
+        if not hits:
+            continue
+        # Drop the token entirely if every remaining occurrence is backticked.
+        if all_in_backticks(visual_text, tok, {i for i, _ in hits}):
+            continue
+        candidates.append({
+            "token": tok,
+            "matches": [{"line": i, "text": ln.strip()} for i, ln in hits],
+        })
+
+    if args.json:
+        print(json.dumps({
+            "check": "coherence",
+            "brand_dir": str(brand),
+            "candidates_flagged": len(candidates),
+            "candidates": candidates,
+        }))
+    else:
+        print(f"Coherence lint: {brand}")
+        print(f"  IS-NOT tokens scanned: {len(tokens)}")
+        print(f"  Candidate contradictions flagged: {len(candidates)}")
+        if candidates:
+            print()
+            for c in candidates:
+                print(f"  [{c['token']}] in visual-language.md:")
+                for m in c["matches"]:
+                    print(f"    {m['line']}: {m['text']}")
+                print()
+        else:
+            print("  No candidate contradictions outside intentional-vocab ranges.")
+
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
