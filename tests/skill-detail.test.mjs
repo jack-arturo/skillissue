@@ -5,16 +5,17 @@ import { groupBundleFiles, initialBundlePath, packageTabForHash, resourceKind } 
 
 test("bundle viewer groups files like the hosted package explorer", () => {
   const files = [
-    { path: "SKILL.md" },
+    { path: "references/zebra.md" },
     { path: "references/pr-labels.md" },
     { path: "scripts/review.mjs" },
     { path: "assets/mark.svg" },
+    { path: "SKILL.md" },
   ];
   assert.deepEqual(
     groupBundleFiles(files).map((group) => [group.id, group.files.map((file) => file.path)]),
     [
       ["root", ["SKILL.md"]],
-      ["references", ["references/pr-labels.md"]],
+      ["references", ["references/pr-labels.md", "references/zebra.md"]],
       ["assets", ["assets/mark.svg"]],
       ["scripts", ["scripts/review.mjs"]],
     ],

@@ -212,6 +212,10 @@ function bundleFileSummary(file) {
   return "Bundled package file.";
 }
 
+function bundlePathCompare(a, b) {
+  return a.path.localeCompare(b.path, "en", { sensitivity: "base", numeric: true });
+}
+
 function bundleBytes(files) {
   return files.reduce((total, file) => total + fs.statSync(file.absolute).size, 0);
 }
@@ -990,7 +994,7 @@ for (const s of publicSkills) {
   }));
   const groupLabels = { root: "Skill root", references: "Reference docs", assets: "Assets", agents: "Agent metadata", bin: "Commands", scripts: "Scripts", other: "Other files" };
   const resourceTree = ["root", "references", "assets", "agents", "bin", "scripts", "other"].map((group) => {
-    const files = viewerFiles.filter((file) => file.group === group);
+    const files = viewerFiles.filter((file) => file.group === group).sort(bundlePathCompare);
     if (!files.length) return "";
     return `<div class="package-resource-group"><p>${groupLabels[group]}</p>${files.map((file) => `<div class="package-resource-row"><button type="button" data-package-file="${esc(file.path)}"><span class="package-file-kind">${esc(file.kind)}</span><span><strong>${esc(file.title)}</strong><small>${esc(file.path)} · ${esc(formatBytes(file.bytes))}</small></span></button><a href="${esc(file.url)}" rel="noopener">raw</a></div>`).join("")}</div>`;
   }).join("");

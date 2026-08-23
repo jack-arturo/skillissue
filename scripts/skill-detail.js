@@ -27,7 +27,12 @@ function resourceGroup(filePath = "") {
 
 export function groupBundleFiles(files = []) {
   return GROUP_ORDER
-    .map((id) => ({ id, files: files.filter((file) => resourceGroup(file.path) === id) }))
+    .map((id) => ({
+      id,
+      files: files
+        .filter((file) => resourceGroup(file.path) === id)
+        .sort((a, b) => a.path.localeCompare(b.path, "en", { sensitivity: "base", numeric: true })),
+    }))
     .filter((group) => group.files.length);
 }
 
