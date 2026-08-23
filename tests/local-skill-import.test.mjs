@@ -153,6 +153,25 @@ test("unsafe roots and entries fail closed, and overwrite requires an explicit f
     assert.notEqual(metadataSpecialFile.status, 0);
     assert.match(metadataSpecialFile.stderr, /special file/i);
     fs.rmSync(metadataSpecial);
+    const metadataDirectory = path.join(bundle, ".autovault-cache");
+    fs.mkdirSync(metadataDirectory);
+    fs.symlinkSync(path.join(bundle, "unsafe.txt"), path.join(metadataDirectory, "nested-link"));
+    const nestedMetadataSymlink = spawnSync(process.execPath, [auditScript, "--source", source, "--skill", approved], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    assert.notEqual(nestedMetadataSymlink.status, 0);
+    assert.match(nestedMetadataSymlink.stderr, /symlink/i);
+    fs.rmSync(path.join(metadataDirectory, "nested-link"));
+    const nestedMetadataSpecial = path.join(metadataDirectory, "nested-pipe");
+    execFileSync("mkfifo", [nestedMetadataSpecial]);
+    const nestedMetadataSpecialFile = spawnSync(process.execPath, [auditScript, "--source", source, "--skill", approved], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    assert.notEqual(nestedMetadataSpecialFile.status, 0);
+    assert.match(nestedMetadataSpecialFile.stderr, /special file/i);
+    fs.rmSync(metadataDirectory, { recursive: true, force: true });
 
     assert.throws(
       () => run(importScript, ["--source", source, "--skill", approved, "--destination", "../outside"]),
@@ -166,7 +185,7 @@ test("unsafe roots and entries fail closed, and overwrite requires an explicit f
     fs.mkdirSync(path.join(root, destination, approved), { recursive: true });
     assert.throws(
       () => run(importScript, ["--source", source, "--skill", approved, "--destination", destination, "--apply"]),
-      /already exists.*--overwrite/i,
+      /already exists.*--overwrite.*--apply/i,
     );
     const dryReplacement = JSON.parse(run(importScript, [
       "--source", source,

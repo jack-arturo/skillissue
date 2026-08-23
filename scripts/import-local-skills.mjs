@@ -151,7 +151,7 @@ export function importLocalSkills({ source, skills, destination: rawDestination 
       if (error.code !== "ENOENT") throw error;
     }
     if (exists && !overwrite) {
-      fail(`Destination already exists for ${item.name}; rerun with --apply --overwrite to replace it`);
+      fail(`Destination already exists for ${item.name}; rerun with --overwrite to review the replacement plan, then add --apply to replace it`);
     }
     if (exists) replacements.add(item.name);
   }

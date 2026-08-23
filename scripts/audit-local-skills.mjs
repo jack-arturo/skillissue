@@ -107,7 +107,7 @@ function auditTree(bundleRoot) {
   const directories = [];
   const omitted = [];
 
-  function visit(directory, relativeDirectory = "") {
+  function visit(directory, relativeDirectory = "", withinMetadata = false) {
     const entries = fs.readdirSync(directory).sort();
     for (const entry of entries) {
       const relative = relativeDirectory ? path.posix.join(relativeDirectory, entry) : entry;
@@ -116,8 +116,10 @@ function auditTree(bundleRoot) {
       const stat = fs.lstatSync(absolute);
       if (stat.isSymbolicLink()) fail(`Rejected symlink: ${relative}`);
       if (!stat.isDirectory() && !stat.isFile()) fail(`Rejected special file: ${relative}`);
-      if (entry.startsWith(".autovault-")) {
-        omitted.push(relative);
+      const omittedMetadata = withinMetadata || entry.startsWith(".autovault-");
+      if (omittedMetadata) {
+        if (!withinMetadata) omitted.push(relative);
+        if (stat.isDirectory()) visit(absolute, relative, true);
         continue;
       }
       if (stat.isDirectory()) {
