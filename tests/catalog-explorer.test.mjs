@@ -3,13 +3,9 @@ import test from "node:test";
 
 import {
   filterSkills,
-  isModifiedActivation,
-  keyboardFocusTarget,
   normalizeExplorerState,
   parseExplorerState,
   serializeExplorerState,
-  selectionChanged,
-  shouldRevealDetail,
 } from "../scripts/catalog-explorer.js";
 
 const skills = [
@@ -62,27 +58,29 @@ test("Explorer query state parses and serializes only meaningful filters", () =>
     agent: "codex",
     featured: true,
     resources: "yes",
-    skill: "browser-hand",
   });
   assert.equal(
     serializeExplorerState(state),
-    "?q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes&skill=browser-hand",
+    "?q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes",
+  );
+  assert.equal(
+    serializeExplorerState(state, "?utm_source=directory&skill=browser-hand"),
+    "?utm_source=directory&q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes",
   );
   assert.equal(serializeExplorerState(parseExplorerState("?featured=no&resources=nope")), "");
   assert.equal(parseExplorerState("?featured=on").featured, true);
 });
 
-test("Explorer state clears or selects a result before it reaches the URL", () => {
-  const initial = { category: "git", skill: "browser-hand" };
+test("Explorer state clears unavailable filters before it reaches the URL", () => {
+  const initial = { category: "git" };
   const normalized = normalizeExplorerState(skills, initial);
   assert.deepEqual(
     normalized,
-    { category: "git", skill: "commit-message" },
+    { category: "git" },
   );
-  assert.equal(selectionChanged(initial, normalized), true);
   assert.deepEqual(
-    normalizeExplorerState(skills, { q: "does-not-exist", skill: "browser-hand" }),
-    { q: "does-not-exist", skill: "" },
+    normalizeExplorerState(skills, { q: "does-not-exist" }),
+    { q: "does-not-exist" },
   );
 });
 
@@ -90,32 +88,10 @@ test("Explorer state removes unknown option values before serializing visible co
   const normalized = normalizeExplorerState(skills, {
     category: "unknown-category",
     agent: "unknown-agent",
-    skill: "browser-hand",
   });
   assert.deepEqual(normalized, {
     category: "",
     agent: "",
-    skill: "browser-hand",
   });
-  assert.equal(serializeExplorerState(normalized), "?skill=browser-hand");
-});
-
-test("only narrow interactive selections reveal the detail pane", () => {
-  assert.equal(shouldRevealDetail(640), true);
-  assert.equal(shouldRevealDetail(641), false);
-  assert.equal(shouldRevealDetail(undefined), false);
-});
-
-test("modifier-clicks pass through to canonical result navigation", () => {
-  assert.equal(isModifiedActivation({ metaKey: true }), true);
-  assert.equal(isModifiedActivation({ ctrlKey: true }), true);
-  assert.equal(isModifiedActivation({ shiftKey: true }), true);
-  assert.equal(isModifiedActivation({ altKey: true }), true);
-  assert.equal(isModifiedActivation({}), false);
-});
-
-test("keyboard navigation focuses detail only at the narrow breakpoint", () => {
-  assert.equal(keyboardFocusTarget(640), "detail");
-  assert.equal(keyboardFocusTarget(641), "result");
-  assert.equal(keyboardFocusTarget(undefined), "result");
+  assert.equal(serializeExplorerState(normalized), "");
 });

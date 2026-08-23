@@ -700,6 +700,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   const cliInstall = `autovault add ${installId} --sync-profiles`;
   const mcpInstall = `add_skill({ source: "github", identifier: "${installId}" })`;
   const sourceUrl = `https://github.com/${REPO}/blob/${packageSourcePin}/skills/${name}/SKILL.md`;
+  const rawSourceUrl = `https://raw.githubusercontent.com/${REPO}/${packageSourcePin}/skills/${name}/SKILL.md`;
   const storyUrl = `https://skillissue.sh/skills/${name}/`;
   const bundleFiles = listBundleFiles(dir);
   const resourceFiles = bundleFiles.filter(
@@ -733,9 +734,12 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     cliInstall,
     mcpInstall,
     sourceUrl,
+    rawSourceUrl,
     storyUrl,
     installId,
     resourceCount,
+    resourceFiles: resourceFiles.map((file) => file.path),
+    bundleFileCount: resourceFiles.length + 1,
     runnable,
   });
   report.public++;
@@ -821,6 +825,7 @@ const skillsJson = {
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
+    rawSourceUrl: s.rawSourceUrl,
     storyUrl: s.storyUrl,
     url: s.storyUrl,
     installId: s.installId,
@@ -846,42 +851,36 @@ for (const s of publicSkills) {
   const tags = (s.tags || [])
     .map((t) => `<span class="tag">${esc(t)}</span>`)
     .join("");
+  const resourceTiles = s.resourceFiles.length
+    ? s.resourceFiles.map((file) => `<a class="skill-resource" href="https://github.com/${REPO}/blob/${packageSourcePin}/skills/${esc(s.name)}/${esc(file)}" rel="noopener"><code>${esc(file)}</code><span>Resource</span></a>`).join("")
+    : '<p class="muted">This package is a single SKILL.md with no bundled resources.</p>';
   const body = `
-    <section class="hero skill-hero">
+    <section class="skill-package">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v${esc(s.version)} · ${esc(s.provenance)} · package source ${esc(shortPackageSourcePin)}</div>
-        <h1><span class="path">${esc(s.name)}</span></h1>
-        <p class="lede">${esc(s.summary)}</p>
-        <div class="meta" style="margin-bottom:1.25rem">${tags}
-          <span class="badge">${esc(s.provenance)}</span>${featuredBadge}
-        </div>
-        <div class="cta-row">
-          <button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy AutoVault install</button>
-          <button type="button" class="btn btn-ghost" data-copy="${esc(s.mcpInstall)}">Copy MCP add_skill</button>
-          <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
-        </div>
-        <div class="term" style="max-width:48rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">package-source install · ${esc(shortPackageSourcePin)}</span></div>
-          <div class="term-body">
-            <div><span class="dim"># CLI (primary)</span></div>
-            <div><span class="dim">$</span> <span class="cmd">${esc(s.cliInstall)}</span></div>
-            <div style="margin-top:0.6rem"><span class="dim"># MCP tool call</span></div>
-            <div class="cmd" style="word-break:break-all">${esc(s.mcpInstall)}</div>
-            <div class="ok" style="margin-top:0.6rem">→ vault validates · signs · syncs agent skill dirs</div>
-            <div class="dim">source: <a href="${esc(s.sourceUrl)}" style="color:inherit">${esc(REPO)}</a></div>
+        <div class="skill-package-top">
+          <div class="skill-package-intro">
+            <span class="explorer-mark" aria-hidden="true">${esc(explorerMark(s.name))}</span>
+            <div><p class="explorer-kicker">${esc(s.provenance)} package · ${esc(s.category)}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.summary)}</p></div>
           </div>
+          <aside class="skill-install-card">
+            <span>Pinned install</span><code>${esc(s.cliInstall)}</code>
+            <div><button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy install</button><a class="btn btn-ghost" href="${esc(s.rawSourceUrl)}" rel="noopener">Raw</a></div>
+          </aside>
         </div>
+        <dl class="skill-facts">
+          <div><dt>Version</dt><dd>v${esc(s.version)}</dd></div>
+          <div><dt>Provenance</dt><dd>${esc(s.provenance)}</dd></div>
+          <div><dt>Targets</dt><dd>${esc((s.agents?.length ? s.agents : ["general"]).join(", "))}</dd></div>
+          <div><dt>Bundle</dt><dd>${s.bundleFileCount} files · ${esc(s.resourceCount)} resources${s.runnable ? " · runnable" : ""}</dd></div>
+        </dl>
+        <div class="meta skill-meta">${tags}<span class="badge">${esc(s.provenance)}</span>${featuredBadge}</div>
+        <section class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package resources</h2></div><a href="${esc(s.sourceUrl)}" rel="noopener">View source</a></div><div class="skill-resource-grid">${resourceTiles}</div></section>
       </div>
     </section>
     <section>
       <div class="wrap prose">
 ${s.bodyHtml}
 ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
-        <h2>Package</h2>
-        <p class="muted">Version <code>${esc(s.version)}</code>
-        · package-source pin <code>${esc(shortPackageSourcePin)}</code>
-        · SSOT <code>skills/${esc(s.name)}/</code> on GitHub
-        ${s.agents?.length ? ` · agents: ${esc((s.agents || []).join(", "))}` : ""}</p>
       </div>
     </section>`;
   fs.writeFileSync(
@@ -912,12 +911,14 @@ const explorerData = {
     tags: s.tags,
     agents: s.agents,
     featured: s.featured,
+    version: s.version,
     provenance: s.provenance,
     resourceCount: s.resourceCount,
     runnable: s.runnable,
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
+    rawSourceUrl: s.rawSourceUrl,
     packageSourcePin,
   })),
 };
@@ -942,16 +943,8 @@ function fallbackExplorerCard(skill) {
   </header>
   <p class="explorer-card-summary">${esc(skill.summary)}</p>
   <div class="explorer-agent-row" aria-label="Agent targets">${explorerAgentPills(skill)}</div>
-  <footer class="explorer-card-footer"><span>${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</span><a href="/skills/${esc(skill.name)}/">Browse the package <span aria-hidden="true">→</span></a></footer>
+  <footer class="explorer-card-footer"><span>v${esc(skill.version)} · ${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</span><div><a href="${esc(skill.rawSourceUrl)}" rel="noopener">Raw</a><button type="button" class="explorer-copy" data-copy="${esc(skill.cliInstall)}">Copy install</button></div></footer>
 </article>`;
-}
-
-function fallbackExplorerDetail(skill) {
-  return `<div class="explorer-detail-head"><span class="explorer-mark" aria-hidden="true">${esc(explorerMark(skill.name))}</span><div><p class="explorer-kicker">selected package · ${esc(skill.provenance)} · ${esc(skill.category)}</p><h2>${esc(skill.title || skill.name)}</h2></div></div>
-  <p>${esc(skill.description || skill.summary)}</p>
-  <dl class="explorer-facts"><div><dt>Targets</dt><dd>${esc((skill.agents?.length ? skill.agents : ["general"]).join(", "))}</dd></div><div><dt>Bundle</dt><dd>${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</dd></div><div><dt>Provenance</dt><dd>${esc(skill.provenance)}</dd></div></dl>
-  <div class="explorer-install"><span>Pinned AutoVault install</span><code>${esc(skill.cliInstall)}</code><button type="button" class="btn btn-ghost explorer-copy" data-copy="${esc(skill.cliInstall)}">Copy install</button></div>
-  <div class="cta-row"><a class="btn btn-primary" href="${esc(skill.storyUrl)}">Read full story</a><a class="btn btn-ghost" href="${esc(skill.sourceUrl)}" rel="noopener">View source</a></div>`;
 }
 
 const fallbackRows = publicSkills.map(fallbackExplorerCard).join("\n");
@@ -967,7 +960,7 @@ fs.writeFileSync(
     <section class="hero catalog-hero"><div class="wrap">
       <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · package source ${esc(shortPackageSourcePin)}</div>
       <h1>Skills Explorer</h1>
-      <p class="lede">Filter the public shelf, inspect the package, then copy a pinned install. Every result remains a real story page.</p>
+      <p class="lede">A public package directory. Scan the bundle, copy a pinned install, or open the package when you need the deeper notes.</p>
     </div></section>
     <section class="catalog-body"><div class="wrap">
       <div class="explorer" data-catalog-explorer>
@@ -983,10 +976,7 @@ fs.writeFileSync(
           <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
           <p class="section-note" data-explorer-count aria-live="polite">${publicSkills.length} skills</p>
         </form>
-        <div class="explorer-main">
-          <div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div>
-          <aside class="explorer-detail panel" data-explorer-detail aria-live="polite">${fallbackExplorerDetail(firstSkill)}</aside>
-        </div>
+        <div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div>
       </div>
     </div></section>
     <script id="explorer-data" type="application/json">${jsonForScript(explorerData)}</script>
