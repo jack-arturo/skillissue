@@ -216,7 +216,9 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(explorer, /class="explorer-card"/);
     assert.match(explorer, /data-explorer-card/);
     assert.match(explorer, /data-explorer-mark/);
-    assert.match(explorer, /Browse the package/);
+    assert.match(explorer, />Raw</);
+    assert.match(explorer, /Copy install/);
+    assert.doesNotMatch(explorer, /data-explorer-detail/);
     assert.match(explorer, /public package · mixed/);
     assert.match(explorer, /\\u003c/);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", explorerAsset)), true);
@@ -228,6 +230,10 @@ test("strict build exposes only public skills and writes canonical redirects", (
     const linkedStory = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
     assert.match(linkedStory, /<a href="\/skills\/html-asset-renderer\/">HTML Asset Renderer<\/a>/);
     assert.doesNotMatch(linkedStory, /\.\.\/html-asset-renderer\/story\.md/);
+    const browserHandPage = fs.readFileSync(path.join(siteDir, "skills", "browser-hand", "index.html"), "utf8");
+    assert.match(browserHandPage, /class="skill-package"/);
+    assert.match(browserHandPage, /class="skill-resources"/);
+    assert.match(browserHandPage, /Pinned install/);
     const deployment = metadata.skills.find((skill) => skill.name === "cloudflare-commerce-deploy");
     const design = metadata.skills.find((skill) => skill.name === "brand-bible-author");
     assert.equal(deployment.category, "deployment");
