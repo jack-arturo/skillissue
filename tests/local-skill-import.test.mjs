@@ -12,6 +12,22 @@ const publicationPath = path.join(root, "catalog", "autovault-publication.json")
 const auditScript = path.join(root, "scripts", "audit-local-skills.mjs");
 const importScript = path.join(root, "scripts", "import-local-skills.mjs");
 const approved = "autovault-brand-system";
+const existingPublic = [
+  "automem", "autovault-skill", "awtrix-board", "babysit", "browser-hand",
+  "cli-installer-ux", "cloudflare-commerce-deploy", "cloudflare-emdash-cms-deploy",
+  "cloudflare-lead-capture", "cloudflare-ops", "commit-message", "docs-screenshot-packager",
+  "entity-dossier", "flashspace", "home-assistant-operator", "html-asset-renderer",
+  "jacks-writing-style", "long-haul-parallel-repair", "mcp-builder", "mcp-registry-maintainer",
+  "pirsch-analytics-bootstrap", "raycast", "resend-cli", "skill-author", "triage-autohub-runtime",
+].sort();
+const admittedPublic = [
+  "autovault-brand-system", "award-travel-research", "brand-bible-author", "bubble-tea-tui-builder",
+  "building-emdash-site", "ci-cost-audit", "clerk-cloudflare-auth", "clerk-cloudflare-commerce-bootstrap",
+  "context-engineering-audit", "creating-plugins", "elevenlabs-automem-memory", "emdash-cli",
+  "midjourney-iteration", "phala-gpu-tee-deploy", "quest-passthrough-camera-capture",
+  "repo-demo-video-director", "repo-demo-video-publisher", "stripe-commerce-checkout", "tui-design",
+  "unity-ai-collaboration", "unity-quest-build", "video-toolkit", "wordpress-theme-to-emdash",
+].sort();
 
 function fixture() {
   const directory = fs.mkdtempSync(path.join(os.tmpdir(), "skillissue-local-skills-"));
@@ -111,6 +127,14 @@ test("unsafe roots and entries fail closed, and overwrite requires an explicit f
     assert.notEqual(symlink.status, 0);
     assert.match(symlink.stderr, /symlink/i);
     fs.rmSync(path.join(bundle, "linked.txt"));
+    fs.symlinkSync(path.join(bundle, "unsafe.txt"), path.join(bundle, ".autovault-link"));
+    const metadataSymlink = spawnSync(process.execPath, [auditScript, "--source", source, "--skill", approved], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    assert.notEqual(metadataSymlink.status, 0);
+    assert.match(metadataSymlink.stderr, /symlink/i);
+    fs.rmSync(path.join(bundle, ".autovault-link"));
     const special = path.join(bundle, "named-pipe");
     execFileSync("mkfifo", [special]);
     const specialFile = spawnSync(process.execPath, [auditScript, "--source", source, "--skill", approved], {
@@ -120,6 +144,15 @@ test("unsafe roots and entries fail closed, and overwrite requires an explicit f
     assert.notEqual(specialFile.status, 0);
     assert.match(specialFile.stderr, /special file/i);
     fs.rmSync(special);
+    const metadataSpecial = path.join(bundle, ".autovault-pipe");
+    execFileSync("mkfifo", [metadataSpecial]);
+    const metadataSpecialFile = spawnSync(process.execPath, [auditScript, "--source", source, "--skill", approved], {
+      cwd: root,
+      encoding: "utf8",
+    });
+    assert.notEqual(metadataSpecialFile.status, 0);
+    assert.match(metadataSpecialFile.stderr, /special file/i);
+    fs.rmSync(metadataSpecial);
 
     assert.throws(
       () => run(importScript, ["--source", source, "--skill", approved, "--destination", "../outside"]),
@@ -135,6 +168,18 @@ test("unsafe roots and entries fail closed, and overwrite requires an explicit f
       () => run(importScript, ["--source", source, "--skill", approved, "--destination", destination, "--apply"]),
       /already exists.*--overwrite/i,
     );
+    const dryReplacement = JSON.parse(run(importScript, [
+      "--source", source,
+      "--skill", approved,
+      "--destination", destination,
+      "--overwrite",
+    ]));
+    assert.equal(dryReplacement.dryRun, true);
+    assert.deepEqual(dryReplacement.actions[0], {
+      operation: "replace",
+      package: approved,
+      path: `${destination}/${approved}`,
+    });
     assert.doesNotThrow(() => run(importScript, [
       "--source", source,
       "--skill", approved,
@@ -142,6 +187,20 @@ test("unsafe roots and entries fail closed, and overwrite requires an explicit f
       "--apply",
       "--overwrite",
     ]));
+
+    const overlappingSource = path.join(root, destination, "vault");
+    makeBundle(overlappingSource);
+    assert.throws(
+      () => run(importScript, [
+        "--source", overlappingSource,
+        "--skill", approved,
+        "--destination", destination,
+        "--apply",
+        "--overwrite",
+      ]),
+      /source root.*overlaps.*destination/i,
+    );
+    assert.equal(fs.existsSync(path.join(overlappingSource, approved, "SKILL.md")), true);
 
     const sourceRootSymlink = path.join(directory, "source-link");
     fs.symlinkSync(source, sourceRootSymlink);
@@ -155,14 +214,51 @@ test("unsafe roots and entries fail closed, and overwrite requires an explicit f
   }
 });
 
-test("release manifest is the approved 23-package public cohort", () => {
+test("source roots cannot equal or overlap an applied destination", () => {
+  const base = path.join(root, "tests", `.local-skill-overlap-${process.pid}-${Date.now()}`);
+  try {
+    const equalRoot = path.join(base, "equal");
+    makeBundle(equalRoot);
+    const ancestorRoot = path.join(base, "ancestor");
+    makeBundle(ancestorRoot);
+    const descendantDestination = path.join(base, "descendant");
+    const descendantRoot = path.join(descendantDestination, "vault");
+    makeBundle(descendantRoot);
+
+    for (const [source, destination] of [
+      [equalRoot, path.relative(root, equalRoot)],
+      [ancestorRoot, path.relative(root, path.join(ancestorRoot, "destination"))],
+      [descendantRoot, path.relative(root, descendantDestination)],
+    ]) {
+      assert.throws(
+        () => run(importScript, [
+          "--source", source,
+          "--skill", approved,
+          "--destination", destination,
+          "--apply",
+          "--overwrite",
+        ]),
+        /source root.*overlaps.*destination/i,
+      );
+    }
+  } finally {
+    safelyRemove(base);
+  }
+});
+
+test("release manifest exactly admits the approved cohort and preserves registry policy", () => {
   const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   const publication = JSON.parse(fs.readFileSync(publicationPath, "utf8"));
   assert.equal(manifest.schemaVersion, 1);
-  assert.equal(manifest.packages.length, 23);
-  assert.equal(new Set(manifest.packages).size, 23);
-  for (const name of manifest.packages) {
+  assert.deepEqual(manifest.packages.slice().sort(), admittedPublic);
+  for (const name of admittedPublic) {
     assert.deepEqual(publication.skills[name], { visibility: "public" }, `${name} is public`);
   }
+  const publicNames = Object.entries(publication.skills)
+    .filter(([, entry]) => entry.visibility === "public")
+    .map(([name]) => name)
+    .sort();
+  assert.deepEqual(publicNames, [...existingPublic, ...admittedPublic].sort());
   assert.deepEqual(publication.skills["codex-review"], { visibility: "hidden", replacement: "babysit" });
+  assert.deepEqual(publication.skills["dev-browser"], { visibility: "hidden", replacement: "browser-hand" });
 });

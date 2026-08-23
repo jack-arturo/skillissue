@@ -113,19 +113,18 @@ function auditTree(bundleRoot) {
       const relative = relativeDirectory ? path.posix.join(relativeDirectory, entry) : entry;
       const absolute = path.join(directory, entry);
       beneath(bundleRoot, absolute, `Entry ${relative}`);
+      const stat = fs.lstatSync(absolute);
+      if (stat.isSymbolicLink()) fail(`Rejected symlink: ${relative}`);
+      if (!stat.isDirectory() && !stat.isFile()) fail(`Rejected special file: ${relative}`);
       if (entry.startsWith(".autovault-")) {
         omitted.push(relative);
         continue;
       }
-      const stat = fs.lstatSync(absolute);
-      if (stat.isSymbolicLink()) fail(`Rejected symlink: ${relative}`);
       if (stat.isDirectory()) {
         directories.push({ path: relative, mode: stat.mode & 0o777 });
         visit(absolute, relative);
-      } else if (stat.isFile()) {
-        files.push({ path: relative, mode: stat.mode & 0o777 });
       } else {
-        fail(`Rejected special file: ${relative}`);
+        files.push({ path: relative, mode: stat.mode & 0o777 });
       }
     }
   }

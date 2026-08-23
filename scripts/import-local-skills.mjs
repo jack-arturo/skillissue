@@ -61,7 +61,6 @@ function parseImportArgs(argv) {
     }
   }
   Object.assign(args, parseAuditArgs(baseArgs));
-  if (args.overwrite && !args.apply) fail("--overwrite requires --apply");
   return args;
 }
 
@@ -74,9 +73,33 @@ function packageDestination(destination, packageName) {
   return output;
 }
 
-function buildActions(audit, destination) {
+function canonicalizePath(candidate) {
+  const missing = [];
+  let current = candidate;
+  while (true) {
+    try {
+      return path.join(fs.realpathSync(current), ...missing.reverse());
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+      const parent = path.dirname(current);
+      if (parent === current) throw error;
+      missing.push(path.basename(current));
+      current = parent;
+    }
+  }
+}
+
+function pathsOverlap(left, right) {
+  const relative = path.relative(left, right);
+  return relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
+function buildActions(audit, destination, replacements) {
   const actions = [];
   for (const item of audit.packages) {
+    if (replacements.has(item.name)) {
+      actions.push({ operation: "replace", package: item.name, path: `${destination.relative}/${item.name}` });
+    }
     for (const directory of item.directories) {
       actions.push({ operation: "mkdir", package: item.name, path: `${destination.relative}/${item.name}/${directory}` });
     }
@@ -111,26 +134,33 @@ function copyPackage(item, output) {
 }
 
 export function importLocalSkills({ source, skills, destination: rawDestination = "skills", apply = false, overwrite = false } = {}) {
-  if (overwrite && !apply) fail("--overwrite requires --apply");
   const destination = safeDestination(rawDestination);
   const audit = auditLocalSkills({ source, skills });
+  const resolvedDestination = canonicalizePath(destination.absolute);
+  if (pathsOverlap(audit.sourceRoot, resolvedDestination) || pathsOverlap(resolvedDestination, audit.sourceRoot)) {
+    fail("Source root overlaps the repository destination");
+  }
   const outputs = audit.packages.map((item) => ({ item, output: packageDestination(destination, item.name) }));
+  const replacements = new Set();
   for (const { item, output } of outputs) {
+    let exists = false;
     try {
       if (fs.lstatSync(output).isSymbolicLink()) fail(`Destination must not be a symlink: ${item.name}`);
+      exists = true;
     } catch (error) {
       if (error.code !== "ENOENT") throw error;
     }
-    if (fs.existsSync(output) && !overwrite) {
+    if (exists && !overwrite) {
       fail(`Destination already exists for ${item.name}; rerun with --apply --overwrite to replace it`);
     }
+    if (exists) replacements.add(item.name);
   }
   const result = {
     dryRun: !apply,
     sourceRoot: audit.sourceRoot,
     destination: destination.relative,
     packages: audit.packages.map(({ source: ignored, ...item }) => item),
-    actions: buildActions(audit, destination),
+    actions: buildActions(audit, destination, replacements),
   };
   if (!apply) return result;
 
@@ -143,7 +173,7 @@ export function importLocalSkills({ source, skills, destination: rawDestination 
 }
 
 function help() {
-  return `Usage: npm run skills:import -- [--source <directory>] [--skill <approved-name>] [--destination <relative-dir>] [--apply] [--overwrite] [--json]\n\nThe default is a dry run. --apply copies only audited release-manifest packages. Existing packages are refused unless --apply --overwrite is supplied.`;
+  return `Usage: npm run skills:import -- [--source <directory>] [--skill <approved-name>] [--destination <relative-dir>] [--apply] [--overwrite] [--json]\n\nThe default is a dry run. Existing packages are refused unless --overwrite is supplied; replacement happens only with --apply --overwrite.`;
 }
 
 function render(result) {
