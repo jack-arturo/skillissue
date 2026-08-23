@@ -10,6 +10,11 @@ export function resourceKind(filePath = "") {
   return "file";
 }
 
+export function packageTabForHash(hash = "", tabs = []) {
+  const id = String(hash).replace(/^#/, "");
+  return tabs.includes(id) ? id : "overview";
+}
+
 function resourceGroup(filePath = "") {
   if (filePath === "SKILL.md") return "root";
   const group = String(filePath).split("/")[0];
@@ -39,10 +44,12 @@ function initPackageDetail() {
   const panels = [...root.querySelectorAll("[data-package-panel]")];
   const preview = root.querySelector("[data-package-preview]");
   let selectedPath = files[0]?.path || "";
+  let previewObjectUrl = "";
 
-  const setTab = (id) => {
+  const setTab = (id, { updateHash = false } = {}) => {
     tabs.forEach((tab) => tab.setAttribute("aria-selected", String(tab.dataset.packageTab === id)));
     panels.forEach((panel) => { panel.hidden = panel.dataset.packagePanel !== id; });
+    if (updateHash && window.location.hash !== `#${id}`) window.location.hash = id;
   };
   const select = async (path) => {
     const file = files.find((item) => item.path === path);
@@ -55,30 +62,36 @@ function initPackageDetail() {
     const raw = preview.querySelector("[data-package-preview-raw]");
     raw.href = file.url;
     const content = preview.querySelector("[data-package-preview-content]");
-    if ((file.kind || resourceKind(file.path)) === "svg") {
-      content.replaceChildren();
-      const image = document.createElement("img");
-      image.src = file.url;
-      image.alt = file.title || file.path;
-      image.className = "package-preview-image";
-      content.append(image);
-      return;
-    }
     content.textContent = `Loading ${file.path}…`;
     try {
       const response = await fetch(file.url);
       if (!response.ok) throw new Error(String(response.status));
       const source = await response.text();
-      if (selectedPath === path) content.textContent = source;
+      if (selectedPath !== path) return;
+      if (previewObjectUrl) URL.revokeObjectURL(previewObjectUrl);
+      previewObjectUrl = "";
+      if ((file.kind || resourceKind(file.path)) === "svg") {
+        content.replaceChildren();
+        const image = document.createElement("img");
+        previewObjectUrl = URL.createObjectURL(new Blob([source], { type: "image/svg+xml" }));
+        image.src = previewObjectUrl;
+        image.alt = file.title || file.path;
+        image.className = "package-preview-image";
+        content.append(image);
+      } else {
+        content.textContent = source;
+      }
     } catch {
       if (selectedPath === path) content.textContent = "Preview unavailable. Use the raw link to inspect this file.";
     }
   };
 
   root.dataset.tabsReady = "";
-  tabs.forEach((tab) => tab.addEventListener("click", () => setTab(tab.dataset.packageTab)));
+  const tabIds = tabs.map((tab) => tab.dataset.packageTab);
+  tabs.forEach((tab) => tab.addEventListener("click", () => setTab(tab.dataset.packageTab, { updateHash: true })));
   fileButtons.forEach((button) => button.addEventListener("click", () => select(button.dataset.packageFile)));
-  setTab("overview");
+  window.addEventListener("hashchange", () => setTab(packageTabForHash(window.location.hash, tabIds)));
+  setTab(packageTabForHash(window.location.hash, tabIds));
   if (selectedPath) select(selectedPath);
 }
 

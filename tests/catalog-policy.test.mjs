@@ -261,9 +261,22 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
     assert.equal(fs.existsSync(path.join(siteDir, "assets", detailAsset)), true);
     assert.equal(
-      fs.readFileSync(path.join(siteDir, "bundles", "babysit", "references", "pr-labels.md"), "utf8"),
+      fs.readFileSync(path.join(siteDir, "bundles", "babysit", "references", "pr-labels.md.txt"), "utf8"),
       fs.readFileSync(path.join(root, "skills", "babysit", "references", "pr-labels.md"), "utf8"),
     );
+    assert.equal(
+      fs.existsSync(path.join(siteDir, "bundles", "cloudflare-lead-capture", "templates", "project", "snippets", "lead-form.html")),
+      false,
+      "active HTML is never served as a same-origin raw bundle file",
+    );
+    assert.equal(
+      fs.readFileSync(path.join(siteDir, "bundles", "cloudflare-lead-capture", "templates", "project", "snippets", "lead-form.html.txt"), "utf8"),
+      fs.readFileSync(path.join(root, "skills", "cloudflare-lead-capture", "templates", "project", "snippets", "lead-form.html"), "utf8"),
+      "raw bundle sources are served as inert text",
+    );
+    const brandPage = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
+    assert.match(brandPage, /assets\/brand-mark\.svg\.txt/);
+    assert.match(brandPage, /<span class="package-file-kind">svg<\/span>/);
     const babysit = metadata.skills.find((skill) => skill.name === "babysit");
     const publishedBabysitBytes = publicBundleFiles(path.join(root, "skills", "babysit"))
       .filter((file) => file.path !== "story.md")

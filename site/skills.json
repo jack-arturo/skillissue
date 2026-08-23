@@ -2082,12 +2082,12 @@
         },
         {
           "path": "assets/brand-mark-animated.svg",
-          "kind": "resource",
+          "kind": "svg",
           "bytes": 4146
         },
         {
           "path": "assets/brand-mark.svg",
-          "kind": "resource",
+          "kind": "svg",
           "bytes": 763
         },
         {
@@ -2918,7 +2918,7 @@
         },
         {
           "path": "scaffold/public/favicon.svg",
-          "kind": "resource",
+          "kind": "svg",
           "bytes": 257
         },
         {

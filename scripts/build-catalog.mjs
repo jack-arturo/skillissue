@@ -185,6 +185,7 @@ function hasRunnableBundleMember(files) {
 function bundleFileKind(file) {
   const ext = path.extname(file.path).toLowerCase();
   if (/^scripts\//.test(file.path) || (file.mode & 0o111) !== 0) return "script";
+  if (ext === ".svg") return "svg";
   if ([".md", ".mdx", ".txt"].includes(ext)) return "reference";
   if ([".json", ".yaml", ".yml", ".toml"].includes(ext)) return "config";
   return "resource";
@@ -890,7 +891,10 @@ fs.writeFileSync(path.join(siteDir, "assets", explorerAssetName), explorerSource
 fs.writeFileSync(path.join(siteDir, "assets", detailAssetName), detailSource);
 for (const skill of publicSkills) {
   for (const file of skill.publishedBundleFiles) {
-    const target = path.join(siteDir, "bundles", skill.name, file.path);
+    // Raw package members are always emitted as text. A package can contain
+    // HTML or SVG, and exposing either at its native extension would make a
+    // same-origin "raw" link executable instead of inspectable.
+    const target = path.join(siteDir, "bundles", skill.name, `${file.path}.txt`);
     fs.mkdirSync(path.dirname(target), { recursive: true });
     fs.copyFileSync(file.absolute, target);
   }
@@ -982,7 +986,7 @@ for (const s of publicSkills) {
     title: bundleFileTitle(file),
     summary: bundleFileSummary(file),
     bytes: fs.statSync(file.absolute).size,
-    url: `/bundles/${s.name}/${file.path}`,
+    url: `/bundles/${s.name}/${file.path}.txt`,
   }));
   const groupLabels = { root: "Skill root", references: "Reference docs", assets: "Assets", agents: "Agent metadata", bin: "Commands", scripts: "Scripts", other: "Other files" };
   const resourceTree = ["root", "references", "assets", "agents", "bin", "scripts", "other"].map((group) => {
