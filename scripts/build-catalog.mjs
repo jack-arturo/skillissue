@@ -146,13 +146,32 @@ function normalList(value) {
 function frontmatterMap(text, key) {
   const match = text.match(new RegExp(`^${key}:\\s*\\n((?:[ \\t]+[^\\n]+\\n?)*)`, "m"));
   if (!match) return {};
-  return Object.fromEntries(
-    match[1]
-      .split("\n")
-      .map((line) => line.match(/^\s+([A-Za-z0-9_-]+):\s*(.+)$/))
-      .filter(Boolean)
-      .map(([, field, value]) => [field, value.trim().replace(/^['"]|['"]$/g, "")]),
-  );
+  const lines = match[1].split("\n");
+  const result = {};
+  for (let index = 0; index < lines.length; index++) {
+    const entry = lines[index].match(/^\s+([A-Za-z0-9_-]+):\s*(.*)$/);
+    if (!entry) continue;
+    const [, field, value] = entry;
+    if (value.trim()) {
+      result[field] = value.trim().replace(/^['"]|['"]$/g, "");
+      continue;
+    }
+    const list = [];
+    while (index + 1 < lines.length && /^\s+-\s+/.test(lines[index + 1])) {
+      index++;
+      list.push(lines[index].replace(/^\s+-\s+/, "").trim().replace(/^['"]|['"]$/g, ""));
+    }
+    if (list.length) result[field] = list;
+  }
+  return result;
+}
+
+function frontmatterObjectListValues(text, key, field) {
+  const match = text.match(new RegExp(`^${key}:\\s*\\n([\\s\\S]*?)(?=^[A-Za-z0-9_-]+:|^---|(?![\\s\\S]))`, "m"));
+  if (!match) return [];
+  return [...match[1].matchAll(new RegExp(`^\\s*-\\s+${field}:\\s*(.+)$`, "gm"))]
+    .map((entry) => entry[1].trim().replace(/^['"]|['"]$/g, ""))
+    .filter(Boolean);
 }
 
 function hasRunnableBundleMember(files) {
@@ -770,7 +789,10 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   const resourceCount = resourceFiles.length;
   const runnable = hasRunnableBundleMember(resourceFiles);
   const capabilities = frontmatterMap(skillRaw, "capabilities");
-  const requiresSecrets = normalList(skillFm["requires-secrets"]);
+  const structuredSecretNames = frontmatterObjectListValues(skillRaw, "requires-secrets", "name");
+  const requiresSecrets = structuredSecretNames.length
+    ? structuredSecretNames
+    : normalList(skillFm["requires-secrets"]);
   const bundleSize = bundleBytes(bundleFiles);
   bundleSnapshots.push({
     name,
@@ -794,7 +816,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     provenance,
     source: provenance,
     license: skillFm.license || "MIT",
-    related: storyFm.related || [],
+    related: normalList(storyFm.related),
     first_used: storyFm.first_used || "",
     bodyHtml: mdToHtml(storyBody || `## ${name}\n\n${summary}`),
     skillSource: skillRaw,
@@ -829,6 +851,16 @@ publicSkills.sort((a, b) => {
   if (!!b.featured !== !!a.featured) return b.featured ? 1 : -1;
   return a.name.localeCompare(b.name);
 });
+
+const inboundReferences = new Map(publicSkills.map((skill) => [skill.name, 0]));
+for (const skill of publicSkills) {
+  for (const relatedName of skill.related) {
+    if (inboundReferences.has(relatedName)) {
+      inboundReferences.set(relatedName, inboundReferences.get(relatedName) + 1);
+    }
+  }
+}
+for (const skill of publicSkills) skill.references = inboundReferences.get(skill.name) || 0;
 
 if (strict && errors.length) {
   console.error("STRICT FAIL:\n" + errors.map((e) => " - " + e).join("\n"));
@@ -908,7 +940,7 @@ const skillsJson = {
     source: s.source,
     license: s.license,
     firstUsed: s.first_used,
-    references: s.related.length,
+    references: s.references,
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
@@ -1033,7 +1065,7 @@ const explorerData = {
     source: s.source,
     license: s.license,
     firstUsed: s.first_used,
-    references: s.related.length,
+    references: s.references,
     resourceCount: s.resourceCount,
     bundleFileCount: s.bundleFileCount,
     bundleSize: s.bundleSize,

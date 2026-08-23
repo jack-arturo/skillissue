@@ -204,6 +204,12 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(browserHand.cliInstall, new RegExp(`@${packageSourcePin}:skills/browser-hand/SKILL\\.md`));
     assert.match(browserHand.sourceUrl, new RegExp(`/blob/${packageSourcePin}/skills/browser-hand/SKILL\\.md`));
     assert.match(browserHand.rawSourceUrl, new RegExp(`raw.githubusercontent.com/${metadata.repo}/${packageSourcePin}/skills/browser-hand/SKILL\\.md`));
+    const stripeCheckout = metadata.skills.find((skill) => skill.name === "stripe-commerce-checkout");
+    const awtrixBoard = metadata.skills.find((skill) => skill.name === "awtrix-board");
+    const cloudflareOps = metadata.skills.find((skill) => skill.name === "cloudflare-ops");
+    assert.deepEqual(stripeCheckout.requiresSecrets, ["STRIPE_SECRET_KEY", "STRIPE_WEBHOOK_SECRET"]);
+    assert.deepEqual(awtrixBoard.capabilities.tools, ["Bash"]);
+    assert.equal(cloudflareOps.references, 6, "reference sort uses inbound public links");
 
     const explorer = fs.readFileSync(path.join(siteDir, "skills", "index.html"), "utf-8");
     assert.match(explorer, /data-catalog-explorer/);

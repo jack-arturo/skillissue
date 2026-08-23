@@ -86,7 +86,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-04",
-      "references": 2,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/automem/SKILL.md",
@@ -128,7 +128,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-04",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-skill/SKILL.md",
@@ -172,7 +172,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/long-haul-parallel-repair/SKILL.md",
@@ -238,7 +238,7 @@
         "tools": "[Bash, Read]"
       },
       "requiresSecrets": [
-        "name: AUTOMEM_API_KEY"
+        "AUTOMEM_API_KEY"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -265,7 +265,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/pirsch-analytics-bootstrap/SKILL.md",
@@ -283,7 +283,8 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: PIRSCH_CLIENT_ID"
+        "PIRSCH_CLIENT_ID",
+        "PIRSCH_CLIENT_SECRET"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -468,7 +469,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 2,
+      "references": 6,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md",
@@ -518,7 +519,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 2,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-commerce-deploy/SKILL.md",
@@ -583,7 +584,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-emdash-cms-deploy/SKILL.md",
@@ -659,7 +660,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md",
@@ -688,7 +689,7 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: COMFYUI_BEARER_TOKEN"
+        "COMFYUI_BEARER_TOKEN"
       ],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -780,7 +781,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 1,
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/commit-message/SKILL.md",
@@ -826,7 +827,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-07",
-      "references": 3,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md",
@@ -910,7 +911,10 @@
       "resources": [],
       "capabilities": {
         "network": "false",
-        "filesystem": "readonly"
+        "filesystem": "readonly",
+        "tools": [
+          "Bash"
+        ]
       },
       "requiresSecrets": [],
       "runnable": false,
@@ -938,7 +942,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-07",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/raycast/SKILL.md",
@@ -968,7 +972,11 @@
       ],
       "capabilities": {
         "network": "false",
-        "filesystem": "readwrite"
+        "filesystem": "readwrite",
+        "tools": [
+          "Bash",
+          "Python"
+        ]
       },
       "requiresSecrets": [],
       "runnable": false,
@@ -1016,7 +1024,10 @@
       ],
       "capabilities": {
         "network": "true",
-        "filesystem": "readonly"
+        "filesystem": "readonly",
+        "tools": [
+          "Bash"
+        ]
       },
       "requiresSecrets": [],
       "runnable": true,
@@ -1093,7 +1104,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-07",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/triage-autohub-runtime/SKILL.md",
@@ -1118,7 +1129,11 @@
       ],
       "capabilities": {
         "network": "true",
-        "filesystem": "readwrite"
+        "filesystem": "readwrite",
+        "tools": [
+          "Bash",
+          "Read"
+        ]
       },
       "requiresSecrets": [],
       "runnable": true,
@@ -1491,7 +1506,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 1,
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/html-asset-renderer/SKILL.md",
@@ -1541,7 +1556,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/midjourney-iteration/SKILL.md",
@@ -1620,7 +1635,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/tui-design/SKILL.md",
@@ -1674,7 +1689,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/docs-screenshot-packager/SKILL.md",
@@ -1759,7 +1774,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-05",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/jacks-writing-style/SKILL.md",
@@ -1824,7 +1839,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md",
@@ -1867,7 +1882,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-06",
-      "references": 1,
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cli-installer-ux/SKILL.md",
@@ -1932,7 +1947,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/context-engineering-audit/SKILL.md",
@@ -1992,7 +2007,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md",
@@ -2010,7 +2025,7 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: CLERK_SECRET_KEY"
+        "CLERK_SECRET_KEY"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2038,7 +2053,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-brand-system/SKILL.md",
@@ -2133,7 +2148,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 3,
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
@@ -2151,7 +2166,10 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: CLOUDFLARE_API_TOKEN"
+        "CLOUDFLARE_API_TOKEN",
+        "CLERK_SECRET_KEY",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2178,7 +2196,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/ci-cost-audit/SKILL.md",
@@ -2381,7 +2399,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md",
@@ -2410,7 +2428,8 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: STRIPE_SECRET_KEY"
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2437,7 +2456,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/award-travel-research/SKILL.md",
@@ -2454,7 +2473,7 @@
         "filesystem": "readonly"
       },
       "requiresSecrets": [
-        "name: SEATS_AERO_API_KEY"
+        "SEATS_AERO_API_KEY"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2562,7 +2581,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 1,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/elevenlabs-automem-memory/SKILL.md",
@@ -2580,7 +2599,8 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: ELEVENLABS_API_KEY"
+        "ELEVENLABS_API_KEY",
+        "AUTOMEM_API_TOKEN"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2609,7 +2629,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 4,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/building-emdash-site/SKILL.md",
@@ -2761,7 +2781,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/emdash-cli/SKILL.md",
@@ -2785,7 +2805,7 @@
         "tools": "[Bash, Read, Edit]"
       },
       "requiresSecrets": [
-        "name: EMDASH_TOKEN"
+        "EMDASH_TOKEN"
       ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
@@ -2814,7 +2834,7 @@
       "source": "house",
       "license": "MIT",
       "firstUsed": "2026-08",
-      "references": 2,
+      "references": 0,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/wordpress-theme-to-emdash/SKILL.md",
