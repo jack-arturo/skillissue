@@ -48,9 +48,14 @@ export function filterSkills(skills, state = {}) {
 }
 
 export function normalizeExplorerState(skills, state = {}) {
-  const visible = filterSkills(skills, state);
+  const categories = new Set(skills.map((skill) => skill.category).filter(Boolean));
+  const agents = new Set(skills.flatMap((skill) => skill.agents || []).filter(Boolean));
+  const normalized = { ...state };
+  if (Object.hasOwn(state, "category")) normalized.category = categories.has(state.category) ? state.category : "";
+  if (Object.hasOwn(state, "agent")) normalized.agent = agents.has(state.agent) ? state.agent : "";
+  const visible = filterSkills(skills, normalized);
   return {
-    ...state,
+    ...normalized,
     skill: visible.some((skill) => skill.name === state.skill)
       ? state.skill
       : (visible[0]?.name || ""),
@@ -59,6 +64,14 @@ export function normalizeExplorerState(skills, state = {}) {
 
 export function selectionChanged(previousState = {}, nextState = {}) {
   return previousState.skill !== nextState.skill;
+}
+
+export function shouldRevealDetail(viewportWidth) {
+  return Number.isFinite(viewportWidth) && viewportWidth <= 640;
+}
+
+export function isModifiedActivation(event = {}) {
+  return Boolean(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey);
 }
 
 function option(select, value, label) {
@@ -101,6 +114,7 @@ function initExplorer() {
   const results = root.querySelector("[data-explorer-results]");
   const detail = root.querySelector("[data-explorer-detail]");
   results.setAttribute("role", "listbox");
+  detail.tabIndex = -1;
   const categories = [...new Set(skills.map((skill) => skill.category).filter(Boolean))].sort();
   const agents = [...new Set(skills.flatMap((skill) => skill.agents || []).filter(Boolean))].sort();
   categories.forEach((value) => option(controls.category, value, value));
@@ -161,6 +175,11 @@ function initExplorer() {
     source.textContent = "View package source";
     detail.append(title, description, meta, actions, source);
   }
+  function revealDetailOnNarrowViewport() {
+    if (!shouldRevealDetail(window.innerWidth)) return;
+    detail.focus({ preventScroll: true });
+    detail.scrollIntoView({ block: "start", behavior: "smooth" });
+  }
   function render() {
     const visible = filterSkills(skills, state);
     state = normalizeExplorerState(skills, state);
@@ -189,11 +208,12 @@ function initExplorer() {
       badge.textContent = `${skill.category} · ${skill.resourceCount || 0} resource${skill.resourceCount === 1 ? "" : "s"}`;
       row.append(name, summary, badge);
       row.addEventListener("click", (event) => {
-        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (isModifiedActivation(event)) return;
         event.preventDefault();
         state.skill = skill.name;
         updateUrl();
         render();
+        revealDetailOnNarrowViewport();
       });
       row.addEventListener("keydown", (event) => {
         if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
@@ -220,10 +240,11 @@ function initExplorer() {
     change();
   });
   Object.values(controls).forEach((control) => control.addEventListener(control === controls.q ? "input" : "change", change));
-  applyControls();
   const initialState = state;
+  state = normalizeExplorerState(skills, state);
+  applyControls();
   render();
-  if (selectionChanged(initialState, state)) updateUrl();
+  if (serializeExplorerState(initialState) !== serializeExplorerState(state)) updateUrl();
 }
 
 if (typeof document !== "undefined") initExplorer();

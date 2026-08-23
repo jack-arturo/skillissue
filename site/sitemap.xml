@@ -8,17 +8,17 @@
   <url><loc>https://skillissue.sh/changelog/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills.json</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/llms.txt</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://skillissue.sh/skills/long-haul-parallel-repair/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/skill-author/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/automem/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/autovault-skill/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/skills/long-haul-parallel-repair/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/entity-dossier/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/skills/pirsch-analytics-bootstrap/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/cloudflare-lead-capture/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/cloudflare-ops/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/cloudflare-commerce-deploy/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/phala-gpu-tee-deploy/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://skillissue.sh/skills/pirsch-analytics-bootstrap/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/babysit/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/commit-message/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/browser-hand/</loc><changefreq>weekly</changefreq></url>
@@ -26,16 +26,16 @@
   <url><loc>https://skillissue.sh/skills/raycast/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/awtrix-board/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/home-assistant-operator/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://skillissue.sh/skills/resend-cli/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/triage-autohub-runtime/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/skills/resend-cli/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/mcp-builder/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/mcp-registry-maintainer/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://skillissue.sh/skills/jacks-writing-style/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/brand-bible-author/</loc><changefreq>weekly</changefreq></url>
-  <url><loc>https://skillissue.sh/skills/docs-screenshot-packager/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/html-asset-renderer/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/midjourney-iteration/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/tui-design/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/skills/docs-screenshot-packager/</loc><changefreq>weekly</changefreq></url>
+  <url><loc>https://skillissue.sh/skills/jacks-writing-style/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/bubble-tea-tui-builder/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/cli-installer-ux/</loc><changefreq>weekly</changefreq></url>
   <url><loc>https://skillissue.sh/skills/context-engineering-audit/</loc><changefreq>weekly</changefreq></url>

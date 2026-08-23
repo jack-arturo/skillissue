@@ -6,6 +6,8 @@ import { execFileSync, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
+import { importLocalSkills } from "../scripts/import-local-skills.mjs";
+
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const manifestPath = path.join(root, "catalog", "local-skill-release.json");
 const publicationPath = path.join(root, "catalog", "autovault-publication.json");
@@ -264,6 +266,80 @@ test("source roots cannot equal or overlap an applied destination", () => {
     }
   } finally {
     safelyRemove(base);
+  }
+});
+
+test("failed replacement staging leaves the previous package intact", () => {
+  const { directory, source } = fixture();
+  const destination = `tests/.local-skill-transaction-${path.basename(directory)}`;
+  const output = path.join(root, destination, approved);
+  try {
+    makeBundle(source);
+    fs.mkdirSync(output, { recursive: true });
+    fs.writeFileSync(path.join(output, "SKILL.md"), "previous package\n");
+    const injectedFs = Object.create(fs);
+    injectedFs.chmodSync = (target, mode) => {
+      if (target.includes(".import-stage-") && target.endsWith("SKILL.md")) {
+        throw new Error("injected staging chmod failure");
+      }
+      return fs.chmodSync(target, mode);
+    };
+
+    assert.throws(
+      () => importLocalSkills({
+        source,
+        skills: [approved],
+        destination,
+        apply: true,
+        overwrite: true,
+        fileSystem: injectedFs,
+      }),
+      /injected staging chmod failure/,
+    );
+    assert.equal(fs.readFileSync(path.join(output, "SKILL.md"), "utf8"), "previous package\n");
+  } finally {
+    safelyRemove(path.join(root, destination));
+    safelyRemove(directory);
+  }
+});
+
+test("failed multi-package swap rolls every previous package back", () => {
+  const second = "award-travel-research";
+  const { directory, source } = fixture();
+  const destination = `tests/.local-skill-rollback-${path.basename(directory)}`;
+  const firstOutput = path.join(root, destination, approved);
+  const secondOutput = path.join(root, destination, second);
+  try {
+    makeBundle(source, approved);
+    makeBundle(source, second);
+    for (const [output, contents] of [[firstOutput, "previous first\n"], [secondOutput, "previous second\n"]]) {
+      fs.mkdirSync(output, { recursive: true });
+      fs.writeFileSync(path.join(output, "SKILL.md"), contents);
+    }
+    const injectedFs = Object.create(fs);
+    injectedFs.renameSync = (from, to) => {
+      if (from.includes(`.${second}.import-stage-`) && to === secondOutput) {
+        throw new Error("injected second-package rename failure");
+      }
+      return fs.renameSync(from, to);
+    };
+
+    assert.throws(
+      () => importLocalSkills({
+        source,
+        skills: [approved, second],
+        destination,
+        apply: true,
+        overwrite: true,
+        fileSystem: injectedFs,
+      }),
+      /injected second-package rename failure/,
+    );
+    assert.equal(fs.readFileSync(path.join(firstOutput, "SKILL.md"), "utf8"), "previous first\n");
+    assert.equal(fs.readFileSync(path.join(secondOutput, "SKILL.md"), "utf8"), "previous second\n");
+  } finally {
+    safelyRemove(path.join(root, destination));
+    safelyRemove(directory);
   }
 });
 

@@ -3,10 +3,12 @@ import test from "node:test";
 
 import {
   filterSkills,
+  isModifiedActivation,
   normalizeExplorerState,
   parseExplorerState,
   serializeExplorerState,
   selectionChanged,
+  shouldRevealDetail,
 } from "../scripts/catalog-explorer.js";
 
 const skills = [
@@ -81,4 +83,32 @@ test("Explorer state clears or selects a result before it reaches the URL", () =
     normalizeExplorerState(skills, { q: "does-not-exist", skill: "browser-hand" }),
     { q: "does-not-exist", skill: "" },
   );
+});
+
+test("Explorer state removes unknown option values before serializing visible controls", () => {
+  const normalized = normalizeExplorerState(skills, {
+    category: "unknown-category",
+    agent: "unknown-agent",
+    skill: "browser-hand",
+  });
+  assert.deepEqual(normalized, {
+    category: "",
+    agent: "",
+    skill: "browser-hand",
+  });
+  assert.equal(serializeExplorerState(normalized), "?skill=browser-hand");
+});
+
+test("only narrow interactive selections reveal the detail pane", () => {
+  assert.equal(shouldRevealDetail(640), true);
+  assert.equal(shouldRevealDetail(641), false);
+  assert.equal(shouldRevealDetail(undefined), false);
+});
+
+test("modifier-clicks pass through to canonical result navigation", () => {
+  assert.equal(isModifiedActivation({ metaKey: true }), true);
+  assert.equal(isModifiedActivation({ ctrlKey: true }), true);
+  assert.equal(isModifiedActivation({ shiftKey: true }), true);
+  assert.equal(isModifiedActivation({ altKey: true }), true);
+  assert.equal(isModifiedActivation({}), false);
 });

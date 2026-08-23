@@ -235,7 +235,7 @@ a.card { text-decoration: none; color: inherit; }
 .explorer-result span { color: var(--muted); font-size: 0.86rem; line-height: 1.4; }
 .explorer-result small, .explorer-detail-meta, .explorer-source { color: var(--dim); font: 0.72rem var(--mono); }
 .explorer-result:hover, .explorer-result[aria-selected="true"] { background: var(--green-dim); border-color: rgba(61,255,154,0.28); text-decoration: none; }
-.explorer-result:focus-visible, .explorer-facets select:focus-visible, .explorer-facets input:focus-visible, .explorer-detail a:focus-visible, .explorer-detail button:focus-visible {
+.explorer-result:focus-visible, .explorer-facets select:focus-visible, .explorer-facets input:focus-visible, .explorer-detail:focus-visible, .explorer-detail a:focus-visible, .explorer-detail button:focus-visible {
   outline: 3px solid var(--green); outline-offset: 2px;
 }
 .explorer-detail { position: sticky; top: 4.7rem; min-height: 16rem; }
@@ -249,7 +249,9 @@ a.card { text-decoration: none; color: inherit; }
 @media (max-width: 640px) {
   .explorer { grid-template-columns: 1fr; }
   .explorer-facets, .explorer-detail { position: static; }
-  .explorer-results { max-height: none; }
+  .explorer-facets { order: 1; }
+  .explorer-detail { order: 2; scroll-margin-top: 4.7rem; }
+  .explorer-results { order: 3; max-height: min(60svh, 32rem); }
 }
 .panel {
   background: var(--bg-card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.25rem;

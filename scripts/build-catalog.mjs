@@ -9,21 +9,90 @@
 import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
-import { execSync } from "node:child_process";
+import { execFileSync, execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const strict = process.argv.includes("--strict");
-const siteDir = process.env.SKILLISSUE_SITE_DIR
+const siteTarget = process.env.SKILLISSUE_SITE_DIR
   ? path.resolve(process.env.SKILLISSUE_SITE_DIR)
   : path.join(root, "site");
-const reportPath = process.env.SKILLISSUE_REPORT_PATH
+const reportTarget = process.env.SKILLISSUE_REPORT_PATH
   ? path.resolve(process.env.SKILLISSUE_REPORT_PATH)
   : path.join(root, "catalog", "report.json");
 const skillsDir = path.join(root, "skills");
 const contentStory = path.join(root, "content/story");
 const REPO = "jack-arturo/skillissue";
+const GENERATED_SENTINEL = ".skillissue-generated";
+const cssSourcePath = path.join(__dirname, "site.css");
+const explorerSourcePath = path.join(__dirname, "catalog-explorer.js");
+const cssSource = fs.readFileSync(cssSourcePath);
+const explorerSource = fs.readFileSync(explorerSourcePath);
+
+function fingerprint(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex").slice(0, 12);
+}
+
+const cssAssetName = `site.${fingerprint(cssSource)}.css`;
+const explorerAssetName = `catalog-explorer.${fingerprint(explorerSource)}.js`;
+
+function canonicalizePath(candidate) {
+  const missing = [];
+  let current = candidate;
+  while (true) {
+    try {
+      return path.join(fs.realpathSync(current), ...missing.reverse());
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+      const parent = path.dirname(current);
+      if (parent === current) throw error;
+      missing.push(path.basename(current));
+      current = parent;
+    }
+  }
+}
+
+function containsPath(parent, candidate) {
+  const relative = path.relative(parent, candidate);
+  return relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
+function validateGeneratedTarget() {
+  const canonicalTarget = canonicalizePath(siteTarget);
+  const canonicalRoot = fs.realpathSync(root);
+  if (
+    canonicalTarget === path.parse(canonicalTarget).root ||
+    containsPath(canonicalTarget, canonicalRoot)
+  ) {
+    throw new Error(`Unsafe generated output target: ${siteTarget}. Choose the repository site/ directory or a dedicated generated directory.`);
+  }
+  if (fs.existsSync(siteTarget) && fs.lstatSync(siteTarget).isSymbolicLink()) {
+    throw new Error(`Unsafe generated output target: ${siteTarget} must not be a symlink.`);
+  }
+  const defaultTarget = path.join(root, "site");
+  if (process.env.SKILLISSUE_SITE_DIR && siteTarget !== defaultTarget && fs.existsSync(siteTarget)) {
+    const entries = fs.readdirSync(siteTarget);
+    if (entries.length && !entries.includes(GENERATED_SENTINEL)) {
+      throw new Error(`Override output target is populated but not owned by this build (missing ${GENERATED_SENTINEL}): ${siteTarget}`);
+    }
+  }
+}
+
+function assertCommittedSkillTree() {
+  let status;
+  try {
+    status = execFileSync("git", ["status", "--porcelain", "--untracked-files=all", "--", "skills"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim();
+  } catch (error) {
+    throw new Error(`Cannot verify that skills/ is committed before generating install pins: ${error.message}`);
+  }
+  if (status) {
+    throw new Error(`Refusing to generate stale package pins: commit all skills/ changes first. Dirty paths:\n${status}`);
+  }
+}
 
 function esc(s) {
   return String(s ?? "")
@@ -55,6 +124,8 @@ function listBundleFiles(directory, relative = "") {
 function hashFiles(files) {
   const hash = crypto.createHash("sha256");
   for (const file of files) {
+    hash.update((file.mode & 0o111) === 0 ? "100644" : "100755");
+    hash.update("\0");
     hash.update(file.path);
     hash.update("\0");
     hash.update(fs.readFileSync(file.absolute));
@@ -239,10 +310,11 @@ function mdToHtml(md) {
       '<figure class="chart"><img src="$2" alt="$1" loading="lazy" /></figure>',
     );
     t = t.replace(
-      /\[([^\]]+)\]\((https?:[^)]+|\/[^)]+)\)/g,
-      (_, label, href) => {
-        const rel = href.startsWith("http") ? ' rel="noopener"' : "";
-        return `<a href="${href}"${rel}>${label}</a>`;
+      /\[([^\]]+)\]\((https?:[^)]+|\/[^)]+|\.\.\/([a-z0-9]+(?:-[a-z0-9]+)*)\/story\.md)\)/g,
+      (_, label, href, localSkill) => {
+        const canonicalHref = localSkill ? `/skills/${localSkill}/` : href;
+        const rel = canonicalHref.startsWith("http") ? ' rel="noopener"' : "";
+        return `<a href="${canonicalHref}"${rel}>${label}</a>`;
       },
     );
     return t;
@@ -497,7 +569,7 @@ function shellLayout({ title, description, path: pagePath, body, active }) {
 <meta property="og:url" content="https://skillissue.sh${esc(pagePath)}">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/${cssAssetName}">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -552,6 +624,7 @@ ${body}
 // --- load skills from repo tree ---
 const deny = loadDenylist();
 const publicationRegistry = loadPublicationRegistry();
+assertCommittedSkillTree();
 const packageSourcePin = packageSourceSha();
 const shortPackageSourcePin = packageSourcePin.slice(0, 7);
 const publicSkills = [];
@@ -609,6 +682,8 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   const version = skillFm.version || storyFm.version_pin || "1.0.0";
   const provenance = storyFm.provenance || "house";
   const featured = storyFm.featured === true || storyFm.featured === "true";
+  const category = String(storyFm.category || skillFm.category || "ops").toLowerCase().trim() || "ops";
+  const group = catalogGroup(category);
   const bodyTrim = storyBody.trim();
   const hasNarrative =
     bodyTrim.length > 80 &&
@@ -645,7 +720,8 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     title: storyFm.title || skillFm.name || name,
     summary,
     description,
-    category: catalogGroup(storyFm.category || skillFm.category),
+    category,
+    group,
     version,
     tags: normalList(storyFm.tags || skillFm.tags),
     agents: normalList(skillFm.agents),
@@ -666,9 +742,10 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
 }
 
 publicSkills.sort((a, b) => {
-  const ga = groupOrderOf(a.category);
-  const gb = groupOrderOf(b.category);
+  const ga = groupOrderOf(a.group);
+  const gb = groupOrderOf(b.group);
   if (ga !== gb) return ga - gb;
+  if (a.group !== b.group) return a.group.localeCompare(b.group);
   if (a.category !== b.category) return a.category.localeCompare(b.category);
   if (!!b.featured !== !!a.featured) return b.featured ? 1 : -1;
   return a.name.localeCompare(b.name);
@@ -679,27 +756,26 @@ if (strict && errors.length) {
   process.exit(1);
 }
 
-// The output is fully generated: remove stale assets as well as stale pages.
-fs.mkdirSync(siteDir, { recursive: true });
-for (const ent of fs.readdirSync(siteDir, { withFileTypes: true })) {
-  const p = path.join(siteDir, ent.name);
-  if (ent.isDirectory()) fs.rmSync(p, { recursive: true, force: true });
-  else fs.unlinkSync(p);
+validateGeneratedTarget();
+if (fs.existsSync(siteTarget) && !fs.lstatSync(siteTarget).isDirectory()) {
+  throw new Error(`Generated output target must be a directory: ${siteTarget}`);
 }
+fs.mkdirSync(path.dirname(siteTarget), { recursive: true });
+let stagingDir = fs.mkdtempSync(path.join(path.dirname(siteTarget), `.${path.basename(siteTarget)}.build-stage-`));
+const siteDir = stagingDir;
+process.once("exit", () => {
+  if (stagingDir && fs.existsSync(stagingDir)) fs.rmSync(stagingDir, { recursive: true, force: true });
+});
+
+const reportRelative = path.relative(siteTarget, reportTarget);
+if (reportRelative === "") throw new Error("SKILLISSUE_REPORT_PATH must name a file, not the generated output directory");
+const reportInsideTarget = reportRelative !== ".." && !reportRelative.startsWith(`..${path.sep}`) && !path.isAbsolute(reportRelative);
+const generatedReportPath = reportInsideTarget ? path.join(siteDir, reportRelative) : reportTarget;
 
 // CSS
-const cssSrc = path.join(__dirname, "site.css");
 fs.mkdirSync(path.join(siteDir, "assets"), { recursive: true });
-if (fs.existsSync(cssSrc)) {
-  fs.writeFileSync(
-    path.join(siteDir, "assets/site.css"),
-    fs.readFileSync(cssSrc, "utf8"),
-  );
-}
-fs.copyFileSync(
-  path.join(__dirname, "catalog-explorer.js"),
-  path.join(siteDir, "assets/catalog-explorer.js"),
-);
+fs.writeFileSync(path.join(siteDir, "assets", cssAssetName), cssSource);
+fs.writeFileSync(path.join(siteDir, "assets", explorerAssetName), explorerSource);
 // Essay charts (SVG) + harvest data for transparency
 const contentAssets = path.join(root, "content/assets");
 if (fs.existsSync(contentAssets)) {
@@ -734,6 +810,7 @@ const skillsJson = {
     name: s.name,
     title: s.title,
     category: s.category,
+    group: s.group,
     summary: s.summary,
     description: s.description,
     version: s.version,
@@ -831,6 +908,7 @@ const explorerData = {
     description: s.description,
     storyUrl: s.storyUrl,
     category: s.category,
+    group: s.group,
     tags: s.tags,
     agents: s.agents,
     featured: s.featured,
@@ -882,7 +960,7 @@ fs.writeFileSync(
       </div>
     </div></section>
     <script id="explorer-data" type="application/json">${jsonForScript(explorerData)}</script>
-    <script type="module" src="/assets/catalog-explorer.js"></script>`,
+    <script type="module" src="/assets/${explorerAssetName}"></script>`,
     active: "skills",
   }),
 );
@@ -1248,22 +1326,60 @@ report.generatedAt = new Date().toISOString();
 report.packageSourcePin = packageSourcePin;
 report.packageSourcePinShort = shortPackageSourcePin;
 report.publicSkills = publicSkills.map((s) => s.name);
+const reportJson = JSON.stringify(report, null, 2) + "\n";
+if (reportInsideTarget) {
+  fs.mkdirSync(path.dirname(generatedReportPath), { recursive: true });
+  fs.writeFileSync(generatedReportPath, reportJson);
+}
+fs.writeFileSync(path.join(siteDir, GENERATED_SENTINEL), "skillissue generated output v1\n");
+
+function unusedBuildSibling(kind) {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    const candidate = path.join(
+      path.dirname(siteTarget),
+      `.${path.basename(siteTarget)}.build-${kind}-${process.pid}-${Date.now()}-${attempt}`,
+    );
+    if (!fs.existsSync(candidate)) return candidate;
+  }
+  throw new Error(`Could not reserve a generated output ${kind} path beside ${siteTarget}`);
+}
+
+let previousSite = null;
+if (fs.existsSync(siteTarget)) {
+  previousSite = unusedBuildSibling("backup");
+  fs.renameSync(siteTarget, previousSite);
+}
+try {
+  fs.renameSync(stagingDir, siteTarget);
+  stagingDir = null;
+} catch (error) {
+  if (previousSite) {
+    try {
+      fs.renameSync(previousSite, siteTarget);
+    } catch (restoreError) {
+      throw new Error(`Generated output swap failed: ${error.message}; restoring the previous target also failed: ${restoreError.message}`, { cause: error });
+    }
+  }
+  throw new Error(`Generated output swap failed; the previous target was restored: ${error.message}`, { cause: error });
+}
+if (previousSite) fs.rmSync(previousSite, { recursive: true, force: false });
+
+if (!reportInsideTarget) {
+  fs.mkdirSync(path.dirname(reportTarget), { recursive: true });
+  fs.writeFileSync(reportTarget, reportJson);
+}
 if (!process.env.SKILLISSUE_SITE_DIR && !process.env.SKILLISSUE_REPORT_PATH) {
   fs.writeFileSync(
     path.join(root, "catalog", "autovault-sync.json"),
     JSON.stringify({
-      schemaVersion: 2,
+      schemaVersion: 3,
       target: "skillissue",
       hashAlgorithm: "sha256",
+      bundleHashAlgorithm: "git-mode-path-bytes-v1",
       skills: bundleSnapshots.sort((a, b) => a.name.localeCompare(b.name)),
     }, null, 2) + "\n",
   );
 }
-fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-fs.writeFileSync(
-  reportPath,
-  JSON.stringify(report, null, 2) + "\n",
-);
 
 console.log(
   `Built site: ${report.public} public from skills/ · package source ${shortPackageSourcePin}`,
