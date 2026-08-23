@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   filterSkills,
   isModifiedActivation,
+  keyboardFocusTarget,
   normalizeExplorerState,
   parseExplorerState,
   serializeExplorerState,
@@ -111,4 +112,10 @@ test("modifier-clicks pass through to canonical result navigation", () => {
   assert.equal(isModifiedActivation({ shiftKey: true }), true);
   assert.equal(isModifiedActivation({ altKey: true }), true);
   assert.equal(isModifiedActivation({}), false);
+});
+
+test("keyboard navigation focuses detail only at the narrow breakpoint", () => {
+  assert.equal(keyboardFocusTarget(640), "detail");
+  assert.equal(keyboardFocusTarget(641), "result");
+  assert.equal(keyboardFocusTarget(undefined), "result");
 });

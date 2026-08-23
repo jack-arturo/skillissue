@@ -138,6 +138,28 @@ test("build refuses to advertise a pin when the skills tree is not committed", (
   }
 });
 
+test("build rejects ignored untracked skill files without changing its output target", () => {
+  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "skillissue-ignored-pin-"));
+  const siteDir = path.join(fixture, "site");
+  const ignoredSkillFile = path.join(root, "skills", "automem", ".env");
+  assert.equal(fs.existsSync(ignoredSkillFile), false, `${ignoredSkillFile} must not pre-exist`);
+  fs.mkdirSync(siteDir);
+  fs.writeFileSync(ignoredSkillFile, "TEST_ONLY=ignored\n");
+  try {
+    const result = spawnSync(process.execPath, ["scripts/build-catalog.mjs", "--strict"], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, SKILLISSUE_SITE_DIR: siteDir },
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /commit all skills\/ changes first|stale package pins/i);
+    assert.deepEqual(fs.readdirSync(siteDir), []);
+  } finally {
+    fs.rmSync(ignoredSkillFile, { force: true });
+    fs.rmSync(fixture, { recursive: true, force: true });
+  }
+});
+
 test("strict build exposes only public skills and writes canonical redirects", () => {
   const siteDir = fs.mkdtempSync(path.join(os.tmpdir(), "skillissue-catalog-"));
   const reportPath = path.join(siteDir, "report.json");

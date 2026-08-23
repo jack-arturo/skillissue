@@ -82,7 +82,7 @@ function validateGeneratedTarget() {
 function assertCommittedSkillTree() {
   let status;
   try {
-    status = execFileSync("git", ["status", "--porcelain", "--untracked-files=all", "--", "skills"], {
+    status = execFileSync("git", ["status", "--porcelain", "--untracked-files=all", "--ignored=matching", "--", "skills"], {
       cwd: root,
       encoding: "utf8",
     }).trim();

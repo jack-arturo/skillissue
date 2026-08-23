@@ -70,6 +70,10 @@ export function shouldRevealDetail(viewportWidth) {
   return Number.isFinite(viewportWidth) && viewportWidth <= 640;
 }
 
+export function keyboardFocusTarget(viewportWidth) {
+  return shouldRevealDetail(viewportWidth) ? "detail" : "result";
+}
+
 export function isModifiedActivation(event = {}) {
   return Boolean(event.metaKey || event.ctrlKey || event.shiftKey || event.altKey);
 }
@@ -222,9 +226,13 @@ function initExplorer() {
         state.skill = visible[next].name;
         updateUrl();
         render();
-        [...results.querySelectorAll("[data-skill]")]
-          .find((row) => row.dataset.skill === state.skill)
-          ?.focus();
+        if (keyboardFocusTarget(window.innerWidth) === "detail") {
+          revealDetailOnNarrowViewport();
+        } else {
+          [...results.querySelectorAll("[data-skill]")]
+            .find((row) => row.dataset.skill === state.skill)
+            ?.focus();
+        }
       });
       results.append(row);
     });
