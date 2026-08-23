@@ -63,6 +63,10 @@ test("Explorer query state parses and serializes only meaningful filters", () =>
     serializeExplorerState(state),
     "?q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes",
   );
+  assert.equal(
+    serializeExplorerState(state, "?utm_source=directory&skill=browser-hand"),
+    "?utm_source=directory&q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes",
+  );
   assert.equal(serializeExplorerState(parseExplorerState("?featured=no&resources=nope")), "");
   assert.equal(parseExplorerState("?featured=on").featured, true);
 });

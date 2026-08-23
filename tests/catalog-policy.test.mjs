@@ -234,6 +234,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(browserHandPage, /class="skill-package"/);
     assert.match(browserHandPage, /class="skill-resources"/);
     assert.match(browserHandPage, /Pinned install/);
+    assert.match(browserHandPage, /7 files · 6 resources · runnable/);
     const deployment = metadata.skills.find((skill) => skill.name === "cloudflare-commerce-deploy");
     const design = metadata.skills.find((skill) => skill.name === "brand-bible-author");
     assert.equal(deployment.category, "deployment");

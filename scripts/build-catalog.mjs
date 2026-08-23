@@ -737,7 +737,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     installId,
     resourceCount,
     resourceFiles: resourceFiles.map((file) => file.path),
-    bundleFileCount: bundleFiles.length,
+    bundleFileCount: resourceFiles.length + 1,
     runnable,
   });
   report.public++;

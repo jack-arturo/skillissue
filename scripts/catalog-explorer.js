@@ -15,8 +15,11 @@ export function parseExplorerState(input = "") {
   };
 }
 
-export function serializeExplorerState(state = {}) {
-  const params = new URLSearchParams();
+export function serializeExplorerState(state = {}, input = "") {
+  const params = input instanceof URLSearchParams
+    ? new URLSearchParams(input)
+    : new URLSearchParams(String(input).replace(/^.*\?/, ""));
+  ["q", "category", "agent", "featured", "resources", "skill"].forEach((key) => params.delete(key));
   if (state.q?.trim()) params.set("q", state.q.trim());
   if (state.category) params.set("category", state.category);
   if (state.agent) params.set("agent", state.agent);
@@ -187,7 +190,7 @@ function initExplorer() {
   }
   function updateUrl() {
     state = normalizeExplorerState(skills, state);
-    const query = serializeExplorerState(state);
+    const query = serializeExplorerState(state, window.location.search);
     history.replaceState(null, "", `${window.location.pathname}${query}`);
   }
   function render() {
@@ -216,7 +219,7 @@ function initExplorer() {
   state = normalizeExplorerState(skills, state);
   applyControls();
   render();
-  if (window.location.search !== serializeExplorerState(state)) updateUrl();
+  if (window.location.search !== serializeExplorerState(state, window.location.search)) updateUrl();
 }
 
 if (typeof document !== "undefined") initExplorer();
