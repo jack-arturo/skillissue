@@ -1,131 +1,344 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 3,
   "target": "skillissue",
+  "hashAlgorithm": "sha256",
+  "bundleHashAlgorithm": "git-mode-path-bytes-v1",
   "skills": [
     {
       "name": "automem",
       "version": "1.1.0",
-      "contentHash": "31688d3efac9adbc81702895e22a87be3d5ce6593453b36ea7cdd8735286fb03"
+      "contentHash": "31688d3efac9adbc81702895e22a87be3d5ce6593453b36ea7cdd8735286fb03",
+      "bundleHash": "7f9e7feee3841eafa26b75ae9567f5b08b2019cec78f4203fc95c05a32abf951",
+      "fileCount": 2
+    },
+    {
+      "name": "autovault-brand-system",
+      "version": "0.1.0",
+      "contentHash": "26ee9a8d6332ce510be10b176110c3f16f852270fa9fb93fd079d813f5c5be05",
+      "bundleHash": "e287a7c1690b1a5c9f77f8370b4ba713caaec6810b84f7e69b869c3c18c1a865",
+      "fileCount": 12
     },
     {
       "name": "autovault-skill",
       "version": "1.1.0",
-      "contentHash": "ef381a8a703e87238cbd4083ae1d0e9a1208d5faff6ce1b5c4ca1eaa1d446ede"
+      "contentHash": "ef381a8a703e87238cbd4083ae1d0e9a1208d5faff6ce1b5c4ca1eaa1d446ede",
+      "bundleHash": "f63e90d9614a4efaea3bc26722abf3d09b14e310cac0c18edef4794dc85586e1",
+      "fileCount": 2
+    },
+    {
+      "name": "award-travel-research",
+      "version": "1.1.0",
+      "contentHash": "4f19e6503aa94d9aff0d173f94f0e356bf947a3a9dadd771211b49a1aed6dac2",
+      "bundleHash": "45122d5087bb88fd6ad24dff347cf96e9056dc70a3b1f1f7c80c7a5f4ddb341f",
+      "fileCount": 2
     },
     {
       "name": "awtrix-board",
       "version": "1.0.0",
-      "contentHash": "79edbdd099b1d8724d0c15438434f2e8a5b528e4e96cc6b0513329553850b3c7"
+      "contentHash": "fbe7db697c1d86132fc7d14d15846f5f3513cef19112b1276fe8081200ea5b40",
+      "bundleHash": "c285612a7d71c64994ec7ab4fd35faccae79c7635f249416d724c07d9913a7ae",
+      "fileCount": 3
     },
     {
       "name": "babysit",
       "version": "1.7.0",
-      "contentHash": "1628b0f8296b5b218aa99d8b40dec52641c542b2247f012577f2740b2195c437"
+      "contentHash": "cdf4526086e9d080a27cdc73b5817ce0c5375d51b1da4c178d6092c1ce174eb9",
+      "bundleHash": "a69e2d03c8798c5ffaa6bfdc2e01376212c3832233785333d637915f36b73ab6",
+      "fileCount": 6
+    },
+    {
+      "name": "brand-bible-author",
+      "version": "0.1.0",
+      "contentHash": "837593273c42a373f13a8e7388090e3029b69349a87153cad2c0b717385a8114",
+      "bundleHash": "44abd15b4cbe388ecc89ef1945425062d6a3f7d986a81dcf2a05def4a9b5b808",
+      "fileCount": 13
     },
     {
       "name": "browser-hand",
       "version": "0.6.2",
-      "contentHash": "73d793a0810b7a91887a6d55e475ae1514a7ad3b9ca1490f0260faeb7944b5b4"
+      "contentHash": "410f15d8575e1593fceb936df5ecc095289a802888d001d3bbb41c80df764ee6",
+      "bundleHash": "7eb914e7ad3eab68c183b4040cd53562bf11f90286a938a090dff6c5e4bf46ff",
+      "fileCount": 8
+    },
+    {
+      "name": "bubble-tea-tui-builder",
+      "version": "1.1.0",
+      "contentHash": "d95a50e5cdaa01028cfdf959d79af112e8bfaefdb8d589539db5b731e4d82dc1",
+      "bundleHash": "e85caa9f74c2e0662c16146f81ab5cefc1039d9b1b086eca1b8b52f650ed9806",
+      "fileCount": 2
+    },
+    {
+      "name": "building-emdash-site",
+      "version": "1.0.0",
+      "contentHash": "95cae9cefd62fbb3a6a7019ce60dbc1206f63d1087cd71dfbc5d58c7c88a0f88",
+      "bundleHash": "0b83418f2c930eacb8fc8f54c304ffb8399a28567a7d14129f974d79c6b56480",
+      "fileCount": 7
+    },
+    {
+      "name": "ci-cost-audit",
+      "version": "1.0.0",
+      "contentHash": "39b53981fb864b6cd4ad5dfc50d4b537d2da94c1c24b18f1e95e2640f15df7c1",
+      "bundleHash": "c6c44c839276085f6c89b1c09069a28434d287a07c96320f7ad0f323109981d6",
+      "fileCount": 2
+    },
+    {
+      "name": "clerk-cloudflare-auth",
+      "version": "1.1.0",
+      "contentHash": "3751d91c9b9fff47fb2296843b144769dd732de3b0f65796713a4fc5a036037f",
+      "bundleHash": "26881ffa0fe512ca4f95965874265fcfd1358433f8fcf34626c3e294f21c2990",
+      "fileCount": 2
+    },
+    {
+      "name": "clerk-cloudflare-commerce-bootstrap",
+      "version": "1.0.2",
+      "contentHash": "07f78240c7abd212dfa54df4672601d6977e81e7b6547c2885fb54b9c5c5ddac",
+      "bundleHash": "270e328e234ec2a8717abf0ff2643c48117db7667f75c03efef637e58371a634",
+      "fileCount": 2
     },
     {
       "name": "cli-installer-ux",
       "version": "1.0.0",
-      "contentHash": "568d6dc64d813407e84a712b1cbafa25dca9bf50cb26775f85df451b6b1b3791"
+      "contentHash": "fbbbbd61040b1407f9e30221529727533a7a4ec5b9f03afdf3fcb4b5b73591f6",
+      "bundleHash": "aa0a4d4842022e51506321947277522d6be1503a6e4714dabee818fd8ab3d7a4",
+      "fileCount": 6
     },
     {
       "name": "cloudflare-commerce-deploy",
       "version": "1.0.3",
-      "contentHash": "b4b1232e5615aa75ce4bfc7bbaa0554bf41aef44cd9fc52bbd39d9f0b0c1d560"
+      "contentHash": "d7e98531b2da603cc32416bb27ee68c94d5f137ab7ccc482441d04fa4478dd5b",
+      "bundleHash": "102aedc34d951db9824c04d25824186b8ac201766cdc572515a61109d6092e11",
+      "fileCount": 6
     },
     {
       "name": "cloudflare-emdash-cms-deploy",
       "version": "1.13.0",
-      "contentHash": "9ebeddc21e810725032160fc54edd58a545960eba0e6eae3933318b5e091d177"
+      "contentHash": "da203c7921eee8b9992ffde70d4dcff639a6f76460b47af67d809180b91913ea",
+      "bundleHash": "22bfb52d4285094fec9de6248306b21c1f4bcf8de4e831f353382a11a2034639",
+      "fileCount": 8
     },
     {
       "name": "cloudflare-lead-capture",
       "version": "1.4.0",
-      "contentHash": "7bc40b9d05559b49a138968224fb325db618136bd222793bea59c5bc727a0b83"
+      "contentHash": "56a75a7e454c2693ebd1d65a425cbf44c89b6a5197902319b8374ecbdbbd0c17",
+      "bundleHash": "6824965e44ce21b991e21708e2a60cfb9a57df23011b02a3d32cdf37229eb3c9",
+      "fileCount": 24
     },
     {
       "name": "cloudflare-ops",
       "version": "1.0.5",
-      "contentHash": "cc5899a09eb6b4fb1828165fa593d50c25c415d5dab79544293965fa1a1a8743"
+      "contentHash": "864dd2ae498b0729876709b5c8cdda0f2a3aad540a17ba3a3f0a9b953c1c5e01",
+      "bundleHash": "82f19ae93969e35e899e10c4b3d387dbb3b8418f1ffaad5c3d7be2d5e9d01c35",
+      "fileCount": 3
     },
     {
       "name": "commit-message",
       "version": "1.0.0",
-      "contentHash": "e2ca59007ca5f518560e895047d95838fe64f0b30601f9747079ef82440ca318"
+      "contentHash": "e2ca59007ca5f518560e895047d95838fe64f0b30601f9747079ef82440ca318",
+      "bundleHash": "1d334dc1faf9eefcc30a799f78f7312f9e80a4530eda0680a755591f13b388b0",
+      "fileCount": 2
+    },
+    {
+      "name": "context-engineering-audit",
+      "version": "1.0.0",
+      "contentHash": "16602a419c8dec66cc00a46bfab3b953a2c68395bd9d6d5e68e7c2b29fd6d6a2",
+      "bundleHash": "55926f6a216ab33f90231c66fa85b13f5847cf3cdc6007ecac9606e2c7c64e08",
+      "fileCount": 5
+    },
+    {
+      "name": "creating-plugins",
+      "version": "1.0.0",
+      "contentHash": "ec58c4346b5222fc273a24d328454af56bbcaa42bf9a8d283ad03a659cbeefcb",
+      "bundleHash": "804b890f4192d29c7e113bc8c8f447af43df391ad6b4388746e9c196cff497b4",
+      "fileCount": 9
     },
     {
       "name": "docs-screenshot-packager",
       "version": "1.0.0",
-      "contentHash": "f32b5ee7e289cb103e30efd933f3ef3f3745d2aa1cefecf335e3d783ce37eb74"
+      "contentHash": "5c2637bf97410d3364ed554484205bb667ff225b60afcd365ea2385863eddbfb",
+      "bundleHash": "da469145da2fb28ce46b290fb4dfc97485c09ee9eb8ea9f3b8fa68497ee8e09a",
+      "fileCount": 10
+    },
+    {
+      "name": "elevenlabs-automem-memory",
+      "version": "1.0.0",
+      "contentHash": "a279e0533019039f577ddb8ba9b14027dbe7dd98cf2c947c7f8365303e8b1037",
+      "bundleHash": "6a1ba7b865d9245bd7afd2b8400fd36fbc34b4b1cba200fa4edcbdf90dcb22d5",
+      "fileCount": 2
+    },
+    {
+      "name": "emdash-cli",
+      "version": "1.0.0",
+      "contentHash": "21d6e6ee21d56b22faaf9144114703787bceba531010bd7c868125a062316729",
+      "bundleHash": "ecf189bd642bee75c5f1574cf40c751ecd318d1d5a3ad78d40773796d5eef766",
+      "fileCount": 3
     },
     {
       "name": "entity-dossier",
       "version": "0.1.0",
-      "contentHash": "0489e3dbcc461129d052b5b0d645d97c04264fd30f8d8e3f0e226e976ca56825"
+      "contentHash": "0489e3dbcc461129d052b5b0d645d97c04264fd30f8d8e3f0e226e976ca56825",
+      "bundleHash": "16f81572cb80c59b440601084fcdf118aec74c56a9146eb02b82d957414480ce",
+      "fileCount": 2
     },
     {
       "name": "flashspace",
       "version": "1.0.0",
-      "contentHash": "aa9abf37699047c589b436f0aa287e93bdcbc4fd82b2b40895f78b77c8aa729d"
+      "contentHash": "aa9abf37699047c589b436f0aa287e93bdcbc4fd82b2b40895f78b77c8aa729d",
+      "bundleHash": "a56d6cdb62de46db0779aa8243521f2cf0b76bfe22872df5b4733706734f8a95",
+      "fileCount": 2
     },
     {
       "name": "home-assistant-operator",
       "version": "1.0.0",
-      "contentHash": "5f7d25bf82777a647e6e1d42478c4f87728339ba4d7d6a1db49de821c4c2ee25"
+      "contentHash": "fac5d2ab5ef13efd8ff49fc9d8637373db0b8141814393d09ffb9ace720aacd7",
+      "bundleHash": "a7e9a56371b4a71fee31d4e270839a83ec1309a8a857dd6ede9ffe15ce921107",
+      "fileCount": 3
     },
     {
       "name": "html-asset-renderer",
       "version": "1.0.0",
-      "contentHash": "b79aa62f7a1b3c484ba6bc7d5f5444a4979e7c951498fe507d222995c4bbc5a9"
+      "contentHash": "1ccd92719d67c34a440649c2628ef1674033d3eb2c1efb7a74969b7be17fd58c",
+      "bundleHash": "0c04ac78d336188d45808be53cd494bc3e70a3ab2227e3d137156743fc8f3e33",
+      "fileCount": 3
     },
     {
       "name": "jacks-writing-style",
       "version": "1.0.0",
-      "contentHash": "b015872358a94dc987121b49254b83b0ec041e4665cbaff6a5e7c0fdb380e6cc"
+      "contentHash": "f00030c5f229714d7f018cb4fe32849638c22b1abdde53bef4269bbad824546a",
+      "bundleHash": "7acb12092fd8f29c73b0f3710b61729a6b746ffe656219584b6bf599c3886503",
+      "fileCount": 6
     },
     {
       "name": "long-haul-parallel-repair",
       "version": "1.1.0",
-      "contentHash": "98df644254aede2856a5f3974b2b267ae7dac684212635e23c133e39efe5f411"
+      "contentHash": "31ada8a4c7e94370019792fc65c7dff06bdd12a66fd54a8fd5a81f6699872126",
+      "bundleHash": "ce30417a3b0c2f590f90101c9c49a6901f5f6a2aa469763046bea3515c1ac768",
+      "fileCount": 3
     },
     {
       "name": "mcp-builder",
       "version": "1.0.0",
-      "contentHash": "2419e4c331202b55bdc3670fb3815047d1afcb00f4415d18c1f4829bfeb3ac69"
+      "contentHash": "d3a575698afa7fb588a6b5c8eb33851a7a99643b4d132a5e1c418a7ff9a24e12",
+      "bundleHash": "4b7d2d0e82251000546d61d318bb4c58e4ec5c241a41748977537627ad32f390",
+      "fileCount": 11
     },
     {
       "name": "mcp-registry-maintainer",
       "version": "1.0.0",
-      "contentHash": "326445ac0baaeec5cc610bba2906f5ef16e32ccf71a65daffa4d10e01681758d"
+      "contentHash": "b7c8dc851532c32afaf36038e9c327b852eb9bf28c77574bea1a34777a1a6b4b",
+      "bundleHash": "5d565fb2e8b55cc1847420ea61a490ce36d7848ac6bdbef5400fb9ebad43b143",
+      "fileCount": 3
+    },
+    {
+      "name": "midjourney-iteration",
+      "version": "0.1.0",
+      "contentHash": "6be59d4839260fc8fd6d9f6c7a66a38407eaaa6ec6e983af8f5311025d47f08e",
+      "bundleHash": "9b8dd897173a5f91366eb05afc737f21cee8c5296c8e6ce10340c63242dd55c9",
+      "fileCount": 9
+    },
+    {
+      "name": "phala-gpu-tee-deploy",
+      "version": "1.0.0",
+      "contentHash": "75cfd796242df6c5a4e935720812b5b73a2992eec5f44d72083d93511eab3da7",
+      "bundleHash": "f2db4f446e989f4cec7c7adba253c67f5fc429071ad026757c2f5249f67cb691",
+      "fileCount": 4
     },
     {
       "name": "pirsch-analytics-bootstrap",
       "version": "1.1.0",
-      "contentHash": "f3ce01619b361937ba32f585c45e4204a718c353d5e6d037c4328b07e4198195"
+      "contentHash": "f3ce01619b361937ba32f585c45e4204a718c353d5e6d037c4328b07e4198195",
+      "bundleHash": "041c05819c4f71895b96993781288b2748f6df9a76f07130df9f2bf295115809",
+      "fileCount": 2
+    },
+    {
+      "name": "quest-passthrough-camera-capture",
+      "version": "1.0.0",
+      "contentHash": "55231c822d777d22d92615a00b259f0c5b8ffaefe6d875b38c1a49dc75fd04a6",
+      "bundleHash": "7e0f9cffdfe13a567aab0220d4681d8b26464ff5a210f51ad43108f2370b99d2",
+      "fileCount": 2
     },
     {
       "name": "raycast",
       "version": "1.0.0",
-      "contentHash": "ef1ec20a1578c308a2c5afe9a55b12e8071c909f73b3616dedfb8ba898f35330"
+      "contentHash": "9f1f88eaf3026b1ec561a988f34a97e447d573a5b4e8484d0e27dd5f03e7dfa1",
+      "bundleHash": "5dc4e096237aecc1895bf27c5738e69eb0775d91b2e05e2dddeae517eac79212",
+      "fileCount": 5
+    },
+    {
+      "name": "repo-demo-video-director",
+      "version": "1.4.0",
+      "contentHash": "4486d99290920ef9765e0a7d1d55f0c3c519f26ad0e2822b9fdd2d6c8239a8ea",
+      "bundleHash": "4e0b0cc141c387e4b55c729aaa9856ce1bfcc012dc2c836279836b1edcce69ed",
+      "fileCount": 2
+    },
+    {
+      "name": "repo-demo-video-publisher",
+      "version": "1.6.0",
+      "contentHash": "a1597c321ea720a097751a758cfffec6c138aca0ea76e2f9984fd01ae7b6f4d5",
+      "bundleHash": "ca30daf53127aa9976a99fb24b4df2d307692b129ae11ecddeb37f2fcd9d6a6c",
+      "fileCount": 2
     },
     {
       "name": "resend-cli",
       "version": "2.3.2",
-      "contentHash": "d13efd06284ecd7745bc816dcc2be1fba9d32ab2f35a5d8f9a16d84e7427cbc1"
+      "contentHash": "87eac330ce10ba5bd48cdc9274702dfd70da8074bcf2c379cc07f1071d312d9c",
+      "bundleHash": "cefeebefd30b8e79b1b264501731fef75e9aa4f0b67f70b1540cb41eceb1bcc8",
+      "fileCount": 17
     },
     {
       "name": "skill-author",
       "version": "2.0.0",
-      "contentHash": "dcf0c9cdc33c408191c0e2b55530e3cc2128bdcd14ec7d07eadf4925abd3d13b"
+      "contentHash": "dcf0c9cdc33c408191c0e2b55530e3cc2128bdcd14ec7d07eadf4925abd3d13b",
+      "bundleHash": "5258953ea9d5397671498daf651aef01bc6d555305eeeb2f529aa991d35ed8d8",
+      "fileCount": 2
+    },
+    {
+      "name": "stripe-commerce-checkout",
+      "version": "1.1.0",
+      "contentHash": "b61f3b4192bf00bb42889d51bfddaffcf4d5d28473eeea7090345e7d31c1fbd6",
+      "bundleHash": "2f5f683f0cebcf2a57aa7ef7ab6ce8a354f1c9d794a10bee051e9279f9746572",
+      "fileCount": 4
     },
     {
       "name": "triage-autohub-runtime",
       "version": "1.0.4",
-      "contentHash": "a2a60b24e552ff37d4173d71dff7d9160b7e7b09815ba97919a77cbd2115cafc"
+      "contentHash": "b4753a3eecc3b3284523dbfa96c4d2d0b8622327a4f9016ecb0eabe91f0e86bd",
+      "bundleHash": "629ec81a2921b3dcd4b2ed0669cbbecff548d708166ffb3204a9c656c02eced9",
+      "fileCount": 4
+    },
+    {
+      "name": "tui-design",
+      "version": "1.0.0",
+      "contentHash": "055baafe3fb174311142a45e380b09412ce999954861c007641b5e5cf99ef367",
+      "bundleHash": "42bf33c525d2a8bb85fda44878ec8c5a8116859b6909cac154b6a2c8f27f6a62",
+      "fileCount": 4
+    },
+    {
+      "name": "unity-ai-collaboration",
+      "version": "1.2.0",
+      "contentHash": "c016debb4c635411941ef5297c5cbae5781d075ca523f744a047d8408aa5b01a",
+      "bundleHash": "a0e6def55c62219e08891d18ed19ed5d29cb5b8f0c516d2ce70166865b14d6e3",
+      "fileCount": 9
+    },
+    {
+      "name": "unity-quest-build",
+      "version": "2.2.0",
+      "contentHash": "b1cae31825dd28460020ebc65af82bebfa0a1a34adb4502022f64f27986993c3",
+      "bundleHash": "2e9913e764f62d10db41d10da118dd3510075136e4780ea0904ad82231942f5a",
+      "fileCount": 7
+    },
+    {
+      "name": "video-toolkit",
+      "version": "1.0.0",
+      "contentHash": "4fc52445d09ea3085f6e3ef6afbcf88122ee77449c23dd9f74620209248ac0d7",
+      "bundleHash": "40a2d6f26d3a2b6ab30f6e839cf06f5ba1a4c6d7564be0c727bce24a70d31f07",
+      "fileCount": 7
+    },
+    {
+      "name": "wordpress-theme-to-emdash",
+      "version": "1.0.0",
+      "contentHash": "e110955be9ab85a8014ec839ffeebd9e0816c70cf65766ab3acbb086638960bb",
+      "bundleHash": "4f3db2790d5b3b2a05b7c26b8ce9e2b3f4a57449676d2729d85f8ed3696e810d",
+      "fileCount": 31
     }
   ]
 }

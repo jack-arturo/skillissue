@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+chrome_debug_port="${MJ_ITER_CHROME_PORT:-9222}"
+browser_mode="${MJ_ITER_BROWSER_MODE:-prompt}"
+profile_dir="${MJ_ITER_CHROME_PROFILE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/midjourney-iteration/chrome-profile}"
+
+# Chrome 136+ silently ignores --remote-debugging-port when paired with the
+# default user-data-dir (security hardening against cookie-theft). A non-default
+# --user-data-dir is REQUIRED. The skill keeps a persistent profile under
+# $profile_dir so the user only signs into midjourney.com once.
+mkdir -p "$profile_dir"
+
+case "$(uname -s)" in
+  Darwin)
+    chrome_app='Google Chrome'
+    chrome_bin='/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+    # Use the binary directly rather than `open -a` so the flags are guaranteed
+    # to take effect even if a Chrome instance is running on a different profile.
+    launch_cmd=("$chrome_bin" "--remote-debugging-port=$chrome_debug_port" "--user-data-dir=$profile_dir")
+    ;;
+  Linux)
+    if command -v google-chrome >/dev/null 2>&1; then
+      chrome_bin="$(command -v google-chrome)"
+    elif command -v chromium >/dev/null 2>&1; then
+      chrome_bin="$(command -v chromium)"
+    else
+      printf 'Could not find google-chrome or chromium on PATH.\n' >&2
+      exit 1
+    fi
+    launch_cmd=("$chrome_bin" "--remote-debugging-port=$chrome_debug_port" "--user-data-dir=$profile_dir")
+    ;;
+  *)
+    printf 'Unsupported OS: %s. Launch Chrome manually with --remote-debugging-port=%s --user-data-dir=%s.\n' "$(uname -s)" "$chrome_debug_port" "$profile_dir" >&2
+    exit 1
+    ;;
+esac
+
+cat <<TEXT
+midjourney-iteration: relaunch Chrome with DevTools Protocol enabled
+
+This will launch Chrome with --remote-debugging-port=$chrome_debug_port and a
+dedicated user-data-dir at:
+
+  $profile_dir
+
+Important:
+
+  - The dedicated profile is REQUIRED. Chrome 136+ silently ignores
+    --remote-debugging-port on the default profile. Override the location with
+    \$MJ_ITER_CHROME_PROFILE_DIR if you want it elsewhere.
+
+  - This is a separate Chrome profile from your everyday browsing. Tabs,
+    extensions, and logins do NOT carry over. The first run will require you
+    to sign into midjourney.com; subsequent runs reuse the same profile.
+
+  - You can keep your normal Chrome window open at the same time — this just
+    adds a second Chrome window pointed at the dedicated profile. No need to
+    quit your everyday Chrome.
+
+  - This script will NOT auto-quit any existing Chrome for you.
+
+Launch command:
+
+  ${launch_cmd[*]}
+
+TEXT
+
+case "$browser_mode" in
+  always|open|yes|true|1)
+    printf 'Launching now (MJ_ITER_BROWSER_MODE=%s)...\n' "$browser_mode"
+    "${launch_cmd[@]}" >/dev/null 2>&1 &
+    sleep 2
+    printf 'Chrome relaunch dispatched. Run the preflight again to confirm.\n'
+    exit 0
+    ;;
+  never|manual|no|false|0)
+    printf 'Browser launch skipped by MJ_ITER_BROWSER_MODE=%s. Copy the command above.\n' "$browser_mode"
+    exit 0
+    ;;
+esac
+
+printf 'Run the launch command above now? [y/N]: '
+read -r answer
+case "$answer" in
+  y|Y|yes|YES|Yes)
+    "${launch_cmd[@]}" >/dev/null 2>&1 &
+    sleep 2
+    printf 'Chrome relaunch dispatched. Run the preflight again to confirm.\n'
+    ;;
+  *)
+    printf 'Skipped. Copy the launch command above when you are ready.\n'
+    ;;
+esac

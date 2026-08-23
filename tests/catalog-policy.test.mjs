@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
+import crypto from "node:crypto";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
@@ -16,7 +17,31 @@ const hidden = [
 ];
 const removed = ["dev-browser", "voiceink-2-upgrade"];
 
-test("publication registry is an explicit 25-skill allowlist", () => {
+function publicBundleFiles(directory, relative = "") {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const absolute = path.join(directory, entry.name);
+    const filePath = relative ? `${relative}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) files.push(...publicBundleFiles(absolute, filePath));
+    else if (entry.isFile()) files.push({ absolute, path: filePath, mode: fs.statSync(absolute).mode });
+  }
+  return files;
+}
+
+function independentBundleHash(files) {
+  const hash = crypto.createHash("sha256");
+  for (const file of files) {
+    hash.update((file.mode & 0o111) === 0 ? "100644" : "100755");
+    hash.update("\0");
+    hash.update(file.path);
+    hash.update("\0");
+    hash.update(fs.readFileSync(file.absolute));
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+test("publication registry is an explicit 48-skill allowlist", () => {
   const registry = JSON.parse(
     fs.readFileSync(path.join(root, "catalog", "autovault-publication.json"), "utf-8")
   );
@@ -26,12 +51,113 @@ test("publication registry is an explicit 25-skill allowlist", () => {
     .sort();
   assert.equal(registry.schemaVersion, 1);
   assert.equal(registry.target, "skillissue");
-  assert.equal(publicNames.length, 25);
+  assert.equal(publicNames.length, 48);
   assert.deepEqual(
     registry.skills["codex-review"],
     { visibility: "hidden", replacement: "babysit" }
   );
   for (const name of hidden) assert.equal(registry.skills[name].visibility, "hidden");
+});
+
+test("committed publication snapshot covers every public bundle", () => {
+  const registry = JSON.parse(fs.readFileSync(path.join(root, "catalog", "autovault-publication.json"), "utf-8"));
+  const snapshot = JSON.parse(fs.readFileSync(path.join(root, "catalog", "autovault-sync.json"), "utf-8"));
+  const publicNames = Object.entries(registry.skills)
+    .filter(([, entry]) => entry.visibility === "public")
+    .map(([name]) => name)
+    .sort();
+  assert.equal(snapshot.schemaVersion, 3);
+  assert.equal(snapshot.hashAlgorithm, "sha256");
+  assert.equal(snapshot.bundleHashAlgorithm, "git-mode-path-bytes-v1");
+  assert.deepEqual(snapshot.skills.map((skill) => skill.name).sort(), publicNames);
+  for (const skill of snapshot.skills) {
+    const directory = path.join(root, "skills", skill.name);
+    const files = publicBundleFiles(directory);
+    assert.equal(
+      skill.contentHash,
+      crypto.createHash("sha256").update(fs.readFileSync(path.join(directory, "SKILL.md"))).digest("hex"),
+      `${skill.name} content hash matches the committed package`,
+    );
+    assert.equal(skill.bundleHash, independentBundleHash(files), `${skill.name} bundle hash matches modes, paths, and bytes`);
+    assert.equal(skill.fileCount, files.length, `${skill.name} file count matches the committed package`);
+  }
+});
+
+test("build rejects unsafe and populated unowned output targets without changing them", () => {
+  for (const target of [path.parse(root).root, root, path.dirname(root)]) {
+    const result = spawnSync(process.execPath, ["scripts/build-catalog.mjs", "--strict"], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, SKILLISSUE_SITE_DIR: target },
+    });
+    assert.notEqual(result.status, 0, `rejects ${target}`);
+    assert.match(result.stderr, /unsafe generated output target/i);
+  }
+
+  const siteDir = fs.mkdtempSync(path.join(os.tmpdir(), "skillissue-unowned-output-"));
+  const marker = path.join(siteDir, "keep.txt");
+  fs.writeFileSync(marker, "not generated\n");
+  try {
+    const result = spawnSync(process.execPath, ["scripts/build-catalog.mjs", "--strict"], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, SKILLISSUE_SITE_DIR: siteDir },
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /generated sentinel|not owned/i);
+    assert.equal(fs.readFileSync(marker, "utf8"), "not generated\n");
+  } finally {
+    fs.rmSync(siteDir, { recursive: true, force: true });
+  }
+});
+
+test("build refuses to advertise a pin when the skills tree is not committed", () => {
+  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "skillissue-dirty-pin-"));
+  const alternateIndex = path.join(fixture, "index");
+  const siteDir = path.join(fixture, "site");
+  const gitIndexRaw = execFileSync("git", ["rev-parse", "--git-path", "index"], { cwd: root, encoding: "utf8" }).trim();
+  const gitIndex = path.isAbsolute(gitIndexRaw) ? gitIndexRaw : path.join(root, gitIndexRaw);
+  fs.copyFileSync(gitIndex, alternateIndex);
+  const env = { ...process.env, GIT_INDEX_FILE: alternateIndex };
+  try {
+    execFileSync("git", ["update-index", "--force-remove", "skills/midjourney-iteration/SKILL.md"], {
+      cwd: root,
+      env,
+      stdio: "pipe",
+    });
+    const result = spawnSync(process.execPath, ["scripts/build-catalog.mjs", "--strict"], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...env, SKILLISSUE_SITE_DIR: siteDir },
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /commit all skills\/ changes first|stale package pins/i);
+    assert.equal(fs.existsSync(siteDir), false);
+  } finally {
+    fs.rmSync(fixture, { recursive: true, force: true });
+  }
+});
+
+test("build rejects ignored untracked skill files without changing its output target", () => {
+  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "skillissue-ignored-pin-"));
+  const siteDir = path.join(fixture, "site");
+  const ignoredSkillFile = path.join(root, "skills", "automem", ".env");
+  assert.equal(fs.existsSync(ignoredSkillFile), false, `${ignoredSkillFile} must not pre-exist`);
+  fs.mkdirSync(siteDir);
+  fs.writeFileSync(ignoredSkillFile, "TEST_ONLY=ignored\n");
+  try {
+    const result = spawnSync(process.execPath, ["scripts/build-catalog.mjs", "--strict"], {
+      cwd: root,
+      encoding: "utf8",
+      env: { ...process.env, SKILLISSUE_SITE_DIR: siteDir },
+    });
+    assert.notEqual(result.status, 0);
+    assert.match(result.stderr, /commit all skills\/ changes first|stale package pins/i);
+    assert.deepEqual(fs.readdirSync(siteDir), []);
+  } finally {
+    fs.rmSync(ignoredSkillFile, { force: true });
+    fs.rmSync(fixture, { recursive: true, force: true });
+  }
 });
 
 test("strict build exposes only public skills and writes canonical redirects", () => {
@@ -55,7 +181,56 @@ test("strict build exposes only public skills and writes canonical redirects", (
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
       .sort();
-    assert.equal(skillDirs.length, 25);
+    assert.equal(skillDirs.length, 48);
+
+    const metadata = JSON.parse(fs.readFileSync(path.join(siteDir, "skills.json"), "utf-8"));
+    const report = JSON.parse(fs.readFileSync(reportPath, "utf-8"));
+    const packageSourcePin = execFileSync("git", ["log", "-1", "--format=%H", "--", "skills"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim();
+    assert.equal(metadata.publicCount, 48);
+    assert.equal(metadata.skills.length, 48);
+    assert.equal(metadata.packageSourcePin, packageSourcePin);
+    assert.equal(report.packageSourcePin, packageSourcePin);
+    assert.equal(fs.existsSync(path.join(siteDir, ".skillissue-generated")), true);
+    const browserHand = metadata.skills.find((skill) => skill.name === "browser-hand");
+    assert.ok(browserHand);
+    for (const field of [
+      "summary", "description", "storyUrl", "category", "tags", "agents",
+      "featured", "resourceCount", "runnable", "cliInstall", "mcpInstall",
+      "sourceUrl", "packageSourcePin",
+    ]) assert.notEqual(browserHand[field], undefined, `metadata includes ${field}`);
+    assert.match(browserHand.cliInstall, new RegExp(`@${packageSourcePin}:skills/browser-hand/SKILL\\.md`));
+    assert.match(browserHand.sourceUrl, new RegExp(`/blob/${packageSourcePin}/skills/browser-hand/SKILL\\.md`));
+
+    const explorer = fs.readFileSync(path.join(siteDir, "skills", "index.html"), "utf-8");
+    assert.match(explorer, /data-catalog-explorer/);
+    assert.match(explorer, /id="explorer-data" type="application\/json"/);
+    const explorerAsset = explorer.match(/src="\/assets\/(catalog-explorer\.[a-f0-9]{12}\.js)"/)?.[1];
+    const cssAsset = explorer.match(/href="\/assets\/(site\.[a-f0-9]{12}\.css)"/)?.[1];
+    assert.ok(explorerAsset, "Explorer references a content-fingerprinted module");
+    assert.ok(cssAsset, "Explorer references content-fingerprinted CSS");
+    assert.doesNotMatch(explorer, /role="listbox"/);
+    assert.match(explorer, /href="\/skills\/browser-hand\/"/);
+    assert.match(explorer, /\\u003c/);
+    assert.equal(fs.existsSync(path.join(siteDir, "assets", explorerAsset)), true);
+    assert.equal(fs.existsSync(path.join(siteDir, "assets", cssAsset)), true);
+    assert.equal(fs.existsSync(path.join(siteDir, "assets", "catalog-explorer.js")), false);
+    assert.equal(fs.existsSync(path.join(siteDir, "assets", "site.css")), false);
+    const linkedStory = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
+    assert.match(linkedStory, /<a href="\/skills\/html-asset-renderer\/">HTML Asset Renderer<\/a>/);
+    assert.doesNotMatch(linkedStory, /\.\.\/html-asset-renderer\/story\.md/);
+    const deployment = metadata.skills.find((skill) => skill.name === "cloudflare-commerce-deploy");
+    const design = metadata.skills.find((skill) => skill.name === "brand-bible-author");
+    assert.equal(deployment.category, "deployment");
+    assert.equal(deployment.group, "cloudflare");
+    assert.equal(design.category, "design");
+    assert.equal(design.group, "writing");
+    for (const asset of [
+      "apple-touch-icon.png", "favicon-32.png", "favicon-512.jpg",
+      "favicon-512.png", "favicon.svg", "og.png",
+    ]) assert.equal(fs.existsSync(path.join(siteDir, "assets", asset)), true, `${asset} is generated from source`);
 
     const redirects = fs.readFileSync(path.join(siteDir, "_redirects"), "utf-8");
     assert.match(redirects, /^\/skills\/dev-browser\/ \/skills\/browser-hand\/ 301$/m);
@@ -69,6 +244,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
     for (const name of [...hidden, ...removed]) {
       assert.equal(generated.includes(`/skills/${name}/`), false, `${name} leaked into generated catalog`);
     }
+    assert.match(generated, /https:\/\/skillissue\.sh\/skills\/browser-hand\//);
   } finally {
     fs.rmSync(siteDir, { recursive: true, force: true });
   }

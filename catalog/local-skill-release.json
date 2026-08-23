@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "packages": [
+    "autovault-brand-system",
+    "award-travel-research",
+    "brand-bible-author",
+    "bubble-tea-tui-builder",
+    "building-emdash-site",
+    "ci-cost-audit",
+    "clerk-cloudflare-auth",
+    "clerk-cloudflare-commerce-bootstrap",
+    "context-engineering-audit",
+    "creating-plugins",
+    "elevenlabs-automem-memory",
+    "emdash-cli",
+    "midjourney-iteration",
+    "phala-gpu-tee-deploy",
+    "quest-passthrough-camera-capture",
+    "repo-demo-video-director",
+    "repo-demo-video-publisher",
+    "stripe-commerce-checkout",
+    "tui-design",
+    "unity-ai-collaboration",
+    "unity-quest-build",
+    "video-toolkit",
+    "wordpress-theme-to-emdash"
+  ]
+}

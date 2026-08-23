@@ -1,0 +1,12 @@
+{
+  "id": "com.example.commerce-checkout",
+  "version": "1.0.0",
+  "name": "Commerce Checkout",
+  "stripe_api_access_type": "restricted_api_key",
+  "permissions": [
+    {
+      "permission": "checkout_session_write",
+      "purpose": "Create Stripe-hosted Checkout Sessions and return branded checkout URLs."
+    }
+  ]
+}

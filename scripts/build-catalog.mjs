@@ -8,21 +8,91 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import crypto from "node:crypto";
+import { execFileSync, execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const strict = process.argv.includes("--strict");
-const siteDir = process.env.SKILLISSUE_SITE_DIR
+const siteTarget = process.env.SKILLISSUE_SITE_DIR
   ? path.resolve(process.env.SKILLISSUE_SITE_DIR)
   : path.join(root, "site");
-const reportPath = process.env.SKILLISSUE_REPORT_PATH
+const reportTarget = process.env.SKILLISSUE_REPORT_PATH
   ? path.resolve(process.env.SKILLISSUE_REPORT_PATH)
   : path.join(root, "catalog", "report.json");
 const skillsDir = path.join(root, "skills");
 const contentStory = path.join(root, "content/story");
 const REPO = "jack-arturo/skillissue";
+const GENERATED_SENTINEL = ".skillissue-generated";
+const cssSourcePath = path.join(__dirname, "site.css");
+const explorerSourcePath = path.join(__dirname, "catalog-explorer.js");
+const cssSource = fs.readFileSync(cssSourcePath);
+const explorerSource = fs.readFileSync(explorerSourcePath);
+
+function fingerprint(bytes) {
+  return crypto.createHash("sha256").update(bytes).digest("hex").slice(0, 12);
+}
+
+const cssAssetName = `site.${fingerprint(cssSource)}.css`;
+const explorerAssetName = `catalog-explorer.${fingerprint(explorerSource)}.js`;
+
+function canonicalizePath(candidate) {
+  const missing = [];
+  let current = candidate;
+  while (true) {
+    try {
+      return path.join(fs.realpathSync(current), ...missing.reverse());
+    } catch (error) {
+      if (error.code !== "ENOENT") throw error;
+      const parent = path.dirname(current);
+      if (parent === current) throw error;
+      missing.push(path.basename(current));
+      current = parent;
+    }
+  }
+}
+
+function containsPath(parent, candidate) {
+  const relative = path.relative(parent, candidate);
+  return relative === "" || (relative !== ".." && !relative.startsWith(`..${path.sep}`) && !path.isAbsolute(relative));
+}
+
+function validateGeneratedTarget() {
+  const canonicalTarget = canonicalizePath(siteTarget);
+  const canonicalRoot = fs.realpathSync(root);
+  if (
+    canonicalTarget === path.parse(canonicalTarget).root ||
+    containsPath(canonicalTarget, canonicalRoot)
+  ) {
+    throw new Error(`Unsafe generated output target: ${siteTarget}. Choose the repository site/ directory or a dedicated generated directory.`);
+  }
+  if (fs.existsSync(siteTarget) && fs.lstatSync(siteTarget).isSymbolicLink()) {
+    throw new Error(`Unsafe generated output target: ${siteTarget} must not be a symlink.`);
+  }
+  const defaultTarget = path.join(root, "site");
+  if (process.env.SKILLISSUE_SITE_DIR && siteTarget !== defaultTarget && fs.existsSync(siteTarget)) {
+    const entries = fs.readdirSync(siteTarget);
+    if (entries.length && !entries.includes(GENERATED_SENTINEL)) {
+      throw new Error(`Override output target is populated but not owned by this build (missing ${GENERATED_SENTINEL}): ${siteTarget}`);
+    }
+  }
+}
+
+function assertCommittedSkillTree() {
+  let status;
+  try {
+    status = execFileSync("git", ["status", "--porcelain", "--untracked-files=all", "--ignored=matching", "--", "skills"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim();
+  } catch (error) {
+    throw new Error(`Cannot verify that skills/ is committed before generating install pins: ${error.message}`);
+  }
+  if (status) {
+    throw new Error(`Refusing to generate stale package pins: commit all skills/ changes first. Dirty paths:\n${status}`);
+  }
+}
 
 function esc(s) {
   return String(s ?? "")
@@ -30,6 +100,52 @@ function esc(s) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/** JSON placed inside a script element must not be able to close that element. */
+function jsonForScript(value) {
+  return JSON.stringify(value).replace(/[<>&\u2028\u2029]/g, (character) => {
+    const code = character.charCodeAt(0).toString(16).padStart(4, "0");
+    return `\\u${code}`;
+  });
+}
+
+function listBundleFiles(directory, relative = "") {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const child = path.join(directory, entry.name);
+    const childRelative = relative ? `${relative}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) files.push(...listBundleFiles(child, childRelative));
+    else if (entry.isFile()) files.push({ path: childRelative, absolute: child, mode: fs.statSync(child).mode });
+  }
+  return files;
+}
+
+function hashFiles(files) {
+  const hash = crypto.createHash("sha256");
+  for (const file of files) {
+    hash.update((file.mode & 0o111) === 0 ? "100644" : "100755");
+    hash.update("\0");
+    hash.update(file.path);
+    hash.update("\0");
+    hash.update(fs.readFileSync(file.absolute));
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+function normalList(value) {
+  if (Array.isArray(value)) return value.filter(Boolean).map(String);
+  if (typeof value === "string" && value.trim()) return [value.trim()];
+  return [];
+}
+
+function hasRunnableBundleMember(files) {
+  return files.some((file) =>
+    (file.mode & 0o111) !== 0 ||
+    /^bin\//.test(file.path) ||
+    /^scripts\/.*\.(?:[cm]?js|ts|py|sh|bash|zsh|rb|pl)$/i.test(file.path),
+  );
 }
 
 function gitSha() {
@@ -40,6 +156,22 @@ function gitSha() {
     }).trim();
   } catch {
     return "main";
+  }
+}
+
+/**
+ * Install URLs must name an immutable commit that contains the package tree,
+ * not whichever later commit happened to regenerate site output.
+ */
+function packageSourceSha() {
+  try {
+    const sourcePin = execSync("git log -1 --format=%H -- skills", {
+      cwd: root,
+      encoding: "utf8",
+    }).trim();
+    return sourcePin || gitSha();
+  } catch {
+    return gitSha();
   }
 }
 
@@ -178,10 +310,11 @@ function mdToHtml(md) {
       '<figure class="chart"><img src="$2" alt="$1" loading="lazy" /></figure>',
     );
     t = t.replace(
-      /\[([^\]]+)\]\((https?:[^)]+|\/[^)]+)\)/g,
-      (_, label, href) => {
-        const rel = href.startsWith("http") ? ' rel="noopener"' : "";
-        return `<a href="${href}"${rel}>${label}</a>`;
+      /\[([^\]]+)\]\((https?:[^)]+|\/[^)]+|\.\.\/([a-z0-9]+(?:-[a-z0-9]+)*)\/story\.md)\)/g,
+      (_, label, href, localSkill) => {
+        const canonicalHref = localSkill ? `/skills/${localSkill}/` : href;
+        const rel = canonicalHref.startsWith("http") ? ' rel="noopener"' : "";
+        return `<a href="${canonicalHref}"${rel}>${label}</a>`;
       },
     );
     return t;
@@ -436,7 +569,7 @@ function shellLayout({ title, description, path: pagePath, body, active }) {
 <meta property="og:url" content="https://skillissue.sh${esc(pagePath)}">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/${cssAssetName}">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -491,9 +624,11 @@ ${body}
 // --- load skills from repo tree ---
 const deny = loadDenylist();
 const publicationRegistry = loadPublicationRegistry();
-const sha = gitSha();
-const shortSha = sha.slice(0, 7);
+assertCommittedSkillTree();
+const packageSourcePin = packageSourceSha();
+const shortPackageSourcePin = packageSourcePin.slice(0, 7);
 const publicSkills = [];
+const bundleSnapshots = [];
 const errors = [];
 const report = {
   public: 0,
@@ -547,6 +682,8 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   const version = skillFm.version || storyFm.version_pin || "1.0.0";
   const provenance = storyFm.provenance || "house";
   const featured = storyFm.featured === true || storyFm.featured === "true";
+  const category = String(storyFm.category || skillFm.category || "ops").toLowerCase().trim() || "ops";
+  const group = catalogGroup(category);
   const bodyTrim = storyBody.trim();
   const hasNarrative =
     bodyTrim.length > 80 &&
@@ -559,20 +696,35 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     if (strict) errors.push(`public skill lacks story narrative: ${name}`);
   }
 
-  const installId = `${REPO}@${sha}:skills/${name}/SKILL.md`;
+  const installId = `${REPO}@${packageSourcePin}:skills/${name}/SKILL.md`;
   const cliInstall = `autovault add ${installId} --sync-profiles`;
   const mcpInstall = `add_skill({ source: "github", identifier: "${installId}" })`;
-  const sourceUrl = `https://github.com/${REPO}/blob/${sha}/skills/${name}/SKILL.md`;
+  const sourceUrl = `https://github.com/${REPO}/blob/${packageSourcePin}/skills/${name}/SKILL.md`;
+  const storyUrl = `https://skillissue.sh/skills/${name}/`;
+  const bundleFiles = listBundleFiles(dir);
+  const resourceFiles = bundleFiles.filter(
+    (file) => file.path !== "SKILL.md" && file.path !== "story.md",
+  );
+  const resourceCount = resourceFiles.length;
+  const runnable = hasRunnableBundleMember(resourceFiles);
+  bundleSnapshots.push({
+    name,
+    version,
+    contentHash: crypto.createHash("sha256").update(skillRaw).digest("hex"),
+    bundleHash: hashFiles(bundleFiles),
+    fileCount: bundleFiles.length,
+  });
 
   publicSkills.push({
     name: skillFm.name || name,
     title: storyFm.title || skillFm.name || name,
     summary,
     description,
-    category: catalogGroup(storyFm.category || skillFm.category),
+    category,
+    group,
     version,
-    tags: storyFm.tags || skillFm.tags || [],
-    agents: skillFm.agents || [],
+    tags: normalList(storyFm.tags || skillFm.tags),
+    agents: normalList(skillFm.agents),
     featured,
     provenance,
     related: storyFm.related || [],
@@ -581,15 +733,19 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     cliInstall,
     mcpInstall,
     sourceUrl,
+    storyUrl,
     installId,
+    resourceCount,
+    runnable,
   });
   report.public++;
 }
 
 publicSkills.sort((a, b) => {
-  const ga = groupOrderOf(a.category);
-  const gb = groupOrderOf(b.category);
+  const ga = groupOrderOf(a.group);
+  const gb = groupOrderOf(b.group);
   if (ga !== gb) return ga - gb;
+  if (a.group !== b.group) return a.group.localeCompare(b.group);
   if (a.category !== b.category) return a.category.localeCompare(b.category);
   if (!!b.featured !== !!a.featured) return b.featured ? 1 : -1;
   return a.name.localeCompare(b.name);
@@ -600,24 +756,26 @@ if (strict && errors.length) {
   process.exit(1);
 }
 
-// clean site except assets
-fs.mkdirSync(siteDir, { recursive: true });
-for (const ent of fs.readdirSync(siteDir, { withFileTypes: true })) {
-  if (ent.name === "assets") continue;
-  const p = path.join(siteDir, ent.name);
-  if (ent.isDirectory()) fs.rmSync(p, { recursive: true, force: true });
-  else fs.unlinkSync(p);
+validateGeneratedTarget();
+if (fs.existsSync(siteTarget) && !fs.lstatSync(siteTarget).isDirectory()) {
+  throw new Error(`Generated output target must be a directory: ${siteTarget}`);
 }
+fs.mkdirSync(path.dirname(siteTarget), { recursive: true });
+let stagingDir = fs.mkdtempSync(path.join(path.dirname(siteTarget), `.${path.basename(siteTarget)}.build-stage-`));
+const siteDir = stagingDir;
+process.once("exit", () => {
+  if (stagingDir && fs.existsSync(stagingDir)) fs.rmSync(stagingDir, { recursive: true, force: true });
+});
+
+const reportRelative = path.relative(siteTarget, reportTarget);
+if (reportRelative === "") throw new Error("SKILLISSUE_REPORT_PATH must name a file, not the generated output directory");
+const reportInsideTarget = reportRelative !== ".." && !reportRelative.startsWith(`..${path.sep}`) && !path.isAbsolute(reportRelative);
+const generatedReportPath = reportInsideTarget ? path.join(siteDir, reportRelative) : reportTarget;
 
 // CSS
-const cssSrc = path.join(__dirname, "site.css");
 fs.mkdirSync(path.join(siteDir, "assets"), { recursive: true });
-if (fs.existsSync(cssSrc)) {
-  fs.writeFileSync(
-    path.join(siteDir, "assets/site.css"),
-    fs.readFileSync(cssSrc, "utf8"),
-  );
-}
+fs.writeFileSync(path.join(siteDir, "assets", cssAssetName), cssSource);
+fs.writeFileSync(path.join(siteDir, "assets", explorerAssetName), explorerSource);
 // Essay charts (SVG) + harvest data for transparency
 const contentAssets = path.join(root, "content/assets");
 if (fs.existsSync(contentAssets)) {
@@ -639,12 +797,12 @@ const skillsJson = {
   description:
     "Jack Arturo's personal/agent skills collection — packages on GitHub, install via AutoVault.",
   updated: new Date().toISOString().slice(0, 10),
-  installPin: sha,
-  installPinShort: shortSha,
+  packageSourcePin,
+  packageSourcePinShort: shortPackageSourcePin,
   repo: REPO,
   publicCount: publicSkills.length,
   install: {
-    autovault: `autovault add ${REPO}@${sha}:skills/<name>/SKILL.md --sync-profiles`,
+    autovault: `autovault add ${REPO}@${packageSourcePin}:skills/<name>/SKILL.md --sync-profiles`,
     bootstrap: "https://autovault.sh",
   },
   featured: publicSkills.filter((s) => s.featured).map((s) => s.name),
@@ -652,6 +810,8 @@ const skillsJson = {
     name: s.name,
     title: s.title,
     category: s.category,
+    group: s.group,
+    summary: s.summary,
     description: s.description,
     version: s.version,
     tags: s.tags,
@@ -661,7 +821,12 @@ const skillsJson = {
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
-    url: `https://skillissue.sh/skills/${s.name}/`,
+    storyUrl: s.storyUrl,
+    url: s.storyUrl,
+    installId: s.installId,
+    resourceCount: s.resourceCount,
+    runnable: s.runnable,
+    packageSourcePin,
   })),
 };
 fs.writeFileSync(
@@ -673,6 +838,7 @@ fs.writeFileSync(
 for (const s of publicSkills) {
   const dir = path.join(siteDir, "skills", s.name);
   fs.mkdirSync(dir, { recursive: true });
+  const featuredBadge = s.featured ? '<span class="badge">featured</span>' : "";
   const related = (s.related || [])
     .filter((n) => publicSkills.some((p) => p.name === n))
     .map((n) => `<a class="tag" href="/skills/${esc(n)}/">${esc(n)}</a>`)
@@ -683,12 +849,11 @@ for (const s of publicSkills) {
   const body = `
     <section class="hero skill-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v${esc(s.version)} · ${esc(s.provenance)} · pin ${esc(shortSha)}</div>
+        <div class="prompt"><span class="dot"></span> skill · v${esc(s.version)} · ${esc(s.provenance)} · package source ${esc(shortPackageSourcePin)}</div>
         <h1><span class="path">${esc(s.name)}</span></h1>
         <p class="lede">${esc(s.summary)}</p>
         <div class="meta" style="margin-bottom:1.25rem">${tags}
-          <span class="badge">${esc(s.provenance)}</span>
-          ${s.featured ? '<span class="badge">featured</span>' : ""}
+          <span class="badge">${esc(s.provenance)}</span>${featuredBadge}
         </div>
         <div class="cta-row">
           <button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy AutoVault install</button>
@@ -696,7 +861,7 @@ for (const s of publicSkills) {
           <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
         </div>
         <div class="term" style="max-width:48rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · ${esc(shortSha)}</span></div>
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">package-source install · ${esc(shortPackageSourcePin)}</span></div>
           <div class="term-body">
             <div><span class="dim"># CLI (primary)</span></div>
             <div><span class="dim">$</span> <span class="cmd">${esc(s.cliInstall)}</span></div>
@@ -714,7 +879,7 @@ ${s.bodyHtml}
 ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
         <h2>Package</h2>
         <p class="muted">Version <code>${esc(s.version)}</code>
-        · install pin <code>${esc(shortSha)}</code>
+        · package-source pin <code>${esc(shortPackageSourcePin)}</code>
         · SSOT <code>skills/${esc(s.name)}/</code> on GitHub
         ${s.agents?.length ? ` · agents: ${esc((s.agents || []).join(", "))}` : ""}</p>
       </div>
@@ -731,127 +896,71 @@ ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
   );
 }
 
-// catalog
+// catalog — the links below are the no-JavaScript experience. The module only
+// refines them into a searchable, shareable Explorer.
 fs.mkdirSync(path.join(siteDir, "skills"), { recursive: true });
-const grouped = new Map();
-for (const s of publicSkills) {
-  if (!grouped.has(s.category)) grouped.set(s.category, []);
-  grouped.get(s.category).push(s);
-}
-const groupIds = [...grouped.keys()].sort((a, b) => {
-  const oa = groupOrderOf(a);
-  const ob = groupOrderOf(b);
-  if (oa !== ob) return oa - ob;
-  return a.localeCompare(b);
-});
-const groupMeta = groupIds.map((id) => ({
-  id,
-  label: CATALOG_GROUPS[id]?.label || id,
-  n: grouped.get(id).length,
-}));
-const featuredCount = publicSkills.filter((s) => s.featured).length;
-const catalogHtml = groupIds
-  .map((id) => {
-    const items = grouped.get(id);
-    const label = CATALOG_GROUPS[id]?.label || id;
-    return `<div class="skill-group" data-group="${esc(id)}">
-    <div class="section-head">
-      <h2>${esc(label)}</h2>
-      <span class="section-note">${items.length}</span>
-    </div>
-    <div class="grid">${items.map(skillCard).join("\n")}</div>
-  </div>`;
-  })
-  .join("\n");
+const explorerData = {
+  packageSourcePin,
+  skills: publicSkills.map((s) => ({
+    name: s.name,
+    title: s.title,
+    summary: s.summary,
+    description: s.description,
+    storyUrl: s.storyUrl,
+    category: s.category,
+    group: s.group,
+    tags: s.tags,
+    agents: s.agents,
+    featured: s.featured,
+    resourceCount: s.resourceCount,
+    runnable: s.runnable,
+    cliInstall: s.cliInstall,
+    mcpInstall: s.mcpInstall,
+    sourceUrl: s.sourceUrl,
+    packageSourcePin,
+  })),
+};
+const fallbackRows = publicSkills.map((s) => `<a class="explorer-result" href="/skills/${esc(s.name)}/">
+  <strong>${esc(s.name)}</strong><span>${esc(s.summary)}</span>
+  <small>${esc(s.category)} · ${s.resourceCount} resource${s.resourceCount === 1 ? "" : "s"}</small>
+</a>`).join("\n");
+const firstSkill = publicSkills[0];
 
 fs.writeFileSync(
   path.join(siteDir, "skills/index.html"),
   shellLayout({
     title: "Skills — skillissue.sh",
-    description:
-      "Jack Arturo's public agent skills — packages on GitHub, install via AutoVault.",
+    description: "Jack Arturo's public agent skills — packages on GitHub, install via AutoVault.",
     path: "/skills/",
     body: `
-    <section class="hero catalog-hero">
-      <div class="wrap">
-        <div class="prompt"><span class="dot"></span> <span id="result-count">${publicSkills.length} public</span> · pin ${esc(shortSha)}</div>
-        <h1>Skills</h1>
-        <p class="lede">Each page is a story plus a real <code>autovault add</code> for the package living in this repo.</p>
+    <section class="hero catalog-hero"><div class="wrap">
+      <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · package source ${esc(shortPackageSourcePin)}</div>
+      <h1>Skills Explorer</h1>
+      <p class="lede">Filter the public shelf, inspect the package, then copy a pinned install. Every result remains a real story page.</p>
+    </div></section>
+    <section class="catalog-body"><div class="wrap">
+      <div class="explorer" data-catalog-explorer>
+        <form class="explorer-facets" aria-label="Filter skills">
+          <label for="explorer-q">Search</label>
+          <input class="search" id="explorer-q" name="q" type="search" placeholder="name, summary, description, tag" autocomplete="off" spellcheck="false">
+          <label for="explorer-category">Category</label>
+          <select id="explorer-category" name="category"><option value="">All categories</option></select>
+          <label for="explorer-agent">Agent</label>
+          <select id="explorer-agent" name="agent"><option value="">All agents</option></select>
+          <label class="explorer-check"><input type="checkbox" name="featured"> Featured only</label>
+          <label for="explorer-resources">Package resources</label>
+          <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
+          <p class="section-note" data-explorer-count aria-live="polite">${publicSkills.length} skills</p>
+        </form>
+        <div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div>
+        <aside class="explorer-detail panel" data-explorer-detail aria-live="polite">
+          <h2>${esc(firstSkill.name)}</h2><p>${esc(firstSkill.summary)}</p>
+          <a class="btn btn-primary" href="/skills/${esc(firstSkill.name)}/">Read full story</a>
+        </aside>
       </div>
-    </section>
-    <section class="catalog-body">
-      <div class="wrap" id="catalog">
-        <div class="catalog-tools">
-          <div class="search-row"><input class="search" id="q" type="search" placeholder="filter by name, tag, or blurb…" autocomplete="off" spellcheck="false"></div>
-          <div class="filters" id="filters" aria-label="Skill groups"></div>
-        </div>
-        ${catalogHtml}
-        <div class="empty" id="empty">No skills match.</div>
-      </div>
-    </section>
-    <script>
-    (function(){
-      var groups=[].slice.call(document.querySelectorAll('.skill-group'));
-      var cards=[].slice.call(document.querySelectorAll('#catalog .card'));
-      var filters=document.getElementById('filters');
-      var q=document.getElementById('q');
-      var countEl=document.getElementById('result-count');
-      var empty=document.getElementById('empty');
-      var total=${publicSkills.length};
-      var cats=${JSON.stringify(groupMeta)};
-      var featuredN=${featuredCount};
-      var active='all';
-      function chip(id, label, n){
-        var on=id===active;
-        return '<button type="button" class="chip'+(on?' active':'')+'" data-cat="'+id+'" aria-pressed="'+on+'">'+label+' <span class="chip-n">'+n+'</span></button>';
-      }
-      function paint(){
-        filters.innerHTML=chip('all','all',total)+chip('featured','featured',featuredN)+cats.map(function(c){
-          return chip(c.id,c.label,c.n);
-        }).join('');
-      }
-      function setActive(id, push){
-        active=id;
-        if(push!==false){
-          var hash=id==='all'?'':('#'+encodeURIComponent(id));
-          if((location.hash||'')!==hash) history.replaceState(null,'',hash||(location.pathname+location.search));
-        }
-        paint();
-        filter();
-      }
-      function filter(){
-        var qq=(q.value||'').toLowerCase();
-        var n=0;
-        cards.forEach(function(c){
-          var text=c.textContent.toLowerCase();
-          var cat=c.getAttribute('data-category')||'';
-          var feat=c.getAttribute('data-featured')==='1';
-          var okCat=active==='all'||(active==='featured'&&feat)||cat===active;
-          var ok=okCat&&(!qq||text.indexOf(qq)>=0);
-          c.hidden=!ok;
-          if(ok)n++;
-        });
-        groups.forEach(function(g){
-          var vis=g.querySelectorAll('.card:not([hidden])').length;
-          g.hidden=vis===0;
-          var note=g.querySelector('.section-note');
-          if(note) note.textContent=vis;
-        });
-        if(countEl) countEl.textContent=n===total?(n+' public'):(n+' of '+total);
-        empty.classList.toggle('show',n===0);
-      }
-      filters.addEventListener('click',function(e){
-        var b=e.target.closest('[data-cat]'); if(!b)return;
-        setActive(b.getAttribute('data-cat'));
-      });
-      q.addEventListener('input',filter);
-      var initial=decodeURIComponent((location.hash||'').replace(/^#/,'')).toLowerCase();
-      var known=initial==='featured'||cats.some(function(c){return c.id===initial});
-      paint();
-      if(known) setActive(initial,false);
-      else filter();
-    })();
-    </script>`,
+    </div></section>
+    <script id="explorer-data" type="application/json">${jsonForScript(explorerData)}</script>
+    <script type="module" src="/assets/${explorerAssetName}"></script>`,
     active: "skills",
   }),
 );
@@ -884,7 +993,7 @@ fs.writeFileSync(
     body: `
     <section class="hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> live · ${publicSkills.length} public skills · pin ${esc(shortSha)}</div>
+        <div class="prompt"><span class="dot"></span> live · ${publicSkills.length} public skills · package source ${esc(shortPackageSourcePin)}</div>
         <h1><span class="path">skillissue</span>.sh<span class="cursor" aria-hidden="true"></span></h1>
         <p class="lede">
           Jack Arturo’s personal/agent skills —
@@ -907,7 +1016,7 @@ fs.writeFileSync(
         <div class="stats">
           <div class="stat"><b>${publicSkills.length}</b><span>public skill pages</span></div>
           <div class="stat"><b>${featured.length}</b><span>featured</span></div>
-          <div class="stat"><b>${esc(shortSha)}</b><span>install pin (this build)</span></div>
+          <div class="stat"><b>${esc(shortPackageSourcePin)}</b><span>package-source install pin</span></div>
         </div>
       </div>
     </section>
@@ -1030,7 +1139,7 @@ Every public skill page has a copy button. Pattern:
 autovault add jack-arturo/skillissue@<sha>:skills/<name>/SKILL.md --sync-profiles
 \`\`\`
 
-The \`@sha\` pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.
+The \`@sha\` pin is the last committed package-source revision, so installs stay reproducible even when the site itself is rebuilt later. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.
 
 ## 3. What AutoVault does
 
@@ -1123,7 +1232,7 @@ storyPage(
 ## 0.3.0 — 2026-07-20
 
 - GitHub SSOT: packages under \`skills/<name>/\` (SKILL.md + story.md)
-- AutoVault install rows (CLI + MCP) pinned to build commit
+- AutoVault install rows (CLI + MCP) pinned to the immutable package-source commit
 - Email list: D1 LEAD_DB + Resend
 - Removed typo-domain marketing copy
 
@@ -1147,12 +1256,12 @@ const llms = `# skillissue.sh
 - Home: https://skillissue.sh/
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
-- Source packages: https://github.com/jack-arturo/skillissue/tree/main/skills
-- Install pin (this build): ${sha}
+- Source packages: https://github.com/jack-arturo/skillissue/tree/${packageSourcePin}/skills
+- Package-source install pin: ${packageSourcePin}
 
 ## Install
 \`\`\`
-autovault add jack-arturo/skillissue@${sha}:skills/<name>/SKILL.md --sync-profiles
+autovault add jack-arturo/skillissue@${packageSourcePin}:skills/<name>/SKILL.md --sync-profiles
 \`\`\`
 
 ## Public skills (${publicSkills.length})
@@ -1214,16 +1323,66 @@ fs.writeFileSync(
 );
 
 report.generatedAt = new Date().toISOString();
-report.installPin = sha;
+report.packageSourcePin = packageSourcePin;
+report.packageSourcePinShort = shortPackageSourcePin;
 report.publicSkills = publicSkills.map((s) => s.name);
-fs.mkdirSync(path.dirname(reportPath), { recursive: true });
-fs.writeFileSync(
-  reportPath,
-  JSON.stringify(report, null, 2) + "\n",
-);
+const reportJson = JSON.stringify(report, null, 2) + "\n";
+if (reportInsideTarget) {
+  fs.mkdirSync(path.dirname(generatedReportPath), { recursive: true });
+  fs.writeFileSync(generatedReportPath, reportJson);
+}
+fs.writeFileSync(path.join(siteDir, GENERATED_SENTINEL), "skillissue generated output v1\n");
+
+function unusedBuildSibling(kind) {
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    const candidate = path.join(
+      path.dirname(siteTarget),
+      `.${path.basename(siteTarget)}.build-${kind}-${process.pid}-${Date.now()}-${attempt}`,
+    );
+    if (!fs.existsSync(candidate)) return candidate;
+  }
+  throw new Error(`Could not reserve a generated output ${kind} path beside ${siteTarget}`);
+}
+
+let previousSite = null;
+if (fs.existsSync(siteTarget)) {
+  previousSite = unusedBuildSibling("backup");
+  fs.renameSync(siteTarget, previousSite);
+}
+try {
+  fs.renameSync(stagingDir, siteTarget);
+  stagingDir = null;
+} catch (error) {
+  if (previousSite) {
+    try {
+      fs.renameSync(previousSite, siteTarget);
+    } catch (restoreError) {
+      throw new Error(`Generated output swap failed: ${error.message}; restoring the previous target also failed: ${restoreError.message}`, { cause: error });
+    }
+  }
+  throw new Error(`Generated output swap failed; the previous target was restored: ${error.message}`, { cause: error });
+}
+if (previousSite) fs.rmSync(previousSite, { recursive: true, force: false });
+
+if (!reportInsideTarget) {
+  fs.mkdirSync(path.dirname(reportTarget), { recursive: true });
+  fs.writeFileSync(reportTarget, reportJson);
+}
+if (!process.env.SKILLISSUE_SITE_DIR && !process.env.SKILLISSUE_REPORT_PATH) {
+  fs.writeFileSync(
+    path.join(root, "catalog", "autovault-sync.json"),
+    JSON.stringify({
+      schemaVersion: 3,
+      target: "skillissue",
+      hashAlgorithm: "sha256",
+      bundleHashAlgorithm: "git-mode-path-bytes-v1",
+      skills: bundleSnapshots.sort((a, b) => a.name.localeCompare(b.name)),
+    }, null, 2) + "\n",
+  );
+}
 
 console.log(
-  `Built site: ${report.public} public from skills/ · pin ${shortSha}`,
+  `Built site: ${report.public} public from skills/ · package source ${shortPackageSourcePin}`,
 );
 if (report.missingNarrative.length) {
   console.warn("Missing narrative:", report.missingNarrative.join(", "));

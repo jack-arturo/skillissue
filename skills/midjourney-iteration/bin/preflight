@@ -1,0 +1,121 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+skill_root="${MJ_ITER_SKILL_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+chrome_debug_port="${MJ_ITER_CHROME_PORT:-9222}"
+browser_mode="${MJ_ITER_BROWSER_MODE:-prompt}"
+profile_dir="${MJ_ITER_CHROME_PROFILE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/midjourney-iteration/chrome-profile}"
+
+redact() {
+  sed -E \
+    -e 's/Bearer[[:space:]]+[A-Za-z0-9._~+\/=-]{20,}/Bearer <redacted>/g' \
+    -e 's/[A-Za-z0-9._~+\/=-]{32,}/<redacted-token>/g'
+}
+
+print_step() {
+  printf '\n[%s] %s\n' "$1" "$2"
+}
+
+print_ok() {
+  printf '  ok:    %s\n' "$1"
+}
+
+print_fail() {
+  printf '  FAIL:  %s\n' "$1" >&2
+}
+
+check_dev_browser() {
+  print_step "1/3" "Checking dev-browser CLI"
+  if ! command -v dev-browser >/dev/null 2>&1; then
+    print_fail "dev-browser is not on PATH."
+    cat <<'TEXT' >&2
+
+Install with:
+
+  npm install -g dev-browser
+  dev-browser install
+
+Then re-run this preflight.
+TEXT
+    return 1
+  fi
+  bin_path="$(command -v dev-browser)"
+  print_ok "dev-browser found at $bin_path"
+}
+
+check_chrome_cdp() {
+  print_step "2/3" "Checking Chrome DevTools Protocol on port $chrome_debug_port"
+  cdp_url="http://127.0.0.1:$chrome_debug_port/json/version"
+  if ! resp="$(curl -fsS --max-time 3 "$cdp_url" 2>&1)"; then
+    print_fail "Chrome is not exposing the DevTools port."
+    cat <<TEXT >&2
+
+Chrome must be launched with --remote-debugging-port=$chrome_debug_port.
+
+If Chrome is already running without that flag, you'll need to fully quit it
+first (Cmd+Q on macOS) — your existing tabs will reopen on the next launch
+because Chrome restores the previous session by default.
+
+Run this skill's helper to relaunch Chrome with the debug port:
+
+  $skill_root/bin/relaunch-chrome
+
+Or relaunch manually with the same dedicated profile:
+
+  open -a 'Google Chrome' --args --remote-debugging-port=$chrome_debug_port --user-data-dir="$profile_dir"
+
+TEXT
+    if ! MJ_ITER_BROWSER_MODE="$browser_mode" "$skill_root/bin/relaunch-chrome"; then
+      print_fail "Chrome launcher failed (MJ_ITER_BROWSER_MODE=$browser_mode)."
+    fi
+    return 1
+  fi
+  product="$(printf '%s' "$resp" | redact | sed -n 's/.*"Browser":[[:space:]]*"\([^"]*\)".*/\1/p')"
+  print_ok "Chrome CDP responding (${product:-Chrome})"
+}
+
+check_mj_tab() {
+  print_step "3/3" "Checking for a logged-in midjourney.com tab"
+  cdp_url="http://127.0.0.1:$chrome_debug_port/json"
+  if ! resp="$(curl -fsS --max-time 3 "$cdp_url" 2>&1)"; then
+    print_fail "Could not list Chrome tabs via CDP."
+    return 1
+  fi
+  if ! printf '%s' "$resp" | grep -q 'midjourney.com'; then
+    print_fail "No midjourney.com tab is open."
+    cat <<'TEXT' >&2
+
+Open midjourney.com in Chrome and sign in, then re-run this preflight.
+The skill cannot create a logged-in session for you — it attaches to an
+existing one.
+
+TEXT
+    return 1
+  fi
+  print_ok "midjourney.com tab found (URL withheld)"
+
+  if printf '%s' "$resp" | grep -q '"url":[[:space:]]*"https://www.midjourney.com/auth'; then
+    print_fail "midjourney.com tab is on the auth page — please sign in."
+    return 1
+  fi
+}
+
+main() {
+  printf 'midjourney-iteration preflight\n'
+  printf 'skill root:   %s\n' "$skill_root"
+
+  fails=0
+  check_dev_browser || fails=$((fails + 1))
+  check_chrome_cdp  || fails=$((fails + 1))
+  check_mj_tab      || fails=$((fails + 1))
+
+  printf '\n'
+  if [ "$fails" -eq 0 ]; then
+    printf 'preflight: PASS — ready to run midjourney-iteration loop.\n'
+    return 0
+  fi
+  printf 'preflight: FAIL — %d issue(s). Resolve the above and re-run.\n' "$fails" >&2
+  return 1
+}
+
+main "$@"

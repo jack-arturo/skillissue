@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/install/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="stylesheet" href="/assets/site.80e47785fbcc.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -46,7 +46,7 @@
 <h2>2. Add a skill from this repo</h2>
 <p>Every public skill page has a copy button. Pattern:</p>
 <pre><code>autovault add jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md --sync-profiles</code></pre>
-<p>The <code>@sha</code> pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
+<p>The <code>@sha</code> pin is the last committed package-source revision, so installs stay reproducible even when the site itself is rebuilt later. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
 <h2>3. What AutoVault does</h2>
 <ol>
 <li>Fetches the skill bundle at that commit  </li>

@@ -8,6 +8,8 @@
     "test": "node --test tests/*.test.mjs",
     "build": "node scripts/build-catalog.mjs",
     "build:strict": "node scripts/build-catalog.mjs --strict",
+    "skills:audit": "node scripts/audit-local-skills.mjs",
+    "skills:import": "node scripts/import-local-skills.mjs",
     "harvest:tools": "node scripts/harvest-tool-timeline.mjs",
     "charts": "node scripts/generate-charts.mjs",
     "preview": "python3 -m http.server 8787 --directory site",

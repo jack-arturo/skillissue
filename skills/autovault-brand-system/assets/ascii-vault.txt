@@ -1,0 +1,59 @@
+AutoVault ASCII Mark
+====================
+
+Static locked mark:
+
+     .----------.
+    /  AUTOVLT  \
+   |      __      |
+   |     (  )     |
+   |      ||      |
+    \__________/
+       |    |
+
+Compact locked mark:
+
+  +----------+
+  |    ()    |
+  |    ||    |
+  +----------+
+     |    |
+
+Compact unlocked mark:
+
+  +----------+
+  |  . . .   |
+  |          |
+  +----------+
+     |    |
+
+Scan frames:
+
+[SCAN]
+  +----------+
+  |----------|
+  |    ()    |
+  +----------+
+     |    |
+
+[READ]
+  +----------+
+  |    ()    |
+  |----------|
+  +----------+
+     |    |
+
+[ADMIT]
+  +----------+
+  |    ()    |
+  |    ||    |
+  +----------+
+     |    |
+
+State labels:
+
+LOCKED  - dial visible, stable outline
+SCAN    - horizontal line moves through the vault
+READ    - dashed or row-highlight state
+ADMIT   - dial resolves and final state rests closed
+HELD    - stable outline plus warning label
