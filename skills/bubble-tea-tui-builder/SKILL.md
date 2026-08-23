@@ -3,7 +3,7 @@ name: bubble-tea-tui-builder
 description: Build, test, and harden Go Bubble Tea terminal user interfaces with replayable events, responsive rendering, and terminal-safe fallbacks.
 license: MIT
 tags: [tui, terminal, bubble-tea, go, testing, graphics]
-agents: [codex]
+agents: [claude-code, codex, autojack]
 category: terminal
 metadata:
   version: "1.1.0"
@@ -66,21 +66,22 @@ State rules:
 - Rendering helpers receive width/height explicitly; no hidden global terminal
   reads inside layout functions.
 
-## AutoHub Bridge Contract
+## Event Contract
 
-For AutoHub voice cockpit work, use newline-delimited JSON over a local Unix
-socket on macOS.
+When a TUI receives state from another process, use newline-delimited JSON over
+a documented local transport. Keep the protocol application-neutral and make
+fixture replay independent of live services.
 
 Event envelope:
 
 ```json
 {
-  "version": "autohub.voice.v1",
-  "type": "audio.level",
+  "version": "v1",
+  "type": "status.changed",
   "seq": 1,
   "ts": "2026-05-09T00:00:00.000Z",
   "session_id": "conv-...",
-  "runtime_id": "autohub-voice",
+  "source": "service-name",
   "payload": {}
 }
 ```
@@ -89,34 +90,29 @@ Command envelope:
 
 ```json
 {
-  "version": "autohub.voice.v1",
+  "version": "v1",
   "type": "command",
   "id": "cmd-1",
-  "command": "interrupt",
+  "command": "refresh",
   "payload": {}
 }
 ```
 
-Required event types for voice cockpit v1:
+Typical event types:
 
 - `runtime.ready`, `runtime.status`, `runtime.exit`
-- `voice.state`, `audio.level`, `vad.state`
-- `transcript.partial`, `transcript.final`
-- `assistant.delta`, `assistant.final`
+- `status.changed`, `progress.updated`, `connection.changed`
+- `item.created`, `item.updated`, `item.completed`
 - `latency.snapshot`
 - `tool.start`, `tool.complete`
-- `memory.retrieval`
 - `diagnostic.entry`
 - `agent.event`, `task.event`
 
-Required commands:
+Typical commands:
 
-- `interrupt`
-- `sleep`
-- `wake`
-- `toggle_output_route`
-- `toggle_interrupt_mode`
-- `start_owner_enrollment`
+- `refresh`
+- `pause`
+- `resume`
 - `quit`
 
 ## Testing Workflow
@@ -129,12 +125,11 @@ Follow test-first implementation.
    - preserve command ids through ack/error.
 2. Write model tests before UI behavior:
    - apply each required event type;
-   - cap waveform, timeline, memory, and diagnostics history;
-   - coalesce `audio.level` updates to the intended render cadence.
+   - cap activity, timeline, and diagnostics history;
+   - coalesce high-frequency updates to the intended render cadence.
 3. Write view tests before layout changes:
    - narrow, standard, and wide terminal sizes;
-   - active mic, active speech, tool call, memory retrieval, diagnostic error,
-     and disconnect states;
+   - active, paused, busy, diagnostic-error, and disconnect states;
    - no empty panels that consume permanent screen space.
 4. Use Bubble Tea testing support:
    - prefer model/update tests for most behavior;
@@ -142,8 +137,8 @@ Follow test-first implementation.
    - use a PTY/headless terminal harness only for end-to-end keyboard and ANSI
      behavior.
 5. Add fixture replay:
-   - `autohub-tui replay fixtures/<name>.jsonl`;
-   - fixtures should work without microphone, model, STT, TTS, or AutoHub.
+   - `<app>-tui replay fixtures/<name>.jsonl`;
+   - fixtures should work without live services or external credentials.
 6. Add visual review artifacts for UI changes:
    - use scripted terminal capture, preferably Charm VHS, for repeatable PNG
      screenshots and GIFs;
@@ -152,7 +147,7 @@ Follow test-first implementation.
    - inspect generated artifacts before claiming visual work is complete;
    - attach or reference the relevant screenshot when reporting UI changes.
 
-Testing ladder for cockpit work:
+Testing ladder for interactive TUIs:
 
 1. Plain model/protocol tests for state and schema.
 2. `teatest` or PTY/grid tests for key interactions and rendered smoke checks.
@@ -164,12 +159,10 @@ Testing ladder for cockpit work:
 
 ## Visual Rules
 
-- Header: current phase, voice state, DB/bridge status, and persistent latency.
-- Mic strip: live RMS/VAD waveform or block meter; never show static dashes as
-  the only mic signal.
-- Main pane: transcript first.
-- Side/activity pane: tool timeline, memory ops, diagnostics. Agent/task items
-  belong here unless they are actively meaningful.
+- Header: current phase, connection status, and persistent latency when useful.
+- Primary pane: the task's main content, with a clear empty state.
+- Side/activity pane: operations, progress, and diagnostics that are currently
+  useful.
 - Footer: terse keymap only.
 - iTerm2 graphics may use inline image escape sequences, but text fallback is
   mandatory and should be the default in tests.
@@ -238,4 +231,4 @@ v1→v2 port — each one is a silent break if missed.
 - Treating static text replay as proof that a TUI looks good.
 - Asking the user to manually open every iteration instead of generating and
   inspecting repeatable visual artifacts.
-- Rebuilding AutoHub voice, model, TTS, or memory logic in Go.
+- Rebuilding an application's backend logic inside the TUI.

@@ -3,7 +3,7 @@ name: award-travel-research
 description: Research award flights with mandatory live verification, optional provider-specific accelerators, normalized comparisons, and transfer-safe recommendations.
 license: MIT
 tags: [travel, awards, flights, miles, points, research]
-agents: [codex]
+agents: [codex, autojack]
 category: travel
 metadata:
   version: "1.1.0"

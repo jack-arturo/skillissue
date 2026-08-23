@@ -3,7 +3,7 @@ name: elevenlabs-automem-memory
 description: Connect an ElevenLabs conversational agent to a protected AutoMem-compatible MCP service and verify that durable memory calls work in real conversations.
 license: MIT
 tags: [elevenlabs, automem, mcp, voice, deployment]
-agents: [codex]
+agents: [claude-code, codex, autojack]
 category: voice
 metadata:
   version: "1.0.0"

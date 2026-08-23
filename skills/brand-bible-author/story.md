@@ -8,7 +8,7 @@ summary: >-
   Turns tested visual exploration and taste decisions into a locked, reusable identity and visual-language contract.
 category: design
 tags: [brand, design, music]
-related: [midjourney-iteration, social-asset-pack]
+related: [midjourney-iteration]
 first_used: 2026-08
 ---
 
@@ -22,4 +22,4 @@ Read the actual winning images, extract the repeatable choices, ask for the tast
 
 ## Related
 
-Begin with [Midjourney Iteration](../midjourney-iteration/story.md); use [Social Asset Pack](../social-asset-pack/story.md) after the bible is locked.
+Begin with [Midjourney Iteration](../midjourney-iteration/story.md).

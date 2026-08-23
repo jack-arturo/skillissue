@@ -3,7 +3,7 @@ name: context-engineering-audit
 description: Audit and cut what an agent loads before the user types — system prompts, CLAUDE.md/AGENTS.md, skill and tool descriptions. Use before trimming any instruction file, or after a model-generation change makes old prompt scaffolding counterproductive.
 license: MIT
 tags: [context-engineering, prompts, claude-code, agents, audit]
-agents: [codex]
+agents: [claude-code, codex, cursor]
 category: workflow
 metadata:
   version: "1.0.0"

@@ -10,7 +10,7 @@ Briefs are JSON. The skill normalizes any partial brief by filling defaults, but
 
   "project_dir": "string (required) — absolute path to the artist's project folder. The bible is written to <project_dir>/brand/{identity.md, visual-language.md, reference-pins/}. The session log is written to <project_dir>/sessions/brand-bible-author/<timestamp>-<slug>/notes.md.",
 
-  "divergent_session_path": "string (required) — absolute path to a Phase 0 divergent run directory. Must contain picks.json with top_picks[], concepts_tested[], refine_patterns_observed[], and ideally directions_to_park[]; per-round prompt files (round-*.prompt.txt); and the round screenshots referenced from picks.json[].path.",
+  "divergent_session_path": "string (required) — absolute path to a Phase 0 divergent run directory. Must contain picks.json with top_picks[], concepts_tested[], and ideally directions_to_park[]; per-round prompt files (round-*.prompt.txt); and the selected images referenced from picks.json[].path.",
 
   "moodboard_dir": "string (optional but strongly recommended) — absolute path to a directory of moodboard reference images. Required when the artist has prior released material — the skill counts compositional modes from picks AND moodboard, and the released-art canonical comp is often visible only in the moodboard.",
 
@@ -26,7 +26,7 @@ Briefs are JSON. The skill normalizes any partial brief by filling defaults, but
     }
   ],
 
-  "iteration_skill_refine_patterns_path": "string (optional) — absolute path to a refine-patterns.md file. When provided, the bible's banned-vocabulary table cross-links entries to their source pattern.",
+  "iteration_notes_path": "string (optional) — absolute path to concise iteration notes. When provided, the bible's vocabulary table can record the supporting evidence.",
 
   "max_voice_references": 3,        // optional, default 3; hard cap
 
@@ -61,9 +61,9 @@ When provided, the bible includes a "Provenance" line in both files that names t
 
 1–3 entries (capped by `max_voice_references`). Each entry is an object with `reference`, `why_it_lands`, and `kind`. The skill puts these into a table in identity.md so future operators can re-test fit. The operator must provide these — they cannot be auto-derived from picks. Memory recall on the project slug is a good way to surface candidates the user has previously tagged.
 
-### `iteration_skill_refine_patterns_path`
+### `iteration_notes_path`
 
-When set, the banned-vocabulary table in visual-language.md cross-links each entry to its source refine-pattern (e.g., `content-drift-occult`, `style-drift-altrock-cinema`). This makes the bible legible to future operators who haven't read the iteration history.
+When set, the banned-vocabulary table in visual-language.md identifies the relevant note or observation. This makes the bible legible to future operators who did not participate in the exploration.
 
 ### `irony_layers`
 
@@ -75,7 +75,7 @@ Default true. The audience section is load-bearing for downstream voice/caption 
 
 ### `min_do_not_cross_lines`
 
-Default 3. The do-not-cross lines are load-bearing for content safety in downstream skills — at least 3 forces the operator to articulate boundaries explicitly. Common categories: real distress imagery, audience mocking, real-brand defamation, occult coding, sexualized imagery.
+Default 3. The do-not-cross lines are load-bearing for downstream work: they force the operator to articulate boundaries explicitly rather than rely on unstated taste.
 
 ## Minimal valid brief
 

@@ -3,7 +3,7 @@ name: clerk-cloudflare-commerce-bootstrap
 description: Plan and implement a test-first Cloudflare commerce application with Clerk identity, Stripe Checkout, and explicit live-billing approval.
 license: MIT
 tags: [orchestrator, clerk, cloudflare, stripe, commerce, bootstrap]
-agents: [codex]
+agents: [claude-code, codex, autojack]
 category: commerce
 metadata:
   version: "1.0.2"
@@ -20,6 +20,9 @@ requires-secrets:
     required: true
   - name: STRIPE_SECRET_KEY
     description: Stripe credential managed outside the repository; test mode is the default.
+    required: true
+  - name: STRIPE_WEBHOOK_SECRET
+    description: Signing secret for verifying Stripe webhook requests.
     required: true
 resources:
   - path: story.md

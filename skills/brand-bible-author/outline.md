@@ -35,11 +35,11 @@ This file is the persona/voice contract. The visual language is in `visual-langu
 
 ## What <artist> IS
 
-<5–7 bullets, each concrete and specific. Not "a sad girl" — "this sad girl, with these perfumes, on this white tile.">
+<5–7 bullets, each concrete and specific. Name observable choices rather than broad mood labels.>
 
 ## What <artist> IS NOT
 
-<5–8 bullets covering the genre/aesthetic ban. Be specific about the register-vs-medium distinction (e.g., "cute *register* banned; girly *garments* fine when paired with deadpan affect").>
+<5–8 bullets covering the genre/aesthetic boundary. State the scope precisely when a broad tone restriction still permits a narrow visual technique.>
 
 ## Audience
 
@@ -56,7 +56,7 @@ This file is the persona/voice contract. The visual language is in `visual-langu
 ```
 ## Tone register — the irony layers
 
-<artist> operates at N irony levels simultaneously, and the tension between them is the brand:
+<artist> operates across N deliberate interpretive layers, and the tension between them is the brand:
 
 1. **Surface (sincere):** "..."
 2. **Mid (knowing):** "..."
@@ -70,7 +70,7 @@ Briefs and lyrics should always carry at least N of these layers. <Threshold rul
 ```
 ## Tone register
 
-<One paragraph describing the artist's flat tone register. Concrete: emotional weather, voice texture (warm/clipped/breathy/declamatory), distance to listener (intimate/oratorical), commitment level (earnest/playful/reverent). Anchor to the voice references — "between Phoebe Bridgers' specificity and Big Thief's communal spirituality" beats "soft and emotional".>
+<One paragraph describing the artist's tone register. Be concrete about emotional weather, voice texture, distance to listener, and commitment level. Anchor every claim to the supplied voice references.>
 
 Briefs and lyrics should match this register; deviations need a deliberate reason.
 ```
@@ -139,9 +139,9 @@ Every brand-authentic asset extends one of these <N>. Don't invent a new mode wi
 - <key visual element>
 - <secondary elements>
 - <mood>
-- <wardrobe — if relevant; describe with neutral nouns, never register adjectives; pair girly/cute garments with deadpan affect or destruction props>
+- <wardrobe — if relevant; describe the observable garment, material, and silhouette without treating a broad mood label as a rule>
 
-**MJ failure modes documented:** <list refine-pattern names from iteration_skill_refine_patterns_path>.
+**Iteration evidence:** <list concise notes from iteration_notes_path, if supplied>.
 
 ### 2B. <Composition name>
 
@@ -155,9 +155,9 @@ Every brand-authentic asset extends one of these <N>. Don't invent a new mode wi
 
 These phrases push MJ toward off-brand output. Push to `--no` in every brief and avoid in the positive prompt.
 
-| Banned phrase | Pushes MJ toward | Refine-pattern reference |
+| Banned phrase | Pushes the result toward | Evidence |
 |---|---|---|
-| `<phrase>` | <off-brand drift> | `<refine-pattern-name>`, Round X |
+| `<phrase>` | <off-brand direction> | <pick, moodboard, or iteration note> |
 | ... | ... | ... |
 
 ## 4. Preferred vocabulary (replacements)
@@ -206,7 +206,7 @@ When the brief touches a banned territory, use these substitutions instead.
 
 Bump the version and append a "Changes" log line at the bottom whenever:
 
-- A new MJ refine-pattern is documented for this artist.
+- New iteration evidence changes a confirmed visual rule.
 - A new signature composition is confirmed by a divergent run.
 - The palette evolves (new color hits, backdrop variant locks).
 - A vocabulary trigger is discovered that wasn't in the prior version.
@@ -227,5 +227,5 @@ Do **not** update for one-off iteration findings that haven't been confirmed acr
 - **Voice references vary in count.** Don't pad to 3 if 1 is the honest answer. Don't truncate to 3 if 5 are equally load-bearing — the brief's `max_voice_references` is the cap, but the operator can override on a per-bible basis with a note in the file.
 - **Compositional modes vary in count.** A focused brand might have one; another may have several. Cover modes with a confirmed hit or a canonical released-art/moodboard reference.
 - **The "as-rendered" palette column is mandatory.** Record both the prompt target and observed output. When they differ, the observed output is the downstream visual truth.
-- **Banned vocabulary should cite refine-patterns where possible.** When the iteration skill logged a pattern, link to it. When the ban is operator-judgment ("we don't want cute drift"), say so explicitly with the `(judgment, not yet a logged refine-pattern)` marker — future operators can promote it to a real pattern when they hit it.
-- **Aspect ratios per asset type** is the section downstream skills read most. Be opinionated. If the skill chain has a `social-asset-pack` skill that needs IG story dimensions, the bible should already say `9:16 — Use Composition 2C, fills frame cleanest`.
+- **Banned vocabulary should cite evidence.** Identify whether a ban came from a pick, moodboard reference, iteration note, or operator decision. This keeps later editors from treating a temporary miss as a permanent rule.
+- **Aspect ratios per asset type** should be explicit enough that a later asset brief can use the correct dimensions without guessing.

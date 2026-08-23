@@ -8,7 +8,7 @@ summary: >-
   The safe integration shape for connecting an ElevenLabs conversational agent to a protected AutoMem MCP service.
 category: voice
 tags: [elevenlabs, automem, mcp]
-related: [automem, agents]
+related: [automem]
 first_used: 2026-08
 ---
 
@@ -22,4 +22,4 @@ Deploy a supported memory service using provider-managed environment variables, 
 
 ## Related
 
-See [AutoMem](../automem/story.md) for memory discipline and [Agents](../agents/story.md) for voice-agent work.
+See [AutoMem](../automem/story.md) for memory discipline.

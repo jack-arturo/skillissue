@@ -78,15 +78,14 @@ def extract_is_not_bullets(identity_text: str) -> list[str]:
     return [line[2:].strip() for line in body.splitlines() if line.startswith("- ")]
 
 
-# Matches "Banned register words: cute, kawaii, bubblegum." style explicit ban lists.
+# Matches "Banned descriptor words: term-one, term-two." style explicit ban lists.
 BAN_LIST_RE = re.compile(r"[Bb]anned\s+[\w-]+(?:\s+words)?\s*:\s*([^.]+)")
 
 
 def tokens_for_bullet(bullet: str) -> set[str]:
     """If the bullet has an explicit 'Banned X: a, b, c' list, use ONLY those tokens.
-    Otherwise fall back to tokenizing the whole bullet. Carve-out language ('worn
-    deadpan, paired with destruction props') is real prose, not a contradiction
-    list — it would otherwise produce massive false positives."""
+    Otherwise fall back to tokenizing the whole bullet. Clarifying prose is not
+    a contradiction list and should not become a source of false positives."""
     m = BAN_LIST_RE.search(bullet)
     if m:
         items = re.split(r"[,\s]+", m.group(1).strip())
@@ -150,14 +149,6 @@ def main() -> int:
     tokens = set()
     for bullet in is_not_bullets:
         tokens.update(tokens_for_bullet(bullet))
-
-    # Drop tokens that name brand colors or signature items (these are
-    # *expected* to appear in both files — they describe what's banned in a
-    # way that's only meaningful by referencing real elements).
-    BRAND_TERMS = {"pink", "chrome", "shrapnel", "magenta", "ombre", "platinum",
-                   "fashion", "editorial", "luxury", "perfume", "iphone",
-                   "satirical", "performance", "performer", "performing", "character"}
-    tokens -= BRAND_TERMS
 
     candidates: list[dict] = []
     for tok in sorted(tokens):

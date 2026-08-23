@@ -3,7 +3,7 @@ name: autovault-brand-system
 description: Apply the AutoVault brand system across web SVG, terminal ASCII, illustrated mascot, social asset, and video-oriented surfaces when creating or adapting AutoVault-branded UI, docs, demos, or marketing visuals.
 license: MIT
 tags: [autovault, brand, design, motion, svg, ascii, mascot, demo]
-agents: [codex]
+agents: [claude-code, codex, autojack]
 category: brand
 metadata:
   version: "0.1.0"

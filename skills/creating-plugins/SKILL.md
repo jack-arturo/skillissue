@@ -7,7 +7,7 @@ description: >-
   block types, admin pages, or content hooks.
 license: MIT
 tags: [emdash, plugins, typescript, cms]
-agents: [codex]
+agents: [claude-code, codex, autojack, cursor]
 category: web
 metadata:
   version: "1.0.0"

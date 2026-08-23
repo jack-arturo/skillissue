@@ -3,7 +3,7 @@ name: clerk-cloudflare-auth
 description: Add Clerk authentication to Cloudflare Pages or Workers apps with protected APIs, session-aware UI, and optional application-side user mapping.
 license: MIT
 tags: [clerk, cloudflare, auth, pages, workers, vite, d1]
-agents: [codex]
+agents: [claude-code, codex, autojack]
 category: auth
 metadata:
   version: "1.1.0"
@@ -14,9 +14,6 @@ capabilities:
 requires-secrets:
   - name: CLERK_SECRET_KEY
     description: Server-side Clerk credential, configured through the deployment platform.
-    required: true
-  - name: VITE_CLERK_PUBLISHABLE_KEY
-    description: Browser-safe Clerk key supplied to the frontend build.
     required: true
 resources:
   - path: story.md

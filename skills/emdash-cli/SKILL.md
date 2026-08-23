@@ -7,7 +7,7 @@ description: >-
   or scripting CMS operations.
 license: MIT
 tags: [emdash, cli, cms, content]
-agents: [codex]
+agents: [claude-code, codex, autojack, cursor]
 category: web
 metadata:
   version: "1.0.0"
@@ -82,8 +82,8 @@ This works for interactive use but isn't suitable for CI. Use service tokens for
 The `--header` flag works with any auth scheme:
 
 ```bash
-# Basic auth
-npx emdash login --url https://example.com -H "Authorization: Basic dXNlcjpwYXNz"
+# Basic auth (supply the value through an environment variable)
+npx emdash login --url https://example.com -H "Authorization: Basic ${EMDASH_BASIC_AUTH}"
 
 # Custom auth header
 npx emdash login --url https://example.com -H "X-API-Key: ${EMDASH_API_KEY}"

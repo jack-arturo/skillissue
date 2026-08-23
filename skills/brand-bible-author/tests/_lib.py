@@ -45,7 +45,7 @@ BRIEF_SCHEMA: dict[str, Any] = {
                 },
             },
         },
-        "iteration_skill_refine_patterns_path": {"type": "string"},
+        "iteration_notes_path": {"type": "string"},
         "max_voice_references": {"type": "integer", "minimum": 1, "maximum": 10},
         "irony_layers": {"type": "boolean"},
         "audience_required": {"type": "boolean"},

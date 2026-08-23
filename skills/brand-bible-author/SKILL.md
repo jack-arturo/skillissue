@@ -3,7 +3,7 @@ name: brand-bible-author
 description: Codify a divergent Midjourney exploration + moodboard + voice context into a locked brand bible — `<project>/brand/{identity.md, visual-language.md, reference-pins/}` — that downstream image, packaging, and voice skills can share. Use after a Phase 0 divergent run has surfaced 3–5 winning picks and the operator has held a confirming taste conversation with the artist.
 license: MIT
 tags: [brand, design, midjourney, brand-bible, music, content-strategy]
-agents: [codex]
+agents: [claude-code, codex, autojack]
 category: design
 metadata:
   version: "0.1.0"
@@ -43,7 +43,7 @@ resources:
 
 Turn a Phase 0 divergent Midjourney run plus the artist's moodboard, prior released art, and voice references into a two-file brand bible plus a curated reference-pin library. The bible becomes the shared rubric every downstream skill (image production, packaging, voice) reads, so different assets stay coherent across a release campaign.
 
-This skill **assumes the divergent exploration is done** — there are 3–5 winning picks with provenance, plus refine-pattern notes on what failed. If that hasn't happened, run divergent exploration first and come back.
+This skill **assumes the divergent exploration is done** — there are 3–5 winning picks with provenance and short iteration notes. If that has not happened, run divergent exploration first and come back.
 
 ## When to use
 
@@ -63,7 +63,7 @@ This skill **assumes the divergent exploration is done** — there are 3–5 win
 
 - The artist's project folder exists at `<project_dir>` and is preferably a git repo (so the lock commit creates a clean baseline).
 - A divergent session at `<divergent_session_path>` containing:
-  - `picks.json` with `top_picks[]`, `concepts_tested[]`, `refine_patterns_observed[]`, and ideally `directions_to_park[]`.
+  - `picks.json` with `top_picks[]`, `concepts_tested[]`, and ideally `directions_to_park[]`.
   - Per-round prompt files (`round-*.prompt.txt`) the operator can read for exact MJ params.
   - The actual round screenshots so winning picks can be loaded as images.
 - A moodboard directory (strongly recommended) at `<project_dir>/moodboard/` containing prior released art and any reference images the artist anchored on.
@@ -73,8 +73,8 @@ This skill **assumes the divergent exploration is done** — there are 3–5 win
 
 Two failure modes happen reliably when an operator drafts a brand bible solo:
 
-1. **Trusting the source naming.** `picks.json` describes outcomes in the terms used during iteration ("close-up portrait + smashed luxury"). The actual brand often has a third compositional mode visible only in the moodboard or in the released art — the bible needs all of them, not just the iteration outcomes. The skill prompts the operator to count modes from picks AND moodboard, not just picks.
-2. **Cross-file contradictions.** identity.md's IS-NOT line and visual-language.md's compositions are each correct in isolation but routinely contradict each other (e.g., banning "cute" in identity while the moodboard refs are cute-coded). A solo author misses this. The skill includes a required **cross-file coherence check** between draft and lock.
+1. **Trusting source labels.** `picks.json` names the directions used during iteration, but the moodboard or released work can reveal another canonical composition. Count modes from all confirmed sources, not only the iteration labels.
+2. **Cross-file contradictions.** identity.md's IS-NOT line and visual-language.md's compositions can each be correct in isolation while conflicting together. The skill includes a required **cross-file coherence check** between draft and lock.
 
 See `coherence-check.md` for the contradiction-check prompt.
 
@@ -82,7 +82,7 @@ See `coherence-check.md` for the contradiction-check prompt.
 
 ### 1. Load the brief
 
-Briefs are structured JSON — see `brief-schema.md`. At minimum: `project_dir` (absolute), `divergent_session_path` (absolute, contains `picks.json`). Optional: `moodboard_dir`, `voice_references[]`, `released_art_paths[]`, `iteration_skill_refine_patterns_path`.
+Briefs are structured JSON — see `brief-schema.md`. At minimum: `project_dir` (absolute), `divergent_session_path` (absolute, contains `picks.json`). Optional: `moodboard_dir`, `voice_references[]`, `released_art_paths[]`, `iteration_notes_path`.
 
 If the user passed prose, convert to the structured shape first and confirm with them before running.
 
@@ -96,11 +96,11 @@ The session log captures the friction notes — every taste call the operator ma
 
 Read in parallel:
 
-- `<divergent_session_path>/picks.json` — extract `top_picks[]`, `concepts_tested[]`, `refine_patterns_observed[]`, `directions_to_park[]`.
+- `<divergent_session_path>/picks.json` — extract `top_picks[]`, `concepts_tested[]`, and `directions_to_park[]`.
 - `<divergent_session_path>/round-*.prompt.txt` — for each winning round, regex out `--ar X:Y --s NN --c NN` and any `--style` flag. These are brand defaults if both winning rounds share them.
 - `<divergent_session_path>/eval-notes.jsonl` — only as cross-check on dominant miss modes.
 - `<moodboard_dir>/*.png` (if provided) — list filenames; do not interpret yet.
-- `<iteration_skill_refine_patterns_path>` (if provided) — for cross-linking banned vocabulary to logged refine-patterns.
+- `<iteration_notes_path>` (if provided) — for capturing concise iteration evidence alongside vocabulary decisions.
 
 From this extraction, produce a **mechanical-facts block** — the inputs the operator-decision steps will reference. Do not write it into the bible directly; surface it to the operator first.
 
@@ -128,7 +128,7 @@ c. **Voice references (1–3, max).** "List 1–3 reference artists/tracks/aesth
 
 d. **Audience.** "Primary audience (one bullet). Secondary audience (one bullet). Not-the-audience (one bullet)."
 
-e. **Do-not-cross lines.** "What thematic/visual material is OFF for this artist? E.g., self-harm, real-brand defamation, occult coding. The skill enforces a minimum of 3 lines; add more if needed."
+e. **Do-not-cross lines.** "What thematic or visual material is off for this artist? The skill enforces a minimum of 3 lines; add more if needed."
 
 f. **Palette hexes — prompt target AND as-rendered.** For each signature color, the operator looks at the picks and answers: "what hex does MJ actually produce when it hits?" These will both go into the visual-language.md palette table; never elide the divergence.
 
@@ -153,7 +153,7 @@ Use `outline.md` § "visual-language.md skeleton". Target ~1200 words. Required 
 
 1. Palette table — prompt-target hex + as-rendered descriptor + provenance
 2. Signature compositions (one § per mode discovered in step 4) — composition rules, sub-modes if any, MJ failure modes documented
-3. Banned vocabulary (with provenance — link each entry to a refine-pattern in the iteration skill if available)
+3. Banned vocabulary (with evidence from the picks, moodboard, or iteration notes)
 4. Preferred vocabulary substitutions
 5. Aspect ratios per asset type
 6. MJ defaults for the brand (`--ar`, `--s`, `--c`, `--v`, raw-vs-default)
@@ -205,7 +205,7 @@ Return a concise summary to the user:
 - Do **not** bake brand-specific vocabulary into the skill files. A worked example is not a template; the skill must produce a coherent bible for a different artist without forcing them into the same shape.
 - Do **not** add irony-layer tone register if the artist is sincere. Schema offers it as an optional section.
 - Do **not** rename reference-pins after lock. Downstream skills resolve refs by exact filename; rename breaks every brief that referenced the old name.
-- Do **not** elide as-rendered palette divergence. If MJ rendered olive when the prompt asked lime, both go in the table. Hiding the divergence ships a wrong palette.
+- Do **not** elide as-rendered palette divergence. Record both the prompt target and observed output when they differ.
 
 ## Tests and benchmarks
 

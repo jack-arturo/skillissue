@@ -8,7 +8,7 @@ description: >-
   provides all EmDash-specific patterns.
 license: MIT
 tags: [emdash, astro, cms, content]
-agents: [codex]
+agents: [claude-code, codex, autojack, cursor]
 category: web
 metadata:
   version: "1.0.0"
