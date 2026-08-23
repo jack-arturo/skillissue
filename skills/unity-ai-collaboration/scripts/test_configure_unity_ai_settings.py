@@ -140,6 +140,41 @@ class ConfigureUnityAiSettingsTests(unittest.TestCase):
         self.assertEqual(2, result.returncode)
         self.assertIn("protected", result.stderr.lower())
 
+    def test_rejects_provider_selection_before_editorprefs_write(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            project = self.make_project(root)
+            fake = self.make_fake_cli(root, {})
+            bad = root / "bad-provider.json"
+            bad.write_text(
+                json.dumps(
+                    {
+                        "schema_version": 1,
+                        "settings": [
+                            {
+                                "id": "meta.selected_service",
+                                "editor_prefs_key": "Meta.XR.SDK.AI Agent Bridge.SelectedServiceId",
+                                "type": "string",
+                                "value": "provider-name",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            env = os.environ.copy()
+            env["UNITY_MCP_CLI"] = str(fake)
+            result = subprocess.run(
+                [str(SCRIPT), "--project", str(project), "--baseline", str(bad), "--apply", "--json"],
+                check=False,
+                capture_output=True,
+                text=True,
+                env=env,
+            )
+
+        self.assertEqual(2, result.returncode)
+        self.assertIn("protected", result.stderr.lower())
+
 
 if __name__ == "__main__":
     unittest.main()

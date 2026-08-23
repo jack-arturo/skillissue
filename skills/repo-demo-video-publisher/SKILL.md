@@ -169,25 +169,11 @@ When a repo uses release-please or any human-gated release process, distinguish 
 15. **Guard the diff.** Before commit, require `git diff --name-only origin/<base>...HEAD` or the staged equivalent to be exactly `README.md`; require `git ls-files --modified --others --exclude-standard` to show no generated media or source artifacts in the repo. If cleanup is needed, preserve scratch assets first, then reset/rewrite the branch with `--force-with-lease` only when the user has authorized history replacement.
 16. **PR loop.** Run repo checks appropriate for README-only changes, push if requested, request Copilot review if requested by the workflow, and stop before merge unless the user explicitly authorizes merging.
 
-## README Embed Pattern
+## README attachment pattern
 
-Prefer the compact StreamDeck-style README embed: one media element plus one caption.
+Upload the approved MP4 through GitHub's issue, pull-request, or README editor attachment UI. GitHub generates the native `https://github.com/user-attachments/assets/...` URL; retain that exact generated URL and paste it into the README as the attachment URL on its own line. GitHub renders that native attachment as video.
 
-```html
-<video src="https://github.com/user-attachments/assets/<mp4-id>"></video>
-
-<p align="center">
-  <sub>Product demo generated with Remotion using simulated data.</sub>
-</p>
-```
-
-A fallback link is optional. If you include one, it must point to a non-media page such as a PR/issue comment or release note, not directly to the MP4:
-
-```html
-<p><a href="https://github.com/<owner>/<repo>/pull/<pr-number>#issuecomment-<asset-comment-id>">Watch the simulated product demo</a></p>
-```
-
-Do not use any direct MP4 URL as a fallback `href`, whether markdown or HTML; GitHub may render it as a second media block. If you add `poster="<poster-url>"`, still keep a nonblank first frame because GitHub rendering, sanitization, and downstream mirrors may ignore poster attributes.
+Do not hand-author stripped video HTML, fabricate an attachment URL, or add a second MP4 link as fallback. If context is needed, add a plain-text caption below the single native attachment. Keep the first frame meaningful because GitHub uses it as the playable preview.
 
 ## Thumbnail and First-Frame Rules
 
@@ -287,7 +273,7 @@ If the scan finds generated artifacts in the repo, move them to scratch or remov
 - Treating approval for an older render as approval for a newly rendered MP4.
 - Committing Remotion projects, `node_modules`, package lockfiles, generated audio archives, screenshots, terminal recordings, posters, or rendered MP4s for a README demo.
 - Embedding `media/foo.mp4` in README when the file is not meant to be committed.
-- Adding both `<video src="<mp4>">` and a markdown MP4 link that renders as a duplicate video block on GitHub.
+- Adding more than one native attachment URL or a fallback MP4 link that renders as a duplicate video block on GitHub.
 - Shipping an MP4 whose first frame is blank, white, black, or otherwise low-information.
 - Persisting callback endpoints, local workstation paths, upload policy payloads, cookies, signed download URLs, API keys, or secrets in metadata.
 - Assuming a 404 user-attachments URL means upload failure before checking whether the asset is anchored.

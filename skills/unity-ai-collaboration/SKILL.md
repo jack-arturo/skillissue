@@ -68,6 +68,11 @@ Start a new Assistant conversation after adding, changing, rescanning, allowing,
 or denying an AI Skill. Old conversations retain their original skill context.
 Read `references/responsibility-matrix.md` before combining surfaces.
 
+The checked-in settings baseline deliberately does not choose an AI provider or
+model. Choose those per project and per user after verifying entitlement, cost,
+and the intended task; the settings helper rejects provider/service/model keys
+before it can write EditorPrefs.
+
 ## Route by comparative advantage
 
 - Use Unity Assistant for scene-aware, visual, asset, and short editor-local

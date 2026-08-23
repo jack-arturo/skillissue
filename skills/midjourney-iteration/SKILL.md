@@ -84,7 +84,7 @@ Briefs are structured JSON — see `brief-schema.md` for the full shape. At mini
 
 If the user passed a prose brief, convert it to the structured shape first and confirm with them before running the loop.
 
-**Session output location.** Resolve the session-log dir from `brief.project_dir` once at the start of the run:
+**Session output location.** Resolve the session-log dir from `brief.output_dir` once at the start of the run:
 
 - If `output_dir` is set: `<output_dir>/<timestamp>-<slug>/`
 - Otherwise: `${XDG_STATE_HOME:-$HOME/.local/state}/midjourney-iteration/<timestamp>-<slug>/`
@@ -99,7 +99,7 @@ const tabs = await browser.listPages();
 const mj = tabs.find(t => t.url && t.url.includes('midjourney.com'));
 if (!mj) { console.error('NO_MJ_TAB'); throw new Error('Open midjourney.com in Chrome and sign in.'); }
 const page = await browser.getPage(mj.id);
-console.log(JSON.stringify({ id: mj.id, url: mj.url, title: mj.title }));
+console.log(JSON.stringify({ id: mj.id, origin: new URL(mj.url).origin }));
 EOF
 ```
 
@@ -129,7 +129,7 @@ A round wins if **≥2 of the 4 images** pass the rubric.
 - **Stop hard** if `round_index >= brief.max_rounds`.
 - **Otherwise refine.** Match the dominant failure mode against `refine-patterns.md`, apply the prompt-edit recipe, and loop back to step 4.
 
-After every round, append the round's prompt + screenshot path + per-image scores to `<session-log-dir>/log.jsonl` (or `eval-notes.jsonl`), where `<session-log-dir>` was resolved in §2 from `brief.project_dir`.
+After every round, append the round's prompt + screenshot path + per-image scores to `<session-log-dir>/log.jsonl` (or `eval-notes.jsonl`), where `<session-log-dir>` was resolved in §2 from `brief.output_dir`.
 
 ### 7. Return the top 3 picks
 

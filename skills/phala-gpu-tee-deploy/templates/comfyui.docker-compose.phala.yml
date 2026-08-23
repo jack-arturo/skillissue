@@ -1,9 +1,10 @@
 # Phala H200 GPU TEE deploy — public ai-dock ComfyUI image, NO build context, NO file mounts,
-# NO external URLs. The checkpoint is fetched by an init sidecar into a shared volume, so the
-# whole deploy is self-contained in this compose (deployed into the private TEE; nothing public).
+# The model is fetched by an init sidecar into a shared volume; supply its URL as
+# an encrypted deployment environment variable rather than baking an asset ID into this file.
 #
 # Reserve the GPU via the dashboard GPU-TEE flow (On-Demand + a prod dstack-nvidia image), paste
-# this compose, add Encrypted Secrets CIVITAI_TOKEN + COMFYUI_BEARER_TOKEN. Iterate in place with:
+# this compose, add `MODEL_URL` and (when access control is needed) `COMFYUI_BEARER_TOKEN` as
+# encrypted deployment environment variables. `MODEL_SHA256` and `MODEL_EXPECTED_BYTES` are optional integrity checks. Iterate in place with:
 #   phala deploy --cvm-id <app_id> -c <thisfile> -e .env
 #
 # Architecture: only Caddy:8780 is published. Caddy bearer-gates every request → ai-dock ComfyUI
@@ -11,30 +12,43 @@
 # does not interpolate it.
 services:
   # One-shot: download the checkpoint into the shared volume, then exit. ComfyUI waits for this.
-  # Idempotent via exact-size check. Explicit curl — NOT ai-dock's downloader (issue #137).
+  # Idempotent when an optional checksum or size is supplied.
   model-init:
     image: curlimages/curl:8.11.1
     user: "0:0"                                   # run as root: curlimages/curl defaults to uid 100, but the
                                                   # fresh named volume mounts root-owned 755 → non-root curl
                                                   # can't create the output file → curl exit 23 (write error).
     environment:
-      - CIVITAI_TOKEN=${CIVITAI_TOKEN}
+      MODEL_URL: ${MODEL_URL}
+      MODEL_SHA256: ${MODEL_SHA256:-}
+      MODEL_EXPECTED_BYTES: ${MODEL_EXPECTED_BYTES:-}
     entrypoint: ["/bin/sh", "-c"]
     command:
       - |
         set -eu
         CKPT=/checkpoints/model.safetensors
-        EXPECTED=7105348856                       # exact byte size of the target checkpoint
+        : "$${MODEL_URL:?MODEL_URL is required}"
+        checksum_matches() {
+          sha256sum "$$CKPT" > /tmp/model.sha256
+          read -r actual_sha _ < /tmp/model.sha256
+          [ "$$actual_sha" = "$$MODEL_SHA256" ]
+        }
         have=$$(wc -c < "$$CKPT" 2>/dev/null || echo 0)
-        if [ "$$have" = "$$EXPECTED" ]; then
-          echo "[init] checkpoint present at expected size — skip"
+        if [ -n "$$MODEL_SHA256" ] && [ -f "$$CKPT" ] && checksum_matches; then
+          echo "[init] model checksum matches — skip"
+        elif [ -n "$$MODEL_EXPECTED_BYTES" ] && [ "$$have" = "$$MODEL_EXPECTED_BYTES" ]; then
+          echo "[init] model size matches — skip"
         else
-          echo "[init] downloading checkpoint…"
-          curl -fL --retry 3 --retry-delay 5 -o "$$CKPT" \
-            "https://civitai.com/api/download/models/<VERSION_ID>?token=$${CIVITAI_TOKEN}"
+          echo "[init] downloading model…"
+          curl -fL --retry 3 --retry-delay 5 -o "$$CKPT" "$$MODEL_URL"
           got=$$(wc -c < "$$CKPT")
-          [ "$$got" = "$$EXPECTED" ] || { echo "[init] size $$got != $$EXPECTED" >&2; exit 1; }
-          echo "[init] downloaded OK ($$got bytes)"
+          if [ -n "$$MODEL_EXPECTED_BYTES" ] && [ "$$got" != "$$MODEL_EXPECTED_BYTES" ]; then
+            echo "[init] downloaded size does not match MODEL_EXPECTED_BYTES" >&2; exit 1
+          fi
+          if [ -n "$$MODEL_SHA256" ]; then
+            checksum_matches || { echo "[init] downloaded checksum does not match MODEL_SHA256" >&2; exit 1; }
+          fi
+          echo "[init] downloaded and validated"
         fi
     volumes:
       - checkpoints:/checkpoints

@@ -7,6 +7,8 @@
  * IMPORTANT: Image fields are objects with { src, alt }, not strings!
  */
 
+import { Image } from "emdash/ui";
+
 interface Props {
 	title: string;
 	href: string;
@@ -35,7 +37,7 @@ const formattedDate = date
 	{
 		featuredImage?.src && (
 			<a href={href} class="post-card-image">
-				<img src={featuredImage.src} alt={featuredImage.alt || title} loading="lazy" />
+				<Image src={featuredImage.src} alt={featuredImage.alt || title} loading="lazy" />
 			</a>
 		)
 	}

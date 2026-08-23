@@ -3,6 +3,7 @@ set -euo pipefail
 
 skill_root="${MJ_ITER_SKILL_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 chrome_debug_port="${MJ_ITER_CHROME_PORT:-9222}"
+profile_dir="${MJ_ITER_CHROME_PROFILE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/midjourney-iteration/chrome-profile}"
 
 redact() {
   sed -E \
@@ -58,9 +59,9 @@ Run this skill's helper to relaunch Chrome with the debug port:
 
   $skill_root/bin/relaunch-chrome
 
-Or relaunch manually:
+Or relaunch manually with the same dedicated profile:
 
-  open -a 'Google Chrome' --args --remote-debugging-port=$chrome_debug_port
+  open -a 'Google Chrome' --args --remote-debugging-port=$chrome_debug_port --user-data-dir="$profile_dir"
 
 TEXT
     return 1
@@ -87,8 +88,7 @@ existing one.
 TEXT
     return 1
   fi
-  url="$(printf '%s' "$resp" | grep -o '"url"[[:space:]]*:[[:space:]]*"[^"]*midjourney.com[^"]*"' | head -n1 | sed 's/.*"url":[[:space:]]*"\([^"]*\)".*/\1/')"
-  print_ok "midjourney.com tab found: ${url:-(url hidden)}"
+  print_ok "midjourney.com tab found (URL withheld)"
 
   if printf '%s' "$resp" | grep -q '"url":[[:space:]]*"https://www.midjourney.com/auth'; then
     print_fail "midjourney.com tab is on the auth page — please sign in."

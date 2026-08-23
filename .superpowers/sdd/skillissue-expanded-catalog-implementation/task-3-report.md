@@ -43,3 +43,22 @@ Each package has a `story.md` with a nonempty summary, concise Why/How sections,
 ## Known unrelated integration result
 
 `node --test tests/local-skill-import.test.mjs` has one existing integration collision: its default dry-run fixture imports `autovault-brand-system` into a worktree where that destination is already present. The failure is outside this cohort and was not masked or modified.
+
+## Atomic-release remediation
+
+- Replaced README video HTML guidance with the native GitHub attachment flow: upload through GitHub, retain its generated attachment URL, and use that single URL on its own README line.
+- Corrected the Stripe App manifest field to `stripe_api_access_type`. The checkout template now accepts only `offerId`, resolves price and metadata through a server-side offer map, and fails closed until a server-side authenticated-user adapter is supplied. It never reads caller-controlled amount, name, metadata, price, or reference fields.
+- Made the EmDash scaffold explicitly workspace-only, corrected the live collection import to `defineLiveCollection` plus `emdash/runtime`, removed the nonexistent bundled-seed claim, and switched scaffold image examples to `Image` from `emdash/ui`.
+- Rewrote `video-toolkit` as a truthful, non-runnable public workflow. Its references no longer prescribe absent local files, provider endpoints, commands, or credentials.
+- Removed the selected provider/service from the Unity settings baseline and expanded the settings writer's protected-key filter to reject provider, service, and model selection before any EditorPrefs write. Added a regression test.
+- Replaced the Phala model source with `MODEL_URL` plus optional `MODEL_SHA256` and `MODEL_EXPECTED_BYTES`; validation runs only when those optional values are supplied. Removed asset-specific identifiers and aligned the documented environment names.
+- Corrected Midjourney output handling to `output_dir`, kept manual Chrome relaunches on the configured dedicated profile, and stopped logging authenticated tab URLs.
+- Declared and enforced macOS-only support for the Quest toolchain audit so Windows/Linux cannot be reported as missing macOS paths.
+
+## Remediation validation
+
+- Unity settings tests: 4 passed (including provider/service rejection).
+- Unity Quest audit tests: 2 passed.
+- Midjourney shell syntax, Stripe JavaScript syntax/manifest JSON, and Phala compose configuration checks: passed.
+- All eleven importer audits and local AutoVault dry-runs: passed after remediation.
+- Strict catalog build again passed with temporary outputs only; generated repository output remains untouched.

@@ -36,6 +36,14 @@ bin:
 Use a simulator-first, evidence-driven loop. A green compile is not a Quest
 acceptance result.
 
+## Platform contract
+
+`scripts/audit-unity-quest-toolchain` currently supports **macOS only**. It
+inspects macOS Unity Hub, Editor, Meta Quest Developer Hub, Simulator, and
+licensing layouts and fails closed on Windows or Linux rather than reporting
+those paths as missing. Run it on a macOS build machine, or perform an
+equivalent platform-specific inventory outside this package.
+
 ## Start with the actual environment
 
 1. Run `scripts/audit-unity-quest-toolchain --project <path> --json`.

@@ -19,9 +19,6 @@ requires-secrets:
   - name: COMFYUI_BEARER_TOKEN
     description: Optional access token for the published workload, supplied at deployment time.
     required: false
-  - name: MODEL_DOWNLOAD_TOKEN
-    description: Optional model-provider token, supplied at deployment time and never committed.
-    required: false
 resources:
   - path: story.md
     type: file
@@ -33,14 +30,14 @@ resources:
 
 Take a containerized GPU workload from local compose to a running, **attested**,
 **bearer-gated** endpoint on a Phala confidential H200 GPU TEE (dstack). Verified
-end-to-end 2026-06 with `phala` CLI v1.1.19 deploying ComfyUI (Pony Realism SDXL)
+end-to-end 2026-06 with `phala` CLI v1.1.19 deploying ComfyUI
 on an on-demand H200.
 
 ## When To Use
 
 Use when a user wants uncensored / private GPU inference on confidential hardware:
-- Image generation (ComfyUI + an SDXL/Pony checkpoint) on a private endpoint.
-- Text serving (vLLM + an abliterated model) on the same TEE pattern.
+- Image generation (ComfyUI plus a user-approved checkpoint) on a private endpoint.
+- Text serving (vLLM plus a user-approved model) on the same TEE pattern.
 - Any workload that must run inside a TEE with hardware attestation and a single
   authenticated ingress, with model weights and tokens kept off public storage.
 
@@ -57,9 +54,10 @@ image and text workloads — only the compose changes.
 3. A **public** container image (e.g. `ghcr.io/ai-dock/comfyui:latest-cuda`,
    `caddy:2`, `curlimages/curl`). `phala deploy -c` uploads the **compose only** —
    no local files, no build context reach the CVM.
-4. Secrets in a local, gitignored `.env` (e.g. `CIVITAI_TOKEN`,
-   `COMFYUI_BEARER_TOKEN`). Passed with `-e .env`; the CLI seals them. Never
-   commit or print them.
+4. Supply `MODEL_URL` and, when access control is needed,
+   `COMFYUI_BEARER_TOKEN` as deployment environment variables. `MODEL_SHA256`
+   and `MODEL_EXPECTED_BYTES` are optional integrity checks. Pass them with
+   `-e .env` or the dashboard's encrypted-secret UI; never commit or print them.
 
 ## Key Reality: GPU reservation is dashboard-only
 
@@ -106,16 +104,17 @@ Because only the compose is uploaded, deliver everything inline. See
   Write the Caddyfile inline with a **quoted heredoc** (`<<'EOF'`) so
   `{$BEARER}` is written literally and Caddy expands it from env at runtime — the
   token never lands in the rendered file.
-- **Model fetch = an init sidecar**, not the app's built-in downloader. ai-dock's
-  Civitai helper silently fails even with a valid token (ai-dock issue #137); use
-  an explicit `curl` sidecar that downloads into a shared named volume and exits.
-  Make it idempotent with an exact-size check so a restart doesn't re-pull GBs.
+- **Model fetch = an init sidecar**, not an app-specific downloader. Use an
+  explicit `curl` sidecar that downloads into a shared named volume and exits.
+  Give it `MODEL_URL` and, when available, `MODEL_SHA256` or
+  `MODEL_EXPECTED_BYTES` so restart validation is generic rather than tied to a
+  particular asset.
 - The app `depends_on` the init sidecar with
   `condition: service_completed_successfully` — so a non-zero init exit aborts the
   whole stack (see Debugging).
 - **Escape shell `$` as `$$`** inside `command:` scripts so docker-compose does
   not interpolate it; the shell/Caddy expands it at runtime.
-- Secrets resolve as `${CIVITAI_TOKEN}` / `${COMFYUI_BEARER_TOKEN}` from `-e .env`.
+- The template resolves `${MODEL_URL}`, optional `${MODEL_SHA256}` / `${MODEL_EXPECTED_BYTES}`, and `${COMFYUI_BEARER_TOKEN}` from deployment environment variables.
 - Validate locally: `docker compose -f docker-compose.phala.yml config` exits 0.
 
 ## Step 3 — Deploy and update
@@ -201,8 +200,8 @@ serves. Diagnose from the **init container logs**, not the boot log.
 
 ## Reuse for other workloads (e.g. vLLM)
 
-Same flow; swap the compose. For text serving: a vLLM container (serving an
-abliterated model) behind the same Caddy bearer gate, model pulled by the same
+Same flow; swap the compose. For text serving: a vLLM container behind the same
+Caddy bearer gate, model pulled by the same
 init-sidecar pattern (or vLLM's HF download with a sealed `HF_TOKEN`), same
 attestation + 401/200 verification. The deploy mechanics do not change.
 
@@ -221,8 +220,8 @@ attestation + 401/200 verification. The deploy mechanics do not change.
 - Do not accept the dashboard's default 6-month pricing or default dev OS image.
 - Do not bind-mount local files or use a build context — only the compose is
   uploaded.
-- Do not rely on ai-dock's built-in Civitai downloader (issue #137) — explicit
-  curl sidecar.
+- Do not rely on an app-specific downloader when a public deployment needs an
+  auditable model-fetch path — use the explicit curl sidecar.
 - Do not run the curl init sidecar as the default non-root user against a fresh
   named volume — it exits 23.
 - Do not report "CC attestation verified" from `is_online`+TCB alone on a prod

@@ -21,6 +21,9 @@ PROTECTED_KEY_FRAGMENTS = (
     "disclaimeraccepted",
     "selectedmodel",
     "providerenabled",
+    "provider",
+    "selectedservice",
+    "serviceid",
 )
 SUPPORTED_TYPES = {"bool", "int", "string"}
 

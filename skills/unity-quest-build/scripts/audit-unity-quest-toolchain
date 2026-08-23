@@ -29,6 +29,8 @@ PACKAGE_KEYS = (
     "com.ivanmurzak.unity.mcp.particlesystem",
 )
 
+SUPPORTED_PLATFORM = "darwin"
+
 
 def read_json(path: Path) -> dict[str, Any]:
     try:
@@ -370,6 +372,8 @@ def main() -> int:
     parser.add_argument("--json", action="store_true", dest="as_json")
     parser.add_argument("--offline", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+    if sys.platform != SUPPORTED_PLATFORM:
+        parser.error("this audit currently supports macOS only; it inspects macOS Unity, Hub, and Meta Quest application layouts")
     try:
         data = collect(args.project.expanduser().resolve(), args.offline)
     except ValueError as error:

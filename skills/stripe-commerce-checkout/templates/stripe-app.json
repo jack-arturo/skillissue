@@ -2,7 +2,7 @@
   "id": "com.example.commerce-checkout",
   "version": "1.0.0",
   "name": "Commerce Checkout",
-  "api_access_type": "restricted_api_key",
+  "stripe_api_access_type": "restricted_api_key",
   "permissions": [
     {
       "permission": "checkout_session_write",

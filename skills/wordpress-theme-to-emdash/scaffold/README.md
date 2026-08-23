@@ -1,6 +1,6 @@
 # EmDash Theme Scaffold
 
-This is a minimal, working EmDash theme that demonstrates correct patterns for:
+This is an **existing EmDash workspace template**, not a standalone starter. It demonstrates correct patterns for:
 
 - **Site settings** - Use `getSiteSettings()` for title, tagline, logo - never hard-code
 - **Menus** - Use `getMenu()` for navigation - never hard-code links
@@ -21,28 +21,30 @@ The theme is a shell that displays CMS content. Never hard-code:
 
 When porting a WordPress theme:
 
-1. Copy this scaffold to your theme directory
-2. Run `pnpm install` from monorepo root
-3. Verify it builds: `pnpm --filter your-theme build`
-4. Use these templates as reference for correct API usage
+1. Copy this scaffold into an EmDash workspace that already provides the `emdash` package.
+2. Rename the package and update the workspace configuration from the monorepo root.
+3. Run `pnpm install` from the workspace root.
+4. Verify it builds: `pnpm --filter your-theme build`.
+
+It intentionally uses `"emdash": "workspace:*"`; do not copy this package manifest into an unrelated standalone repository. For a standalone site, start from the installed EmDash package's current setup instructions instead.
 
 ## Key Patterns
 
 ### Image Fields
 
 ```astro
+import { Image } from "emdash/ui";
+
 {/* CORRECT - check .src exists */}
 {post.data.featured_image?.src && (
-  <img
+  <Image
     src={post.data.featured_image.src}
     alt={post.data.featured_image.alt || post.data.title}
   />
 )}
 
-{/* WRONG - field is an object, not a string */}
-{post.data.featured_image && (
-  <img src={post.data.featured_image} />  // Renders [object Object]
-)}
+{/* WRONG - passing the field object directly instead of its src */}
+<Image src={post.data.featured_image} alt={post.data.title} />
 ```
 
 ### Taxonomy Terms
@@ -97,5 +99,6 @@ scaffold/
 ├── public/
 │   └── favicon.svg
 └── .emdash/
-    └── seed.json          # All field types demonstrated
 ```
+
+This scaffold does **not** bundle a seed file. Add one for the specific migration only after the content model and media mapping are known.

@@ -5,15 +5,10 @@
  * It replaces Astro's content collections for CMS-managed content.
  */
 
-import { defineCollection } from "astro:content";
-import { emdashLoader } from "emdash";
+import { defineLiveCollection } from "astro:content";
+import { emdashLoader } from "emdash/runtime";
 
 // Posts collection - loaded from EmDash CMS
 export const collections = {
-	posts: defineCollection({
-		loader: emdashLoader({ collection: "posts" }),
-	}),
-	pages: defineCollection({
-		loader: emdashLoader({ collection: "pages" }),
-	}),
+	_emdash: defineLiveCollection({ loader: emdashLoader() }),
 };

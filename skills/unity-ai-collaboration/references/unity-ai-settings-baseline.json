@@ -116,13 +116,6 @@
       "rationale": "Enable Meta XR editor integrations on dedicated Quest development machines."
     },
     {
-      "id": "meta.agent_bridge_service",
-      "editor_prefs_key": "Meta.XR.SDK.AI Agent Bridge.SelectedServiceId",
-      "type": "string",
-      "value": "claudecode",
-      "rationale": "Meta XR Core 203 exposes Claude Code and Gemini CLI; retain the locally validated Claude Code route."
-    },
-    {
       "id": "meta.agent_bridge_verbose_logging",
       "editor_prefs_key": "Meta.XR.SDK.AI Agent Bridge.VerboseLogging",
       "type": "bool",

@@ -73,16 +73,18 @@ interface ImageField {
 ```
 
 ```astro
+import { Image } from "emdash/ui";
+
 {/* CORRECT */}
 {post.data.featured_image?.src && (
-  <img
+  <Image
     src={post.data.featured_image.src}
     alt={post.data.featured_image.alt || post.data.title}
   />
 )}
 
 {/* WRONG - renders [object Object] */}
-<img src={post.data.featured_image} />
+<Image src={post.data.featured_image} alt={post.data.title} />
 ```
 
 ### Reference Fields
