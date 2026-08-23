@@ -41,7 +41,7 @@ The Stripe CLI is useful for test-mode provisioning. Keep its credentials separa
 
 1. Decide whether the offer is one-time, subscription, donation, or deposit.
 2. Accept only a documented `offerId` from the browser. Resolve its Stripe Price ID, product display data, quantity, and metadata from a server-side allowlist; never accept amounts, price IDs, product names, quantities, client reference IDs, or arbitrary metadata from the browser.
-3. Start from `templates/cloudflare-pages-checkout.js`; wire its fail-closed authenticated-user adapter to the application's server-side session, then configure its server-side offer map. It creates a Checkout Session using `STRIPE_SECRET_KEY` and returns only the session URL.
+3. Start from `templates/cloudflare-pages-checkout.js`; wire its fail-closed authenticated-user adapter to the application's server-side session, then configure its server-side offer map. It creates a Checkout Session using `STRIPE_SECRET_KEY` and returns `{ id, url }` for the newly created session.
 4. Apply non-secret branding through `branding_settings`. Session branding does not replace account-level legal, receipt, Link, or portal branding; verify those in the Stripe Dashboard.
 5. For subscriptions, add a verified webhook and a user-return reconciliation path. The webhook remains the source of truth; reconciliation is only a fast path after a user returns from Checkout.
 6. Verify a new test-mode session after every endpoint or branding change. Existing session URLs are not a reliable test of a new deployment.

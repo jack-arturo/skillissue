@@ -3,7 +3,7 @@
 # an encrypted deployment environment variable rather than baking an asset ID into this file.
 #
 # Reserve the GPU via the dashboard GPU-TEE flow (On-Demand + a prod dstack-nvidia image), paste
-# this compose, add `MODEL_URL` and (when access control is needed) `COMFYUI_BEARER_TOKEN` as
+# this compose, add required `MODEL_URL` and `COMFYUI_BEARER_TOKEN` as
 # encrypted deployment environment variables. `MODEL_SHA256` and `MODEL_EXPECTED_BYTES` are optional integrity checks. Iterate in place with:
 #   phala deploy --cvm-id <app_id> -c <thisfile> -e .env
 #
@@ -12,7 +12,7 @@
 # does not interpolate it.
 services:
   # One-shot: download the checkpoint into the shared volume, then exit. ComfyUI waits for this.
-  # Idempotent when an optional checksum or size is supplied.
+  # Reuses an existing model only after every supplied integrity check passes.
   model-init:
     image: curlimages/curl:8.11.1
     user: "0:0"                                   # run as root: curlimages/curl defaults to uid 100, but the
@@ -34,10 +34,14 @@ services:
           [ "$$actual_sha" = "$$MODEL_SHA256" ]
         }
         have=$$(wc -c < "$$CKPT" 2>/dev/null || echo 0)
-        if [ -n "$$MODEL_SHA256" ] && [ -f "$$CKPT" ] && checksum_matches; then
-          echo "[init] model checksum matches — skip"
-        elif [ -n "$$MODEL_EXPECTED_BYTES" ] && [ "$$have" = "$$MODEL_EXPECTED_BYTES" ]; then
-          echo "[init] model size matches — skip"
+        if [ -f "$$CKPT" ] && { [ -n "$$MODEL_SHA256" ] || [ -n "$$MODEL_EXPECTED_BYTES" ]; }; then
+          if [ -n "$$MODEL_SHA256" ]; then
+            checksum_matches || { echo "[init] existing model checksum does not match MODEL_SHA256" >&2; exit 1; }
+          fi
+          if [ -n "$$MODEL_EXPECTED_BYTES" ] && [ "$$have" != "$$MODEL_EXPECTED_BYTES" ]; then
+            echo "[init] existing model size does not match MODEL_EXPECTED_BYTES" >&2; exit 1
+          fi
+          echo "[init] existing model passed supplied integrity checks — skip"
         else
           echo "[init] downloading model…"
           curl -fL --retry 3 --retry-delay 5 -o "$$CKPT" "$$MODEL_URL"
@@ -88,6 +92,7 @@ services:
       - sh
       - -c
       - |
+        : "$${COMFYUI_BEARER_TOKEN:?COMFYUI_BEARER_TOKEN is required}"
         cat > /etc/caddy/Caddyfile <<'EOF'
         {
           admin off

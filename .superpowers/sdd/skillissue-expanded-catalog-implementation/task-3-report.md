@@ -62,3 +62,15 @@ Each package has a `story.md` with a nonempty summary, concise Why/How sections,
 - Midjourney shell syntax, Stripe JavaScript syntax/manifest JSON, and Phala compose configuration checks: passed.
 - All eleven importer audits and local AutoVault dry-runs: passed after remediation.
 - Strict catalog build again passed with temporary outputs only; generated repository output remains untouched.
+
+## Final contract corrections
+
+- Phala model reuse now validates every supplied integrity field independently: a supplied SHA-256 mismatch exits immediately even when the byte count matches, and supplied SHA-256 plus byte count must both pass. Added `scripts/validate-model-file` for the same local preflight contract.
+- The Phala template now requires a nonempty `COMFYUI_BEARER_TOKEN` at Caddy startup; the declared secret and documentation mark it required. There is no implicit ungated mode.
+- Stripe documentation now correctly states that the checkout endpoint returns both the newly created session `id` and `url`.
+
+## Final validation
+
+- `validate-model-file` rejected a wrong SHA-256 with the correct byte count, then accepted the byte-only check for the same fixture.
+- Midjourney and Phala shell syntax, Stripe JavaScript syntax, and Phala compose configuration with required environment variables: passed.
+- Final importer audits and local AutoVault dry-runs for Phala and Stripe: passed.

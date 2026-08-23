@@ -17,10 +17,12 @@ capabilities:
   tools: [Bash, Read, Edit]
 requires-secrets:
   - name: COMFYUI_BEARER_TOKEN
-    description: Optional access token for the published workload, supplied at deployment time.
-    required: false
+    description: Required access token for the published workload, supplied at deployment time.
+    required: true
 resources:
   - path: story.md
+    type: file
+  - path: scripts/validate-model-file
     type: file
   - path: templates/comfyui.docker-compose.phala.yml
     type: file
@@ -54,8 +56,8 @@ image and text workloads — only the compose changes.
 3. A **public** container image (e.g. `ghcr.io/ai-dock/comfyui:latest-cuda`,
    `caddy:2`, `curlimages/curl`). `phala deploy -c` uploads the **compose only** —
    no local files, no build context reach the CVM.
-4. Supply `MODEL_URL` and, when access control is needed,
-   `COMFYUI_BEARER_TOKEN` as deployment environment variables. `MODEL_SHA256`
+4. Supply required `MODEL_URL` and `COMFYUI_BEARER_TOKEN` as deployment
+   environment variables. `MODEL_SHA256`
    and `MODEL_EXPECTED_BYTES` are optional integrity checks. Pass them with
    `-e .env` or the dashboard's encrypted-secret UI; never commit or print them.
 
@@ -115,6 +117,10 @@ Because only the compose is uploaded, deliver everything inline. See
 - **Escape shell `$` as `$$`** inside `command:` scripts so docker-compose does
   not interpolate it; the shell/Caddy expands it at runtime.
 - The template resolves `${MODEL_URL}`, optional `${MODEL_SHA256}` / `${MODEL_EXPECTED_BYTES}`, and `${COMFYUI_BEARER_TOKEN}` from deployment environment variables.
+- The Caddy service fails at startup when `COMFYUI_BEARER_TOKEN` is empty; this
+  template has no implicit ungated mode.
+- To preflight an existing model file locally, run
+  `scripts/validate-model-file <file> <sha256-or-empty> <expected-bytes-or-empty>`.
 - Validate locally: `docker compose -f docker-compose.phala.yml config` exits 0.
 
 ## Step 3 — Deploy and update
