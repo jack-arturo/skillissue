@@ -40,6 +40,10 @@
       ],
       "featured": true,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/skill-author/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/skill-author/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/skill-author/SKILL.md",
@@ -48,6 +52,15 @@
       "url": "https://skillissue.sh/skills/skill-author/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/skill-author/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 7304,
+      "resources": [],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -70,6 +83,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-04",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/automem/SKILL.md",
@@ -78,6 +95,15 @@
       "url": "https://skillissue.sh/skills/automem/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/automem/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 10476,
+      "resources": [],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readonly",
+        "tools": "[]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -99,6 +125,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-04",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-skill/SKILL.md",
@@ -107,6 +137,15 @@
       "url": "https://skillissue.sh/skills/autovault-skill/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-skill/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 9391,
+      "resources": [],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readonly",
+        "tools": "[]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -130,6 +169,10 @@
       ],
       "featured": true,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/long-haul-parallel-repair/SKILL.md",
@@ -138,6 +181,21 @@
       "url": "https://skillissue.sh/skills/long-haul-parallel-repair/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/long-haul-parallel-repair/SKILL.md",
       "resourceCount": 1,
+      "bundleFileCount": 2,
+      "bundleSize": 5953,
+      "resources": [
+        {
+          "path": "agents/openai.yaml",
+          "kind": "config",
+          "bytes": 326
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Agent, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -159,6 +217,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/entity-dossier/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/entity-dossier/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/entity-dossier/SKILL.md",
@@ -167,6 +229,17 @@
       "url": "https://skillissue.sh/skills/entity-dossier/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/entity-dossier/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 4371,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readonly",
+        "tools": "[Bash, Read]"
+      },
+      "requiresSecrets": [
+        "name: AUTOMEM_API_KEY"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -189,6 +262,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/pirsch-analytics-bootstrap/SKILL.md",
@@ -197,6 +274,17 @@
       "url": "https://skillissue.sh/skills/pirsch-analytics-bootstrap/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/pirsch-analytics-bootstrap/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 11451,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [
+        "name: PIRSCH_CLIENT_ID"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -221,6 +309,10 @@
       ],
       "featured": true,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-lead-capture/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-lead-capture/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-lead-capture/SKILL.md",
@@ -229,6 +321,126 @@
       "url": "https://skillissue.sh/skills/cloudflare-lead-capture/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-lead-capture/SKILL.md",
       "resourceCount": 22,
+      "bundleFileCount": 23,
+      "bundleSize": 94983,
+      "resources": [
+        {
+          "path": "bin/doctor",
+          "kind": "script",
+          "bytes": 4070
+        },
+        {
+          "path": "bin/scaffold",
+          "kind": "script",
+          "bytes": 9774
+        },
+        {
+          "path": "bin/setup",
+          "kind": "script",
+          "bytes": 2978
+        },
+        {
+          "path": "templates/astro-ssr/README.astro-ssr.md",
+          "kind": "reference",
+          "bytes": 2354
+        },
+        {
+          "path": "templates/astro-ssr/src/components/ContactForm.astro",
+          "kind": "resource",
+          "bytes": 2934
+        },
+        {
+          "path": "templates/astro-ssr/src/pages/api/contact.ts",
+          "kind": "resource",
+          "bytes": 6041
+        },
+        {
+          "path": "templates/project/functions/admin/lead-capture/templates.js",
+          "kind": "resource",
+          "bytes": 1770
+        },
+        {
+          "path": "templates/project/functions/admin/lead-capture/test-email.js",
+          "kind": "resource",
+          "bytes": 1125
+        },
+        {
+          "path": "templates/project/functions/admin/lead-capture.js",
+          "kind": "resource",
+          "bytes": 2241
+        },
+        {
+          "path": "templates/project/functions/api/lead.js",
+          "kind": "resource",
+          "bytes": 5198
+        },
+        {
+          "path": "templates/project/functions/api/signup.js",
+          "kind": "resource",
+          "bytes": 3929
+        },
+        {
+          "path": "templates/project/functions/lib/lead-capture/email.js",
+          "kind": "resource",
+          "bytes": 5550
+        },
+        {
+          "path": "templates/project/functions/lib/lead-capture/http.js",
+          "kind": "resource",
+          "bytes": 4483
+        },
+        {
+          "path": "templates/project/functions/lib/lead-capture/tokens.js",
+          "kind": "resource",
+          "bytes": 2170
+        },
+        {
+          "path": "templates/project/functions/lib/lead-capture/turnstile.js",
+          "kind": "resource",
+          "bytes": 994
+        },
+        {
+          "path": "templates/project/functions/unsubscribe.js",
+          "kind": "resource",
+          "bytes": 1847
+        },
+        {
+          "path": "templates/project/lead-capture-admin.html",
+          "kind": "resource",
+          "bytes": 8451
+        },
+        {
+          "path": "templates/project/README.lead-capture.md",
+          "kind": "reference",
+          "bytes": 2372
+        },
+        {
+          "path": "templates/project/schema/lead-capture.sql",
+          "kind": "resource",
+          "bytes": 5864
+        },
+        {
+          "path": "templates/project/snippets/lead-form.html",
+          "kind": "resource",
+          "bytes": 2417
+        },
+        {
+          "path": "templates/project/wrangler.lead-capture.jsonc",
+          "kind": "resource",
+          "bytes": 315
+        },
+        {
+          "path": "templates/project/wrangler.toml",
+          "kind": "config",
+          "bytes": 339
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -253,6 +465,10 @@
       ],
       "featured": true,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md",
@@ -261,6 +477,21 @@
       "url": "https://skillissue.sh/skills/cloudflare-ops/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md",
       "resourceCount": 1,
+      "bundleFileCount": 2,
+      "bundleSize": 14323,
+      "resources": [
+        {
+          "path": "bin/cloudflare-ops",
+          "kind": "script",
+          "bytes": 3727
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -284,6 +515,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-commerce-deploy/SKILL.md",
@@ -292,6 +527,36 @@
       "url": "https://skillissue.sh/skills/cloudflare-commerce-deploy/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-commerce-deploy/SKILL.md",
       "resourceCount": 4,
+      "bundleFileCount": 5,
+      "bundleSize": 27322,
+      "resources": [
+        {
+          "path": "bin/doctor",
+          "kind": "script",
+          "bytes": 4207
+        },
+        {
+          "path": "bin/dry-run",
+          "kind": "script",
+          "bytes": 3458
+        },
+        {
+          "path": "bin/setup",
+          "kind": "script",
+          "bytes": 5309
+        },
+        {
+          "path": "templates/cloudflare-commerce.json",
+          "kind": "config",
+          "bytes": 524
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -315,6 +580,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-emdash-cms-deploy/SKILL.md",
@@ -323,6 +592,46 @@
       "url": "https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-emdash-cms-deploy/SKILL.md",
       "resourceCount": 6,
+      "bundleFileCount": 7,
+      "bundleSize": 43473,
+      "resources": [
+        {
+          "path": "references/branding.md",
+          "kind": "reference",
+          "bytes": 7536
+        },
+        {
+          "path": "references/cms-configuration.md",
+          "kind": "reference",
+          "bytes": 10726
+        },
+        {
+          "path": "references/deploy.md",
+          "kind": "reference",
+          "bytes": 2877
+        },
+        {
+          "path": "references/domain-dns.md",
+          "kind": "reference",
+          "bytes": 898
+        },
+        {
+          "path": "references/project-setup.md",
+          "kind": "reference",
+          "bytes": 5539
+        },
+        {
+          "path": "references/troubleshooting.md",
+          "kind": "reference",
+          "bytes": 9880
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -347,6 +656,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md",
@@ -355,6 +668,28 @@
       "url": "https://skillissue.sh/skills/phala-gpu-tee-deploy/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md",
       "resourceCount": 2,
+      "bundleFileCount": 3,
+      "bundleSize": 18955,
+      "resources": [
+        {
+          "path": "scripts/validate-model-file",
+          "kind": "script",
+          "bytes": 822
+        },
+        {
+          "path": "templates/comfyui.docker-compose.phala.yml",
+          "kind": "config",
+          "bytes": 4898
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [
+        "name: COMFYUI_BEARER_TOKEN"
+      ],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -378,6 +713,10 @@
       ],
       "featured": true,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-07",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/babysit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/babysit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/babysit/SKILL.md",
@@ -386,6 +725,36 @@
       "url": "https://skillissue.sh/skills/babysit/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/babysit/SKILL.md",
       "resourceCount": 4,
+      "bundleFileCount": 5,
+      "bundleSize": 69851,
+      "resources": [
+        {
+          "path": "references/ci-and-final-readiness.md",
+          "kind": "reference",
+          "bytes": 4167
+        },
+        {
+          "path": "references/codex-review-threads.md",
+          "kind": "reference",
+          "bytes": 33096
+        },
+        {
+          "path": "references/pr-labels.md",
+          "kind": "reference",
+          "bytes": 7956
+        },
+        {
+          "path": "references/preflight-and-pr-creation.md",
+          "kind": "reference",
+          "bytes": 7340
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit, Grep, Glob]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -408,6 +777,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/commit-message/SKILL.md",
@@ -416,6 +789,15 @@
       "url": "https://skillissue.sh/skills/commit-message/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/commit-message/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 4442,
+      "resources": [],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readonly",
+        "tools": "[Bash]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -441,6 +823,10 @@
       ],
       "featured": true,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-07",
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md",
@@ -449,6 +835,42 @@
       "url": "https://skillissue.sh/skills/browser-hand/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md",
       "resourceCount": 6,
+      "bundleFileCount": 7,
+      "bundleSize": 57030,
+      "resources": [
+        {
+          "path": "references/extension-cli.md",
+          "kind": "reference",
+          "bytes": 3452
+        },
+        {
+          "path": "references/platform-gotchas.md",
+          "kind": "reference",
+          "bytes": 30747
+        },
+        {
+          "path": "references/remote-debug-fallback.md",
+          "kind": "reference",
+          "bytes": 1620
+        },
+        {
+          "path": "references/setup.md",
+          "kind": "reference",
+          "bytes": 3577
+        },
+        {
+          "path": "references/troubleshooting.md",
+          "kind": "reference",
+          "bytes": 8001
+        },
+        {
+          "path": "scripts/anon-screenshot.sh",
+          "kind": "script",
+          "bytes": 3122
+        }
+      ],
+      "capabilities": {},
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -471,6 +893,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-07",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/flashspace/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/flashspace/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/flashspace/SKILL.md",
@@ -479,6 +905,14 @@
       "url": "https://skillissue.sh/skills/flashspace/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/flashspace/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 11725,
+      "resources": [],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readonly"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -501,6 +935,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-07",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/raycast/SKILL.md",
@@ -509,6 +947,30 @@
       "url": "https://skillissue.sh/skills/raycast/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/raycast/SKILL.md",
       "resourceCount": 3,
+      "bundleFileCount": 4,
+      "bundleSize": 18357,
+      "resources": [
+        {
+          "path": "references/ai-config.md",
+          "kind": "reference",
+          "bytes": 3180
+        },
+        {
+          "path": "references/control-surfaces.md",
+          "kind": "reference",
+          "bytes": 5585
+        },
+        {
+          "path": "references/troubleshooting.md",
+          "kind": "reference",
+          "bytes": 2540
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -531,6 +993,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/awtrix-board/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/awtrix-board/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/awtrix-board/SKILL.md",
@@ -539,6 +1005,20 @@
       "url": "https://skillissue.sh/skills/awtrix-board/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/awtrix-board/SKILL.md",
       "resourceCount": 1,
+      "bundleFileCount": 2,
+      "bundleSize": 16585,
+      "resources": [
+        {
+          "path": "bin/awtrix",
+          "kind": "resource",
+          "bytes": 7763
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readonly"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -560,6 +1040,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/home-assistant-operator/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/home-assistant-operator/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/home-assistant-operator/SKILL.md",
@@ -568,6 +1052,21 @@
       "url": "https://skillissue.sh/skills/home-assistant-operator/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/home-assistant-operator/SKILL.md",
       "resourceCount": 1,
+      "bundleFileCount": 2,
+      "bundleSize": 3982,
+      "resources": [
+        {
+          "path": "bin/home-assistant-operator",
+          "kind": "script",
+          "bytes": 1648
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -591,6 +1090,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-07",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/triage-autohub-runtime/SKILL.md",
@@ -599,6 +1102,25 @@
       "url": "https://skillissue.sh/skills/triage-autohub-runtime/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/triage-autohub-runtime/SKILL.md",
       "resourceCount": 2,
+      "bundleFileCount": 3,
+      "bundleSize": 35194,
+      "resources": [
+        {
+          "path": "references/failure-signatures.md",
+          "kind": "reference",
+          "bytes": 8464
+        },
+        {
+          "path": "scripts/collect-incident-evidence.js",
+          "kind": "script",
+          "bytes": 15862
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -619,6 +1141,10 @@
       ],
       "featured": false,
       "provenance": "mixed",
+      "source": "mixed",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/resend-cli/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/resend-cli/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/resend-cli/SKILL.md",
@@ -627,6 +1153,87 @@
       "url": "https://skillissue.sh/skills/resend-cli/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/resend-cli/SKILL.md",
       "resourceCount": 15,
+      "bundleFileCount": 16,
+      "bundleSize": 64212,
+      "resources": [
+        {
+          "path": "references/api-keys.md",
+          "kind": "reference",
+          "bytes": 954
+        },
+        {
+          "path": "references/auth.md",
+          "kind": "reference",
+          "bytes": 1472
+        },
+        {
+          "path": "references/automations.md",
+          "kind": "reference",
+          "bytes": 4651
+        },
+        {
+          "path": "references/broadcasts.md",
+          "kind": "reference",
+          "bytes": 3090
+        },
+        {
+          "path": "references/contact-properties.md",
+          "kind": "reference",
+          "bytes": 1516
+        },
+        {
+          "path": "references/contacts.md",
+          "kind": "reference",
+          "bytes": 4379
+        },
+        {
+          "path": "references/domains.md",
+          "kind": "reference",
+          "bytes": 5910
+        },
+        {
+          "path": "references/emails.md",
+          "kind": "reference",
+          "bytes": 6044
+        },
+        {
+          "path": "references/error-codes.md",
+          "kind": "reference",
+          "bytes": 3571
+        },
+        {
+          "path": "references/logs.md",
+          "kind": "reference",
+          "bytes": 1172
+        },
+        {
+          "path": "references/segments.md",
+          "kind": "reference",
+          "bytes": 1346
+        },
+        {
+          "path": "references/templates.md",
+          "kind": "reference",
+          "bytes": 2182
+        },
+        {
+          "path": "references/topics.md",
+          "kind": "reference",
+          "bytes": 1085
+        },
+        {
+          "path": "references/webhooks.md",
+          "kind": "reference",
+          "bytes": 2528
+        },
+        {
+          "path": "references/workflows.md",
+          "kind": "reference",
+          "bytes": 11959
+        }
+      ],
+      "capabilities": {},
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -647,6 +1254,10 @@
       ],
       "featured": false,
       "provenance": "mixed",
+      "source": "mixed",
+      "license": "Apache-2.0",
+      "firstUsed": "2026-04",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-builder/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-builder/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/mcp-builder/SKILL.md",
@@ -655,6 +1266,57 @@
       "url": "https://skillissue.sh/skills/mcp-builder/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-builder/SKILL.md",
       "resourceCount": 9,
+      "bundleFileCount": 10,
+      "bundleSize": 122977,
+      "resources": [
+        {
+          "path": "LICENSE.txt",
+          "kind": "reference",
+          "bytes": 11345
+        },
+        {
+          "path": "reference/evaluation.md",
+          "kind": "reference",
+          "bytes": 21663
+        },
+        {
+          "path": "reference/mcp_best_practices.md",
+          "kind": "reference",
+          "bytes": 7330
+        },
+        {
+          "path": "reference/node_mcp_server.md",
+          "kind": "reference",
+          "bytes": 28550
+        },
+        {
+          "path": "reference/python_mcp_server.md",
+          "kind": "reference",
+          "bytes": 25099
+        },
+        {
+          "path": "scripts/connections.py",
+          "kind": "script",
+          "bytes": 4875
+        },
+        {
+          "path": "scripts/evaluation.py",
+          "kind": "script",
+          "bytes": 12579
+        },
+        {
+          "path": "scripts/example_evaluation.xml",
+          "kind": "script",
+          "bytes": 1194
+        },
+        {
+          "path": "scripts/requirements.txt",
+          "kind": "script",
+          "bytes": 29
+        }
+      ],
+      "capabilities": {},
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -677,6 +1339,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-registry-maintainer/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-registry-maintainer/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/mcp-registry-maintainer/SKILL.md",
@@ -685,6 +1351,21 @@
       "url": "https://skillissue.sh/skills/mcp-registry-maintainer/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/mcp-registry-maintainer/SKILL.md",
       "resourceCount": 1,
+      "bundleFileCount": 2,
+      "bundleSize": 4687,
+      "resources": [
+        {
+          "path": "bin/mcp-registry-maintainer",
+          "kind": "script",
+          "bytes": 2204
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -708,6 +1389,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/brand-bible-author/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/brand-bible-author/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/brand-bible-author/SKILL.md",
@@ -716,6 +1401,71 @@
       "url": "https://skillissue.sh/skills/brand-bible-author/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/brand-bible-author/SKILL.md",
       "resourceCount": 11,
+      "bundleFileCount": 12,
+      "bundleSize": 58320,
+      "resources": [
+        {
+          "path": "bin/coherence-lint",
+          "kind": "script",
+          "bytes": 7347
+        },
+        {
+          "path": "brief-schema.md",
+          "kind": "reference",
+          "bytes": 5501
+        },
+        {
+          "path": "coherence-check.md",
+          "kind": "reference",
+          "bytes": 2107
+        },
+        {
+          "path": "examples/generic-artist.brief.json",
+          "kind": "config",
+          "bytes": 777
+        },
+        {
+          "path": "outline.md",
+          "kind": "reference",
+          "bytes": 8370
+        },
+        {
+          "path": "tests/_lib.py",
+          "kind": "resource",
+          "bytes": 4113
+        },
+        {
+          "path": "tests/README.md",
+          "kind": "reference",
+          "bytes": 2754
+        },
+        {
+          "path": "tests/run_all.sh",
+          "kind": "resource",
+          "bytes": 1920
+        },
+        {
+          "path": "tests/validate_locked_bible.py",
+          "kind": "resource",
+          "bytes": 6378
+        },
+        {
+          "path": "tests/validate_references.py",
+          "kind": "resource",
+          "bytes": 2220
+        },
+        {
+          "path": "tests/validate_schema.py",
+          "kind": "resource",
+          "bytes": 1776
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Write, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -738,6 +1488,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/html-asset-renderer/SKILL.md",
@@ -746,6 +1500,21 @@
       "url": "https://skillissue.sh/skills/html-asset-renderer/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/html-asset-renderer/SKILL.md",
       "resourceCount": 1,
+      "bundleFileCount": 2,
+      "bundleSize": 20606,
+      "resources": [
+        {
+          "path": "scripts/render-html-assets.mjs",
+          "kind": "script",
+          "bytes": 15841
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node, Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -769,6 +1538,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/midjourney-iteration/SKILL.md",
@@ -777,6 +1550,51 @@
       "url": "https://skillissue.sh/skills/midjourney-iteration/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/midjourney-iteration/SKILL.md",
       "resourceCount": 7,
+      "bundleFileCount": 8,
+      "bundleSize": 20021,
+      "resources": [
+        {
+          "path": "bin/preflight",
+          "kind": "script",
+          "bytes": 3547
+        },
+        {
+          "path": "bin/relaunch-chrome",
+          "kind": "script",
+          "bytes": 3309
+        },
+        {
+          "path": "brief-schema.md",
+          "kind": "reference",
+          "bytes": 814
+        },
+        {
+          "path": "eval-rubric.md",
+          "kind": "reference",
+          "bytes": 555
+        },
+        {
+          "path": "examples/product-hero.brief.json",
+          "kind": "config",
+          "bytes": 396
+        },
+        {
+          "path": "refine-patterns.md",
+          "kind": "reference",
+          "bytes": 836
+        },
+        {
+          "path": "workflow.md",
+          "kind": "reference",
+          "bytes": 557
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Write, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -799,6 +1617,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/tui-design/SKILL.md",
@@ -807,6 +1629,26 @@
       "url": "https://skillissue.sh/skills/tui-design/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/tui-design/SKILL.md",
       "resourceCount": 2,
+      "bundleFileCount": 3,
+      "bundleSize": 45625,
+      "resources": [
+        {
+          "path": "references/app-patterns.md",
+          "kind": "reference",
+          "bytes": 12420
+        },
+        {
+          "path": "references/visual-catalog.md",
+          "kind": "reference",
+          "bytes": 7931
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readonly",
+        "tools": "[Read]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -829,6 +1671,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/docs-screenshot-packager/SKILL.md",
@@ -837,6 +1683,56 @@
       "url": "https://skillissue.sh/skills/docs-screenshot-packager/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/docs-screenshot-packager/SKILL.md",
       "resourceCount": 8,
+      "bundleFileCount": 9,
+      "bundleSize": 27031,
+      "resources": [
+        {
+          "path": "agents/openai.yaml",
+          "kind": "config",
+          "bytes": 230
+        },
+        {
+          "path": "examples/github-readme.manifest.json",
+          "kind": "config",
+          "bytes": 558
+        },
+        {
+          "path": "examples/marketing-site.manifest.json",
+          "kind": "config",
+          "bytes": 540
+        },
+        {
+          "path": "references/capture-recipes.md",
+          "kind": "reference",
+          "bytes": 1595
+        },
+        {
+          "path": "references/github-readme.md",
+          "kind": "reference",
+          "bytes": 1303
+        },
+        {
+          "path": "references/marketing-site.md",
+          "kind": "reference",
+          "bytes": 1516
+        },
+        {
+          "path": "scripts/package-screenshots.mjs",
+          "kind": "script",
+          "bytes": 8230
+        },
+        {
+          "path": "scripts/verify-screenshot-pack.mjs",
+          "kind": "script",
+          "bytes": 7114
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Node, Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -860,6 +1756,10 @@
       ],
       "featured": true,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-05",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/jacks-writing-style/SKILL.md",
@@ -868,6 +1768,36 @@
       "url": "https://skillissue.sh/skills/jacks-writing-style/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/jacks-writing-style/SKILL.md",
       "resourceCount": 4,
+      "bundleFileCount": 5,
+      "bundleSize": 61370,
+      "resources": [
+        {
+          "path": "references/blog_examples.md",
+          "kind": "reference",
+          "bytes": 14467
+        },
+        {
+          "path": "references/drunk_support_examples.md",
+          "kind": "reference",
+          "bytes": 12580
+        },
+        {
+          "path": "references/readme_examples.md",
+          "kind": "reference",
+          "bytes": 9117
+        },
+        {
+          "path": "scripts/detect_claude_isms.py",
+          "kind": "script",
+          "bytes": 5864
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Read, Edit, Bash]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -891,6 +1821,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md",
@@ -899,6 +1833,15 @@
       "url": "https://skillissue.sh/skills/bubble-tea-tui-builder/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 10099,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -921,6 +1864,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-06",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cli-installer-ux/SKILL.md",
@@ -929,6 +1876,36 @@
       "url": "https://skillissue.sh/skills/cli-installer-ux/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cli-installer-ux/SKILL.md",
       "resourceCount": 4,
+      "bundleFileCount": 5,
+      "bundleSize": 10059,
+      "resources": [
+        {
+          "path": "examples/clack-ui.ts",
+          "kind": "resource",
+          "bytes": 1201
+        },
+        {
+          "path": "examples/cli-output.test.ts",
+          "kind": "resource",
+          "bytes": 1289
+        },
+        {
+          "path": "examples/compact-install.sh",
+          "kind": "resource",
+          "bytes": 1473
+        },
+        {
+          "path": "references/cli-ux-checklist.md",
+          "kind": "reference",
+          "bytes": 770
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -952,6 +1929,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/context-engineering-audit/SKILL.md",
@@ -960,6 +1941,31 @@
       "url": "https://skillissue.sh/skills/context-engineering-audit/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/context-engineering-audit/SKILL.md",
       "resourceCount": 3,
+      "bundleFileCount": 4,
+      "bundleSize": 13492,
+      "resources": [
+        {
+          "path": "references/coupling-check.md",
+          "kind": "reference",
+          "bytes": 2368
+        },
+        {
+          "path": "references/measuring.md",
+          "kind": "reference",
+          "bytes": 2512
+        },
+        {
+          "path": "references/rewrite-patterns.md",
+          "kind": "reference",
+          "bytes": 2568
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Read, Edit, Bash, Grep]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -983,6 +1989,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md",
@@ -991,6 +2001,17 @@
       "url": "https://skillissue.sh/skills/clerk-cloudflare-auth/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 4769,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [
+        "name: CLERK_SECRET_KEY"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1014,6 +2035,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-brand-system/SKILL.md",
@@ -1022,6 +2047,66 @@
       "url": "https://skillissue.sh/skills/autovault-brand-system/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/autovault-brand-system/SKILL.md",
       "resourceCount": 10,
+      "bundleFileCount": 11,
+      "bundleSize": 26457,
+      "resources": [
+        {
+          "path": "agents/openai.yaml",
+          "kind": "config",
+          "bytes": 521
+        },
+        {
+          "path": "assets/ascii-vault.txt",
+          "kind": "reference",
+          "bytes": 880
+        },
+        {
+          "path": "assets/autovault-brand.css",
+          "kind": "resource",
+          "bytes": 2564
+        },
+        {
+          "path": "assets/brand-mark-animated.svg",
+          "kind": "resource",
+          "bytes": 4146
+        },
+        {
+          "path": "assets/brand-mark.svg",
+          "kind": "resource",
+          "bytes": 763
+        },
+        {
+          "path": "assets/mascot-prompt.md",
+          "kind": "reference",
+          "bytes": 1932
+        },
+        {
+          "path": "assets/usage-examples.md",
+          "kind": "reference",
+          "bytes": 1403
+        },
+        {
+          "path": "references/identity.md",
+          "kind": "reference",
+          "bytes": 3271
+        },
+        {
+          "path": "references/motion.md",
+          "kind": "reference",
+          "bytes": 2858
+        },
+        {
+          "path": "references/surface-adaptation.md",
+          "kind": "reference",
+          "bytes": 2832
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1045,6 +2130,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 3,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
@@ -1053,6 +2142,17 @@
       "url": "https://skillissue.sh/skills/clerk-cloudflare-commerce-bootstrap/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 5449,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [
+        "name: CLOUDFLARE_API_TOKEN"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1075,6 +2175,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/ci-cost-audit/SKILL.md",
@@ -1083,6 +2187,15 @@
       "url": "https://skillissue.sh/skills/ci-cost-audit/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/ci-cost-audit/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 6006,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1106,6 +2219,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-director/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-director/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/repo-demo-video-director/SKILL.md",
@@ -1114,6 +2231,15 @@
       "url": "https://skillissue.sh/skills/repo-demo-video-director/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-director/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 13507,
+      "resources": [],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readonly",
+        "tools": "[Bash, Read]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1137,6 +2263,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-publisher/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-publisher/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/repo-demo-video-publisher/SKILL.md",
@@ -1145,6 +2275,15 @@
       "url": "https://skillissue.sh/skills/repo-demo-video-publisher/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/repo-demo-video-publisher/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 28872,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1169,6 +2308,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/video-toolkit/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/video-toolkit/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/video-toolkit/SKILL.md",
@@ -1177,6 +2320,41 @@
       "url": "https://skillissue.sh/skills/video-toolkit/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/video-toolkit/SKILL.md",
       "resourceCount": 5,
+      "bundleFileCount": 6,
+      "bundleSize": 4994,
+      "resources": [
+        {
+          "path": "references/asset-generation.md",
+          "kind": "reference",
+          "bytes": 308
+        },
+        {
+          "path": "references/composition-patterns.md",
+          "kind": "reference",
+          "bytes": 293
+        },
+        {
+          "path": "references/project-workflow.md",
+          "kind": "reference",
+          "bytes": 323
+        },
+        {
+          "path": "references/setup.md",
+          "kind": "reference",
+          "bytes": 340
+        },
+        {
+          "path": "references/troubleshooting.md",
+          "kind": "reference",
+          "bytes": 334
+        }
+      ],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1200,6 +2378,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md",
@@ -1208,6 +2390,28 @@
       "url": "https://skillissue.sh/skills/stripe-commerce-checkout/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md",
       "resourceCount": 2,
+      "bundleFileCount": 3,
+      "bundleSize": 10210,
+      "resources": [
+        {
+          "path": "templates/cloudflare-pages-checkout.js",
+          "kind": "resource",
+          "bytes": 4675
+        },
+        {
+          "path": "templates/stripe-app.json",
+          "kind": "config",
+          "bytes": 321
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [
+        "name: STRIPE_SECRET_KEY"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1230,6 +2434,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/award-travel-research/SKILL.md",
@@ -1238,6 +2446,16 @@
       "url": "https://skillissue.sh/skills/award-travel-research/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/award-travel-research/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 4685,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readonly"
+      },
+      "requiresSecrets": [
+        "name: SEATS_AERO_API_KEY"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1261,6 +2479,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-ai-collaboration/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-ai-collaboration/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/unity-ai-collaboration/SKILL.md",
@@ -1269,6 +2491,51 @@
       "url": "https://skillissue.sh/skills/unity-ai-collaboration/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-ai-collaboration/SKILL.md",
       "resourceCount": 7,
+      "bundleFileCount": 8,
+      "bundleSize": 39637,
+      "resources": [
+        {
+          "path": "agents/openai.yaml",
+          "kind": "config",
+          "bytes": 240
+        },
+        {
+          "path": "references/responsibility-matrix.md",
+          "kind": "reference",
+          "bytes": 2717
+        },
+        {
+          "path": "references/safety-and-handoffs.md",
+          "kind": "reference",
+          "bytes": 2582
+        },
+        {
+          "path": "references/settings-and-research.md",
+          "kind": "reference",
+          "bytes": 3089
+        },
+        {
+          "path": "references/unity-ai-settings-baseline.json",
+          "kind": "config",
+          "bytes": 5495
+        },
+        {
+          "path": "scripts/configure-unity-ai-settings",
+          "kind": "script",
+          "bytes": 8392
+        },
+        {
+          "path": "scripts/test_configure_unity_ai_settings.py",
+          "kind": "script",
+          "bytes": 6804
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1292,6 +2559,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 1,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/elevenlabs-automem-memory/SKILL.md",
@@ -1300,6 +2571,17 @@
       "url": "https://skillissue.sh/skills/elevenlabs-automem-memory/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/elevenlabs-automem-memory/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 5241,
+      "resources": [],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [
+        "name: ELEVENLABS_API_KEY"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1324,6 +2606,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/building-emdash-site/SKILL.md",
@@ -1332,6 +2618,41 @@
       "url": "https://skillissue.sh/skills/building-emdash-site/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/building-emdash-site/SKILL.md",
       "resourceCount": 5,
+      "bundleFileCount": 6,
+      "bundleSize": 48252,
+      "resources": [
+        {
+          "path": "references/configuration.md",
+          "kind": "reference",
+          "bytes": 5628
+        },
+        {
+          "path": "references/querying-and-rendering.md",
+          "kind": "reference",
+          "bytes": 9728
+        },
+        {
+          "path": "references/schema-and-seed.md",
+          "kind": "reference",
+          "bytes": 11407
+        },
+        {
+          "path": "references/site-features.md",
+          "kind": "reference",
+          "bytes": 10990
+        },
+        {
+          "path": "references/version-currency.md",
+          "kind": "reference",
+          "bytes": 1624
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1356,6 +2677,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/creating-plugins/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/creating-plugins/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/creating-plugins/SKILL.md",
@@ -1364,6 +2689,51 @@
       "url": "https://skillissue.sh/skills/creating-plugins/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/creating-plugins/SKILL.md",
       "resourceCount": 7,
+      "bundleFileCount": 8,
+      "bundleSize": 74666,
+      "resources": [
+        {
+          "path": "references/admin-ui.md",
+          "kind": "reference",
+          "bytes": 4301
+        },
+        {
+          "path": "references/api-routes.md",
+          "kind": "reference",
+          "bytes": 6339
+        },
+        {
+          "path": "references/block-kit.md",
+          "kind": "reference",
+          "bytes": 10206
+        },
+        {
+          "path": "references/hooks.md",
+          "kind": "reference",
+          "bytes": 14446
+        },
+        {
+          "path": "references/portable-text-blocks.md",
+          "kind": "reference",
+          "bytes": 6436
+        },
+        {
+          "path": "references/publishing.md",
+          "kind": "reference",
+          "bytes": 2955
+        },
+        {
+          "path": "references/storage.md",
+          "kind": "reference",
+          "bytes": 7225
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1388,6 +2758,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/emdash-cli/SKILL.md",
@@ -1396,6 +2770,23 @@
       "url": "https://skillissue.sh/skills/emdash-cli/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/emdash-cli/SKILL.md",
       "resourceCount": 1,
+      "bundleFileCount": 2,
+      "bundleSize": 16087,
+      "resources": [
+        {
+          "path": "EDITING-FLOW.md",
+          "kind": "reference",
+          "bytes": 6840
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit]"
+      },
+      "requiresSecrets": [
+        "name: EMDASH_TOKEN"
+      ],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1420,6 +2811,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/wordpress-theme-to-emdash/SKILL.md",
@@ -1428,6 +2823,161 @@
       "url": "https://skillissue.sh/skills/wordpress-theme-to-emdash/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/wordpress-theme-to-emdash/SKILL.md",
       "resourceCount": 29,
+      "bundleFileCount": 30,
+      "bundleSize": 131157,
+      "resources": [
+        {
+          "path": "phases/1-discovery.md",
+          "kind": "reference",
+          "bytes": 5447
+        },
+        {
+          "path": "phases/2-design.md",
+          "kind": "reference",
+          "bytes": 2735
+        },
+        {
+          "path": "phases/3-templates.md",
+          "kind": "reference",
+          "bytes": 3431
+        },
+        {
+          "path": "phases/4-dynamic.md",
+          "kind": "reference",
+          "bytes": 3371
+        },
+        {
+          "path": "phases/5-seed.md",
+          "kind": "reference",
+          "bytes": 4872
+        },
+        {
+          "path": "phases/6-verify.md",
+          "kind": "reference",
+          "bytes": 2949
+        },
+        {
+          "path": "references/astro-essentials.md",
+          "kind": "reference",
+          "bytes": 26880
+        },
+        {
+          "path": "references/concept-mapping.md",
+          "kind": "reference",
+          "bytes": 15025
+        },
+        {
+          "path": "references/design-extraction.md",
+          "kind": "reference",
+          "bytes": 7385
+        },
+        {
+          "path": "references/emdash-api.md",
+          "kind": "reference",
+          "bytes": 10738
+        },
+        {
+          "path": "references/template-patterns.md",
+          "kind": "reference",
+          "bytes": 17605
+        },
+        {
+          "path": "scaffold/astro.config.mjs",
+          "kind": "resource",
+          "bytes": 576
+        },
+        {
+          "path": "scaffold/CHECKLIST.md",
+          "kind": "reference",
+          "bytes": 4234
+        },
+        {
+          "path": "scaffold/package.json",
+          "kind": "config",
+          "bytes": 562
+        },
+        {
+          "path": "scaffold/public/favicon.svg",
+          "kind": "resource",
+          "bytes": 257
+        },
+        {
+          "path": "scaffold/README.md",
+          "kind": "reference",
+          "bytes": 3317
+        },
+        {
+          "path": "scaffold/src/components/PostCard.astro",
+          "kind": "resource",
+          "bytes": 1144
+        },
+        {
+          "path": "scaffold/src/env.d.ts",
+          "kind": "resource",
+          "bytes": 85
+        },
+        {
+          "path": "scaffold/src/layouts/Base.astro",
+          "kind": "resource",
+          "bytes": 1689
+        },
+        {
+          "path": "scaffold/src/live.config.ts",
+          "kind": "resource",
+          "bytes": 410
+        },
+        {
+          "path": "scaffold/src/pages/404.astro",
+          "kind": "resource",
+          "bytes": 349
+        },
+        {
+          "path": "scaffold/src/pages/categories/[slug].astro",
+          "kind": "resource",
+          "bytes": 1320
+        },
+        {
+          "path": "scaffold/src/pages/index.astro",
+          "kind": "resource",
+          "bytes": 1250
+        },
+        {
+          "path": "scaffold/src/pages/pages/[slug].astro",
+          "kind": "resource",
+          "bytes": 681
+        },
+        {
+          "path": "scaffold/src/pages/posts/[slug].astro",
+          "kind": "resource",
+          "bytes": 2231
+        },
+        {
+          "path": "scaffold/src/pages/posts/index.astro",
+          "kind": "resource",
+          "bytes": 1040
+        },
+        {
+          "path": "scaffold/src/pages/tags/[slug].astro",
+          "kind": "resource",
+          "bytes": 1207
+        },
+        {
+          "path": "scaffold/src/styles/global.css",
+          "kind": "resource",
+          "bytes": 4057
+        },
+        {
+          "path": "scaffold/tsconfig.json",
+          "kind": "config",
+          "bytes": 173
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1450,6 +3000,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md",
@@ -1458,6 +3012,15 @@
       "url": "https://skillissue.sh/skills/quest-passthrough-camera-capture/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md",
       "resourceCount": 0,
+      "bundleFileCount": 1,
+      "bundleSize": 5982,
+      "resources": [],
+      "capabilities": {
+        "network": "false",
+        "filesystem": "readwrite",
+        "tools": "[Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": false,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     },
@@ -1481,6 +3044,10 @@
       ],
       "featured": false,
       "provenance": "house",
+      "source": "house",
+      "license": "MIT",
+      "firstUsed": "2026-08",
+      "references": 2,
       "cliInstall": "autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-quest-build/SKILL.md --sync-profiles",
       "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-quest-build/SKILL.md\" })",
       "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/unity-quest-build/SKILL.md",
@@ -1489,6 +3056,41 @@
       "url": "https://skillissue.sh/skills/unity-quest-build/",
       "installId": "jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/unity-quest-build/SKILL.md",
       "resourceCount": 5,
+      "bundleFileCount": 6,
+      "bundleSize": 40178,
+      "resources": [
+        {
+          "path": "agents/openai.yaml",
+          "kind": "config",
+          "bytes": 221
+        },
+        {
+          "path": "references/failure-modes.md",
+          "kind": "reference",
+          "bytes": 3542
+        },
+        {
+          "path": "references/verification-ladder.md",
+          "kind": "reference",
+          "bytes": 4256
+        },
+        {
+          "path": "scripts/audit-unity-quest-toolchain",
+          "kind": "script",
+          "bytes": 15209
+        },
+        {
+          "path": "scripts/test_audit_unity_quest_toolchain.py",
+          "kind": "script",
+          "bytes": 4918
+        }
+      ],
+      "capabilities": {
+        "network": "true",
+        "filesystem": "readwrite",
+        "tools": "[Bash, Read, Edit, Write]"
+      },
+      "requiresSecrets": [],
       "runnable": true,
       "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972"
     }

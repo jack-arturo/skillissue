@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/cloudflare-ops/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.64dc30fbd271.css">
+<link rel="stylesheet" href="/assets/site.5ccb0703f30d.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -41,29 +41,33 @@
 
     <section class="skill-package">
       <div class="wrap">
+        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>house</span><span>/</span><span>cloudflare-ops</span></p>
         <div class="skill-package-top">
           <div class="skill-package-intro">
             <span class="explorer-mark" aria-hidden="true">CO</span>
-            <div><p class="explorer-kicker">house package · deployment</p><h1>Cloudflare Ops</h1><p class="lede">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</p></div>
+            <div><p class="explorer-kicker">Hosted skill bundle · house · deployment</p><h1>Cloudflare Ops</h1><p class="lede">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</p></div>
           </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md --sync-profiles</code>
-            <div><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md --sync-profiles">Copy install</button><a class="btn btn-ghost" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md" rel="noopener">Raw</a></div>
+          <aside class="skill-install-card" data-install-mode="cli">
+            <span>Pinned install</span>
+            <div class="install-tabs" role="group" aria-label="Install method"><button type="button" data-install-tab="cli" aria-pressed="true">CLI</button><button type="button" data-install-tab="mcp" aria-pressed="false">MCP</button></div>
+            <div class="install-command" data-install-panel="cli"><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md --sync-profiles</code><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md --sync-profiles">Copy install</button></div>
+            <div class="install-command" data-install-panel="mcp" hidden><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md&quot; })</code><button type="button" class="btn btn-primary" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/cloudflare-ops/SKILL.md&quot; })">Copy MCP call</button></div>
+            <div class="install-links"><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md" rel="noopener">Raw SKILL.md</a><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md" rel="noopener">Source</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
           <div><dt>Version</dt><dd>v1.0.5</dd></div>
-          <div><dt>Provenance</dt><dd>house</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
           <div><dt>Targets</dt><dd>claude-code, codex, autojack, cursor</dd></div>
-          <div><dt>Bundle</dt><dd>2 files · 1 resources · runnable</dd></div>
+          <div><dt>Bundle</dt><dd>2 files · 1 resources · runnable · 14 KB</dd></div>
         </dl>
         <div class="meta skill-meta"><span class="tag">cloudflare</span><span class="tag">pages</span><span class="tag">d1</span><span class="badge">house</span><span class="badge">featured</span></div>
-        <section class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package resources</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md" rel="noopener">View source</a></div><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/bin/cloudflare-ops" rel="noopener"><code>bin/cloudflare-ops</code><span>Resource</span></a></div></section>
+        <nav class="package-nav" aria-label="Package sections"><a href="#overview">Overview</a><a href="#bundle">Bundle</a><a href="#permissions">Permissions</a><a href="#provenance">Provenance</a><a href="#source">Source</a></nav>
       </div>
     </section>
     <section>
       <div class="wrap prose">
-<h2>Why it exists</h2>
+        <section class="package-section" id="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why it exists</h2>
 <p>Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain pages deploys.</p>
 <h2>History</h2>
 <h3>1.0.0–1.0.5</h3>
@@ -71,8 +75,228 @@
 <h2>How Jack actually uses it</h2>
 <p>Use before any Cloudflare mutation. Prefer <code>git push</code> on GitHub-connected Pages. Never <code>wrangler pages deploy</code> against those projects.</p>
 <h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p>
-<h2>Related</h2><div class="meta"><a class="tag" href="/skills/cloudflare-lead-capture/">cloudflare-lead-capture</a> <a class="tag" href="/skills/cloudflare-commerce-deploy/">cloudflare-commerce-deploy</a></div>
+<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p></div></section>
+        <section class="package-section" id="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package files</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md" rel="noopener">View source</a></div><p class="muted">1 bundled resource; includes runnable files.</p><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md" rel="noopener"><code>SKILL.md</code><span>skill definition · 9.5 KB</span></a><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/bin/cloudflare-ops" rel="noopener"><code>bin/cloudflare-ops</code><span>script · 3.6 KB</span></a></div></div></section>
+        <section class="package-section" id="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Node, Read, Edit]</dd></div></dl><p class="muted">No secrets declared by this package.</p></section>
+        <section class="package-section" id="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are all linked here before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex, autojack, cursor</dd></div></dl><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/cloudflare-lead-capture/">cloudflare-lead-capture</a> <a class="tag" href="/skills/cloudflare-commerce-deploy/">cloudflare-commerce-deploy</a></div></section>
+        <section class="package-section" id="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-ops/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
+name: cloudflare-ops
+description: &gt;-
+  Use for AutoHub-style Cloudflare runtime operations: Pages and Worker
+  preflights, preview D1/KV pairs, migrations, data sync, or local tunnels. Use
+  cloudflare-commerce-deploy instead for general app deployment, DNS, custom
+  domains, secrets, environment configuration, or Registrar work.
+license: MIT
+tags: [cloudflare, ops, pages, workers, d1, kv, tunnel, dns, autovault, autohub]
+agents: [claude-code, codex, autojack, cursor]
+category: deployment
+metadata:
+  version: &quot;1.0.5&quot;
+capabilities:
+  network: true
+  filesystem: readwrite
+  tools: [Bash, Node, Read, Edit]
+requires-secrets: []
+resources:
+  - path: bin/cloudflare-ops
+    type: file
+bin:
+  run:
+    command: bin/cloudflare-ops
+    description: Signed wrapper that dispatches Cloudflare ops tasks (deploy-pages, setup-d1, setup-d1-preview, tunnel-setup, tunnel-start, migrate, sync) for the target repo.
+    requires-tty: false
+---
+
+# Cloudflare Ops
+
+## When To Use
+
+Use this skill when the user asks to deploy an AutoHub-style project to
+Cloudflare, run Pages or Worker preflights, operate D1 migrations/sync, manage
+the local Cloudflare tunnel helper, pair preview D1+KV resources for safe PR
+previews, or standardize repo-local Cloudflare hacks.
+
+For full one-shot Clerk + Stripe + Cloudflare commerce builds, drive this skill
+from `clerk-cloudflare-commerce-bootstrap`. Route general app deployment,
+per-environment Pages variables and secrets, DNS/custom domains, logs, cache,
+and Registrar work to `cloudflare-commerce-deploy`.
+
+This skill's deploy path is **Pages-centric**. For an Astro/EmDash site that runs
+as a **Worker** (`output: 'server'` + `@astrojs/cloudflare`, shipped with
+`wrangler deploy` — *not* Pages), the deploy recipe and its gotchas are owned by
+`cloudflare-emdash-cms-deploy`. Use *this* skill for that project's D1/KV
+provisioning, preview pairs, migrations, and sync.
+
+## Deploy Mechanism — choose one canonical path
+
+Cloudflare Pages supports two healthy deployment models. Detect which model the
+project already uses and preserve it unless the user explicitly asks to switch.
+
+- **Git-connected Pages:** `source.type == &quot;github&quot;` in the Pages project.
+  Ongoing deploys happen from `git push` and Cloudflare's Git integration. In
+  this model, do not run ad hoc local `wrangler pages deploy` for ongoing
+  releases because it bypasses the connected build path.
+- **Direct Upload from CI:** the repo owns a GitHub Actions workflow that runs
+  `wrangler pages deploy` with a commit hash/branch after tests and builds pass.
+  This is valid when it is the canonical CI path; keep using the workflow and do
+  not forcibly connect the Pages project to GitHub.
+
+The `deploy-pages` task in this skill is a setup/bootstrap helper. It can create
+the Pages project and attach domains. It should only connect the project to
+GitHub when the chosen deployment model is Git-connected Pages.
+
+### Connect a Pages project to a GitHub repo
+
+After the project is created and domains are attached, wire it to the repo
+with one POST:
+
+```bash
+curl -sS -X POST \
+  -H &quot;Authorization: Bearer $CLOUDFLARE_API_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  &quot;https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/&lt;project_name&gt;&quot; \
+  --data '{
+    &quot;source&quot;: {
+      &quot;type&quot;: &quot;github&quot;,
+      &quot;config&quot;: {
+        &quot;owner&quot;: &quot;&lt;github_org_or_user&gt;&quot;,
+        &quot;repo_name&quot;: &quot;&lt;repo&gt;&quot;,
+        &quot;production_branch&quot;: &quot;main&quot;
+      }
+    }
+  }'
+```
+
+Verify with `GET …/pages/projects/&lt;project_name&gt;` and confirm
+`result.source.type == &quot;github&quot;` and the `config.{owner,repo_name,production_branch}`
+match.
+
+For a Direct Upload project, verify the workflow instead: it should checkout the
+exact commit, run the repo's build/test gate, then call `wrangler pages deploy`
+with `--project-name`, `--branch`, and `--commit-hash`. Do not add a second
+Cloudflare auto-build path on top of that workflow.
+
+## Preconditions
+
+- The target repo is passed with `--repo &lt;path&gt;` for Pages/D1/tunnel tasks.
+- Wrangler/cloudflared credentials stay outside chat and source control.
+- If global Wrangler auth is already configured (`wrangler login` state and/or
+  `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` from shell startup / Autohub
+  `.env` / System Configuration `secrets/.env`), treat that as the default
+  credential path for all Cloudflare tasks in this skill. **Do not tell Jack
+  you lack Cloudflare credentials without first running `wrangler whoami`.**
+- AutoVault-stored credential helpers are fallback paths when global Wrangler
+  auth is unavailable or lacks required scope.
+- Billable Cloudflare actions still require explicit user confirmation in the
+  conversation before the agent runs them. A single DNS TXT for domain
+  verification is not billable — proceed.
+
+## DNS TXT for domain verification (wpfusion.com)
+
+When Wordfence (or similar) asks for a TXT on `wpfusion.com`:
+
+| Item | Value |
+|------|-------|
+| Account | Very Good Plugins (`CLOUDFLARE_ACCOUNT_ID`) |
+| Zone | `wpfusion.com` → id `41d3ea9c35eda46091348ef05e861d3a` |
+| API | `Authorization: Bearer $CLOUDFLARE_API_TOKEN` |
+| Typical record | TXT `wpfusion.com` `wfvendor=&lt;token&gt;` TTL 600 |
+
+Confirm with `dig @1.1.1.1 +short TXT wpfusion.com`.
+
+## Workflow
+
+1. Run a preflight first:
+
+```bash
+autovault skill doctor cloudflare-ops --repo .
+```
+
+2. Use `dry-run` before any mutation:
+
+```bash
+autovault skill dry-run cloudflare-ops --repo . --task deploy-pages
+```
+
+3. Dispatch supported tasks through the signed wrapper:
+
+```bash
+autovault skill run cloudflare-ops --repo . --task deploy-pages -- --slug=my-site --dir=dist
+autovault skill run cloudflare-ops --repo . --task setup-d1-preview -- --slug=my-site
+autovault skill migrate cloudflare-ops --repo . --target local
+autovault skill migrate cloudflare-ops --repo . --target preview
+autovault skill sync cloudflare-ops --repo . --mode sidecar
+autovault skill run cloudflare-ops --repo . --task tunnel-start
+```
+
+## Supported Tasks
+
+- `deploy-pages` — **setup-only** helper. Creates the Pages project and
+  attaches custom domains. If the chosen model is Git-connected Pages, it may
+  also connect the project to GitHub. If the chosen model is Direct Upload from
+  CI, ongoing deploys stay in the repo workflow.
+- `setup-d1` — production D1 + KV pair.
+- `setup-d1-preview` — preview D1 + KV pair, designed to feed
+  `CLOUDFLARE_PREVIEW_D1_DATABASE_ID` and `CLOUDFLARE_PREVIEW_KV_NAMESPACE_ID`
+  GitHub repo variables for PR-preview deploys.
+- `tunnel-setup`
+- `tunnel-start`
+- D1 migration targets: `local`, `preview`, `remote`
+- D1 sync modes: `sidecar`, `daemon`, `backfill`, `parity`
+
+## Preview Resource Pairs
+
+PR-preview deploys must run against an isolated D1 + KV pair so preview traffic
+never writes to production data. The expected shape:
+
+- One preview D1 database per project, named `&lt;project&gt;-preview` or
+  `&lt;project&gt;-hosted-preview`. Capture both its `database_id` and
+  `database_name`.
+- One preview KV namespace per project, named `&lt;project&gt;-vault-objects-preview`
+  or similar. Capture its `id`.
+- Apply the same migrations to preview D1 that production uses. The
+  `migrate --target preview` task is the supported path.
+- Surface the IDs to CI as repository variables (not secrets — these IDs are
+  safe to commit-adjacent and are referenced from `wrangler.preview.json` /
+  `scripts/write-pages-preview-config.mjs` style generators):
+  - `CLOUDFLARE_PREVIEW_D1_DATABASE_ID`
+  - `CLOUDFLARE_PREVIEW_D1_DATABASE_NAME`
+  - `CLOUDFLARE_PREVIEW_KV_NAMESPACE_ID`
+- For per-environment Pages secrets (`CLERK_SECRET_KEY`, `STRIPE_SECRET_KEY`,
+  `STRIPE_WEBHOOK_SECRET`, `RESEND_API_KEY`, etc.) the standard
+  `wrangler pages secret put` writes production only — see the
+  **Per-Environment Pages Env Vars** section in `cloudflare-commerce-deploy`
+  for the project-level PATCH endpoint that writes the preview environment.
+
+When `setup-d1-preview` finishes, report the database name, database id, KV id,
+and the exact `gh variable set` lines the user can paste — never the
+production values.
+
+## Output
+
+Report the repo, task, exact helper invoked, and whether the run was a dry run.
+For preview-pair tasks, also report the database name, database id, KV id, and
+the GitHub variable names the user must set. Only report secret names or
+provider-side secret references, never raw values.
+
+## Anti-Patterns
+
+- Do not run ad hoc local `wrangler pages deploy` against a Pages project whose
+  `source.type == &quot;github&quot;`. It bypasses that project's canonical build path
+  and creates split-brain deploys. Push to `main` instead.
+- Do not &quot;fix&quot; a repo that already uses Direct Upload from CI by adding a second
+  Git-connected deploy path. Pick one deployment model and keep it singular.
+- When deploying a single HTML file to Cloudflare Pages (e.g. an artifact), do NOT pass the file path directly to `wrangler pages deploy file.html`. This uploads the file as `file.html` and it will not be served at the root URL. Instead, place the file in a directory, rename it to `index.html`, and deploy the directory: `mkdir dist &amp;&amp; cp file.html dist/index.html &amp;&amp; wrangler pages deploy dist`.
+- Do not manually copy Cloudflare tokens into project files.
+- Do not register domains or create billable resources without explicit user
+  confirmation.
+- Do not bypass the repo helper scripts when they already encode project
+  conventions.
+- Do not run `migrate --target remote` against production when the intent was
+  preview — the wrong target silently corrupts the wrong database.
+- Do not point preview deploys at the production D1 or KV. The preview pair
+  exists specifically so PR traffic is isolated.
+</code></pre></section>
       </div>
     </section>
   </main>
@@ -100,6 +324,13 @@
           var p=b.textContent;b.textContent='copied';b.classList.add('copied');
           setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
         }catch(_){b.textContent='failed'}
+      });
+      document.addEventListener('click',function(e){
+        var tab=e.target.closest('[data-install-tab]');if(!tab)return;
+        var card=tab.closest('[data-install-mode]');if(!card)return;
+        var mode=tab.getAttribute('data-install-tab');card.setAttribute('data-install-mode',mode);
+        card.querySelectorAll('[data-install-tab]').forEach(function(button){button.setAttribute('aria-pressed',String(button===tab))});
+        card.querySelectorAll('[data-install-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-install-panel')!==mode});
       });
     })();
   </script>

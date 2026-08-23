@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/bubble-tea-tui-builder/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.64dc30fbd271.css">
+<link rel="stylesheet" href="/assets/site.5ccb0703f30d.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -41,35 +41,276 @@
 
     <section class="skill-package">
       <div class="wrap">
+        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>house</span><span>/</span><span>bubble-tea-tui-builder</span></p>
         <div class="skill-package-top">
           <div class="skill-package-intro">
             <span class="explorer-mark" aria-hidden="true">BT</span>
-            <div><p class="explorer-kicker">house package · terminal</p><h1>Bubble Tea TUI Builder</h1><p class="lede">Practical defaults for fast, testable Go terminal interfaces built with Bubble Tea.</p></div>
+            <div><p class="explorer-kicker">Hosted skill bundle · house · terminal</p><h1>Bubble Tea TUI Builder</h1><p class="lede">Practical defaults for fast, testable Go terminal interfaces built with Bubble Tea.</p></div>
           </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles</code>
-            <div><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles">Copy install</button><a class="btn btn-ghost" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md" rel="noopener">Raw</a></div>
+          <aside class="skill-install-card" data-install-mode="cli">
+            <span>Pinned install</span>
+            <div class="install-tabs" role="group" aria-label="Install method"><button type="button" data-install-tab="cli" aria-pressed="true">CLI</button><button type="button" data-install-tab="mcp" aria-pressed="false">MCP</button></div>
+            <div class="install-command" data-install-panel="cli"><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles</code><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles">Copy install</button></div>
+            <div class="install-command" data-install-panel="mcp" hidden><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md&quot; })</code><button type="button" class="btn btn-primary" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/bubble-tea-tui-builder/SKILL.md&quot; })">Copy MCP call</button></div>
+            <div class="install-links"><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md" rel="noopener">Raw SKILL.md</a><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md" rel="noopener">Source</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
           <div><dt>Version</dt><dd>v1.1.0</dd></div>
-          <div><dt>Provenance</dt><dd>house</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
           <div><dt>Targets</dt><dd>claude-code, codex, autojack</dd></div>
-          <div><dt>Bundle</dt><dd>1 files · 0 resources</dd></div>
+          <div><dt>Bundle</dt><dd>1 files · 0 resources · 9.9 KB</dd></div>
         </dl>
         <div class="meta skill-meta"><span class="tag">go</span><span class="tag">tui</span><span class="tag">bubble-tea</span><span class="badge">house</span></div>
-        <section class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package resources</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md" rel="noopener">View source</a></div><div class="skill-resource-grid"><p class="muted">This package is a single SKILL.md with no bundled resources.</p></div></section>
+        <nav class="package-nav" aria-label="Package sections"><a href="#overview">Overview</a><a href="#bundle">Bundle</a><a href="#permissions">Permissions</a><a href="#provenance">Provenance</a><a href="#source">Source</a></nav>
       </div>
     </section>
     <section>
       <div class="wrap prose">
-<h2>Why</h2>
+        <section class="package-section" id="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why</h2>
 <p>A terminal UI can feel instant or feel like a web app trapped in a tiny window. The difference is usually the event boundary and the test surface.</p>
 <h2>How</h2>
 <p>Keep model updates replayable, coalesce noisy events, and test with fixtures before polishing terminal-specific affordances.</p>
 <h2>Related</h2>
-<p>Pair it with <a href="/skills/tui-design/">TUI Design</a> and <a href="/skills/cli-installer-ux/">CLI Installer UX</a>.</p>
-<h2>Related</h2><div class="meta"><a class="tag" href="/skills/tui-design/">tui-design</a> <a class="tag" href="/skills/cli-installer-ux/">cli-installer-ux</a></div>
+<p>Pair it with <a href="/skills/tui-design/">TUI Design</a> and <a href="/skills/cli-installer-ux/">CLI Installer UX</a>.</p></div></section>
+        <section class="package-section" id="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package files</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md" rel="noopener">View source</a></div><p class="muted">0 bundled resources.</p><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md" rel="noopener"><code>SKILL.md</code><span>skill definition · 9.1 KB</span></a></div></div></section>
+        <section class="package-section" id="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></section>
+        <section class="package-section" id="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are all linked here before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex, autojack</dd></div></dl><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/tui-design/">tui-design</a> <a class="tag" href="/skills/cli-installer-ux/">cli-installer-ux</a></div></section>
+        <section class="package-section" id="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/bubble-tea-tui-builder/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
+name: bubble-tea-tui-builder
+description: Build, test, and harden Go Bubble Tea terminal user interfaces with replayable events, responsive rendering, and terminal-safe fallbacks.
+license: MIT
+tags: [tui, terminal, bubble-tea, go, testing, graphics]
+agents: [claude-code, codex, autojack]
+category: terminal
+metadata:
+  version: &quot;1.1.0&quot;
+capabilities:
+  network: true
+  filesystem: readwrite
+  tools: [Bash, Read, Edit, Write]
+requires-secrets: []
+resources:
+  - path: story.md
+    type: file
+---
+
+# Bubble Tea TUI Builder
+
+## When To Use
+
+Use this skill when building or improving a standalone terminal UI in Go,
+especially with Bubble Tea, Bubbles, Lip Gloss, local JSONL/Unix-socket
+bridges, PTY tests, fixture replay, audio-level meters, latency strips, or
+iTerm2 graphics fallbacks.
+
+The goal is a reliable terminal product, not a browser dashboard or React/Ink
+patch.
+
+## Core Defaults
+
+1. Build the runtime boundary first: TUI state comes from a structured event
+   stream, not stdout scraping.
+2. Keep Bubble Tea `Model`, `Update`, and `View` pure enough to test with
+   fixture messages.
+3. Coalesce high-frequency events before they become layout work. Mic/VAD
+   levels should render around 10Hz unless the user explicitly needs more.
+4. Keep the terminal readable when graphics are unavailable. Every image or
+   rich visual must have a text fallback.
+5. Prefer bounded histories: transcript turns, timeline entries, diagnostics,
+   and waveform samples must have caps.
+6. Use one canonical event schema and command schema; do not invent one-off
+   payloads per component.
+7. Treat visual verification as part of the work. Text replay and passing unit
+   tests are not enough to claim a TUI looks good.
+
+## Architecture Pattern
+
+Use these packages unless the repo already has stronger conventions:
+
+- `cmd/&lt;binary&gt;/main.go`: CLI argument parsing and process exit.
+- `internal/protocol`: event and command envelopes, JSONL encode/decode.
+- `internal/bridge`: child process launcher, Unix-socket/TCP bridge, command
+  round trips.
+- `internal/cockpit`: Bubble Tea model, update logic, view rendering.
+- `internal/graphics`: iTerm2 inline image renderer plus text fallback.
+- `fixtures`: replayable event streams for offline development.
+
+State rules:
+
+- `Update` consumes typed messages and updates one model tree.
+- `View` only formats existing model state.
+- Runtime side effects live in commands or bridge adapters, not view code.
+- Rendering helpers receive width/height explicitly; no hidden global terminal
+  reads inside layout functions.
+
+## Event Contract
+
+When a TUI receives state from another process, use newline-delimited JSON over
+a documented local transport. Keep the protocol application-neutral and make
+fixture replay independent of live services.
+
+Event envelope:
+
+```json
+{
+  &quot;version&quot;: &quot;v1&quot;,
+  &quot;type&quot;: &quot;status.changed&quot;,
+  &quot;seq&quot;: 1,
+  &quot;ts&quot;: &quot;2026-05-09T00:00:00.000Z&quot;,
+  &quot;session_id&quot;: &quot;conv-...&quot;,
+  &quot;source&quot;: &quot;service-name&quot;,
+  &quot;payload&quot;: {}
+}
+```
+
+Command envelope:
+
+```json
+{
+  &quot;version&quot;: &quot;v1&quot;,
+  &quot;type&quot;: &quot;command&quot;,
+  &quot;id&quot;: &quot;cmd-1&quot;,
+  &quot;command&quot;: &quot;refresh&quot;,
+  &quot;payload&quot;: {}
+}
+```
+
+Typical event types:
+
+- `runtime.ready`, `runtime.status`, `runtime.exit`
+- `status.changed`, `progress.updated`, `connection.changed`
+- `item.created`, `item.updated`, `item.completed`
+- `latency.snapshot`
+- `tool.start`, `tool.complete`
+- `diagnostic.entry`
+- `agent.event`, `task.event`
+
+Typical commands:
+
+- `refresh`
+- `pause`
+- `resume`
+- `quit`
+
+## Testing Workflow
+
+Follow test-first implementation.
+
+1. Write protocol tests before protocol code:
+   - decode valid JSONL envelopes;
+   - reject malformed lines without crashing replay;
+   - preserve command ids through ack/error.
+2. Write model tests before UI behavior:
+   - apply each required event type;
+   - cap activity, timeline, and diagnostics history;
+   - coalesce high-frequency updates to the intended render cadence.
+3. Write view tests before layout changes:
+   - narrow, standard, and wide terminal sizes;
+   - active, paused, busy, diagnostic-error, and disconnect states;
+   - no empty panels that consume permanent screen space.
+4. Use Bubble Tea testing support:
+   - prefer model/update tests for most behavior;
+   - use `github.com/charmbracelet/x/exp/teatest/v2` for rendered model output;
+   - use a PTY/headless terminal harness only for end-to-end keyboard and ANSI
+     behavior.
+5. Add fixture replay:
+   - `&lt;app&gt;-tui replay fixtures/&lt;name&gt;.jsonl`;
+   - fixtures should work without live services or external credentials.
+6. Add visual review artifacts for UI changes:
+   - use scripted terminal capture, preferably Charm VHS, for repeatable PNG
+     screenshots and GIFs;
+   - cover standard, narrow, help, diagnostics, active voice, and disconnect
+     states;
+   - inspect generated artifacts before claiming visual work is complete;
+   - attach or reference the relevant screenshot when reporting UI changes.
+
+Testing ladder for interactive TUIs:
+
+1. Plain model/protocol tests for state and schema.
+2. `teatest` or PTY/grid tests for key interactions and rendered smoke checks.
+3. Static fixture replay for deterministic text output.
+4. `replay --hold`, demo mode, or an equivalent interactive PTY run for human
+   inspection.
+5. VHS screenshots/GIFs, or native terminal screenshots as a fallback, for
+   design acceptance.
+
+## Visual Rules
+
+- Header: current phase, connection status, and persistent latency when useful.
+- Primary pane: the task's main content, with a clear empty state.
+- Side/activity pane: operations, progress, and diagnostics that are currently
+  useful.
+- Footer: terse keymap only.
+- iTerm2 graphics may use inline image escape sequences, but text fallback is
+  mandatory and should be the default in tests.
+
+## Research Checklist
+
+Before adding dependencies or adopting outside TUI automation tools:
+
+1. Prefer official docs for Bubble Tea, Bubbles, Lip Gloss, teatest, and the
+   target terminal graphics protocol.
+2. Audit third-party TUI automation projects from source before installing.
+3. Avoid remote installer shortcuts. Use package managers or source-reviewed
+   builds.
+4. Record why a tool is used, what it verifies, and what remains covered by
+   plain model tests.
+5. Prefer VHS for repeatable visual QA when available. It can script terminal
+   size, waits, screenshots, GIFs, and key input; use native macOS/iTerm
+   screenshots only as a local fallback.
+
+## Bubble Tea v2 Migration Notes
+
+The v2 stack (stable since Feb 2026) is the current default for new work and
+for porting v1 cockpits. The identifiers below are verified against a real
+v1→v2 port — each one is a silent break if missed.
+
+- **Module paths moved to `charm.land`, each with a `/v2` suffix**:
+  `charm.land/bubbletea/v2`, `charm.land/bubbles/v2/...`,
+  `charm.land/lipgloss/v2` (+ `.../v2/compat`, `.../v2/tree`),
+  `charm.land/glamour/v2`. **teatest is the exception** — it stays on GitHub
+  and only gains `/v2`: `github.com/charmbracelet/x/exp/teatest/v2`. Do not
+  assume it moved to `charm.land` like the others.
+- **`space` key, not `&quot; &quot;`.** v2 delivers the space bar as the key string
+  `&quot;space&quot;`, not a `&quot; &quot;` rune. A keymap binding built on `&quot; &quot;` silently stops
+  firing (in a voice cockpit, space is often interrupt — the primary control).
+  Audit every binding string and add a table-driven test that synthesizes a v2
+  `KeyPressMsg` for each catalog binding.
+- **`View() string` → `View() tea.View`.** The model's `View` now returns a
+  `tea.View` struct (cursor/background/layer fields), not a string. Keep the
+  pure string renderer as `ViewString()` and wrap it in a thin
+  `View() tea.View` that sets alt-screen, mouse mode, and an explicitly hidden
+  cursor. This isolates blast radius and keeps `ViewString()` unit-testable;
+  print sites (e.g. `replay`) call `ViewString()`.
+- **lipgloss v2 `Width`/`Height` are border-inclusive.** They now count border
+  and padding *inside* the given size, where v1 added them outside. Layouts
+  ported verbatim shrink by the border/padding width — recompute pane budgets,
+  and measure rendered width with escape-aware `ansi.StringWidth`, never `len`.
+- **`AdaptiveColor` moved to `charm.land/lipgloss/v2/compat`.** The v1
+  top-level `lipgloss.AdaptiveColor` is gone; the drop-in is
+  `compat.AdaptiveColor{Light, Dark}`. The cleaner long-term target is
+  `LightDark(isDark)` driven by `tea.BackgroundColorMsg` once you have the
+  terminal background signal.
+- **teatest/v2 assertions: never assert on escape-sequence goldens.**
+  Renderer-version churn makes raw ANSI byte goldens brittle. Assert on
+  `ansi.Strip`-ed substrings / stable markers. Under `-race`, reconstruct the
+  screen from the final frame rather than diffing intermediate frames, which
+  can interleave nondeterministically.
+
+## Anti-Patterns
+
+- Scraping runtime stdout for product state.
+- Letting every audio frame trigger full layout work.
+- Hiding protocol decisions inside view components.
+- Adding a graphics-only feature without a text fallback.
+- Shipping blank AGENTS/TASKS panels as permanent layout.
+- Treating a passing build as proof that a TUI is usable.
+- Treating static text replay as proof that a TUI looks good.
+- Asking the user to manually open every iteration instead of generating and
+  inspecting repeatable visual artifacts.
+- Rebuilding an application's backend logic inside the TUI.
+</code></pre></section>
       </div>
     </section>
   </main>
@@ -97,6 +338,13 @@
           var p=b.textContent;b.textContent='copied';b.classList.add('copied');
           setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
         }catch(_){b.textContent='failed'}
+      });
+      document.addEventListener('click',function(e){
+        var tab=e.target.closest('[data-install-tab]');if(!tab)return;
+        var card=tab.closest('[data-install-mode]');if(!card)return;
+        var mode=tab.getAttribute('data-install-tab');card.setAttribute('data-install-mode',mode);
+        card.querySelectorAll('[data-install-tab]').forEach(function(button){button.setAttribute('aria-pressed',String(button===tab))});
+        card.querySelectorAll('[data-install-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-install-panel')!==mode});
       });
     })();
   </script>

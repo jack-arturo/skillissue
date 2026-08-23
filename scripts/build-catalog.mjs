@@ -140,12 +140,41 @@ function normalList(value) {
   return [];
 }
 
+function frontmatterMap(text, key) {
+  const match = text.match(new RegExp(`^${key}:\\s*\\n((?:[ \\t]+[^\\n]+\\n?)*)`, "m"));
+  if (!match) return {};
+  return Object.fromEntries(
+    match[1]
+      .split("\n")
+      .map((line) => line.match(/^\s+([A-Za-z0-9_-]+):\s*(.+)$/))
+      .filter(Boolean)
+      .map(([, field, value]) => [field, value.trim().replace(/^['"]|['"]$/g, "")]),
+  );
+}
+
 function hasRunnableBundleMember(files) {
   return files.some((file) =>
     (file.mode & 0o111) !== 0 ||
     /^bin\//.test(file.path) ||
     /^scripts\/.*\.(?:[cm]?js|ts|py|sh|bash|zsh|rb|pl)$/i.test(file.path),
   );
+}
+
+function bundleFileKind(file) {
+  const ext = path.extname(file.path).toLowerCase();
+  if (/^scripts\//.test(file.path) || (file.mode & 0o111) !== 0) return "script";
+  if ([".md", ".mdx", ".txt"].includes(ext)) return "reference";
+  if ([".json", ".yaml", ".yml", ".toml"].includes(ext)) return "config";
+  return "resource";
+}
+
+function bundleBytes(files) {
+  return files.reduce((total, file) => total + fs.statSync(file.absolute).size, 0);
+}
+
+function formatBytes(bytes) {
+  if (bytes < 1024) return `${bytes} B`;
+  return `${(bytes / 1024).toFixed(bytes < 10 * 1024 ? 1 : 0)} KB`;
 }
 
 function gitSha() {
@@ -614,6 +643,13 @@ ${body}
           setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
         }catch(_){b.textContent='failed'}
       });
+      document.addEventListener('click',function(e){
+        var tab=e.target.closest('[data-install-tab]');if(!tab)return;
+        var card=tab.closest('[data-install-mode]');if(!card)return;
+        var mode=tab.getAttribute('data-install-tab');card.setAttribute('data-install-mode',mode);
+        card.querySelectorAll('[data-install-tab]').forEach(function(button){button.setAttribute('aria-pressed',String(button===tab))});
+        card.querySelectorAll('[data-install-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-install-panel')!==mode});
+      });
     })();
   </script>
 </body>
@@ -708,6 +744,9 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   );
   const resourceCount = resourceFiles.length;
   const runnable = hasRunnableBundleMember(resourceFiles);
+  const capabilities = frontmatterMap(skillRaw, "capabilities");
+  const requiresSecrets = normalList(skillFm["requires-secrets"]);
+  const bundleSize = bundleBytes(bundleFiles);
   bundleSnapshots.push({
     name,
     version,
@@ -728,9 +767,14 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     agents: normalList(skillFm.agents),
     featured,
     provenance,
+    source: provenance,
+    license: skillFm.license || "MIT",
     related: storyFm.related || [],
     first_used: storyFm.first_used || "",
     bodyHtml: mdToHtml(storyBody || `## ${name}\n\n${summary}`),
+    skillSource: skillRaw,
+    capabilities,
+    requiresSecrets,
     cliInstall,
     mcpInstall,
     sourceUrl,
@@ -738,8 +782,13 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     storyUrl,
     installId,
     resourceCount,
-    resourceFiles: resourceFiles.map((file) => file.path),
+    resourceFiles: resourceFiles.map((file) => ({
+      path: file.path,
+      kind: bundleFileKind(file),
+      bytes: fs.statSync(file.absolute).size,
+    })),
     bundleFileCount: resourceFiles.length + 1,
+    bundleSize,
     runnable,
   });
   report.public++;
@@ -822,6 +871,10 @@ const skillsJson = {
     agents: s.agents,
     featured: !!s.featured,
     provenance: s.provenance,
+    source: s.source,
+    license: s.license,
+    firstUsed: s.first_used,
+    references: s.related.length,
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
@@ -830,6 +883,11 @@ const skillsJson = {
     url: s.storyUrl,
     installId: s.installId,
     resourceCount: s.resourceCount,
+    bundleFileCount: s.bundleFileCount,
+    bundleSize: s.bundleSize,
+    resources: s.resourceFiles,
+    capabilities: s.capabilities,
+    requiresSecrets: s.requiresSecrets,
     runnable: s.runnable,
     packageSourcePin,
   })),
@@ -851,36 +909,54 @@ for (const s of publicSkills) {
   const tags = (s.tags || [])
     .map((t) => `<span class="tag">${esc(t)}</span>`)
     .join("");
-  const resourceTiles = s.resourceFiles.length
-    ? s.resourceFiles.map((file) => `<a class="skill-resource" href="https://github.com/${REPO}/blob/${packageSourcePin}/skills/${esc(s.name)}/${esc(file)}" rel="noopener"><code>${esc(file)}</code><span>Resource</span></a>`).join("")
-    : '<p class="muted">This package is a single SKILL.md with no bundled resources.</p>';
+  const bundleFiles = [
+    { path: "SKILL.md", kind: "skill definition", bytes: Buffer.byteLength(s.skillSource) },
+    ...s.resourceFiles,
+  ];
+  const resourceTiles = bundleFiles.map((file) => {
+    const source = `https://github.com/${REPO}/blob/${packageSourcePin}/skills/${s.name}/${file.path}`;
+    return `<a class="skill-resource" href="${esc(source)}" rel="noopener"><code>${esc(file.path)}</code><span>${esc(file.kind)} · ${esc(formatBytes(file.bytes))}</span></a>`;
+  }).join("");
+  const capabilityRows = Object.entries(s.capabilities).length
+    ? Object.entries(s.capabilities).map(([key, value]) => `<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`).join("")
+    : '<div><dt>Capabilities</dt><dd>Not declared</dd></div>';
+  const secrets = s.requiresSecrets.length
+    ? `<p class="muted">Requires: ${esc(s.requiresSecrets.join(", "))}</p>`
+    : '<p class="muted">No secrets declared by this package.</p>';
   const body = `
     <section class="skill-package">
       <div class="wrap">
+        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>${esc(s.provenance)}</span><span>/</span><span>${esc(s.name)}</span></p>
         <div class="skill-package-top">
           <div class="skill-package-intro">
             <span class="explorer-mark" aria-hidden="true">${esc(explorerMark(s.name))}</span>
-            <div><p class="explorer-kicker">${esc(s.provenance)} package · ${esc(s.category)}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.summary)}</p></div>
+            <div><p class="explorer-kicker">Hosted skill bundle · ${esc(s.provenance)} · ${esc(s.category)}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.summary)}</p></div>
           </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>${esc(s.cliInstall)}</code>
-            <div><button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy install</button><a class="btn btn-ghost" href="${esc(s.rawSourceUrl)}" rel="noopener">Raw</a></div>
+          <aside class="skill-install-card" data-install-mode="cli">
+            <span>Pinned install</span>
+            <div class="install-tabs" role="group" aria-label="Install method"><button type="button" data-install-tab="cli" aria-pressed="true">CLI</button><button type="button" data-install-tab="mcp" aria-pressed="false">MCP</button></div>
+            <div class="install-command" data-install-panel="cli"><code>${esc(s.cliInstall)}</code><button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy install</button></div>
+            <div class="install-command" data-install-panel="mcp" hidden><code>${esc(s.mcpInstall)}</code><button type="button" class="btn btn-primary" data-copy="${esc(s.mcpInstall)}">Copy MCP call</button></div>
+            <div class="install-links"><a href="${esc(s.rawSourceUrl)}" rel="noopener">Raw SKILL.md</a><a href="${esc(s.sourceUrl)}" rel="noopener">Source</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
           <div><dt>Version</dt><dd>v${esc(s.version)}</dd></div>
-          <div><dt>Provenance</dt><dd>${esc(s.provenance)}</dd></div>
+          <div><dt>License</dt><dd>${esc(s.license)}</dd></div>
           <div><dt>Targets</dt><dd>${esc((s.agents?.length ? s.agents : ["general"]).join(", "))}</dd></div>
-          <div><dt>Bundle</dt><dd>${s.bundleFileCount} files · ${esc(s.resourceCount)} resources${s.runnable ? " · runnable" : ""}</dd></div>
+          <div><dt>Bundle</dt><dd>${s.bundleFileCount} files · ${s.resourceCount} resources${s.runnable ? " · runnable" : ""} · ${esc(formatBytes(s.bundleSize))}</dd></div>
         </dl>
         <div class="meta skill-meta">${tags}<span class="badge">${esc(s.provenance)}</span>${featuredBadge}</div>
-        <section class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package resources</h2></div><a href="${esc(s.sourceUrl)}" rel="noopener">View source</a></div><div class="skill-resource-grid">${resourceTiles}</div></section>
+        <nav class="package-nav" aria-label="Package sections"><a href="#overview">Overview</a><a href="#bundle">Bundle</a><a href="#permissions">Permissions</a><a href="#provenance">Provenance</a><a href="#source">Source</a></nav>
       </div>
     </section>
     <section>
       <div class="wrap prose">
-${s.bodyHtml}
-${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
+        <section class="package-section" id="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p>${s.bodyHtml}</div></section>
+        <section class="package-section" id="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package files</h2></div><a href="${esc(s.sourceUrl)}" rel="noopener">View source</a></div><p class="muted">${s.resourceCount} bundled resource${s.resourceCount === 1 ? "" : "s"}${s.runnable ? "; includes runnable files" : ""}.</p><div class="skill-resource-grid">${resourceTiles}</div></div></section>
+        <section class="package-section" id="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts">${capabilityRows}</dl>${secrets}</section>
+        <section class="package-section" id="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This ${esc(s.provenance)} package is installed from the Git commit shown above. Its source, bundle files, and declared surface are all linked here before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>${esc(shortPackageSourcePin)}</code></dd></div><div><dt>Compatibility</dt><dd>${esc((s.agents?.length ? s.agents : ["general"]).join(", "))}</dd></div></dl>${related ? `<h3>Related skills</h3><div class="meta">${related}</div>` : ""}</section>
+        <section class="package-section" id="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="${esc(s.rawSourceUrl)}" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>${esc(s.skillSource)}</code></pre></section>
       </div>
     </section>`;
   fs.writeFileSync(
@@ -913,7 +989,13 @@ const explorerData = {
     featured: s.featured,
     version: s.version,
     provenance: s.provenance,
+    source: s.source,
+    license: s.license,
+    firstUsed: s.first_used,
+    references: s.related.length,
     resourceCount: s.resourceCount,
+    bundleFileCount: s.bundleFileCount,
+    bundleSize: s.bundleSize,
     runnable: s.runnable,
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
@@ -943,7 +1025,7 @@ function fallbackExplorerCard(skill) {
   </header>
   <p class="explorer-card-summary">${esc(skill.summary)}</p>
   <div class="explorer-agent-row" aria-label="Agent targets">${explorerAgentPills(skill)}</div>
-  <footer class="explorer-card-footer"><span>v${esc(skill.version)} · ${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</span><div><a href="${esc(skill.rawSourceUrl)}" rel="noopener">Raw</a><button type="button" class="explorer-copy" data-copy="${esc(skill.cliInstall)}">Copy install</button></div></footer>
+  <footer class="explorer-card-footer"><span>v${esc(skill.version)} · ${esc(skill.license || "MIT")} · ${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</span><div><a href="${esc(skill.rawSourceUrl)}" rel="noopener">Raw</a><button type="button" class="explorer-copy" data-copy="${esc(skill.cliInstall)}">Copy install</button></div></footer>
 </article>`;
 }
 
@@ -971,12 +1053,14 @@ fs.writeFileSync(
           <select id="explorer-category" name="category"><option value="">All categories</option></select>
           <label for="explorer-agent">Agent</label>
           <select id="explorer-agent" name="agent"><option value="">All agents</option></select>
+          <label for="explorer-source">Source</label>
+          <select id="explorer-source" name="source"><option value="">All sources</option></select>
           <label class="explorer-check"><input type="checkbox" name="featured"> Featured only</label>
           <label for="explorer-resources">Package resources</label>
           <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
-          <p class="section-note" data-explorer-count aria-live="polite">${publicSkills.length} skills</p>
+          <p class="section-note" data-explorer-count aria-live="polite">Showing ${publicSkills.length} of ${publicSkills.length} skills</p>
         </form>
-        <div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div>
+        <div class="explorer-main"><div class="explorer-toolbar"><div class="explorer-sort" role="group" aria-label="Sort skills"><span>Sort</span><button type="button" data-explorer-sort="referenced" aria-pressed="true">Most referenced</button><button type="button" data-explorer-sort="recent" aria-pressed="false">Recent</button><button type="button" data-explorer-sort="name" aria-pressed="false">Name</button></div><div class="explorer-view" role="group" aria-label="Result view"><button type="button" data-explorer-view="grid" aria-pressed="true">Grid</button><button type="button" data-explorer-view="list" aria-pressed="false">List</button></div></div><div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div></div>
       </div>
     </div></section>
     <script id="explorer-data" type="application/json">${jsonForScript(explorerData)}</script>

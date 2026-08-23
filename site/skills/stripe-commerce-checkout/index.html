@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/stripe-commerce-checkout/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.64dc30fbd271.css">
+<link rel="stylesheet" href="/assets/site.5ccb0703f30d.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -41,35 +41,107 @@
 
     <section class="skill-package">
       <div class="wrap">
+        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>house</span><span>/</span><span>stripe-commerce-checkout</span></p>
         <div class="skill-package-top">
           <div class="skill-package-intro">
             <span class="explorer-mark" aria-hidden="true">SC</span>
-            <div><p class="explorer-kicker">house package · payments</p><h1>Stripe Commerce Checkout</h1><p class="lede">A test-first pattern for a branded Stripe Checkout endpoint that keeps secrets server-side and live mutations explicit.</p></div>
+            <div><p class="explorer-kicker">Hosted skill bundle · house · payments</p><h1>Stripe Commerce Checkout</h1><p class="lede">A test-first pattern for a branded Stripe Checkout endpoint that keeps secrets server-side and live mutations explicit.</p></div>
           </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md --sync-profiles</code>
-            <div><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md --sync-profiles">Copy install</button><a class="btn btn-ghost" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md" rel="noopener">Raw</a></div>
+          <aside class="skill-install-card" data-install-mode="cli">
+            <span>Pinned install</span>
+            <div class="install-tabs" role="group" aria-label="Install method"><button type="button" data-install-tab="cli" aria-pressed="true">CLI</button><button type="button" data-install-tab="mcp" aria-pressed="false">MCP</button></div>
+            <div class="install-command" data-install-panel="cli"><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md --sync-profiles</code><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md --sync-profiles">Copy install</button></div>
+            <div class="install-command" data-install-panel="mcp" hidden><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md&quot; })</code><button type="button" class="btn btn-primary" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/stripe-commerce-checkout/SKILL.md&quot; })">Copy MCP call</button></div>
+            <div class="install-links"><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md" rel="noopener">Raw SKILL.md</a><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md" rel="noopener">Source</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
           <div><dt>Version</dt><dd>v1.1.0</dd></div>
-          <div><dt>Provenance</dt><dd>house</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
           <div><dt>Targets</dt><dd>claude-code, codex, cursor</dd></div>
-          <div><dt>Bundle</dt><dd>3 files · 2 resources</dd></div>
+          <div><dt>Bundle</dt><dd>3 files · 2 resources · 10.0 KB</dd></div>
         </dl>
         <div class="meta skill-meta"><span class="tag">stripe</span><span class="tag">checkout</span><span class="tag">payments</span><span class="badge">house</span></div>
-        <section class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package resources</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md" rel="noopener">View source</a></div><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/templates/cloudflare-pages-checkout.js" rel="noopener"><code>templates/cloudflare-pages-checkout.js</code><span>Resource</span></a><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/templates/stripe-app.json" rel="noopener"><code>templates/stripe-app.json</code><span>Resource</span></a></div></section>
+        <nav class="package-nav" aria-label="Package sections"><a href="#overview">Overview</a><a href="#bundle">Bundle</a><a href="#permissions">Permissions</a><a href="#provenance">Provenance</a><a href="#source">Source</a></nav>
       </div>
     </section>
     <section>
       <div class="wrap prose">
-<h2>Why</h2>
+        <section class="package-section" id="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why</h2>
 <p>Payments code should make the safe path the default and make the expensive path impossible to mistake for a dry run.</p>
 <h2>How</h2>
 <p>Validate offers on the server, use environment-provided restricted keys, test Checkout before live mode, and verify webhook ownership before granting anything. The account dashboard still owns account-wide branding.</p>
 <h2>Related</h2>
-<p>Use <a href="/skills/cloudflare-commerce-deploy/">Cloudflare Commerce Deploy</a> for delivery and <a href="/skills/clerk-cloudflare-commerce-bootstrap/">Clerk + Cloudflare Commerce Bootstrap</a> for the larger app shape.</p>
-<h2>Related</h2><div class="meta"><a class="tag" href="/skills/cloudflare-commerce-deploy/">cloudflare-commerce-deploy</a> <a class="tag" href="/skills/clerk-cloudflare-commerce-bootstrap/">clerk-cloudflare-commerce-bootstrap</a></div>
+<p>Use <a href="/skills/cloudflare-commerce-deploy/">Cloudflare Commerce Deploy</a> for delivery and <a href="/skills/clerk-cloudflare-commerce-bootstrap/">Clerk + Cloudflare Commerce Bootstrap</a> for the larger app shape.</p></div></section>
+        <section class="package-section" id="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package files</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md" rel="noopener">View source</a></div><p class="muted">2 bundled resources.</p><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md" rel="noopener"><code>SKILL.md</code><span>skill definition · 4.1 KB</span></a><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/templates/cloudflare-pages-checkout.js" rel="noopener"><code>templates/cloudflare-pages-checkout.js</code><span>resource · 4.6 KB</span></a><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/templates/stripe-app.json" rel="noopener"><code>templates/stripe-app.json</code><span>config · 321 B</span></a></div></div></section>
+        <section class="package-section" id="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">Requires: name: STRIPE_SECRET_KEY</p></section>
+        <section class="package-section" id="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are all linked here before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex, cursor</dd></div></dl><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/cloudflare-commerce-deploy/">cloudflare-commerce-deploy</a> <a class="tag" href="/skills/clerk-cloudflare-commerce-bootstrap/">clerk-cloudflare-commerce-bootstrap</a></div></section>
+        <section class="package-section" id="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/stripe-commerce-checkout/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
+name: stripe-commerce-checkout
+description: Build a Stripe Checkout endpoint with restricted keys, branded sessions, webhooks, and a test-first operating model.
+license: MIT
+tags: [stripe, commerce, checkout, payments, branding, webhooks]
+agents: [claude-code, codex, cursor]
+category: payments
+metadata:
+  version: &quot;1.1.0&quot;
+capabilities:
+  network: true
+  filesystem: readwrite
+  tools: [Bash, Read, Edit]
+requires-secrets:
+  - name: STRIPE_SECRET_KEY
+    description: Server-side Stripe restricted or secret key, supplied through the deployment environment.
+    required: true
+  - name: STRIPE_WEBHOOK_SECRET
+    description: Webhook signing secret, supplied through the deployment environment when webhooks are enabled.
+    required: false
+resources:
+  - path: story.md
+    type: file
+  - path: templates/cloudflare-pages-checkout.js
+    type: file
+  - path: templates/stripe-app.json
+    type: file
+---
+
+# Stripe Commerce Checkout
+
+Use this skill for a server endpoint that creates Stripe-hosted Checkout Sessions. Start in **test mode**. Live products, prices, webhooks, and sessions require an explicit current-conversation instruction authorizing the specific live mutation.
+
+## Secrets and scope
+
+Supply `STRIPE_SECRET_KEY` and, where applicable, `STRIPE_WEBHOOK_SECRET` through the host's secret manager or local environment. Never request them in chat, put them in a repository, pass them on a command line, or print them. Prefer a project-scoped restricted key over an account-wide key.
+
+The Stripe CLI is useful for test-mode provisioning. Keep its credentials separate from application configuration; a CLI login key is not an application secret. Set environment variables in the deployment platform and use `.dev.vars` or an equivalent ignored local file for local work.
+
+## Build the endpoint
+
+1. Decide whether the offer is one-time, subscription, donation, or deposit.
+2. Accept only a documented `offerId` from the browser. Resolve its Stripe Price ID, product display data, quantity, and metadata from a server-side allowlist; never accept amounts, price IDs, product names, quantities, client reference IDs, or arbitrary metadata from the browser.
+3. Start from `templates/cloudflare-pages-checkout.js`; wire its fail-closed authenticated-user adapter to the application's server-side session, then configure its server-side offer map. It creates a Checkout Session using `STRIPE_SECRET_KEY` and returns `{ id, url }` for the newly created session.
+4. Apply non-secret branding through `branding_settings`. Session branding does not replace account-level legal, receipt, Link, or portal branding; verify those in the Stripe Dashboard.
+5. For subscriptions, add a verified webhook and a user-return reconciliation path. The webhook remains the source of truth; reconciliation is only a fast path after a user returns from Checkout.
+6. Verify a new test-mode session after every endpoint or branding change. Existing session URLs are not a reliable test of a new deployment.
+
+## Webhooks and portal
+
+Verify the Stripe signature using `STRIPE_WEBHOOK_SECRET` before changing entitlement or subscription state. Make handlers idempotent. On a Checkout return, retrieve the session server-side and verify that its client reference or metadata belongs to the authenticated user; never trust a browser-submitted customer or subscription ID.
+
+Billing Portal branding is account-level, unlike Checkout Session branding. A distinct product may need a distinct Stripe account if the portal must have separate global branding.
+
+## Stripe App route
+
+Stripe does not offer an API that mints new API keys. If installed accounts need a project-scoped key, use a reviewed Stripe App configuration such as `templates/stripe-app.json`, request the narrowest permissions possible, and let the account owner approve the install. Do not automate credential creation outside Stripe's supported flow.
+
+## Safety rules
+
+- Default all mutations to test mode.
+- Treat a configured live key as configuration, not authorization.
+- Never expose a secret key or webhook secret in client code, logs, commits, or reports.
+- Validate server-side ownership before granting access after Checkout.
+- Report secret names and test evidence, never secret values.
+</code></pre></section>
       </div>
     </section>
   </main>
@@ -97,6 +169,13 @@
           var p=b.textContent;b.textContent='copied';b.classList.add('copied');
           setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
         }catch(_){b.textContent='failed'}
+      });
+      document.addEventListener('click',function(e){
+        var tab=e.target.closest('[data-install-tab]');if(!tab)return;
+        var card=tab.closest('[data-install-mode]');if(!card)return;
+        var mode=tab.getAttribute('data-install-tab');card.setAttribute('data-install-mode',mode);
+        card.querySelectorAll('[data-install-tab]').forEach(function(button){button.setAttribute('aria-pressed',String(button===tab))});
+        card.querySelectorAll('[data-install-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-install-panel')!==mode});
       });
     })();
   </script>

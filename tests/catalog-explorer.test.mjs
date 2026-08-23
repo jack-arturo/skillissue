@@ -6,6 +6,7 @@ import {
   normalizeExplorerState,
   parseExplorerState,
   serializeExplorerState,
+  sortSkills,
 } from "../scripts/catalog-explorer.js";
 
 const skills = [
@@ -18,6 +19,9 @@ const skills = [
     agents: ["codex", "claude-code"],
     featured: true,
     resourceCount: 2,
+    source: "jack-arturo",
+    firstUsed: "2026-08-20",
+    references: 4,
   },
   {
     name: "commit-message",
@@ -28,6 +32,9 @@ const skills = [
     agents: ["codex"],
     featured: false,
     resourceCount: 0,
+    source: "autovault",
+    firstUsed: "2026-08-01",
+    references: 1,
   },
 ];
 
@@ -46,26 +53,36 @@ test("filterSkills searches catalog text and combines Explorer facets", () => {
     filterSkills(skills, { q: "git", resources: "none" }).map((skill) => skill.name),
     ["commit-message"],
   );
+  assert.deepEqual(filterSkills(skills, { source: "jack-arturo" }).map((skill) => skill.name), ["browser-hand"]);
+});
+
+test("Explorer sorting follows the documented catalog controls", () => {
+  assert.deepEqual(sortSkills(skills, "name").map((skill) => skill.name), ["browser-hand", "commit-message"]);
+  assert.deepEqual(sortSkills(skills, "recent").map((skill) => skill.name), ["browser-hand", "commit-message"]);
+  assert.deepEqual(sortSkills(skills, "referenced").map((skill) => skill.name), ["browser-hand", "commit-message"]);
 });
 
 test("Explorer query state parses and serializes only meaningful filters", () => {
   const state = parseExplorerState(
-    "?q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes&skill=browser-hand",
+    "?q=Chrome+forms&category=browser&agent=codex&source=jack-arturo&sort=name&view=list&featured=1&resources=yes&skill=browser-hand",
   );
   assert.deepEqual(state, {
     q: "Chrome forms",
     category: "browser",
     agent: "codex",
+    source: "jack-arturo",
+    sort: "name",
+    view: "list",
     featured: true,
     resources: "yes",
   });
   assert.equal(
     serializeExplorerState(state),
-    "?q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes",
+    "?q=Chrome+forms&category=browser&agent=codex&source=jack-arturo&sort=name&view=list&featured=1&resources=yes",
   );
   assert.equal(
     serializeExplorerState(state, "?utm_source=directory&skill=browser-hand"),
-    "?utm_source=directory&q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes",
+    "?utm_source=directory&q=Chrome+forms&category=browser&agent=codex&source=jack-arturo&sort=name&view=list&featured=1&resources=yes",
   );
   assert.equal(serializeExplorerState(parseExplorerState("?featured=no&resources=nope")), "");
   assert.equal(parseExplorerState("?featured=on").featured, true);

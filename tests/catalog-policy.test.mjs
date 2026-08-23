@@ -219,6 +219,9 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(explorer, /data-explorer-mark/);
     assert.match(explorer, />Raw</);
     assert.match(explorer, /Copy install/);
+    assert.match(explorer, /data-explorer-sort="referenced"/);
+    assert.match(explorer, /data-explorer-view="list"/);
+    assert.match(explorer, /name="source"/);
     assert.doesNotMatch(explorer, /data-explorer-detail/);
     assert.match(explorer, /public package · mixed/);
     assert.match(explorer, /\\u003c/);
@@ -237,6 +240,14 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(browserHandPage, /Pinned install/);
     assert.match(browserHandPage, new RegExp(`href="https://raw.githubusercontent.com/${metadata.repo}/${packageSourcePin}/skills/browser-hand/SKILL\\.md" rel="noopener">Raw`));
     assert.match(browserHandPage, /7 files · 6 resources · runnable/);
+    const babysitPage = fs.readFileSync(path.join(siteDir, "skills", "babysit", "index.html"), "utf8");
+    assert.match(babysitPage, /class="package-overview"/);
+    assert.match(babysitPage, /data-install-mode="cli"/);
+    assert.match(babysitPage, /id="bundle"/);
+    assert.match(babysitPage, /id="permissions"/);
+    assert.match(babysitPage, /id="provenance"/);
+    assert.match(babysitPage, /id="source"/);
+    assert.match(babysitPage, /references\/pr-labels\.md/);
     const deployment = metadata.skills.find((skill) => skill.name === "cloudflare-commerce-deploy");
     const design = metadata.skills.find((skill) => skill.name === "brand-bible-author");
     assert.equal(deployment.category, "deployment");
