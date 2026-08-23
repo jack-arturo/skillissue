@@ -94,6 +94,36 @@ function copyButton(label, value) {
   return button;
 }
 
+function skillMark(name = "") {
+  return String(name).split(/[-_\s]+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+}
+
+function resourceLabel(skill) {
+  const count = skill.resourceCount || 0;
+  return `${count} resource${count === 1 ? "" : "s"}`;
+}
+
+function explorerMark(name) {
+  const mark = document.createElement("span");
+  mark.className = "explorer-mark";
+  mark.setAttribute("aria-hidden", "true");
+  mark.textContent = skillMark(name);
+  return mark;
+}
+
+function agentPills(agents = []) {
+  const row = document.createElement("div");
+  row.className = "explorer-agent-row";
+  row.setAttribute("aria-label", "Agent targets");
+  (agents.length ? agents : ["general"]).slice(0, 3).forEach((agent) => {
+    const pill = document.createElement("span");
+    pill.className = "explorer-agent";
+    pill.textContent = agent;
+    row.append(pill);
+  });
+  return row;
+}
+
 function initExplorer() {
   const root = document.querySelector("[data-catalog-explorer]");
   const dataNode = document.getElementById("explorer-data");
@@ -117,7 +147,7 @@ function initExplorer() {
   const count = root.querySelector("[data-explorer-count]");
   const results = root.querySelector("[data-explorer-results]");
   const detail = root.querySelector("[data-explorer-detail]");
-  results.setAttribute("role", "listbox");
+  const main = root.querySelector(".explorer-main");
   detail.tabIndex = -1;
   const categories = [...new Set(skills.map((skill) => skill.category).filter(Boolean))].sort();
   const agents = [...new Set(skills.flatMap((skill) => skill.agents || []).filter(Boolean))].sort();
@@ -156,17 +186,42 @@ function initExplorer() {
       detail.append(message);
       return;
     }
+    const head = document.createElement("div");
+    head.className = "explorer-detail-head";
+    head.append(explorerMark(selected.name));
+    const heading = document.createElement("div");
+    const kicker = document.createElement("p");
+    kicker.className = "explorer-kicker";
+    kicker.textContent = `selected package · ${selected.provenance || "house"} · ${selected.category || "skill"}`;
     const title = document.createElement("h2");
     title.textContent = selected.title || selected.name;
+    heading.append(kicker, title);
+    head.append(heading);
     const description = document.createElement("p");
     description.textContent = selected.description || selected.summary || "";
-    const meta = document.createElement("p");
-    meta.className = "explorer-detail-meta";
-    meta.textContent = `${selected.category || "skill"} · ${selected.resourceCount || 0} resource${selected.resourceCount === 1 ? "" : "s"}${selected.runnable ? " · runnable package" : ""}`;
+    const facts = document.createElement("dl");
+    facts.className = "explorer-facts";
+    const addFact = (label, value) => {
+      const item = document.createElement("div");
+      const term = document.createElement("dt");
+      term.textContent = label;
+      const definition = document.createElement("dd");
+      definition.textContent = value;
+      item.append(term, definition);
+      facts.append(item);
+    };
+    addFact("Targets", (selected.agents?.length ? selected.agents : ["general"]).join(", "));
+    addFact("Bundle", `${resourceLabel(selected)}${selected.runnable ? " · runnable" : ""}`);
+    addFact("Provenance", selected.provenance || "house");
+    const install = document.createElement("div");
+    install.className = "explorer-install";
+    const installLabel = document.createElement("span");
+    installLabel.textContent = "Pinned AutoVault install";
+    const command = document.createElement("code");
+    command.textContent = selected.cliInstall;
+    install.append(installLabel, command, copyButton("Copy install", selected.cliInstall));
     const actions = document.createElement("div");
     actions.className = "cta-row";
-    actions.append(copyButton("Copy AutoVault install", selected.cliInstall));
-    actions.append(copyButton("Copy MCP add_skill", selected.mcpInstall));
     const story = document.createElement("a");
     story.className = "btn btn-primary";
     story.href = selected.storyUrl;
@@ -177,7 +232,8 @@ function initExplorer() {
     source.href = selected.sourceUrl;
     source.rel = "noopener";
     source.textContent = "View package source";
-    detail.append(title, description, meta, actions, source);
+    actions.append(story, source);
+    detail.append(head, description, facts, install, actions);
   }
   function revealDetailOnNarrowViewport() {
     if (!shouldRevealDetail(window.innerWidth)) return;
@@ -189,6 +245,7 @@ function initExplorer() {
     state = normalizeExplorerState(skills, state);
     const selected = skills.find((skill) => skill.name === state.skill);
     count.textContent = `${visible.length} of ${skills.length} skills`;
+    main.append(detail);
     results.replaceChildren();
     if (!visible.length) {
       const empty = document.createElement("p");
@@ -196,32 +253,50 @@ function initExplorer() {
       empty.textContent = "No skills match those filters.";
       results.append(empty);
     }
-    visible.forEach((skill, index) => {
-      const row = document.createElement("a");
-      row.className = "explorer-result";
-      row.href = skill.storyUrl;
-      row.dataset.skill = skill.name;
-      row.setAttribute("role", "option");
-      row.setAttribute("aria-selected", String(skill.name === state.skill));
-      row.tabIndex = skill.name === state.skill ? 0 : -1;
-      const name = document.createElement("strong");
-      name.textContent = skill.name;
+    visible.forEach((skill) => {
+      const card = document.createElement("article");
+      card.className = "explorer-card";
+      card.dataset.explorerCard = "";
+      card.dataset.skill = skill.name;
+      card.setAttribute("aria-current", skill.name === state.skill ? "true" : "false");
+      const head = document.createElement("header");
+      head.className = "explorer-card-head";
+      head.append(explorerMark(skill.name));
+      const heading = document.createElement("div");
+      const kicker = document.createElement("p");
+      kicker.className = "explorer-kicker";
+      kicker.textContent = `public package · ${skill.provenance || "house"} · ${skill.category || "skill"}`;
+      const name = document.createElement("h2");
+      const canonical = document.createElement("a");
+      canonical.href = skill.storyUrl;
+      canonical.textContent = skill.title || skill.name;
+      name.append(canonical);
+      heading.append(kicker, name);
+      head.append(heading);
       const summary = document.createElement("span");
+      summary.className = "explorer-card-summary";
       summary.textContent = skill.summary || skill.description || "";
-      const badge = document.createElement("small");
-      badge.textContent = `${skill.category} · ${skill.resourceCount || 0} resource${skill.resourceCount === 1 ? "" : "s"}`;
-      row.append(name, summary, badge);
-      row.addEventListener("click", (event) => {
-        if (isModifiedActivation(event)) return;
-        event.preventDefault();
+      const footer = document.createElement("footer");
+      footer.className = "explorer-card-footer";
+      const bundle = document.createElement("span");
+      bundle.textContent = `${resourceLabel(skill)}${skill.runnable ? " · runnable" : ""}`;
+      const inspect = document.createElement("button");
+      inspect.type = "button";
+      inspect.className = "explorer-inspect";
+      inspect.dataset.explorerInspect = skill.name;
+      inspect.textContent = skill.name === state.skill ? "Inspecting" : "Inspect";
+      footer.append(bundle, inspect);
+      card.append(head, summary, agentPills(skill.agents || []), footer);
+      inspect.addEventListener("click", () => {
         state.skill = skill.name;
         updateUrl();
         render();
         revealDetailOnNarrowViewport();
       });
-      row.addEventListener("keydown", (event) => {
+      inspect.addEventListener("keydown", (event) => {
         if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
+        const index = visible.findIndex((candidate) => candidate.name === skill.name);
         const next = event.key === 'Home' ? 0 : event.key === 'End' ? visible.length - 1 : Math.max(0, Math.min(visible.length - 1, index + (event.key === 'ArrowDown' ? 1 : -1)));
         state.skill = visible[next].name;
         updateUrl();
@@ -229,14 +304,19 @@ function initExplorer() {
         if (keyboardFocusTarget(window.innerWidth) === "detail") {
           revealDetailOnNarrowViewport();
         } else {
-          [...results.querySelectorAll("[data-skill]")]
-            .find((row) => row.dataset.skill === state.skill)
+          [...results.querySelectorAll("[data-explorer-inspect]")]
+            .find((button) => button.dataset.explorerInspect === state.skill)
             ?.focus();
         }
       });
-      results.append(row);
+      results.append(card);
     });
     renderDetail(selected);
+    if (selected && shouldRevealDetail(window.innerWidth)) {
+      [...results.querySelectorAll("[data-skill]")]
+        .find((card) => card.dataset.skill === selected.name)
+        ?.append(detail);
+    }
   }
   function change() {
     state = readControls();
@@ -252,6 +332,7 @@ function initExplorer() {
   state = normalizeExplorerState(skills, state);
   applyControls();
   render();
+  window.addEventListener("resize", render);
   if (serializeExplorerState(initialState) !== serializeExplorerState(state)) updateUrl();
 }
 

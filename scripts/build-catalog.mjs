@@ -912,6 +912,7 @@ const explorerData = {
     tags: s.tags,
     agents: s.agents,
     featured: s.featured,
+    provenance: s.provenance,
     resourceCount: s.resourceCount,
     runnable: s.runnable,
     cliInstall: s.cliInstall,
@@ -920,10 +921,40 @@ const explorerData = {
     packageSourcePin,
   })),
 };
-const fallbackRows = publicSkills.map((s) => `<a class="explorer-result" href="/skills/${esc(s.name)}/">
-  <strong>${esc(s.name)}</strong><span>${esc(s.summary)}</span>
-  <small>${esc(s.category)} · ${s.resourceCount} resource${s.resourceCount === 1 ? "" : "s"}</small>
-</a>`).join("\n");
+function explorerMark(name) {
+  return name.split(/[-_\s]+/).filter(Boolean).slice(0, 2).map((part) => part[0]).join("").toUpperCase();
+}
+
+function explorerResourceLabel(skill) {
+  return `${skill.resourceCount} resource${skill.resourceCount === 1 ? "" : "s"}`;
+}
+
+function explorerAgentPills(skill) {
+  const agents = skill.agents?.length ? skill.agents : ["general"];
+  return agents.slice(0, 3).map((agent) => `<span class="explorer-agent">${esc(agent)}</span>`).join("");
+}
+
+function fallbackExplorerCard(skill) {
+  return `<article class="explorer-card" data-explorer-card data-skill="${esc(skill.name)}">
+  <header class="explorer-card-head">
+    <span class="explorer-mark" data-explorer-mark aria-hidden="true">${esc(explorerMark(skill.name))}</span>
+    <div><p class="explorer-kicker">public package · ${esc(skill.provenance)} · ${esc(skill.category)}</p><h2><a href="/skills/${esc(skill.name)}/">${esc(skill.title || skill.name)}</a></h2></div>
+  </header>
+  <p class="explorer-card-summary">${esc(skill.summary)}</p>
+  <div class="explorer-agent-row" aria-label="Agent targets">${explorerAgentPills(skill)}</div>
+  <footer class="explorer-card-footer"><span>${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</span><a href="/skills/${esc(skill.name)}/">Browse the package <span aria-hidden="true">→</span></a></footer>
+</article>`;
+}
+
+function fallbackExplorerDetail(skill) {
+  return `<div class="explorer-detail-head"><span class="explorer-mark" aria-hidden="true">${esc(explorerMark(skill.name))}</span><div><p class="explorer-kicker">selected package · ${esc(skill.provenance)} · ${esc(skill.category)}</p><h2>${esc(skill.title || skill.name)}</h2></div></div>
+  <p>${esc(skill.description || skill.summary)}</p>
+  <dl class="explorer-facts"><div><dt>Targets</dt><dd>${esc((skill.agents?.length ? skill.agents : ["general"]).join(", "))}</dd></div><div><dt>Bundle</dt><dd>${esc(explorerResourceLabel(skill))}${skill.runnable ? " · runnable" : ""}</dd></div><div><dt>Provenance</dt><dd>${esc(skill.provenance)}</dd></div></dl>
+  <div class="explorer-install"><span>Pinned AutoVault install</span><code>${esc(skill.cliInstall)}</code><button type="button" class="btn btn-ghost explorer-copy" data-copy="${esc(skill.cliInstall)}">Copy install</button></div>
+  <div class="cta-row"><a class="btn btn-primary" href="${esc(skill.storyUrl)}">Read full story</a><a class="btn btn-ghost" href="${esc(skill.sourceUrl)}" rel="noopener">View source</a></div>`;
+}
+
+const fallbackRows = publicSkills.map(fallbackExplorerCard).join("\n");
 const firstSkill = publicSkills[0];
 
 fs.writeFileSync(
@@ -952,11 +983,10 @@ fs.writeFileSync(
           <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
           <p class="section-note" data-explorer-count aria-live="polite">${publicSkills.length} skills</p>
         </form>
-        <div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div>
-        <aside class="explorer-detail panel" data-explorer-detail aria-live="polite">
-          <h2>${esc(firstSkill.name)}</h2><p>${esc(firstSkill.summary)}</p>
-          <a class="btn btn-primary" href="/skills/${esc(firstSkill.name)}/">Read full story</a>
-        </aside>
+        <div class="explorer-main">
+          <div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div>
+          <aside class="explorer-detail panel" data-explorer-detail aria-live="polite">${fallbackExplorerDetail(firstSkill)}</aside>
+        </div>
       </div>
     </div></section>
     <script id="explorer-data" type="application/json">${jsonForScript(explorerData)}</script>
