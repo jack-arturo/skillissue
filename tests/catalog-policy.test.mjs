@@ -264,6 +264,11 @@ test("strict build exposes only public skills and writes canonical redirects", (
       fs.readFileSync(path.join(siteDir, "bundles", "babysit", "references", "pr-labels.md"), "utf8"),
       fs.readFileSync(path.join(root, "skills", "babysit", "references", "pr-labels.md"), "utf8"),
     );
+    const babysit = metadata.skills.find((skill) => skill.name === "babysit");
+    const publishedBabysitBytes = publicBundleFiles(path.join(root, "skills", "babysit"))
+      .filter((file) => file.path !== "story.md")
+      .reduce((total, file) => total + fs.statSync(file.absolute).size, 0);
+    assert.equal(babysit.bundleSize, publishedBabysitBytes, "bundle size excludes the site-only narrative");
     const deployment = metadata.skills.find((skill) => skill.name === "cloudflare-commerce-deploy");
     const design = metadata.skills.find((skill) => skill.name === "brand-bible-author");
     assert.equal(deployment.category, "deployment");

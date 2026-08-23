@@ -793,7 +793,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   const requiresSecrets = structuredSecretNames.length
     ? structuredSecretNames
     : normalList(skillFm["requires-secrets"]);
-  const bundleSize = bundleBytes(bundleFiles);
+  const bundleSize = bundleBytes(publishedBundleFiles);
   bundleSnapshots.push({
     name,
     version,
