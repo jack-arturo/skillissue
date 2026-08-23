@@ -58,6 +58,7 @@ function safelyRemove(directory) {
 
 test("audit and import default to deterministic safe dry runs", () => {
   const { directory, source } = fixture();
+  const destination = `tests/.local-skill-dry-${path.basename(directory)}`;
   try {
     const bundle = makeBundle(source);
     fs.mkdirSync(path.join(bundle, "bin"));
@@ -69,16 +70,17 @@ test("audit and import default to deterministic safe dry runs", () => {
     const environmentAudit = JSON.parse(run(auditScript, ["--skill", approved], {
       env: { AUTOVAULT_SKILLS_PATH: source },
     }));
-    const firstImport = JSON.parse(run(importScript, ["--source", source, "--skill", approved]));
-    const secondImport = JSON.parse(run(importScript, ["--source", source, "--skill", approved]));
+    const firstImport = JSON.parse(run(importScript, ["--source", source, "--skill", approved, "--destination", destination]));
+    const secondImport = JSON.parse(run(importScript, ["--source", source, "--skill", approved, "--destination", destination]));
 
     assert.equal(audit.dryRun, true);
     assert.deepEqual(environmentAudit.packages, audit.packages);
     assert.equal(firstImport.dryRun, true);
     assert.deepEqual(firstImport.actions, secondImport.actions);
     assert.deepEqual(audit.packages[0].files, ["SKILL.md", "bin/run", "resources/note.txt"]);
-    assert.equal(fs.existsSync(path.join(root, "skills", approved, "bin", "run")), false);
+    assert.equal(fs.existsSync(path.join(root, destination, approved, "bin", "run")), false);
   } finally {
+    safelyRemove(path.join(root, destination));
     safelyRemove(directory);
   }
 });

@@ -2,13 +2,13 @@
   "name": "skillissue",
   "url": "https://skillissue.sh",
   "description": "Jack Arturo's personal/agent skills collection — packages on GitHub, install via AutoVault.",
-  "updated": "2026-08-20",
-  "installPin": "eb295b4c051837775d44536f5eada7524428d59e",
-  "installPinShort": "eb295b4",
+  "updated": "2026-08-23",
+  "installPin": "f0296c2db76a3e5d5849b055c185b49199873754",
+  "installPinShort": "f0296c2",
   "repo": "jack-arturo/skillissue",
-  "publicCount": 25,
+  "publicCount": 48,
   "install": {
-    "autovault": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/<name>/SKILL.md --sync-profiles",
+    "autovault": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/<name>/SKILL.md --sync-profiles",
     "bootstrap": "https://autovault.sh"
   },
   "featured": [
@@ -25,6 +25,7 @@
       "name": "long-haul-parallel-repair",
       "title": "Long-Haul Parallel Repair",
       "category": "agents",
+      "summary": "Agents would either under-delegate or fan out without authorization. This skill is the contract for when \"work for hours\" is real.",
       "description": "Use for multi-slice SDD when ≥2 independent streams exist, or when the user authorizes subagents, fan-out, delegation, long-running autonomous work, \"work for hours\", \"iterate until satisfied\", or solving every <8/10 confidence item through evidence, fixes, and verification. Deep investigation alone is not enough unless streams or autonomy language are present.",
       "version": "1.1.0",
       "tags": [
@@ -39,15 +40,21 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/long-haul-parallel-repair/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/long-haul-parallel-repair/SKILL.md",
-      "url": "https://skillissue.sh/skills/long-haul-parallel-repair/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/long-haul-parallel-repair/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/long-haul-parallel-repair/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/long-haul-parallel-repair/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/long-haul-parallel-repair/",
+      "url": "https://skillissue.sh/skills/long-haul-parallel-repair/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/long-haul-parallel-repair/SKILL.md",
+      "resourceCount": 1,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "skill-author",
       "title": "Skill Author",
       "category": "agents",
+      "summary": "Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.",
       "description": "Package and validate an existing skill draft for AutoVault when its frontmatter, resources, capabilities, or admission result need review.",
       "version": "2.0.0",
       "tags": [
@@ -61,15 +68,21 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/skill-author/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/skill-author/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/skill-author/SKILL.md",
-      "url": "https://skillissue.sh/skills/skill-author/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/skill-author/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/skill-author/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/skill-author/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/skill-author/",
+      "url": "https://skillissue.sh/skills/skill-author/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/skill-author/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "automem",
       "title": "AutoMem",
       "category": "agents",
+      "summary": "Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.",
       "description": "Recall/store/associate via AutoMem (mcp__memory__*). Invoke on corrections (\\\"actually\\\", \\\"no, I prefer\\\", \\\"stop doing X\\\"), settled decisions (\\\"let's go with X\\\", \\\"ship it\\\"), or named patterns (\\\"I always X\\\", \\\"every time\\\"). Also to persist facts, or update/associate memories.",
       "version": "1.1.0",
       "tags": [
@@ -83,15 +96,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/automem/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/automem/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/automem/SKILL.md",
-      "url": "https://skillissue.sh/skills/automem/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/automem/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/automem/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/automem/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/automem/",
+      "url": "https://skillissue.sh/skills/automem/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/automem/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "autovault-skill",
       "title": "AutoVault Skill",
       "category": "agents",
+      "summary": "Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.",
       "description": "Understand AutoVault-managed skills. AutoVault syncs skills into the agent's normal skill directory, so loaded skills can be used directly without an AutoVault MCP server.",
       "version": "1.1.0",
       "tags": [
@@ -104,15 +123,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/autovault-skill/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/autovault-skill/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/autovault-skill/SKILL.md",
-      "url": "https://skillissue.sh/skills/autovault-skill/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-skill/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-skill/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/autovault-skill/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/autovault-skill/",
+      "url": "https://skillissue.sh/skills/autovault-skill/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-skill/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "entity-dossier",
       "title": "Entity Dossier",
       "category": "agents",
+      "summary": "Pre-meeting context kept dying with the chat. The dossier in AutoMem is the deliverable.",
       "description": "Research a person, business, or concept with primary sources and persist a durable AutoMem dossier through AutoHub's context-module write path (scripts/build-context-module.js). Use when asked to \"build a dossier on X\", \"research X and remember them\", or for pre-meeting/collab background that should survive the conversation. The stored dossier is the deliverable — verify it with a recall before reporting done.",
       "version": "0.1.0",
       "tags": [
@@ -125,15 +150,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/entity-dossier/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/entity-dossier/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/entity-dossier/SKILL.md",
-      "url": "https://skillissue.sh/skills/entity-dossier/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/entity-dossier/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/entity-dossier/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/entity-dossier/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/entity-dossier/",
+      "url": "https://skillissue.sh/skills/entity-dossier/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/entity-dossier/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-lead-capture",
       "title": "Cloudflare Lead Capture",
       "category": "cloudflare",
+      "summary": "Hat Trick / waitlist work kept being rewritten. Packaged as scaffold + doctor + setup.",
       "description": "Scaffold Cloudflare Pages or Workers lead-capture systems (Pages Functions OR Astro SSR API routes) with D1 contacts, web forms, Resend email templates, unsubscribe links, Turnstile checks, exports, and a small admin UI when a project needs repeatable email database infrastructure.",
       "version": "1.4.0",
       "tags": [
@@ -149,15 +180,21 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-lead-capture/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-lead-capture/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-lead-capture/SKILL.md",
-      "url": "https://skillissue.sh/skills/cloudflare-lead-capture/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-lead-capture/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-lead-capture/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/cloudflare-lead-capture/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/cloudflare-lead-capture/",
+      "url": "https://skillissue.sh/skills/cloudflare-lead-capture/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-lead-capture/SKILL.md",
+      "resourceCount": 22,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-ops",
       "title": "Cloudflare Ops",
       "category": "cloudflare",
+      "summary": "Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…",
       "description": "Use for AutoHub-style Cloudflare runtime operations: Pages and Worker preflights, preview D1/KV pairs, migrations, data sync, or local tunnels. Use cloudflare-commerce-deploy instead for general app deployment, DNS, custom domains, secrets, environment configuration, or Registrar work.",
       "version": "1.0.5",
       "tags": [
@@ -173,15 +210,21 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-ops/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-ops/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-ops/SKILL.md",
-      "url": "https://skillissue.sh/skills/cloudflare-ops/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-ops/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-ops/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/cloudflare-ops/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/cloudflare-ops/",
+      "url": "https://skillissue.sh/skills/cloudflare-ops/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-ops/SKILL.md",
+      "resourceCount": 1,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-commerce-deploy",
       "title": "Cloudflare Commerce Deploy",
       "category": "cloudflare",
+      "summary": "Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.",
       "description": "Use for general Cloudflare app delivery: Pages or Workers deployment, DNS and custom domains, bindings, secrets, per-environment variables, logs, cache, or optional Registrar work. Route AutoHub preview D1/KV pairs, migrations, data sync, and local tunnels to cloudflare-ops.",
       "version": "1.0.3",
       "tags": [
@@ -196,15 +239,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-commerce-deploy/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-commerce-deploy/SKILL.md",
-      "url": "https://skillissue.sh/skills/cloudflare-commerce-deploy/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-commerce-deploy/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/cloudflare-commerce-deploy/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/cloudflare-commerce-deploy/",
+      "url": "https://skillissue.sh/skills/cloudflare-commerce-deploy/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-commerce-deploy/SKILL.md",
+      "resourceCount": 4,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-emdash-cms-deploy",
       "title": "Cloudflare EmDash CMS Deploy",
       "category": "cloudflare",
+      "summary": "Pages-shaped deploys were serving raw source after Astro 6. This skill owns the Workers recipe and binding gotchas.",
       "description": "Use when deploying an Astro + EmDash CMS site to Cloudflare — build downloads wrangler.jsonc / 404s at root, setup-redirect loops, blank CMS content, new collections, or D1+R2 admin setup. Deploys to Workers, not Pages.",
       "version": "1.13.0",
       "tags": [
@@ -219,15 +268,51 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cloudflare-emdash-cms-deploy/SKILL.md",
-      "url": "https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-emdash-cms-deploy/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-emdash-cms-deploy/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/cloudflare-emdash-cms-deploy/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/",
+      "url": "https://skillissue.sh/skills/cloudflare-emdash-cms-deploy/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-emdash-cms-deploy/SKILL.md",
+      "resourceCount": 6,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "phala-gpu-tee-deploy",
+      "title": "Phala GPU TEE Deploy",
+      "category": "cloudflare",
+      "summary": "A guarded runbook for placing a GPU workload on a confidential Phala deployment and proving what actually ran.",
+      "description": "Use when deploying and verifying ComfyUI or vLLM on a Phala confidential H200 GPU TEE. Covers private bearer-gated endpoints, sealed secrets, dashboard reservation, no-file-mount Compose, attestation limits, and on-demand billing and shutdown behavior.",
+      "version": "1.0.0",
+      "tags": [
+        "phala",
+        "gpu",
+        "tee",
+        "deployment"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/phala-gpu-tee-deploy/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/phala-gpu-tee-deploy/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/phala-gpu-tee-deploy/",
+      "url": "https://skillissue.sh/skills/phala-gpu-tee-deploy/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/phala-gpu-tee-deploy/SKILL.md",
+      "resourceCount": 2,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "pirsch-analytics-bootstrap",
       "title": "Pirsch Analytics Bootstrap",
       "category": "cloudflare",
+      "summary": "Analytics installs were inconsistent and sometimes created domains without asking.",
       "description": "Add Pirsch Analytics to a website, create or inspect the domain with explicit authorization, install and verify the tracking snippet, configure optional DNS verification and custom events, and wire a scoped MCP client without exposing credentials.",
       "version": "1.1.0",
       "tags": [
@@ -241,15 +326,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/pirsch-analytics-bootstrap/SKILL.md",
-      "url": "https://skillissue.sh/skills/pirsch-analytics-bootstrap/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/pirsch-analytics-bootstrap/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/pirsch-analytics-bootstrap/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/pirsch-analytics-bootstrap/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/pirsch-analytics-bootstrap/",
+      "url": "https://skillissue.sh/skills/pirsch-analytics-bootstrap/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/pirsch-analytics-bootstrap/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "babysit",
       "title": "Babysit",
       "category": "git",
+      "summary": "PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.",
       "description": "Use when babysitting a GitHub PR toward merge-ready — create/take over a PR, work Codex review threads, triage CI failures, manage babysit:* status labels. Never merges the PR.",
       "version": "1.7.0",
       "tags": [
@@ -264,15 +355,21 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/babysit/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/babysit/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/babysit/SKILL.md",
-      "url": "https://skillissue.sh/skills/babysit/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/babysit/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/babysit/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/babysit/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/babysit/",
+      "url": "https://skillissue.sh/skills/babysit/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/babysit/SKILL.md",
+      "resourceCount": 4,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "commit-message",
       "title": "Commit Message",
       "category": "git",
+      "summary": "Commit messages were either empty or novels. This drafts from the staged diff.",
       "description": "Draft a conventional-commit-style message from the repository's staged changes. Uses git only; no external services or API keys required.",
       "version": "1.0.0",
       "tags": [
@@ -286,15 +383,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/commit-message/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/commit-message/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/commit-message/SKILL.md",
-      "url": "https://skillissue.sh/skills/commit-message/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/commit-message/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/commit-message/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/commit-message/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/commit-message/",
+      "url": "https://skillissue.sh/skills/commit-message/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/commit-message/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "browser-hand",
       "title": "Browser Hand",
       "category": "browser",
+      "summary": "Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.",
       "description": "Use when work needs the user's already-open, signed-in Chrome: existing tabs, real cookies, forms, screenshots, OAuth-backed sites, or authenticated admin UIs. Includes an extension-first workflow plus a documented low-level headless/CDP fallback for disposable or dedicated-profile automation.",
       "version": "0.6.2",
       "tags": [
@@ -311,15 +414,21 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/browser-hand/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/browser-hand/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/browser-hand/SKILL.md",
-      "url": "https://skillissue.sh/skills/browser-hand/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/browser-hand/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/browser-hand/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/browser-hand/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/browser-hand/",
+      "url": "https://skillissue.sh/skills/browser-hand/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/browser-hand/SKILL.md",
+      "resourceCount": 6,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "flashspace",
       "title": "FlashSpace",
       "category": "desktop",
+      "summary": "Workspace switching was voice/chat friction. CLI skill removes the mouse hunt.",
       "description": "Use when operating FlashSpace virtual workspaces on Jack's Mac: switch profiles or spaces, assign apps, manage floating windows, focus a window, inventory displays, or clean unassigned apps through the installed `flashspace` CLI.",
       "version": "1.0.0",
       "tags": [
@@ -333,15 +442,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/flashspace/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/flashspace/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/flashspace/SKILL.md",
-      "url": "https://skillissue.sh/skills/flashspace/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/flashspace/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/flashspace/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/flashspace/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/flashspace/",
+      "url": "https://skillissue.sh/skills/flashspace/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/flashspace/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "raycast",
       "title": "Raycast",
       "category": "desktop",
+      "summary": "No official Raycast MCP. The skill is file-native + deeplink operations.",
       "description": "Operate Raycast on Jack's Mac via deeplinks, Script Commands, AI providers.yaml/Skills/Commands/Agents, PromptLab, clipboard history, or Superwhisper toggle. Delegate Autohub script install to raycast-autojack.",
       "version": "1.0.0",
       "tags": [
@@ -355,15 +470,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/raycast/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/raycast/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/raycast/SKILL.md",
-      "url": "https://skillissue.sh/skills/raycast/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/raycast/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/raycast/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/raycast/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/raycast/",
+      "url": "https://skillissue.sh/skills/raycast/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/raycast/SKILL.md",
+      "resourceCount": 3,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "awtrix-board",
       "title": "AWTRIX Board",
       "category": "ops",
+      "summary": "Desk presence without phone spam. Device-direct HTTP, no HA required for basic ops.",
       "description": "Use when controlling Jack's two AWTRIX 3 Ulanzi TC001 displays: show a notification, set brightness, read battery or sensor data, or identify a physical unit. Uses the bundled direct-LAN helper without Home Assistant or stored secrets.",
       "version": "1.0.0",
       "tags": [
@@ -377,15 +498,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/awtrix-board/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/awtrix-board/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/awtrix-board/SKILL.md",
-      "url": "https://skillissue.sh/skills/awtrix-board/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/awtrix-board/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/awtrix-board/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/awtrix-board/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/awtrix-board/",
+      "url": "https://skillissue.sh/skills/awtrix-board/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/awtrix-board/SKILL.md",
+      "resourceCount": 1,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "home-assistant-operator",
       "title": "Home Assistant Operator",
       "category": "ops",
+      "summary": "HA access was tribal knowledge. Skill owns inventory, verify, maintain.",
       "description": "Bootstrap, inventory, verify, and maintain AutoHub Home Assistant MCP access as a reusable AutoVault skill.",
       "version": "1.0.0",
       "tags": [
@@ -398,15 +525,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/home-assistant-operator/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/home-assistant-operator/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/home-assistant-operator/SKILL.md",
-      "url": "https://skillissue.sh/skills/home-assistant-operator/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/home-assistant-operator/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/home-assistant-operator/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/home-assistant-operator/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/home-assistant-operator/",
+      "url": "https://skillissue.sh/skills/home-assistant-operator/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/home-assistant-operator/SKILL.md",
+      "resourceCount": 1,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "resend-cli",
       "title": "Resend CLI",
       "category": "ops",
+      "summary": "Email setup needed a vendor CLI skill with non-interactive agent flags.",
       "description": "Use when operating Resend from the terminal: send or preview email, including React Email templates, or manage domains, contacts, broadcasts, templates, webhooks, keys, logs, automations, and events. Defines the non-interactive CLI contract needed for shell scripts and CI.",
       "version": "2.3.2",
       "tags": [
@@ -418,15 +551,21 @@
       ],
       "featured": false,
       "provenance": "mixed",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/resend-cli/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/resend-cli/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/resend-cli/SKILL.md",
-      "url": "https://skillissue.sh/skills/resend-cli/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/resend-cli/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/resend-cli/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/resend-cli/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/resend-cli/",
+      "url": "https://skillissue.sh/skills/resend-cli/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/resend-cli/SKILL.md",
+      "resourceCount": 15,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "triage-autohub-runtime",
       "title": "Triage AutoHub Runtime",
       "category": "ops",
+      "summary": "Retry storms looked like many bugs. This skill separates root cause from cascade.",
       "description": "Diagnose recent AutoHub runtime incidents from logs and live health evidence, separating first causes from retry cascades, process-local database poison, credential-copy drift, platform recipient or permission failures, and intentional fallbacks. Use when AutoHub logs show repeated errors, stuck writes, webhook retry storms, MCP authentication failures, or regressions after a restart.",
       "version": "1.0.4",
       "tags": [
@@ -441,15 +580,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/triage-autohub-runtime/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/triage-autohub-runtime/SKILL.md",
-      "url": "https://skillissue.sh/skills/triage-autohub-runtime/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/triage-autohub-runtime/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/triage-autohub-runtime/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/triage-autohub-runtime/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/triage-autohub-runtime/",
+      "url": "https://skillissue.sh/skills/triage-autohub-runtime/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/triage-autohub-runtime/SKILL.md",
+      "resourceCount": 2,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "mcp-builder",
       "title": "MCP Builder",
       "category": "mcp",
+      "summary": "We kept shipping 1:1 API wrappers that rotted in agent context. This skill encodes the resist-bloat rules Jack runs house-wide.",
       "description": "Guide for creating high-quality MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. Use when building MCP servers to integrate external APIs or services, whether in Python (FastMCP) or Node/TypeScript (MCP SDK).",
       "version": "1.0.0",
       "tags": [
@@ -461,15 +606,21 @@
       ],
       "featured": false,
       "provenance": "mixed",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-builder/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-builder/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/mcp-builder/SKILL.md",
-      "url": "https://skillissue.sh/skills/mcp-builder/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-builder/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-builder/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/mcp-builder/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/mcp-builder/",
+      "url": "https://skillissue.sh/skills/mcp-builder/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-builder/SKILL.md",
+      "resourceCount": 9,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "mcp-registry-maintainer",
       "title": "MCP Registry Maintainer",
       "category": "mcp",
+      "summary": "MCP server sprawl without inventory. Maintain registry scans and health.",
       "description": "Maintain AutoHub MCP server configuration, tool registry scans, health checks, and host config repair through a standardized AutoVault skill.",
       "version": "1.0.0",
       "tags": [
@@ -483,15 +634,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-registry-maintainer/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/mcp-registry-maintainer/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/mcp-registry-maintainer/SKILL.md",
-      "url": "https://skillissue.sh/skills/mcp-registry-maintainer/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-registry-maintainer/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-registry-maintainer/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/mcp-registry-maintainer/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/mcp-registry-maintainer/",
+      "url": "https://skillissue.sh/skills/mcp-registry-maintainer/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-registry-maintainer/SKILL.md",
+      "resourceCount": 1,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "jacks-writing-style",
       "title": "Jack's Writing Style",
       "category": "writing",
+      "summary": "Every public surface under my name was drifting into assistant-voice: hedged, bland, \"it's worth noting.\" This skill is the fix — examples from real READMEs, blogs, and changelogs.",
       "description": "Write like Jack Arturo — direct, casual, technical. Use for anything under his name: blog posts, READMEs, CHANGELOGs, audits, system prompts, drunk.support/verygoodplugins.com content.",
       "version": "1.0.0",
       "tags": [
@@ -506,15 +663,50 @@
       ],
       "featured": true,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/jacks-writing-style/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/jacks-writing-style/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/jacks-writing-style/SKILL.md",
-      "url": "https://skillissue.sh/skills/jacks-writing-style/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/jacks-writing-style/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/jacks-writing-style/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/jacks-writing-style/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/jacks-writing-style/",
+      "url": "https://skillissue.sh/skills/jacks-writing-style/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/jacks-writing-style/SKILL.md",
+      "resourceCount": 4,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "brand-bible-author",
+      "title": "Brand Bible Author",
+      "category": "writing",
+      "summary": "Turns tested visual exploration and taste decisions into a locked, reusable identity and visual-language contract.",
+      "description": "Codify a divergent Midjourney exploration + moodboard + voice context into a locked brand bible — `<project>/brand/{identity.md, visual-language.md, reference-pins/}` — that downstream image, packaging, and voice skills can share. Use after a Phase 0 divergent run has surfaced 3–5 winning picks and the operator has held a confirming taste conversation with the artist.",
+      "version": "0.1.0",
+      "tags": [
+        "brand",
+        "design",
+        "music"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/brand-bible-author/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/brand-bible-author/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/brand-bible-author/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/brand-bible-author/",
+      "url": "https://skillissue.sh/skills/brand-bible-author/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/brand-bible-author/SKILL.md",
+      "resourceCount": 11,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "docs-screenshot-packager",
       "title": "Docs Screenshot Packager",
       "category": "writing",
+      "summary": "Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.",
       "description": "Capture, package, optimize, verify, and place documentation screenshots for GitHub READMEs, repo docs, and marketing/docs sites. Use for release screenshot passes, visual docs updates, screenshot QA, and reusable screenshot workflows across repos.",
       "version": "1.0.0",
       "tags": [
@@ -528,15 +720,21 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/docs-screenshot-packager/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/docs-screenshot-packager/SKILL.md",
-      "url": "https://skillissue.sh/skills/docs-screenshot-packager/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/docs-screenshot-packager/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/docs-screenshot-packager/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/docs-screenshot-packager/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/docs-screenshot-packager/",
+      "url": "https://skillissue.sh/skills/docs-screenshot-packager/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/docs-screenshot-packager/SKILL.md",
+      "resourceCount": 8,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "html-asset-renderer",
       "title": "HTML Asset Renderer",
       "category": "writing",
+      "summary": "Design exports needed dimension-checked production assets, not freehand screenshots.",
       "description": "Render fixed-size HTML/CSS design exports into production raster assets when users need social cards, favicons, docs images, app-store screenshots, or other web-rendered artwork captured, dimension-checked, and prepared for merge.",
       "version": "1.0.0",
       "tags": [
@@ -550,15 +748,107 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/html-asset-renderer/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/html-asset-renderer/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/html-asset-renderer/SKILL.md",
-      "url": "https://skillissue.sh/skills/html-asset-renderer/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/html-asset-renderer/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/html-asset-renderer/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/html-asset-renderer/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/html-asset-renderer/",
+      "url": "https://skillissue.sh/skills/html-asset-renderer/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/html-asset-renderer/SKILL.md",
+      "resourceCount": 1,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "midjourney-iteration",
+      "title": "Midjourney Iteration",
+      "category": "writing",
+      "summary": "A bounded, evidence-based loop for turning a clear visual brief into better Midjourney candidates.",
+      "description": "Iterate on Midjourney prompts in a closed loop — generate, vision-evaluate the result grid against a structured brief, refine the prompt, re-roll — when a user wants album art, music video stills, social-post imagery, or any other MJ output that benefits from autonomous taste-driven iteration rather than one-shot prompting.",
+      "version": "0.1.0",
+      "tags": [
+        "midjourney",
+        "image-generation",
+        "iteration"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/midjourney-iteration/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/midjourney-iteration/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/midjourney-iteration/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/midjourney-iteration/",
+      "url": "https://skillissue.sh/skills/midjourney-iteration/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/midjourney-iteration/SKILL.md",
+      "resourceCount": 7,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "tui-design",
+      "title": "TUI Design",
+      "category": "writing",
+      "summary": "A framework-neutral design system for terminal interfaces that reward keyboard fluency without hiding the door.",
+      "description": "Use when designing terminal interfaces, layouts, color systems, keyboard navigation, dashboards, or accessibility across Ratatui, Ink, Textual, Bubble Tea, and similar TUI frameworks.",
+      "version": "1.0.0",
+      "tags": [
+        "tui",
+        "terminal",
+        "accessibility"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/tui-design/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/tui-design/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/tui-design/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/tui-design/",
+      "url": "https://skillissue.sh/skills/tui-design/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/tui-design/SKILL.md",
+      "resourceCount": 2,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "bubble-tea-tui-builder",
+      "title": "Bubble Tea TUI Builder",
+      "category": "workflow",
+      "summary": "Practical defaults for fast, testable Go terminal interfaces built with Bubble Tea.",
+      "description": "Build, test, and harden Go Bubble Tea terminal user interfaces with replayable events, responsive rendering, and terminal-safe fallbacks.",
+      "version": "1.1.0",
+      "tags": [
+        "go",
+        "tui",
+        "bubble-tea"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/bubble-tea-tui-builder/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/bubble-tea-tui-builder/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/bubble-tea-tui-builder/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/bubble-tea-tui-builder/",
+      "url": "https://skillissue.sh/skills/bubble-tea-tui-builder/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/bubble-tea-tui-builder/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cli-installer-ux",
       "title": "CLI Installer UX",
       "category": "workflow",
+      "summary": "Install scripts leaked machine output into user-facing copy. This skill is the UX gate.",
       "description": "Design and harden compact, useful CLI installers, updaters, setup wizards, and command output surfaces without leaking debug logs or machine JSON into human UX.",
       "version": "1.0.0",
       "tags": [
@@ -572,10 +862,539 @@
       ],
       "featured": false,
       "provenance": "house",
-      "cliInstall": "autovault add jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cli-installer-ux/SKILL.md --sync-profiles",
-      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@eb295b4c051837775d44536f5eada7524428d59e:skills/cli-installer-ux/SKILL.md\" })",
-      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/eb295b4c051837775d44536f5eada7524428d59e/skills/cli-installer-ux/SKILL.md",
-      "url": "https://skillissue.sh/skills/cli-installer-ux/"
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cli-installer-ux/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cli-installer-ux/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/cli-installer-ux/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/cli-installer-ux/",
+      "url": "https://skillissue.sh/skills/cli-installer-ux/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cli-installer-ux/SKILL.md",
+      "resourceCount": 4,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "context-engineering-audit",
+      "title": "Context Engineering Audit",
+      "category": "workflow",
+      "summary": "A disciplined way to measure and trim the instructions an agent pays to load before the work begins.",
+      "description": "Audit and cut what an agent loads before the user types — system prompts, CLAUDE.md/AGENTS.md, skill and tool descriptions. Use before trimming any instruction file, or after a model-generation change makes old prompt scaffolding counterproductive.",
+      "version": "1.0.0",
+      "tags": [
+        "context",
+        "prompts",
+        "agents"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/context-engineering-audit/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/context-engineering-audit/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/context-engineering-audit/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/context-engineering-audit/",
+      "url": "https://skillissue.sh/skills/context-engineering-audit/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/context-engineering-audit/SKILL.md",
+      "resourceCount": 3,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "clerk-cloudflare-auth",
+      "title": "Clerk + Cloudflare Auth",
+      "category": "auth",
+      "summary": "A public integration guide for adding Clerk identity to Cloudflare Pages or Workers without leaking deployment credentials.",
+      "description": "Add Clerk authentication to Cloudflare Pages or Workers apps with protected APIs, session-aware UI, and optional application-side user mapping.",
+      "version": "1.1.0",
+      "tags": [
+        "clerk",
+        "cloudflare",
+        "auth"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-auth/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/clerk-cloudflare-auth/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/clerk-cloudflare-auth/",
+      "url": "https://skillissue.sh/skills/clerk-cloudflare-auth/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-auth/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "autovault-brand-system",
+      "title": "AutoVault Brand System",
+      "category": "brand",
+      "summary": "The reusable visual system for AutoVault surfaces, from SVG and CSS to terminal frames and mascot art direction.",
+      "description": "Apply the AutoVault brand system across web SVG, terminal ASCII, illustrated mascot, social asset, and video-oriented surfaces when creating or adapting AutoVault-branded UI, docs, demos, or marketing visuals.",
+      "version": "0.1.0",
+      "tags": [
+        "autovault",
+        "brand",
+        "design"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-brand-system/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-brand-system/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/autovault-brand-system/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/autovault-brand-system/",
+      "url": "https://skillissue.sh/skills/autovault-brand-system/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-brand-system/SKILL.md",
+      "resourceCount": 10,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "clerk-cloudflare-commerce-bootstrap",
+      "title": "Clerk + Cloudflare Commerce Bootstrap",
+      "category": "commerce",
+      "summary": "A test-first orchestration path for Clerk identity, Cloudflare hosting, and Stripe Checkout.",
+      "description": "Plan and implement a test-first Cloudflare commerce application with Clerk identity, Stripe Checkout, and explicit live-billing approval.",
+      "version": "1.0.2",
+      "tags": [
+        "clerk",
+        "cloudflare",
+        "stripe"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/clerk-cloudflare-commerce-bootstrap/",
+      "url": "https://skillissue.sh/skills/clerk-cloudflare-commerce-bootstrap/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "ci-cost-audit",
+      "title": "CI Cost Audit",
+      "category": "devops",
+      "summary": "A measurement-first audit for finding the workflows that actually consume CI minutes and deciding what to change.",
+      "description": "Audit GitHub Actions and Xcode Cloud CI spend: identify the billable SKUs, the workflows responsible, and the smallest defensible change.",
+      "version": "1.0.0",
+      "tags": [
+        "ci",
+        "github-actions",
+        "cost"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/ci-cost-audit/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/ci-cost-audit/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/ci-cost-audit/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/ci-cost-audit/",
+      "url": "https://skillissue.sh/skills/ci-cost-audit/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/ci-cost-audit/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "repo-demo-video-director",
+      "title": "Repo Demo Video Director",
+      "category": "media",
+      "summary": "The pre-production pass for a truthful README video: claims, storyboard, assets, audio, and a human gate.",
+      "description": "Plan truthful repository README demo videos and stop for human script/storyboard review before rendering. Use when a public repo needs a Remotion/product overview video brief, claim ledger, screenshot/terminal/audio asset plan, simulated-data plan, README placement guidance, and Remotion plugin handoff notes.",
+      "version": "1.4.0",
+      "tags": [
+        "video",
+        "readme",
+        "remotion"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-director/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-director/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/repo-demo-video-director/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/repo-demo-video-director/",
+      "url": "https://skillissue.sh/skills/repo-demo-video-director/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-director/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "repo-demo-video-publisher",
+      "title": "Repo Demo Video Publisher",
+      "category": "media",
+      "summary": "A gated workflow for rendering, checking, uploading, and embedding a repository demo video without polluting the repo.",
+      "description": "Create and publish short repository README demo videos with mandatory human review gates, using screenshots, terminal clips, ElevenLabs audio, the Remotion plugin when available, verified GitHub user-attachments upload, and README-only diff hygiene. Use when a repo needs a Remotion/product demo video embedded in README via a GitHub-hosted user-attachments URL.",
+      "version": "1.6.0",
+      "tags": [
+        "video",
+        "readme",
+        "github"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-publisher/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-publisher/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/repo-demo-video-publisher/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/repo-demo-video-publisher/",
+      "url": "https://skillissue.sh/skills/repo-demo-video-publisher/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-publisher/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "video-toolkit",
+      "title": "Video Toolkit",
+      "category": "media",
+      "summary": "A configurable production toolkit for assembling generated assets and Remotion renders without losing the thread.",
+      "description": "Plan and verify a local video-production workflow with explicit tool choices, review gates, and render evidence.",
+      "version": "1.0.0",
+      "tags": [
+        "video",
+        "remotion",
+        "media"
+      ],
+      "agents": [
+        "autojack",
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/video-toolkit/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/video-toolkit/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/video-toolkit/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/video-toolkit/",
+      "url": "https://skillissue.sh/skills/video-toolkit/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/video-toolkit/SKILL.md",
+      "resourceCount": 5,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "stripe-commerce-checkout",
+      "title": "Stripe Commerce Checkout",
+      "category": "payments",
+      "summary": "A test-first pattern for a branded Stripe Checkout endpoint that keeps secrets server-side and live mutations explicit.",
+      "description": "Build a Stripe Checkout endpoint with restricted keys, branded sessions, webhooks, and a test-first operating model.",
+      "version": "1.1.0",
+      "tags": [
+        "stripe",
+        "checkout",
+        "payments"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/stripe-commerce-checkout/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/stripe-commerce-checkout/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/stripe-commerce-checkout/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/stripe-commerce-checkout/",
+      "url": "https://skillissue.sh/skills/stripe-commerce-checkout/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/stripe-commerce-checkout/SKILL.md",
+      "resourceCount": 2,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "award-travel-research",
+      "title": "Award Travel Research",
+      "category": "travel",
+      "summary": "A live-inventory-first method for comparing award seats without making irreversible point transfers on stale data.",
+      "description": "Research award flights with mandatory live verification, optional provider-specific accelerators, normalized comparisons, and transfer-safe recommendations.",
+      "version": "1.1.0",
+      "tags": [
+        "travel",
+        "awards",
+        "points"
+      ],
+      "agents": [
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/award-travel-research/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/award-travel-research/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/award-travel-research/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/award-travel-research/",
+      "url": "https://skillissue.sh/skills/award-travel-research/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/award-travel-research/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "unity-ai-collaboration",
+      "title": "Unity AI Collaboration",
+      "category": "unity",
+      "summary": "A routing and handoff model for multiple AI surfaces working around one live Unity Editor.",
+      "description": "Use when coordinating Unity Assistant, AI Gateway, Unity MCP servers, external coding agents, or read-only subagents on the same Unity project, especially when concurrent writes, paid generation, credentials, profiler evidence, or editor handoffs are possible.",
+      "version": "1.2.0",
+      "tags": [
+        "unity",
+        "ai",
+        "collaboration"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-ai-collaboration/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-ai-collaboration/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/unity-ai-collaboration/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/unity-ai-collaboration/",
+      "url": "https://skillissue.sh/skills/unity-ai-collaboration/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-ai-collaboration/SKILL.md",
+      "resourceCount": 7,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "elevenlabs-automem-memory",
+      "title": "ElevenLabs + AutoMem Memory",
+      "category": "voice",
+      "summary": "The safe integration shape for connecting an ElevenLabs conversational agent to a protected AutoMem MCP service.",
+      "description": "Connect an ElevenLabs conversational agent to a protected AutoMem-compatible MCP service and verify that durable memory calls work in real conversations.",
+      "version": "1.0.0",
+      "tags": [
+        "elevenlabs",
+        "automem",
+        "mcp"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/elevenlabs-automem-memory/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/elevenlabs-automem-memory/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/elevenlabs-automem-memory/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/elevenlabs-automem-memory/",
+      "url": "https://skillissue.sh/skills/elevenlabs-automem-memory/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/elevenlabs-automem-memory/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "building-emdash-site",
+      "title": "Building an EmDash Site",
+      "category": "web",
+      "summary": "The EmDash-on-Astro playbook for content models, rendering, and the CMS details that are easy to misread.",
+      "description": "Build and customize EmDash CMS sites on Astro. Use when creating pages, defining collections, writing seed files, querying content, rendering Portable Text, setting up menus/taxonomies/widgets, configuring deployment, or any task involving an EmDash-powered Astro site. Assumes basic Astro knowledge but provides all EmDash-specific patterns.",
+      "version": "1.0.0",
+      "tags": [
+        "emdash",
+        "astro",
+        "cms"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/building-emdash-site/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/building-emdash-site/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/building-emdash-site/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/building-emdash-site/",
+      "url": "https://skillissue.sh/skills/building-emdash-site/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/building-emdash-site/SKILL.md",
+      "resourceCount": 5,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "creating-plugins",
+      "title": "Creating EmDash Plugins",
+      "category": "web",
+      "summary": "The extension map for EmDash plugins: hooks, storage, admin UI, API routes, and Portable Text blocks.",
+      "description": "Create EmDash CMS plugins with hooks, storage, settings, admin UI, API routes, and Portable Text block types. Use this skill when asked to build, scaffold, or implement an EmDash plugin, or when creating plugin features like custom block types, admin pages, or content hooks.",
+      "version": "1.0.0",
+      "tags": [
+        "emdash",
+        "plugins",
+        "typescript"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/creating-plugins/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/creating-plugins/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/creating-plugins/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/creating-plugins/",
+      "url": "https://skillissue.sh/skills/creating-plugins/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/creating-plugins/SKILL.md",
+      "resourceCount": 7,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "emdash-cli",
+      "title": "EmDash CLI",
+      "category": "web",
+      "summary": "Command-line guidance for managing EmDash content, schema, media, and automation safely.",
+      "description": "Use the EmDash CLI to manage content, schema, media, and more. Use this skill when you need to interact with a running EmDash instance from the command line — creating content, managing collections, uploading media, generating types, or scripting CMS operations.",
+      "version": "1.0.0",
+      "tags": [
+        "emdash",
+        "cli",
+        "cms"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/emdash-cli/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/emdash-cli/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/emdash-cli/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/emdash-cli/",
+      "url": "https://skillissue.sh/skills/emdash-cli/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/emdash-cli/SKILL.md",
+      "resourceCount": 1,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "wordpress-theme-to-emdash",
+      "title": "WordPress Theme to EmDash",
+      "category": "web",
+      "summary": "A six-phase migration playbook for rebuilding a WordPress theme as an EmDash-powered Astro site.",
+      "description": "Port WordPress themes to EmDash CMS. Use when asked to convert, migrate, or port a WordPress theme to EmDash, or when creating an EmDash site that should match an existing WordPress site's design. Handles design extraction, template conversion, and EmDash-specific features like menus, taxonomies, and widgets.",
+      "version": "1.0.0",
+      "tags": [
+        "wordpress",
+        "emdash",
+        "astro"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack",
+        "cursor"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/wordpress-theme-to-emdash/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/wordpress-theme-to-emdash/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/wordpress-theme-to-emdash/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/wordpress-theme-to-emdash/",
+      "url": "https://skillissue.sh/skills/wordpress-theme-to-emdash/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/wordpress-theme-to-emdash/SKILL.md",
+      "resourceCount": 29,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "quest-passthrough-camera-capture",
+      "title": "Quest Passthrough Camera Capture",
+      "category": "xr",
+      "summary": "Practical lifecycle rules for safely copying Meta Quest passthrough camera frames into Unity-owned textures.",
+      "description": "Use when reading Meta Quest Passthrough Camera Access (PCA) frames into a Unity texture — freezing a room snapshot, feeding a shader, or piping camera pixels to generation/inference — especially when the feed's lifetime, permission gating, color space, or a blocking readback is in play.",
+      "version": "1.0.0",
+      "tags": [
+        "unity",
+        "quest",
+        "passthrough"
+      ],
+      "agents": [
+        "claude-code",
+        "codex"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/quest-passthrough-camera-capture/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/quest-passthrough-camera-capture/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/quest-passthrough-camera-capture/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/quest-passthrough-camera-capture/",
+      "url": "https://skillissue.sh/skills/quest-passthrough-camera-capture/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/quest-passthrough-camera-capture/SKILL.md",
+      "resourceCount": 0,
+      "runnable": false,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+    },
+    {
+      "name": "unity-quest-build",
+      "title": "Unity Quest Build",
+      "category": "xr",
+      "summary": "An evidence ladder for building, testing, profiling, and accepting Unity applications on Meta Quest.",
+      "description": "Use when building, simulating, profiling, sideloading, or verifying Unity 6 Meta Quest applications, especially when XR state, Meta XR Simulator, passthrough cameras, ADB, MQDH, Vulkan, or on-device evidence is involved.",
+      "version": "2.2.0",
+      "tags": [
+        "unity",
+        "quest",
+        "xr"
+      ],
+      "agents": [
+        "claude-code",
+        "codex",
+        "autojack"
+      ],
+      "featured": false,
+      "provenance": "house",
+      "cliInstall": "autovault add jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-quest-build/SKILL.md --sync-profiles",
+      "mcpInstall": "add_skill({ source: \"github\", identifier: \"jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-quest-build/SKILL.md\" })",
+      "sourceUrl": "https://github.com/jack-arturo/skillissue/blob/f0296c2db76a3e5d5849b055c185b49199873754/skills/unity-quest-build/SKILL.md",
+      "storyUrl": "https://skillissue.sh/skills/unity-quest-build/",
+      "url": "https://skillissue.sh/skills/unity-quest-build/",
+      "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-quest-build/SKILL.md",
+      "resourceCount": 5,
+      "runnable": true,
+      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
     }
   ]
 }

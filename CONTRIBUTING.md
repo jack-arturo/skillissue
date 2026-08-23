@@ -12,9 +12,19 @@ Conventional commits preferred: `feat:`, `fix:`, `docs:`, `chore:`.
 
 ## Site changes
 
-Edit files under `site/`. No build step — open `site/index.html` in a browser to preview.
+`skills/` is the public-package source of truth. `site/` is generated output; do not hand-edit it.
+
+When you change a public package narrative or catalog metadata, run:
+
+```bash
+npm test
+npm run build:strict
+npm run build
+```
+
+Review and commit the resulting `site/`, `catalog/report.json`, and `catalog/autovault-sync.json` changes with the source edit.
 
 When adding a skill to the catalog, update both:
 
-1. `site/skills.json` (source of truth for the grid + agents)
-2. The featured cards in `site/index.html` if it belongs on the hero shelf
+1. `skills/<name>/SKILL.md` (the installable package) and `skills/<name>/story.md` (the public narrative)
+2. `catalog/autovault-publication.json` (explicit public visibility)

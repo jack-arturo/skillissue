@@ -8,6 +8,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { execSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
@@ -30,6 +31,50 @@ function esc(s) {
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;");
+}
+
+/** JSON placed inside a script element must not be able to close that element. */
+function jsonForScript(value) {
+  return JSON.stringify(value).replace(/[<>&\u2028\u2029]/g, (character) => {
+    const code = character.charCodeAt(0).toString(16).padStart(4, "0");
+    return `\\u${code}`;
+  });
+}
+
+function listBundleFiles(directory, relative = "") {
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+    const child = path.join(directory, entry.name);
+    const childRelative = relative ? `${relative}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) files.push(...listBundleFiles(child, childRelative));
+    else if (entry.isFile()) files.push({ path: childRelative, absolute: child, mode: fs.statSync(child).mode });
+  }
+  return files;
+}
+
+function hashFiles(files) {
+  const hash = crypto.createHash("sha256");
+  for (const file of files) {
+    hash.update(file.path);
+    hash.update("\0");
+    hash.update(fs.readFileSync(file.absolute));
+    hash.update("\0");
+  }
+  return hash.digest("hex");
+}
+
+function normalList(value) {
+  if (Array.isArray(value)) return value.filter(Boolean).map(String);
+  if (typeof value === "string" && value.trim()) return [value.trim()];
+  return [];
+}
+
+function hasRunnableBundleMember(files) {
+  return files.some((file) =>
+    (file.mode & 0o111) !== 0 ||
+    /^bin\//.test(file.path) ||
+    /^scripts\/.*\.(?:[cm]?js|ts|py|sh|bash|zsh|rb|pl)$/i.test(file.path),
+  );
 }
 
 function gitSha() {
@@ -494,6 +539,7 @@ const publicationRegistry = loadPublicationRegistry();
 const sha = gitSha();
 const shortSha = sha.slice(0, 7);
 const publicSkills = [];
+const bundleSnapshots = [];
 const errors = [];
 const report = {
   public: 0,
@@ -563,6 +609,20 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
   const cliInstall = `autovault add ${installId} --sync-profiles`;
   const mcpInstall = `add_skill({ source: "github", identifier: "${installId}" })`;
   const sourceUrl = `https://github.com/${REPO}/blob/${sha}/skills/${name}/SKILL.md`;
+  const storyUrl = `https://skillissue.sh/skills/${name}/`;
+  const bundleFiles = listBundleFiles(dir);
+  const resourceFiles = bundleFiles.filter(
+    (file) => file.path !== "SKILL.md" && file.path !== "story.md",
+  );
+  const resourceCount = resourceFiles.length;
+  const runnable = hasRunnableBundleMember(resourceFiles);
+  bundleSnapshots.push({
+    name,
+    version,
+    contentHash: crypto.createHash("sha256").update(skillRaw).digest("hex"),
+    bundleHash: hashFiles(bundleFiles),
+    fileCount: bundleFiles.length,
+  });
 
   publicSkills.push({
     name: skillFm.name || name,
@@ -571,8 +631,8 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     description,
     category: catalogGroup(storyFm.category || skillFm.category),
     version,
-    tags: storyFm.tags || skillFm.tags || [],
-    agents: skillFm.agents || [],
+    tags: normalList(storyFm.tags || skillFm.tags),
+    agents: normalList(skillFm.agents),
     featured,
     provenance,
     related: storyFm.related || [],
@@ -581,7 +641,10 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     cliInstall,
     mcpInstall,
     sourceUrl,
+    storyUrl,
     installId,
+    resourceCount,
+    runnable,
   });
   report.public++;
 }
@@ -618,6 +681,10 @@ if (fs.existsSync(cssSrc)) {
     fs.readFileSync(cssSrc, "utf8"),
   );
 }
+fs.copyFileSync(
+  path.join(__dirname, "catalog-explorer.js"),
+  path.join(siteDir, "assets/catalog-explorer.js"),
+);
 // Essay charts (SVG) + harvest data for transparency
 const contentAssets = path.join(root, "content/assets");
 if (fs.existsSync(contentAssets)) {
@@ -652,6 +719,7 @@ const skillsJson = {
     name: s.name,
     title: s.title,
     category: s.category,
+    summary: s.summary,
     description: s.description,
     version: s.version,
     tags: s.tags,
@@ -661,7 +729,12 @@ const skillsJson = {
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
-    url: `https://skillissue.sh/skills/${s.name}/`,
+    storyUrl: s.storyUrl,
+    url: s.storyUrl,
+    installId: s.installId,
+    resourceCount: s.resourceCount,
+    runnable: s.runnable,
+    buildPin: sha,
   })),
 };
 fs.writeFileSync(
@@ -673,6 +746,7 @@ fs.writeFileSync(
 for (const s of publicSkills) {
   const dir = path.join(siteDir, "skills", s.name);
   fs.mkdirSync(dir, { recursive: true });
+  const featuredBadge = s.featured ? '<span class="badge">featured</span>' : "";
   const related = (s.related || [])
     .filter((n) => publicSkills.some((p) => p.name === n))
     .map((n) => `<a class="tag" href="/skills/${esc(n)}/">${esc(n)}</a>`)
@@ -687,8 +761,7 @@ for (const s of publicSkills) {
         <h1><span class="path">${esc(s.name)}</span></h1>
         <p class="lede">${esc(s.summary)}</p>
         <div class="meta" style="margin-bottom:1.25rem">${tags}
-          <span class="badge">${esc(s.provenance)}</span>
-          ${s.featured ? '<span class="badge">featured</span>' : ""}
+          <span class="badge">${esc(s.provenance)}</span>${featuredBadge}
         </div>
         <div class="cta-row">
           <button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy AutoVault install</button>
@@ -731,127 +804,70 @@ ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
   );
 }
 
-// catalog
+// catalog — the links below are the no-JavaScript experience. The module only
+// refines them into a searchable, shareable Explorer.
 fs.mkdirSync(path.join(siteDir, "skills"), { recursive: true });
-const grouped = new Map();
-for (const s of publicSkills) {
-  if (!grouped.has(s.category)) grouped.set(s.category, []);
-  grouped.get(s.category).push(s);
-}
-const groupIds = [...grouped.keys()].sort((a, b) => {
-  const oa = groupOrderOf(a);
-  const ob = groupOrderOf(b);
-  if (oa !== ob) return oa - ob;
-  return a.localeCompare(b);
-});
-const groupMeta = groupIds.map((id) => ({
-  id,
-  label: CATALOG_GROUPS[id]?.label || id,
-  n: grouped.get(id).length,
-}));
-const featuredCount = publicSkills.filter((s) => s.featured).length;
-const catalogHtml = groupIds
-  .map((id) => {
-    const items = grouped.get(id);
-    const label = CATALOG_GROUPS[id]?.label || id;
-    return `<div class="skill-group" data-group="${esc(id)}">
-    <div class="section-head">
-      <h2>${esc(label)}</h2>
-      <span class="section-note">${items.length}</span>
-    </div>
-    <div class="grid">${items.map(skillCard).join("\n")}</div>
-  </div>`;
-  })
-  .join("\n");
+const explorerData = {
+  buildPin: sha,
+  skills: publicSkills.map((s) => ({
+    name: s.name,
+    title: s.title,
+    summary: s.summary,
+    description: s.description,
+    storyUrl: s.storyUrl,
+    category: s.category,
+    tags: s.tags,
+    agents: s.agents,
+    featured: s.featured,
+    resourceCount: s.resourceCount,
+    runnable: s.runnable,
+    cliInstall: s.cliInstall,
+    mcpInstall: s.mcpInstall,
+    sourceUrl: s.sourceUrl,
+    buildPin: sha,
+  })),
+};
+const fallbackRows = publicSkills.map((s) => `<a class="explorer-result" href="/skills/${esc(s.name)}/">
+  <strong>${esc(s.name)}</strong><span>${esc(s.summary)}</span>
+  <small>${esc(s.category)} · ${s.resourceCount} resource${s.resourceCount === 1 ? "" : "s"}</small>
+</a>`).join("\n");
+const firstSkill = publicSkills[0];
 
 fs.writeFileSync(
   path.join(siteDir, "skills/index.html"),
   shellLayout({
     title: "Skills — skillissue.sh",
-    description:
-      "Jack Arturo's public agent skills — packages on GitHub, install via AutoVault.",
+    description: "Jack Arturo's public agent skills — packages on GitHub, install via AutoVault.",
     path: "/skills/",
     body: `
-    <section class="hero catalog-hero">
-      <div class="wrap">
-        <div class="prompt"><span class="dot"></span> <span id="result-count">${publicSkills.length} public</span> · pin ${esc(shortSha)}</div>
-        <h1>Skills</h1>
-        <p class="lede">Each page is a story plus a real <code>autovault add</code> for the package living in this repo.</p>
+    <section class="hero catalog-hero"><div class="wrap">
+      <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · pin ${esc(shortSha)}</div>
+      <h1>Skills Explorer</h1>
+      <p class="lede">Filter the public shelf, inspect the package, then copy a pinned install. Every result remains a real story page.</p>
+    </div></section>
+    <section class="catalog-body"><div class="wrap">
+      <div class="explorer" data-catalog-explorer>
+        <form class="explorer-facets" aria-label="Filter skills">
+          <label for="explorer-q">Search</label>
+          <input class="search" id="explorer-q" name="q" type="search" placeholder="name, summary, description, tag" autocomplete="off" spellcheck="false">
+          <label for="explorer-category">Category</label>
+          <select id="explorer-category" name="category"><option value="">All categories</option></select>
+          <label for="explorer-agent">Agent</label>
+          <select id="explorer-agent" name="agent"><option value="">All agents</option></select>
+          <label class="explorer-check"><input type="checkbox" name="featured"> Featured only</label>
+          <label for="explorer-resources">Package resources</label>
+          <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
+          <p class="section-note" data-explorer-count aria-live="polite">${publicSkills.length} skills</p>
+        </form>
+        <div class="explorer-results" data-explorer-results role="listbox" aria-label="Skill results">${fallbackRows}</div>
+        <aside class="explorer-detail panel" data-explorer-detail aria-live="polite">
+          <h2>${esc(firstSkill.name)}</h2><p>${esc(firstSkill.summary)}</p>
+          <a class="btn btn-primary" href="/skills/${esc(firstSkill.name)}/">Read full story</a>
+        </aside>
       </div>
-    </section>
-    <section class="catalog-body">
-      <div class="wrap" id="catalog">
-        <div class="catalog-tools">
-          <div class="search-row"><input class="search" id="q" type="search" placeholder="filter by name, tag, or blurb…" autocomplete="off" spellcheck="false"></div>
-          <div class="filters" id="filters" aria-label="Skill groups"></div>
-        </div>
-        ${catalogHtml}
-        <div class="empty" id="empty">No skills match.</div>
-      </div>
-    </section>
-    <script>
-    (function(){
-      var groups=[].slice.call(document.querySelectorAll('.skill-group'));
-      var cards=[].slice.call(document.querySelectorAll('#catalog .card'));
-      var filters=document.getElementById('filters');
-      var q=document.getElementById('q');
-      var countEl=document.getElementById('result-count');
-      var empty=document.getElementById('empty');
-      var total=${publicSkills.length};
-      var cats=${JSON.stringify(groupMeta)};
-      var featuredN=${featuredCount};
-      var active='all';
-      function chip(id, label, n){
-        var on=id===active;
-        return '<button type="button" class="chip'+(on?' active':'')+'" data-cat="'+id+'" aria-pressed="'+on+'">'+label+' <span class="chip-n">'+n+'</span></button>';
-      }
-      function paint(){
-        filters.innerHTML=chip('all','all',total)+chip('featured','featured',featuredN)+cats.map(function(c){
-          return chip(c.id,c.label,c.n);
-        }).join('');
-      }
-      function setActive(id, push){
-        active=id;
-        if(push!==false){
-          var hash=id==='all'?'':('#'+encodeURIComponent(id));
-          if((location.hash||'')!==hash) history.replaceState(null,'',hash||(location.pathname+location.search));
-        }
-        paint();
-        filter();
-      }
-      function filter(){
-        var qq=(q.value||'').toLowerCase();
-        var n=0;
-        cards.forEach(function(c){
-          var text=c.textContent.toLowerCase();
-          var cat=c.getAttribute('data-category')||'';
-          var feat=c.getAttribute('data-featured')==='1';
-          var okCat=active==='all'||(active==='featured'&&feat)||cat===active;
-          var ok=okCat&&(!qq||text.indexOf(qq)>=0);
-          c.hidden=!ok;
-          if(ok)n++;
-        });
-        groups.forEach(function(g){
-          var vis=g.querySelectorAll('.card:not([hidden])').length;
-          g.hidden=vis===0;
-          var note=g.querySelector('.section-note');
-          if(note) note.textContent=vis;
-        });
-        if(countEl) countEl.textContent=n===total?(n+' public'):(n+' of '+total);
-        empty.classList.toggle('show',n===0);
-      }
-      filters.addEventListener('click',function(e){
-        var b=e.target.closest('[data-cat]'); if(!b)return;
-        setActive(b.getAttribute('data-cat'));
-      });
-      q.addEventListener('input',filter);
-      var initial=decodeURIComponent((location.hash||'').replace(/^#/,'')).toLowerCase();
-      var known=initial==='featured'||cats.some(function(c){return c.id===initial});
-      paint();
-      if(known) setActive(initial,false);
-      else filter();
-    })();
-    </script>`,
+    </div></section>
+    <script id="explorer-data" type="application/json">${jsonForScript(explorerData)}</script>
+    <script type="module" src="/assets/catalog-explorer.js"></script>`,
     active: "skills",
   }),
 );
@@ -1216,6 +1232,17 @@ fs.writeFileSync(
 report.generatedAt = new Date().toISOString();
 report.installPin = sha;
 report.publicSkills = publicSkills.map((s) => s.name);
+if (!process.env.SKILLISSUE_SITE_DIR && !process.env.SKILLISSUE_REPORT_PATH) {
+  fs.writeFileSync(
+    path.join(root, "catalog", "autovault-sync.json"),
+    JSON.stringify({
+      schemaVersion: 2,
+      target: "skillissue",
+      hashAlgorithm: "sha256",
+      skills: bundleSnapshots.sort((a, b) => a.name.localeCompare(b.name)),
+    }, null, 2) + "\n",
+  );
+}
 fs.mkdirSync(path.dirname(reportPath), { recursive: true });
 fs.writeFileSync(
   reportPath,

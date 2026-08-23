@@ -16,7 +16,7 @@ const hidden = [
 ];
 const removed = ["dev-browser", "voiceink-2-upgrade"];
 
-test("publication registry is an explicit 25-skill allowlist", () => {
+test("publication registry is an explicit 48-skill allowlist", () => {
   const registry = JSON.parse(
     fs.readFileSync(path.join(root, "catalog", "autovault-publication.json"), "utf-8")
   );
@@ -26,12 +26,29 @@ test("publication registry is an explicit 25-skill allowlist", () => {
     .sort();
   assert.equal(registry.schemaVersion, 1);
   assert.equal(registry.target, "skillissue");
-  assert.equal(publicNames.length, 25);
+  assert.equal(publicNames.length, 48);
   assert.deepEqual(
     registry.skills["codex-review"],
     { visibility: "hidden", replacement: "babysit" }
   );
   for (const name of hidden) assert.equal(registry.skills[name].visibility, "hidden");
+});
+
+test("committed publication snapshot covers every public bundle", () => {
+  const registry = JSON.parse(fs.readFileSync(path.join(root, "catalog", "autovault-publication.json"), "utf-8"));
+  const snapshot = JSON.parse(fs.readFileSync(path.join(root, "catalog", "autovault-sync.json"), "utf-8"));
+  const publicNames = Object.entries(registry.skills)
+    .filter(([, entry]) => entry.visibility === "public")
+    .map(([name]) => name)
+    .sort();
+  assert.equal(snapshot.schemaVersion, 2);
+  assert.equal(snapshot.hashAlgorithm, "sha256");
+  assert.deepEqual(snapshot.skills.map((skill) => skill.name).sort(), publicNames);
+  for (const skill of snapshot.skills) {
+    assert.match(skill.contentHash, /^[a-f0-9]{64}$/);
+    assert.match(skill.bundleHash, /^[a-f0-9]{64}$/);
+    assert.ok(skill.fileCount >= 2);
+  }
 });
 
 test("strict build exposes only public skills and writes canonical redirects", () => {
@@ -55,7 +72,26 @@ test("strict build exposes only public skills and writes canonical redirects", (
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
       .sort();
-    assert.equal(skillDirs.length, 25);
+    assert.equal(skillDirs.length, 48);
+
+    const metadata = JSON.parse(fs.readFileSync(path.join(siteDir, "skills.json"), "utf-8"));
+    assert.equal(metadata.publicCount, 48);
+    assert.equal(metadata.skills.length, 48);
+    const browserHand = metadata.skills.find((skill) => skill.name === "browser-hand");
+    assert.ok(browserHand);
+    for (const field of [
+      "summary", "description", "storyUrl", "category", "tags", "agents",
+      "featured", "resourceCount", "runnable", "cliInstall", "mcpInstall",
+      "sourceUrl", "buildPin",
+    ]) assert.notEqual(browserHand[field], undefined, `metadata includes ${field}`);
+
+    const explorer = fs.readFileSync(path.join(siteDir, "skills", "index.html"), "utf-8");
+    assert.match(explorer, /data-catalog-explorer/);
+    assert.match(explorer, /id="explorer-data" type="application\/json"/);
+    assert.match(explorer, /src="\/assets\/catalog-explorer\.js"/);
+    assert.match(explorer, /href="\/skills\/browser-hand\/"/);
+    assert.match(explorer, /\\u003c/);
+    assert.equal(fs.existsSync(path.join(siteDir, "assets", "catalog-explorer.js")), true);
 
     const redirects = fs.readFileSync(path.join(siteDir, "_redirects"), "utf-8");
     assert.match(redirects, /^\/skills\/dev-browser\/ \/skills\/browser-hand\/ 301$/m);
@@ -69,6 +105,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
     for (const name of [...hidden, ...removed]) {
       assert.equal(generated.includes(`/skills/${name}/`), false, `${name} leaked into generated catalog`);
     }
+    assert.match(generated, /https:\/\/skillissue\.sh\/skills\/browser-hand\//);
   } finally {
     fs.rmSync(siteDir, { recursive: true, force: true });
   }
