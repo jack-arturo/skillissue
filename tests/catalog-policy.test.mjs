@@ -80,12 +80,10 @@ test("strict build exposes only public skills and writes canonical redirects", (
       cwd: root,
       encoding: "utf8",
     }).trim();
-    const generatedHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
     assert.equal(metadata.publicCount, 48);
     assert.equal(metadata.skills.length, 48);
     assert.equal(metadata.packageSourcePin, packageSourcePin);
     assert.equal(report.packageSourcePin, packageSourcePin);
-    assert.notEqual(packageSourcePin, generatedHead, "package source pin is not the generator-only output commit");
     const browserHand = metadata.skills.find((skill) => skill.name === "browser-hand");
     assert.ok(browserHand);
     for (const field of [

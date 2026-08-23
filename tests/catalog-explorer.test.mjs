@@ -6,6 +6,7 @@ import {
   normalizeExplorerState,
   parseExplorerState,
   serializeExplorerState,
+  selectionChanged,
 } from "../scripts/catalog-explorer.js";
 
 const skills = [
@@ -69,10 +70,13 @@ test("Explorer query state parses and serializes only meaningful filters", () =>
 });
 
 test("Explorer state clears or selects a result before it reaches the URL", () => {
+  const initial = { category: "git", skill: "browser-hand" };
+  const normalized = normalizeExplorerState(skills, initial);
   assert.deepEqual(
-    normalizeExplorerState(skills, { category: "git", skill: "browser-hand" }),
+    normalized,
     { category: "git", skill: "commit-message" },
   );
+  assert.equal(selectionChanged(initial, normalized), true);
   assert.deepEqual(
     normalizeExplorerState(skills, { q: "does-not-exist", skill: "browser-hand" }),
     { q: "does-not-exist", skill: "" },

@@ -57,6 +57,10 @@ export function normalizeExplorerState(skills, state = {}) {
   };
 }
 
+export function selectionChanged(previousState = {}, nextState = {}) {
+  return previousState.skill !== nextState.skill;
+}
+
 function option(select, value, label) {
   const node = document.createElement("option");
   node.value = value;
@@ -217,7 +221,9 @@ function initExplorer() {
   });
   Object.values(controls).forEach((control) => control.addEventListener(control === controls.q ? "input" : "change", change));
   applyControls();
+  const initialState = state;
   render();
+  if (selectionChanged(initialState, state)) updateUrl();
 }
 
 if (typeof document !== "undefined") initExplorer();
