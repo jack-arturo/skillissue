@@ -198,7 +198,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.ok(browserHand);
     for (const field of [
       "summary", "description", "storyUrl", "category", "tags", "agents",
-      "featured", "resourceCount", "runnable", "cliInstall", "mcpInstall",
+      "featured", "provenance", "resourceCount", "runnable", "cliInstall", "mcpInstall",
       "sourceUrl", "packageSourcePin",
     ]) assert.notEqual(browserHand[field], undefined, `metadata includes ${field}`);
     assert.match(browserHand.cliInstall, new RegExp(`@${packageSourcePin}:skills/browser-hand/SKILL\\.md`));
@@ -213,9 +213,16 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.ok(cssAsset, "Explorer references content-fingerprinted CSS");
     assert.doesNotMatch(explorer, /role="listbox"/);
     assert.match(explorer, /href="\/skills\/browser-hand\/"/);
+    assert.match(explorer, /class="explorer-card"/);
+    assert.match(explorer, /data-explorer-card/);
+    assert.match(explorer, /data-explorer-mark/);
+    assert.match(explorer, /Browse the package/);
+    assert.match(explorer, /public package · mixed/);
     assert.match(explorer, /\\u003c/);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", explorerAsset)), true);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", cssAsset)), true);
+    const explorerCss = fs.readFileSync(path.join(siteDir, "assets", cssAsset), "utf-8");
+    assert.match(explorerCss, /\.explorer-card-footer\s*\{[^}]*border:\s*0;[^}]*padding:\s*0;/);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", "catalog-explorer.js")), false);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", "site.css")), false);
     const linkedStory = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
