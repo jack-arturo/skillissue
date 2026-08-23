@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/quest-passthrough-camera-capture/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.64dc30fbd271.css">
+<link rel="stylesheet" href="/assets/site.5ccb0703f30d.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -41,35 +41,156 @@
 
     <section class="skill-package">
       <div class="wrap">
+        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>house</span><span>/</span><span>quest-passthrough-camera-capture</span></p>
         <div class="skill-package-top">
           <div class="skill-package-intro">
             <span class="explorer-mark" aria-hidden="true">QP</span>
-            <div><p class="explorer-kicker">house package · xr</p><h1>Quest Passthrough Camera Capture</h1><p class="lede">Practical lifecycle rules for safely copying Meta Quest passthrough camera frames into Unity-owned textures.</p></div>
+            <div><p class="explorer-kicker">Hosted skill bundle · house · xr</p><h1>Quest Passthrough Camera Capture</h1><p class="lede">Practical lifecycle rules for safely copying Meta Quest passthrough camera frames into Unity-owned textures.</p></div>
           </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md --sync-profiles</code>
-            <div><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md --sync-profiles">Copy install</button><a class="btn btn-ghost" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener">Raw</a></div>
+          <aside class="skill-install-card" data-install-mode="cli">
+            <span>Pinned install</span>
+            <div class="install-tabs" role="group" aria-label="Install method"><button type="button" data-install-tab="cli" aria-pressed="true">CLI</button><button type="button" data-install-tab="mcp" aria-pressed="false">MCP</button></div>
+            <div class="install-command" data-install-panel="cli"><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md --sync-profiles</code><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md --sync-profiles">Copy install</button></div>
+            <div class="install-command" data-install-panel="mcp" hidden><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md&quot; })</code><button type="button" class="btn btn-primary" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/quest-passthrough-camera-capture/SKILL.md&quot; })">Copy MCP call</button></div>
+            <div class="install-links"><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener">Raw SKILL.md</a><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener">Source</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
           <div><dt>Version</dt><dd>v1.0.0</dd></div>
-          <div><dt>Provenance</dt><dd>house</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
           <div><dt>Targets</dt><dd>claude-code, codex</dd></div>
-          <div><dt>Bundle</dt><dd>1 files · 0 resources</dd></div>
+          <div><dt>Bundle</dt><dd>1 files · 0 resources · 5.8 KB</dd></div>
         </dl>
         <div class="meta skill-meta"><span class="tag">unity</span><span class="tag">quest</span><span class="tag">passthrough</span><span class="badge">house</span></div>
-        <section class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package resources</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener">View source</a></div><div class="skill-resource-grid"><p class="muted">This package is a single SKILL.md with no bundled resources.</p></div></section>
+        <nav class="package-nav" aria-label="Package sections"><a href="#overview">Overview</a><a href="#bundle">Bundle</a><a href="#permissions">Permissions</a><a href="#provenance">Provenance</a><a href="#source">Source</a></nav>
       </div>
     </section>
     <section>
       <div class="wrap prose">
-<h2>Why</h2>
+        <section class="package-section" id="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why</h2>
 <p>A borrowed camera texture looks simple right up until permissions change or the native feed disappears mid-frame.</p>
 <h2>How</h2>
 <p>Treat the feed as borrowed, copy it into a texture you own, keep CPU readback off the frame path, and build a credible no-camera fallback. The boring bits are the feature.</p>
 <h2>Related</h2>
-<p>Follow <a href="/skills/unity-quest-build/">Unity Quest Build</a> for device evidence and <a href="/skills/unity-ai-collaboration/">Unity AI Collaboration</a> when more than one tool can touch the Editor.</p>
-<h2>Related</h2><div class="meta"><a class="tag" href="/skills/unity-quest-build/">unity-quest-build</a> <a class="tag" href="/skills/unity-ai-collaboration/">unity-ai-collaboration</a></div>
+<p>Follow <a href="/skills/unity-quest-build/">Unity Quest Build</a> for device evidence and <a href="/skills/unity-ai-collaboration/">Unity AI Collaboration</a> when more than one tool can touch the Editor.</p></div></section>
+        <section class="package-section" id="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package files</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener">View source</a></div><p class="muted">0 bundled resources.</p><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener"><code>SKILL.md</code><span>skill definition · 5.0 KB</span></a></div></div></section>
+        <section class="package-section" id="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></section>
+        <section class="package-section" id="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are all linked here before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex</dd></div></dl><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/unity-quest-build/">unity-quest-build</a> <a class="tag" href="/skills/unity-ai-collaboration/">unity-ai-collaboration</a></div></section>
+        <section class="package-section" id="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
+name: quest-passthrough-camera-capture
+description: Use when reading Meta Quest Passthrough Camera Access (PCA) frames into a Unity texture — freezing a room snapshot, feeding a shader, or piping camera pixels to generation/inference — especially when the feed's lifetime, permission gating, color space, or a blocking readback is in play.
+license: MIT
+tags: [unity, quest, passthrough, pca, mixed-reality, meta-xr, rendertexture, shader]
+agents: [claude-code, codex]
+category: xr
+metadata:
+  version: &quot;1.0.0&quot;
+capabilities:
+  network: false
+  filesystem: readwrite
+  tools: [Read, Edit, Write]
+requires-secrets: []
+resources:
+  - path: story.md
+    type: file
+---
+
+# Reading passthrough camera frames on Quest
+
+`PassthroughCameraAccess` (Meta XR Core / MRUK) hands you the headset's real
+camera feed. It is a native-written texture owned by a component with its own
+lifecycle — treat it as a borrowed handle, never as an asset.
+
+## Never bind the feed's texture to a renderer
+
+`GetTexture()` returns the texture the feed writes into from the render thread
+and stops writing the moment the feed is disabled. Anything that disables the
+feed — a controller's `OnDisable`, a withdrawn permission, a torn-down scene —
+leaves a bound quad showing a live room that freezes, goes black, or references
+a destroyed native handle, depending on timing.
+
+Blit into a `RenderTexture` **you** allocate and release:
+
+```csharp
+_target = new RenderTexture(source.width, source.height, 0, source.graphicsFormat);
+Graphics.Blit(source, _target);
+```
+
+Sizing and format both matter:
+
+- Size from the source texture each time, not once at startup.
+  `CurrentResolution` is what the device *granted*, not what you requested, and
+  it can differ from the request or change mid-session.
+- Match `source.graphicsFormat`. The feed is `R8G8B8A8_SRGB`; blitting into a
+  linear target darkens the whole image subtly enough to read as &quot;the capture
+  is murky&quot; rather than as a color-space bug.
+
+## Guard every access on `enabled &amp;&amp; IsPlaying`
+
+`GetTexture()` internally validates state and **logs an error** when the
+component is disabled or unpermitted. An unguarded per-frame call produces a
+per-frame error line and returns null. Check `feed.enabled &amp;&amp; feed.IsPlaying`
+first.
+
+## Never call `GetColors()` in a frame path
+
+It is `AsyncGPUReadback.RequestIntoNativeArray(...).WaitForCompletion()` — a
+blocking stall, and its own docs say so. If pixels must reach the CPU, issue a
+non-blocking `AsyncGPUReadback` and consume it a frame or more later. For
+display or shader input, the pixels never need to leave the GPU at all.
+
+## Capture continuously, freeze by stopping
+
+When you want a frame at a specific moment (an entry, a trigger, a gesture),
+do not capture *at* that moment — allocation plus copy on the one frame the
+user is watching is the worst possible placement. Instead blit on a slow
+cadence beforehand into a texture nothing samples, and on the trigger simply
+stop blitting. The last frame taken becomes the frozen one.
+
+The freeze then has no separate flag to fall out of sync with: not capturing
+*is* frozen.
+
+## Do not create a second feed
+
+If anything else in the project already runs `PassthroughCameraAccess`
+components (a stereo lens, a CV pipeline), find and read the existing one
+rather than adding your own — they contend for the same camera. Search the
+scene with a bounded retry; the feed may not exist on the frame your component
+lands, because composition is often permission-gated.
+
+## Design for the feed being absent
+
+PCA is device-only and permission-gated. In the Editor, in tests, on an
+unsupported headset, or after a denied camera permission there is simply no
+feed. That path must be a designed outcome with a bundled fallback asset — not
+an error state — because it is the path every non-device run takes.
+
+Keep &quot;has a target&quot; and &quot;has a frame&quot; as separate questions. An
+allocated-but-never-blitted `RenderTexture` is a perfectly valid `Texture` full
+of nothing, and preferring it over a fallback turns every permission-denied
+session into a black rectangle.
+
+## What testing can and cannot reach
+
+Extract the copy into a source-agnostic method (`LatchFrom(Texture)`) so an
+ordinary `Texture2D` can stand in for the feed. That gives real coverage of
+sizing, creation, release, and whether the blit moves pixels — assert a known
+color reads back from the target, because a latch that sizes perfectly and
+copies nothing looks identical to a working one from every angle except the
+user's.
+
+What no desktop test can answer: **whether the live frame arrives upright.**
+The feed is native-written and `Graphics.Blit` follows the platform's
+texture-origin convention, which a `Texture2D` stand-in gets right for reasons
+a native handle may not. Put &quot;is it flipped or mirrored, and on which axis?&quot; on
+the device checklist explicitly.
+
+## Related
+
+`OVRPassthroughLayer.textureOpacity` dims what the *wearer sees* through the
+compositor. It does not affect the raw PCA feed at all — a frame captured while
+the passthrough layer is fully dimmed still shows the lit room.
+</code></pre></section>
       </div>
     </section>
   </main>
@@ -97,6 +218,13 @@
           var p=b.textContent;b.textContent='copied';b.classList.add('copied');
           setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
         }catch(_){b.textContent='failed'}
+      });
+      document.addEventListener('click',function(e){
+        var tab=e.target.closest('[data-install-tab]');if(!tab)return;
+        var card=tab.closest('[data-install-mode]');if(!card)return;
+        var mode=tab.getAttribute('data-install-tab');card.setAttribute('data-install-mode',mode);
+        card.querySelectorAll('[data-install-tab]').forEach(function(button){button.setAttribute('aria-pressed',String(button===tab))});
+        card.querySelectorAll('[data-install-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-install-panel')!==mode});
       });
     })();
   </script>

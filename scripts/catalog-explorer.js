@@ -1,4 +1,6 @@
 const RESOURCE_VALUES = new Set(["yes", "none"]);
+const SORT_VALUES = new Set(["referenced", "recent", "name"]);
+const VIEW_VALUES = new Set(["grid", "list"]);
 
 export function parseExplorerState(input = "") {
   const params = input instanceof URLSearchParams
@@ -6,12 +8,17 @@ export function parseExplorerState(input = "") {
     : new URLSearchParams(String(input).replace(/^.*\?/, ""));
   const featured = params.get("featured");
   const resources = params.get("resources") || "";
+  const sort = params.get("sort") || "referenced";
+  const view = params.get("view") || "grid";
   return {
     q: (params.get("q") || "").trim(),
     category: (params.get("category") || "").trim(),
     agent: (params.get("agent") || "").trim(),
     featured: featured === "1" || featured === "true" || featured === "on",
     resources: RESOURCE_VALUES.has(resources) ? resources : "",
+    source: (params.get("source") || "").trim(),
+    sort: SORT_VALUES.has(sort) ? sort : "referenced",
+    view: VIEW_VALUES.has(view) ? view : "grid",
   };
 }
 
@@ -19,10 +26,13 @@ export function serializeExplorerState(state = {}, input = "") {
   const params = input instanceof URLSearchParams
     ? new URLSearchParams(input)
     : new URLSearchParams(String(input).replace(/^.*\?/, ""));
-  ["q", "category", "agent", "featured", "resources", "skill"].forEach((key) => params.delete(key));
+  ["q", "category", "agent", "featured", "resources", "source", "sort", "view", "skill"].forEach((key) => params.delete(key));
   if (state.q?.trim()) params.set("q", state.q.trim());
   if (state.category) params.set("category", state.category);
   if (state.agent) params.set("agent", state.agent);
+  if (state.source) params.set("source", state.source);
+  if (state.sort && state.sort !== "referenced") params.set("sort", state.sort);
+  if (state.view && state.view !== "grid") params.set("view", state.view);
   if (state.featured) params.set("featured", "1");
   if (RESOURCE_VALUES.has(state.resources)) params.set("resources", state.resources);
   const query = params.toString();
@@ -44,16 +54,31 @@ export function filterSkills(skills, state = {}) {
     if (state.featured && !skill.featured) return false;
     if (state.resources === "yes" && !(skill.resourceCount > 0)) return false;
     if (state.resources === "none" && skill.resourceCount !== 0) return false;
+    if (state.source && (skill.source || skill.provenance || "") !== state.source) return false;
     return true;
   });
+}
+
+export function sortSkills(skills, sort = "referenced") {
+  const sorted = [...skills];
+  const compareName = (a, b) => String(a.title || a.name || "").localeCompare(String(b.title || b.name || ""), undefined, { sensitivity: "base" });
+  if (sort === "name") return sorted.sort(compareName);
+  if (sort === "recent") {
+    return sorted.sort((a, b) => String(b.firstUsed || "").localeCompare(String(a.firstUsed || "")) || compareName(a, b));
+  }
+  return sorted.sort((a, b) => (b.references || 0) - (a.references || 0) || compareName(a, b));
 }
 
 export function normalizeExplorerState(skills, state = {}) {
   const categories = new Set(skills.map((skill) => skill.category).filter(Boolean));
   const agents = new Set(skills.flatMap((skill) => skill.agents || []).filter(Boolean));
+  const sources = new Set(skills.map((skill) => skill.source || skill.provenance).filter(Boolean));
   const normalized = { ...state };
   if (Object.hasOwn(state, "category")) normalized.category = categories.has(state.category) ? state.category : "";
   if (Object.hasOwn(state, "agent")) normalized.agent = agents.has(state.agent) ? state.agent : "";
+  if (Object.hasOwn(state, "source")) normalized.source = sources.has(state.source) ? state.source : "";
+  if (Object.hasOwn(state, "sort")) normalized.sort = SORT_VALUES.has(state.sort) ? state.sort : "referenced";
+  if (Object.hasOwn(state, "view")) normalized.view = VIEW_VALUES.has(state.view) ? state.view : "grid";
   return normalized;
 }
 
@@ -161,14 +186,19 @@ function initExplorer() {
     agent: root.querySelector("[name=agent]"),
     featured: root.querySelector("[name=featured]"),
     resources: root.querySelector("[name=resources]"),
+    source: root.querySelector("[name=source]"),
   };
+  const sortButtons = [...root.querySelectorAll("[data-explorer-sort]")];
+  const viewButtons = [...root.querySelectorAll("[data-explorer-view]")];
   const form = root.querySelector("form");
   const count = root.querySelector("[data-explorer-count]");
   const results = root.querySelector("[data-explorer-results]");
   const categories = [...new Set(skills.map((skill) => skill.category).filter(Boolean))].sort();
   const agents = [...new Set(skills.flatMap((skill) => skill.agents || []).filter(Boolean))].sort();
+  const sources = [...new Set(skills.map((skill) => skill.source || skill.provenance).filter(Boolean))].sort();
   categories.forEach((value) => option(controls.category, value, value));
   agents.forEach((value) => option(controls.agent, value, value));
+  sources.forEach((value) => option(controls.source, value, value));
 
   const initialState = parseExplorerState(window.location.search);
   let state = initialState;
@@ -179,6 +209,9 @@ function initExplorer() {
       agent: controls.agent.value,
       featured: controls.featured.checked,
       resources: controls.resources.value,
+      source: controls.source.value,
+      sort: state.sort,
+      view: state.view,
     };
   }
   function applyControls() {
@@ -187,6 +220,15 @@ function initExplorer() {
     controls.agent.value = state.agent;
     controls.featured.checked = state.featured;
     controls.resources.value = state.resources;
+    controls.source.value = state.source;
+    sortButtons.forEach((button) => {
+      const selected = button.dataset.explorerSort === state.sort;
+      button.setAttribute("aria-pressed", String(selected));
+    });
+    viewButtons.forEach((button) => {
+      const selected = button.dataset.explorerView === state.view;
+      button.setAttribute("aria-pressed", String(selected));
+    });
   }
   function updateUrl() {
     state = normalizeExplorerState(skills, state);
@@ -194,9 +236,10 @@ function initExplorer() {
     history.replaceState(null, "", `${window.location.pathname}${query}`);
   }
   function render() {
-    const visible = filterSkills(skills, state);
+    const visible = sortSkills(filterSkills(skills, state), state.sort);
     state = normalizeExplorerState(skills, state);
-    count.textContent = `${visible.length} of ${skills.length} skills`;
+    count.textContent = `Showing ${visible.length} of ${skills.length} skills`;
+    results.dataset.view = state.view;
     results.replaceChildren();
     if (!visible.length) {
       const empty = document.createElement("p");
@@ -216,6 +259,18 @@ function initExplorer() {
     change();
   });
   Object.values(controls).forEach((control) => control.addEventListener(control === controls.q ? "input" : "change", change));
+  sortButtons.forEach((button) => button.addEventListener("click", () => {
+    state = { ...readControls(), sort: button.dataset.explorerSort, view: state.view };
+    updateUrl();
+    applyControls();
+    render();
+  }));
+  viewButtons.forEach((button) => button.addEventListener("click", () => {
+    state = { ...readControls(), sort: state.sort, view: button.dataset.explorerView };
+    updateUrl();
+    applyControls();
+    render();
+  }));
   state = normalizeExplorerState(skills, state);
   applyControls();
   render();

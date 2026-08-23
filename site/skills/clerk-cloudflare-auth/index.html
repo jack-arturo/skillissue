@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/clerk-cloudflare-auth/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.64dc30fbd271.css">
+<link rel="stylesheet" href="/assets/site.5ccb0703f30d.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -41,35 +41,134 @@
 
     <section class="skill-package">
       <div class="wrap">
+        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>house</span><span>/</span><span>clerk-cloudflare-auth</span></p>
         <div class="skill-package-top">
           <div class="skill-package-intro">
             <span class="explorer-mark" aria-hidden="true">CC</span>
-            <div><p class="explorer-kicker">house package · auth</p><h1>Clerk + Cloudflare Auth</h1><p class="lede">A public integration guide for adding Clerk identity to Cloudflare Pages or Workers without leaking deployment credentials.</p></div>
+            <div><p class="explorer-kicker">Hosted skill bundle · house · auth</p><h1>Clerk + Cloudflare Auth</h1><p class="lede">A public integration guide for adding Clerk identity to Cloudflare Pages or Workers without leaking deployment credentials.</p></div>
           </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles</code>
-            <div><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles">Copy install</button><a class="btn btn-ghost" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener">Raw</a></div>
+          <aside class="skill-install-card" data-install-mode="cli">
+            <span>Pinned install</span>
+            <div class="install-tabs" role="group" aria-label="Install method"><button type="button" data-install-tab="cli" aria-pressed="true">CLI</button><button type="button" data-install-tab="mcp" aria-pressed="false">MCP</button></div>
+            <div class="install-command" data-install-panel="cli"><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles</code><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md --sync-profiles">Copy install</button></div>
+            <div class="install-command" data-install-panel="mcp" hidden><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md&quot; })</code><button type="button" class="btn btn-primary" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/clerk-cloudflare-auth/SKILL.md&quot; })">Copy MCP call</button></div>
+            <div class="install-links"><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener">Raw SKILL.md</a><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener">Source</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
           <div><dt>Version</dt><dd>v1.1.0</dd></div>
-          <div><dt>Provenance</dt><dd>house</dd></div>
+          <div><dt>License</dt><dd>MIT</dd></div>
           <div><dt>Targets</dt><dd>claude-code, codex, autojack</dd></div>
-          <div><dt>Bundle</dt><dd>1 files · 0 resources</dd></div>
+          <div><dt>Bundle</dt><dd>1 files · 0 resources · 4.7 KB</dd></div>
         </dl>
         <div class="meta skill-meta"><span class="tag">clerk</span><span class="tag">cloudflare</span><span class="tag">auth</span><span class="badge">house</span></div>
-        <section class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package resources</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener">View source</a></div><div class="skill-resource-grid"><p class="muted">This package is a single SKILL.md with no bundled resources.</p></div></section>
+        <nav class="package-nav" aria-label="Package sections"><a href="#overview">Overview</a><a href="#bundle">Bundle</a><a href="#permissions">Permissions</a><a href="#provenance">Provenance</a><a href="#source">Source</a></nav>
       </div>
     </section>
     <section>
       <div class="wrap prose">
-<h2>Why</h2>
+        <section class="package-section" id="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why</h2>
 <p>Identity code gets tangled quickly when frontend state, edge verification, and billing records each invent their own user model.</p>
 <h2>How</h2>
 <p>Keep Clerk responsible for identity, verify sessions at the edge, and keep provider values in environment variables managed outside the repository.</p>
 <h2>Related</h2>
-<p>Use <a href="/skills/cloudflare-commerce-deploy/">Cloudflare Commerce Deploy</a> for deployment wiring and <a href="/skills/stripe-commerce-checkout/">Stripe Commerce Checkout</a> for billing.</p>
-<h2>Related</h2><div class="meta"><a class="tag" href="/skills/cloudflare-commerce-deploy/">cloudflare-commerce-deploy</a> <a class="tag" href="/skills/stripe-commerce-checkout/">stripe-commerce-checkout</a></div>
+<p>Use <a href="/skills/cloudflare-commerce-deploy/">Cloudflare Commerce Deploy</a> for deployment wiring and <a href="/skills/stripe-commerce-checkout/">Stripe Commerce Checkout</a> for billing.</p></div></section>
+        <section class="package-section" id="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package files</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener">View source</a></div><p class="muted">0 bundled resources.</p><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener"><code>SKILL.md</code><span>skill definition · 3.8 KB</span></a></div></div></section>
+        <section class="package-section" id="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">Requires: name: CLERK_SECRET_KEY</p></section>
+        <section class="package-section" id="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are all linked here before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex, autojack</dd></div></dl><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/cloudflare-commerce-deploy/">cloudflare-commerce-deploy</a> <a class="tag" href="/skills/stripe-commerce-checkout/">stripe-commerce-checkout</a></div></section>
+        <section class="package-section" id="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
+name: clerk-cloudflare-auth
+description: Add Clerk authentication to Cloudflare Pages or Workers apps with protected APIs, session-aware UI, and optional application-side user mapping.
+license: MIT
+tags: [clerk, cloudflare, auth, pages, workers, vite, d1]
+agents: [claude-code, codex, autojack]
+category: auth
+metadata:
+  version: &quot;1.1.0&quot;
+capabilities:
+  network: true
+  filesystem: readwrite
+  tools: [Bash, Read, Edit]
+requires-secrets:
+  - name: CLERK_SECRET_KEY
+    description: Server-side Clerk credential, configured through the deployment platform.
+    required: true
+resources:
+  - path: story.md
+    type: file
+---
+
+# Clerk + Cloudflare Auth
+
+Use this skill when a Cloudflare Pages or Workers application needs Clerk login,
+session-aware UI, protected API routes, account records, or billing-linked user
+mapping. Clerk should own identity; the application should own its domain data
+and any billing records.
+
+## Secret boundary
+
+Keep provider values in the platform's environment-variable or secret manager.
+Do not commit them, paste them into chat, or invent a local credential-store
+format. A typical deployment needs these names:
+
+```text
+CLERK_SECRET_KEY=&lt;managed server secret&gt;
+VITE_CLERK_PUBLISHABLE_KEY=&lt;managed build variable&gt;
+```
+
+The publishable key is intended for the browser but should still be supplied by
+the build environment. `CLERK_SECRET_KEY` belongs only in server-side runtime
+configuration. For local development, use ignored environment files and do not
+read or print their contents unless the user explicitly asks.
+
+## Integration shape
+
+1. Inspect the application: framework, Pages Functions or Workers entry point,
+   existing session model, public/protected routes, and application records
+   keyed to users or accounts.
+2. Add Clerk's framework package in the client and Clerk's server package where
+   the edge runtime verifies tokens. Follow current official Clerk and
+   Cloudflare documentation for the package-specific initialization API.
+3. Initialize the client from `VITE_CLERK_PUBLISHABLE_KEY`. Render a clear
+   signed-out fallback if it is absent in a local build.
+4. Verify the session token at every protected Pages Function or Worker route;
+   never treat client-side visibility as authorization.
+5. Map the verified Clerk user or organization ID to D1/application records
+   only where the product needs internal data. Keep Stripe customer and
+   subscription truth in the billing layer rather than duplicating it in
+   identity claims.
+
+## Frontend rules
+
+- Prefer the framework's reactive Clerk APIs over polling global state.
+- Request a fresh token immediately before authenticated API calls.
+- Guard against a late anonymous response replacing a newer signed-in state.
+- Configure Clerk appearance through its supported configuration object, not
+  brittle global CSS overrides.
+- Keep static marketing pages static; add identity only where it is needed.
+
+## Edge authorization
+
+At the server boundary, extract and verify the Clerk session token using the
+official backend SDK. Return `401` for a missing/invalid session and `403` for
+an authenticated user without the required application entitlement. Make route
+policy explicit so public webhooks and health endpoints do not accidentally
+inherit account-only checks.
+
+## Verification
+
+Before deployment, test:
+
+- Signed-out visitors can reach public pages and cannot call protected APIs.
+- A signed-in test user receives the expected account data.
+- Expired or malformed tokens are rejected by the edge route.
+- Local and preview builds receive the appropriate Clerk environment values.
+- Any D1 user mapping is idempotent and uses the verified Clerk identifier.
+
+Use [Cloudflare Commerce Deploy](../cloudflare-commerce-deploy/story.md) for
+provider configuration and [Stripe Commerce Checkout](../stripe-commerce-checkout/story.md)
+when authentication gates paid product access.
+</code></pre></section>
       </div>
     </section>
   </main>
@@ -97,6 +196,13 @@
           var p=b.textContent;b.textContent='copied';b.classList.add('copied');
           setTimeout(function(){b.textContent=p;b.classList.remove('copied')},1200);
         }catch(_){b.textContent='failed'}
+      });
+      document.addEventListener('click',function(e){
+        var tab=e.target.closest('[data-install-tab]');if(!tab)return;
+        var card=tab.closest('[data-install-mode]');if(!card)return;
+        var mode=tab.getAttribute('data-install-tab');card.setAttribute('data-install-mode',mode);
+        card.querySelectorAll('[data-install-tab]').forEach(function(button){button.setAttribute('aria-pressed',String(button===tab))});
+        card.querySelectorAll('[data-install-panel]').forEach(function(panel){panel.hidden=panel.getAttribute('data-install-panel')!==mode});
       });
     })();
   </script>
