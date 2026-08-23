@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   filterSkills,
+  normalizeExplorerState,
   parseExplorerState,
   serializeExplorerState,
 } from "../scripts/catalog-explorer.js";
@@ -64,4 +65,16 @@ test("Explorer query state parses and serializes only meaningful filters", () =>
     "?q=Chrome+forms&category=browser&agent=codex&featured=1&resources=yes&skill=browser-hand",
   );
   assert.equal(serializeExplorerState(parseExplorerState("?featured=no&resources=nope")), "");
+  assert.equal(parseExplorerState("?featured=on").featured, true);
+});
+
+test("Explorer state clears or selects a result before it reaches the URL", () => {
+  assert.deepEqual(
+    normalizeExplorerState(skills, { category: "git", skill: "browser-hand" }),
+    { category: "git", skill: "commit-message" },
+  );
+  assert.deepEqual(
+    normalizeExplorerState(skills, { q: "does-not-exist", skill: "browser-hand" }),
+    { q: "does-not-exist", skill: "" },
+  );
 });

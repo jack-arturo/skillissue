@@ -6,8 +6,8 @@
 - Home: https://skillissue.sh/
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
-- Source packages: https://github.com/jack-arturo/skillissue/tree/main/skills
-- Install pin (this build): f0296c2db76a3e5d5849b055c185b49199873754
+- Source packages: https://github.com/jack-arturo/skillissue/tree/f0296c2db76a3e5d5849b055c185b49199873754/skills
+- Package-source install pin: f0296c2db76a3e5d5849b055c185b49199873754
 
 ## Install
 ```

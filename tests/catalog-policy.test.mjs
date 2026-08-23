@@ -75,23 +75,39 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.equal(skillDirs.length, 48);
 
     const metadata = JSON.parse(fs.readFileSync(path.join(siteDir, "skills.json"), "utf-8"));
+    const report = JSON.parse(fs.readFileSync(reportPath, "utf-8"));
+    const packageSourcePin = execFileSync("git", ["log", "-1", "--format=%H", "--", "skills"], {
+      cwd: root,
+      encoding: "utf8",
+    }).trim();
+    const generatedHead = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim();
     assert.equal(metadata.publicCount, 48);
     assert.equal(metadata.skills.length, 48);
+    assert.equal(metadata.packageSourcePin, packageSourcePin);
+    assert.equal(report.packageSourcePin, packageSourcePin);
+    assert.notEqual(packageSourcePin, generatedHead, "package source pin is not the generator-only output commit");
     const browserHand = metadata.skills.find((skill) => skill.name === "browser-hand");
     assert.ok(browserHand);
     for (const field of [
       "summary", "description", "storyUrl", "category", "tags", "agents",
       "featured", "resourceCount", "runnable", "cliInstall", "mcpInstall",
-      "sourceUrl", "buildPin",
+      "sourceUrl", "packageSourcePin",
     ]) assert.notEqual(browserHand[field], undefined, `metadata includes ${field}`);
+    assert.match(browserHand.cliInstall, new RegExp(`@${packageSourcePin}:skills/browser-hand/SKILL\\.md`));
+    assert.match(browserHand.sourceUrl, new RegExp(`/blob/${packageSourcePin}/skills/browser-hand/SKILL\\.md`));
 
     const explorer = fs.readFileSync(path.join(siteDir, "skills", "index.html"), "utf-8");
     assert.match(explorer, /data-catalog-explorer/);
     assert.match(explorer, /id="explorer-data" type="application\/json"/);
     assert.match(explorer, /src="\/assets\/catalog-explorer\.js"/);
+    assert.doesNotMatch(explorer, /role="listbox"/);
     assert.match(explorer, /href="\/skills\/browser-hand\/"/);
     assert.match(explorer, /\\u003c/);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", "catalog-explorer.js")), true);
+    for (const asset of [
+      "apple-touch-icon.png", "favicon-32.png", "favicon-512.jpg",
+      "favicon-512.png", "favicon.svg", "og.png",
+    ]) assert.equal(fs.existsSync(path.join(siteDir, "assets", asset)), true, `${asset} is generated from source`);
 
     const redirects = fs.readFileSync(path.join(siteDir, "_redirects"), "utf-8");
     assert.match(redirects, /^\/skills\/dev-browser\/ \/skills\/browser-hand\/ 301$/m);

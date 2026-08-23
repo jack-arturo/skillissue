@@ -46,7 +46,7 @@
 <h2>2. Add a skill from this repo</h2>
 <p>Every public skill page has a copy button. Pattern:</p>
 <pre><code>autovault add jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md --sync-profiles</code></pre>
-<p>The <code>@sha</code> pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
+<p>The <code>@sha</code> pin is the last committed package-source revision, so installs stay reproducible even when the site itself is rebuilt later. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
 <h2>3. What AutoVault does</h2>
 <ol>
 <li>Fetches the skill bundle at that commit  </li>

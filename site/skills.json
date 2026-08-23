@@ -3,8 +3,8 @@
   "url": "https://skillissue.sh",
   "description": "Jack Arturo's personal/agent skills collection — packages on GitHub, install via AutoVault.",
   "updated": "2026-08-23",
-  "installPin": "f0296c2db76a3e5d5849b055c185b49199873754",
-  "installPinShort": "f0296c2",
+  "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754",
+  "packageSourcePinShort": "f0296c2",
   "repo": "jack-arturo/skillissue",
   "publicCount": 48,
   "install": {
@@ -48,7 +48,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/long-haul-parallel-repair/SKILL.md",
       "resourceCount": 1,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "skill-author",
@@ -76,7 +76,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/skill-author/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "automem",
@@ -104,7 +104,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/automem/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "autovault-skill",
@@ -131,7 +131,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-skill/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "entity-dossier",
@@ -158,7 +158,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/entity-dossier/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-lead-capture",
@@ -188,7 +188,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-lead-capture/SKILL.md",
       "resourceCount": 22,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-ops",
@@ -218,7 +218,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-ops/SKILL.md",
       "resourceCount": 1,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-commerce-deploy",
@@ -247,7 +247,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-commerce-deploy/SKILL.md",
       "resourceCount": 4,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cloudflare-emdash-cms-deploy",
@@ -276,7 +276,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cloudflare-emdash-cms-deploy/SKILL.md",
       "resourceCount": 6,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "phala-gpu-tee-deploy",
@@ -306,7 +306,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/phala-gpu-tee-deploy/SKILL.md",
       "resourceCount": 2,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "pirsch-analytics-bootstrap",
@@ -334,7 +334,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/pirsch-analytics-bootstrap/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "babysit",
@@ -363,7 +363,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/babysit/SKILL.md",
       "resourceCount": 4,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "commit-message",
@@ -391,7 +391,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/commit-message/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "browser-hand",
@@ -422,7 +422,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/browser-hand/SKILL.md",
       "resourceCount": 6,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "flashspace",
@@ -450,7 +450,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/flashspace/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "raycast",
@@ -478,7 +478,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/raycast/SKILL.md",
       "resourceCount": 3,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "awtrix-board",
@@ -506,7 +506,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/awtrix-board/SKILL.md",
       "resourceCount": 1,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "home-assistant-operator",
@@ -533,7 +533,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/home-assistant-operator/SKILL.md",
       "resourceCount": 1,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "resend-cli",
@@ -559,7 +559,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/resend-cli/SKILL.md",
       "resourceCount": 15,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "triage-autohub-runtime",
@@ -588,7 +588,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/triage-autohub-runtime/SKILL.md",
       "resourceCount": 2,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "mcp-builder",
@@ -614,7 +614,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-builder/SKILL.md",
       "resourceCount": 9,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "mcp-registry-maintainer",
@@ -642,7 +642,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/mcp-registry-maintainer/SKILL.md",
       "resourceCount": 1,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "jacks-writing-style",
@@ -671,7 +671,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/jacks-writing-style/SKILL.md",
       "resourceCount": 4,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "brand-bible-author",
@@ -700,7 +700,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/brand-bible-author/SKILL.md",
       "resourceCount": 11,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "docs-screenshot-packager",
@@ -728,7 +728,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/docs-screenshot-packager/SKILL.md",
       "resourceCount": 8,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "html-asset-renderer",
@@ -756,7 +756,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/html-asset-renderer/SKILL.md",
       "resourceCount": 1,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "midjourney-iteration",
@@ -785,7 +785,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/midjourney-iteration/SKILL.md",
       "resourceCount": 7,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "tui-design",
@@ -813,7 +813,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/tui-design/SKILL.md",
       "resourceCount": 2,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "bubble-tea-tui-builder",
@@ -842,7 +842,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/bubble-tea-tui-builder/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "cli-installer-ux",
@@ -870,7 +870,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/cli-installer-ux/SKILL.md",
       "resourceCount": 4,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "context-engineering-audit",
@@ -899,7 +899,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/context-engineering-audit/SKILL.md",
       "resourceCount": 3,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "clerk-cloudflare-auth",
@@ -928,7 +928,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-auth/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "autovault-brand-system",
@@ -957,7 +957,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/autovault-brand-system/SKILL.md",
       "resourceCount": 10,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "clerk-cloudflare-commerce-bootstrap",
@@ -986,7 +986,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/clerk-cloudflare-commerce-bootstrap/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "ci-cost-audit",
@@ -1014,7 +1014,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/ci-cost-audit/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "repo-demo-video-director",
@@ -1043,7 +1043,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-director/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "repo-demo-video-publisher",
@@ -1072,7 +1072,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/repo-demo-video-publisher/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "video-toolkit",
@@ -1102,7 +1102,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/video-toolkit/SKILL.md",
       "resourceCount": 5,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "stripe-commerce-checkout",
@@ -1131,7 +1131,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/stripe-commerce-checkout/SKILL.md",
       "resourceCount": 2,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "award-travel-research",
@@ -1159,7 +1159,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/award-travel-research/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "unity-ai-collaboration",
@@ -1188,7 +1188,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-ai-collaboration/SKILL.md",
       "resourceCount": 7,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "elevenlabs-automem-memory",
@@ -1217,7 +1217,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/elevenlabs-automem-memory/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "building-emdash-site",
@@ -1247,7 +1247,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/building-emdash-site/SKILL.md",
       "resourceCount": 5,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "creating-plugins",
@@ -1277,7 +1277,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/creating-plugins/SKILL.md",
       "resourceCount": 7,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "emdash-cli",
@@ -1307,7 +1307,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/emdash-cli/SKILL.md",
       "resourceCount": 1,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "wordpress-theme-to-emdash",
@@ -1337,7 +1337,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/wordpress-theme-to-emdash/SKILL.md",
       "resourceCount": 29,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "quest-passthrough-camera-capture",
@@ -1365,7 +1365,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/quest-passthrough-camera-capture/SKILL.md",
       "resourceCount": 0,
       "runnable": false,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     },
     {
       "name": "unity-quest-build",
@@ -1394,7 +1394,7 @@
       "installId": "jack-arturo/skillissue@f0296c2db76a3e5d5849b055c185b49199873754:skills/unity-quest-build/SKILL.md",
       "resourceCount": 5,
       "runnable": true,
-      "buildPin": "f0296c2db76a3e5d5849b055c185b49199873754"
+      "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754"
     }
   ]
 }

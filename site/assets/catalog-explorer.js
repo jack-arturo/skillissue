@@ -10,7 +10,7 @@ export function parseExplorerState(input = "") {
     q: (params.get("q") || "").trim(),
     category: (params.get("category") || "").trim(),
     agent: (params.get("agent") || "").trim(),
-    featured: featured === "1" || featured === "true",
+    featured: featured === "1" || featured === "true" || featured === "on",
     resources: RESOURCE_VALUES.has(resources) ? resources : "",
     skill: (params.get("skill") || "").trim(),
   };
@@ -45,6 +45,16 @@ export function filterSkills(skills, state = {}) {
     if (state.resources === "none" && skill.resourceCount !== 0) return false;
     return true;
   });
+}
+
+export function normalizeExplorerState(skills, state = {}) {
+  const visible = filterSkills(skills, state);
+  return {
+    ...state,
+    skill: visible.some((skill) => skill.name === state.skill)
+      ? state.skill
+      : (visible[0]?.name || ""),
+  };
 }
 
 function option(select, value, label) {
@@ -82,9 +92,11 @@ function initExplorer() {
     featured: root.querySelector("[name=featured]"),
     resources: root.querySelector("[name=resources]"),
   };
+  const form = root.querySelector("form");
   const count = root.querySelector("[data-explorer-count]");
   const results = root.querySelector("[data-explorer-results]");
   const detail = root.querySelector("[data-explorer-detail]");
+  results.setAttribute("role", "listbox");
   const categories = [...new Set(skills.map((skill) => skill.category).filter(Boolean))].sort();
   const agents = [...new Set(skills.flatMap((skill) => skill.agents || []).filter(Boolean))].sort();
   categories.forEach((value) => option(controls.category, value, value));
@@ -109,6 +121,7 @@ function initExplorer() {
     controls.resources.value = state.resources;
   }
   function updateUrl() {
+    state = normalizeExplorerState(skills, state);
     const query = serializeExplorerState(state);
     history.replaceState(null, "", `${window.location.pathname}${query}`);
   }
@@ -146,7 +159,7 @@ function initExplorer() {
   }
   function render() {
     const visible = filterSkills(skills, state);
-    if (!visible.some((skill) => skill.name === state.skill)) state.skill = visible[0]?.name || "";
+    state = normalizeExplorerState(skills, state);
     const selected = skills.find((skill) => skill.name === state.skill);
     count.textContent = `${visible.length} of ${skills.length} skills`;
     results.replaceChildren();
@@ -198,6 +211,10 @@ function initExplorer() {
     updateUrl();
     render();
   }
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    change();
+  });
   Object.values(controls).forEach((control) => control.addEventListener(control === controls.q ? "input" : "change", change));
   applyControls();
   render();

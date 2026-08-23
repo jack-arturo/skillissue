@@ -21,7 +21,7 @@ title: Changelog
 ## 0.3.0 — 2026-07-20
 
 - GitHub SSOT: packages under `skills/<name>/` (SKILL.md + story.md).
-- AutoVault install rows (CLI + MCP) pinned to build commit.
+- AutoVault install rows (CLI + MCP) pinned to the immutable package-source commit.
 - Email list: D1 LEAD_DB + Resend.
 
 ## 0.2.0 — 2026-07-20

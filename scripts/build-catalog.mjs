@@ -88,6 +88,22 @@ function gitSha() {
   }
 }
 
+/**
+ * Install URLs must name an immutable commit that contains the package tree,
+ * not whichever later commit happened to regenerate site output.
+ */
+function packageSourceSha() {
+  try {
+    const sourcePin = execSync("git log -1 --format=%H -- skills", {
+      cwd: root,
+      encoding: "utf8",
+    }).trim();
+    return sourcePin || gitSha();
+  } catch {
+    return gitSha();
+  }
+}
+
 function parseFrontmatter(text) {
   if (!text.startsWith("---")) return { fm: {}, body: text };
   const end = text.indexOf("\n---", 3);
@@ -536,8 +552,8 @@ ${body}
 // --- load skills from repo tree ---
 const deny = loadDenylist();
 const publicationRegistry = loadPublicationRegistry();
-const sha = gitSha();
-const shortSha = sha.slice(0, 7);
+const packageSourcePin = packageSourceSha();
+const shortPackageSourcePin = packageSourcePin.slice(0, 7);
 const publicSkills = [];
 const bundleSnapshots = [];
 const errors = [];
@@ -605,10 +621,10 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     if (strict) errors.push(`public skill lacks story narrative: ${name}`);
   }
 
-  const installId = `${REPO}@${sha}:skills/${name}/SKILL.md`;
+  const installId = `${REPO}@${packageSourcePin}:skills/${name}/SKILL.md`;
   const cliInstall = `autovault add ${installId} --sync-profiles`;
   const mcpInstall = `add_skill({ source: "github", identifier: "${installId}" })`;
-  const sourceUrl = `https://github.com/${REPO}/blob/${sha}/skills/${name}/SKILL.md`;
+  const sourceUrl = `https://github.com/${REPO}/blob/${packageSourcePin}/skills/${name}/SKILL.md`;
   const storyUrl = `https://skillissue.sh/skills/${name}/`;
   const bundleFiles = listBundleFiles(dir);
   const resourceFiles = bundleFiles.filter(
@@ -663,10 +679,9 @@ if (strict && errors.length) {
   process.exit(1);
 }
 
-// clean site except assets
+// The output is fully generated: remove stale assets as well as stale pages.
 fs.mkdirSync(siteDir, { recursive: true });
 for (const ent of fs.readdirSync(siteDir, { withFileTypes: true })) {
-  if (ent.name === "assets") continue;
   const p = path.join(siteDir, ent.name);
   if (ent.isDirectory()) fs.rmSync(p, { recursive: true, force: true });
   else fs.unlinkSync(p);
@@ -706,12 +721,12 @@ const skillsJson = {
   description:
     "Jack Arturo's personal/agent skills collection — packages on GitHub, install via AutoVault.",
   updated: new Date().toISOString().slice(0, 10),
-  installPin: sha,
-  installPinShort: shortSha,
+  packageSourcePin,
+  packageSourcePinShort: shortPackageSourcePin,
   repo: REPO,
   publicCount: publicSkills.length,
   install: {
-    autovault: `autovault add ${REPO}@${sha}:skills/<name>/SKILL.md --sync-profiles`,
+    autovault: `autovault add ${REPO}@${packageSourcePin}:skills/<name>/SKILL.md --sync-profiles`,
     bootstrap: "https://autovault.sh",
   },
   featured: publicSkills.filter((s) => s.featured).map((s) => s.name),
@@ -734,7 +749,7 @@ const skillsJson = {
     installId: s.installId,
     resourceCount: s.resourceCount,
     runnable: s.runnable,
-    buildPin: sha,
+    packageSourcePin,
   })),
 };
 fs.writeFileSync(
@@ -757,7 +772,7 @@ for (const s of publicSkills) {
   const body = `
     <section class="hero skill-hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> skill · v${esc(s.version)} · ${esc(s.provenance)} · pin ${esc(shortSha)}</div>
+        <div class="prompt"><span class="dot"></span> skill · v${esc(s.version)} · ${esc(s.provenance)} · package source ${esc(shortPackageSourcePin)}</div>
         <h1><span class="path">${esc(s.name)}</span></h1>
         <p class="lede">${esc(s.summary)}</p>
         <div class="meta" style="margin-bottom:1.25rem">${tags}
@@ -769,7 +784,7 @@ for (const s of publicSkills) {
           <a class="btn btn-ghost" href="https://autovault.dev/quick-start" rel="noopener">Need AutoVault?</a>
         </div>
         <div class="term" style="max-width:48rem">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">install · ${esc(shortSha)}</span></div>
+          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">package-source install · ${esc(shortPackageSourcePin)}</span></div>
           <div class="term-body">
             <div><span class="dim"># CLI (primary)</span></div>
             <div><span class="dim">$</span> <span class="cmd">${esc(s.cliInstall)}</span></div>
@@ -787,7 +802,7 @@ ${s.bodyHtml}
 ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
         <h2>Package</h2>
         <p class="muted">Version <code>${esc(s.version)}</code>
-        · install pin <code>${esc(shortSha)}</code>
+        · package-source pin <code>${esc(shortPackageSourcePin)}</code>
         · SSOT <code>skills/${esc(s.name)}/</code> on GitHub
         ${s.agents?.length ? ` · agents: ${esc((s.agents || []).join(", "))}` : ""}</p>
       </div>
@@ -808,7 +823,7 @@ ${related ? `<h2>Related</h2><div class="meta">${related}</div>` : ""}
 // refines them into a searchable, shareable Explorer.
 fs.mkdirSync(path.join(siteDir, "skills"), { recursive: true });
 const explorerData = {
-  buildPin: sha,
+  packageSourcePin,
   skills: publicSkills.map((s) => ({
     name: s.name,
     title: s.title,
@@ -824,7 +839,7 @@ const explorerData = {
     cliInstall: s.cliInstall,
     mcpInstall: s.mcpInstall,
     sourceUrl: s.sourceUrl,
-    buildPin: sha,
+    packageSourcePin,
   })),
 };
 const fallbackRows = publicSkills.map((s) => `<a class="explorer-result" href="/skills/${esc(s.name)}/">
@@ -841,7 +856,7 @@ fs.writeFileSync(
     path: "/skills/",
     body: `
     <section class="hero catalog-hero"><div class="wrap">
-      <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · pin ${esc(shortSha)}</div>
+      <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · package source ${esc(shortPackageSourcePin)}</div>
       <h1>Skills Explorer</h1>
       <p class="lede">Filter the public shelf, inspect the package, then copy a pinned install. Every result remains a real story page.</p>
     </div></section>
@@ -859,7 +874,7 @@ fs.writeFileSync(
           <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
           <p class="section-note" data-explorer-count aria-live="polite">${publicSkills.length} skills</p>
         </form>
-        <div class="explorer-results" data-explorer-results role="listbox" aria-label="Skill results">${fallbackRows}</div>
+        <div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div>
         <aside class="explorer-detail panel" data-explorer-detail aria-live="polite">
           <h2>${esc(firstSkill.name)}</h2><p>${esc(firstSkill.summary)}</p>
           <a class="btn btn-primary" href="/skills/${esc(firstSkill.name)}/">Read full story</a>
@@ -900,7 +915,7 @@ fs.writeFileSync(
     body: `
     <section class="hero">
       <div class="wrap">
-        <div class="prompt"><span class="dot"></span> live · ${publicSkills.length} public skills · pin ${esc(shortSha)}</div>
+        <div class="prompt"><span class="dot"></span> live · ${publicSkills.length} public skills · package source ${esc(shortPackageSourcePin)}</div>
         <h1><span class="path">skillissue</span>.sh<span class="cursor" aria-hidden="true"></span></h1>
         <p class="lede">
           Jack Arturo’s personal/agent skills —
@@ -923,7 +938,7 @@ fs.writeFileSync(
         <div class="stats">
           <div class="stat"><b>${publicSkills.length}</b><span>public skill pages</span></div>
           <div class="stat"><b>${featured.length}</b><span>featured</span></div>
-          <div class="stat"><b>${esc(shortSha)}</b><span>install pin (this build)</span></div>
+          <div class="stat"><b>${esc(shortPackageSourcePin)}</b><span>package-source install pin</span></div>
         </div>
       </div>
     </section>
@@ -1046,7 +1061,7 @@ Every public skill page has a copy button. Pattern:
 autovault add jack-arturo/skillissue@<sha>:skills/<name>/SKILL.md --sync-profiles
 \`\`\`
 
-The \`@sha\` pin is this site's build commit so installs are reproducible. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.
+The \`@sha\` pin is the last committed package-source revision, so installs stay reproducible even when the site itself is rebuilt later. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.
 
 ## 3. What AutoVault does
 
@@ -1139,7 +1154,7 @@ storyPage(
 ## 0.3.0 — 2026-07-20
 
 - GitHub SSOT: packages under \`skills/<name>/\` (SKILL.md + story.md)
-- AutoVault install rows (CLI + MCP) pinned to build commit
+- AutoVault install rows (CLI + MCP) pinned to the immutable package-source commit
 - Email list: D1 LEAD_DB + Resend
 - Removed typo-domain marketing copy
 
@@ -1163,12 +1178,12 @@ const llms = `# skillissue.sh
 - Home: https://skillissue.sh/
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
-- Source packages: https://github.com/jack-arturo/skillissue/tree/main/skills
-- Install pin (this build): ${sha}
+- Source packages: https://github.com/jack-arturo/skillissue/tree/${packageSourcePin}/skills
+- Package-source install pin: ${packageSourcePin}
 
 ## Install
 \`\`\`
-autovault add jack-arturo/skillissue@${sha}:skills/<name>/SKILL.md --sync-profiles
+autovault add jack-arturo/skillissue@${packageSourcePin}:skills/<name>/SKILL.md --sync-profiles
 \`\`\`
 
 ## Public skills (${publicSkills.length})
@@ -1230,7 +1245,8 @@ fs.writeFileSync(
 );
 
 report.generatedAt = new Date().toISOString();
-report.installPin = sha;
+report.packageSourcePin = packageSourcePin;
+report.packageSourcePinShort = shortPackageSourcePin;
 report.publicSkills = publicSkills.map((s) => s.name);
 if (!process.env.SKILLISSUE_SITE_DIR && !process.env.SKILLISSUE_REPORT_PATH) {
   fs.writeFileSync(
@@ -1250,7 +1266,7 @@ fs.writeFileSync(
 );
 
 console.log(
-  `Built site: ${report.public} public from skills/ · pin ${shortSha}`,
+  `Built site: ${report.public} public from skills/ · package source ${shortPackageSourcePin}`,
 );
 if (report.missingNarrative.length) {
   console.warn("Missing narrative:", report.missingNarrative.join(", "));

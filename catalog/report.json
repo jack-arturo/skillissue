@@ -3,8 +3,9 @@
   "skipped": [],
   "missingNarrative": [],
   "missingSkillMd": [],
-  "generatedAt": "2026-08-23T16:47:57.145Z",
-  "installPin": "f0296c2db76a3e5d5849b055c185b49199873754",
+  "generatedAt": "2026-08-23T16:55:47.965Z",
+  "packageSourcePin": "f0296c2db76a3e5d5849b055c185b49199873754",
+  "packageSourcePinShort": "f0296c2",
   "publicSkills": [
     "long-haul-parallel-repair",
     "skill-author",
