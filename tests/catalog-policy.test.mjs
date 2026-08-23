@@ -252,6 +252,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(babysitPage, /data-package-tab="bundle"/);
     assert.match(babysitPage, /data-package-file="references\/pr-labels\.md"/);
     assert.match(babysitPage, /data-package-preview/);
+    assert.match(babysitPage, /data-package-preview-raw href="\/bundles\/babysit\/SKILL\.md\.txt"/);
     assert.match(babysitPage, /id="bundle"/);
     assert.match(babysitPage, /id="permissions"/);
     assert.match(babysitPage, /id="provenance"/);

@@ -15,6 +15,10 @@ export function packageTabForHash(hash = "", tabs = []) {
   return tabs.includes(id) ? id : "overview";
 }
 
+export function initialBundlePath(files = []) {
+  return files.find((file) => file.path === "SKILL.md")?.path || files[0]?.path || "";
+}
+
 function resourceGroup(filePath = "") {
   if (filePath === "SKILL.md") return "root";
   const group = String(filePath).split("/")[0];
@@ -43,7 +47,7 @@ function initPackageDetail() {
   const tabs = [...root.querySelectorAll("[data-package-tab]")];
   const panels = [...root.querySelectorAll("[data-package-panel]")];
   const preview = root.querySelector("[data-package-preview]");
-  let selectedPath = files[0]?.path || "";
+  let selectedPath = initialBundlePath(files);
   let previewObjectUrl = "";
 
   const setTab = (id, { updateHash = false } = {}) => {

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { groupBundleFiles, packageTabForHash, resourceKind } from "../scripts/skill-detail.js";
+import { groupBundleFiles, initialBundlePath, packageTabForHash, resourceKind } from "../scripts/skill-detail.js";
 
 test("bundle viewer groups files like the hosted package explorer", () => {
   const files = [
@@ -32,4 +32,12 @@ test("bundle viewer opens a shared section fragment instead of hiding it", () =>
   assert.equal(packageTabForHash("#bundle", tabs), "bundle");
   assert.equal(packageTabForHash("#permissions", tabs), "permissions");
   assert.equal(packageTabForHash("#missing", tabs), "overview");
+});
+
+test("bundle viewer starts on the package instructions", () => {
+  assert.equal(
+    initialBundlePath([{ path: "assets/mark.svg" }, { path: "SKILL.md" }, { path: "references/usage.md" }]),
+    "SKILL.md",
+  );
+  assert.equal(initialBundlePath([{ path: "assets/mark.svg" }]), "assets/mark.svg");
 });
