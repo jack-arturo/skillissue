@@ -1,0 +1,19 @@
+{
+  "title": "artist-phase-0-lock",
+  "project_dir": "/path/to/artist-project",
+  "divergent_session_path": "/path/to/artist-project/sessions/midjourney-iteration/phase-0",
+  "moodboard_dir": "/path/to/artist-project/moodboard",
+  "released_art_paths": ["/path/to/artist-project/moodboard/released-cover.png"],
+  "voice_references": [
+    {
+      "reference": "A relevant artist or era",
+      "why_it_lands": "Thesis match: it clarifies the persona without dictating a copy.",
+      "kind": "thesis"
+    }
+  ],
+  "max_voice_references": 3,
+  "irony_layers": false,
+  "audience_required": true,
+  "min_do_not_cross_lines": 3,
+  "notes": "Read the selected images directly, identify confirmed compositional modes, and ask the operator to make any unresolved taste decisions."
+}

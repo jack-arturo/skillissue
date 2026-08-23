@@ -1,0 +1,155 @@
+{
+  "schema_version": 1,
+  "baseline_version": "2026-07-16.1",
+  "compatibility": {
+    "unity": "6000.3+",
+    "unity_assistant": "2.14.0-pre.1",
+    "meta_xr_core": "203.0.0"
+  },
+  "policy": {
+    "single_writer": true,
+    "copy_credentials": false,
+    "accept_account_disclaimers": false,
+    "copy_model_choices": false,
+    "social_signals_require_primary_source_confirmation": true,
+    "automatic_production_promotion": false
+  },
+  "settings": [
+    {
+      "id": "assistant.auto_run",
+      "editor_prefs_key": "AIAssistant.AutoRun",
+      "type": "bool",
+      "value": false,
+      "rationale": "Keep permission prompts effective and preserve explicit writer handoffs."
+    },
+    {
+      "id": "assistant.package_auto_update",
+      "editor_prefs_key": "AIAssistant.EnablePackageAutoUpdate",
+      "type": "bool",
+      "value": true,
+      "rationale": "Surface compatible Assistant updates for canary review without silently changing package pins."
+    },
+    {
+      "id": "assistant.mcp_tool_timeout_seconds",
+      "editor_prefs_key": "AIAssistant.McpToolCallTimeout",
+      "type": "int",
+      "value": 30,
+      "rationale": "Keep routine MCP calls bounded; longer operations use explicit per-operation waits."
+    },
+    {
+      "id": "assistant.first_party_tools",
+      "editor_prefs_key": "AIAssistant.FirstPartyToolPolicy",
+      "type": "int",
+      "value": 0,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "Allow Unity-owned tool dispatch while retaining granular write and execution gates."
+    },
+    {
+      "id": "assistant.third_party_tools",
+      "editor_prefs_key": "AIAssistant.ThirdPartyToolPolicy",
+      "type": "int",
+      "value": 1,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "MCP extensions remain approval-gated."
+    },
+    {
+      "id": "assistant.read_external_files",
+      "editor_prefs_key": "AIAssistant.ReadExternalFilesPolicy",
+      "type": "int",
+      "value": 1,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "External filesystem reads require an explicit scope decision."
+    },
+    {
+      "id": "assistant.read_project",
+      "editor_prefs_key": "AIAssistant.ReadProjectPolicy",
+      "type": "int",
+      "value": 0,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "Project reads are the normal read-only collaboration surface."
+    },
+    {
+      "id": "assistant.modify_project",
+      "editor_prefs_key": "AIAssistant.ModifyProjectPolicy",
+      "type": "int",
+      "value": 1,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "Project writes require Assistant to be the named writer."
+    },
+    {
+      "id": "assistant.play_mode",
+      "editor_prefs_key": "AIAssistant.PlayModePolicy",
+      "type": "int",
+      "value": 1,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "Play Mode can mutate editor and test state and remains approval-gated."
+    },
+    {
+      "id": "assistant.screen_capture",
+      "editor_prefs_key": "AIAssistant.ScreenCapturePolicy",
+      "type": "int",
+      "value": 1,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "Captures can disclose private scene or desktop content."
+    },
+    {
+      "id": "assistant.code_execution",
+      "editor_prefs_key": "AIAssistant.CodeExecutionPolicy",
+      "type": "int",
+      "value": 1,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "Generated code execution remains approval-gated."
+    },
+    {
+      "id": "assistant.asset_generation",
+      "editor_prefs_key": "AIAssistant.AssetGenerationPolicy",
+      "type": "int",
+      "value": 1,
+      "enum": {"0": "allow", "1": "ask", "2": "deny"},
+      "rationale": "Paid generation requires explicit provider, count, destination, and credit consent."
+    },
+    {
+      "id": "meta.agent_bridge_enabled",
+      "editor_prefs_key": "Meta.XR.SDK.AI Agent Bridge.Enabled",
+      "type": "bool",
+      "value": true,
+      "rationale": "Enable Meta XR editor integrations on dedicated Quest development machines."
+    },
+    {
+      "id": "meta.agent_bridge_verbose_logging",
+      "editor_prefs_key": "Meta.XR.SDK.AI Agent Bridge.VerboseLogging",
+      "type": "bool",
+      "value": false,
+      "rationale": "Enable verbose logs only for bounded diagnostics."
+    },
+    {
+      "id": "meta.remote_agent_port",
+      "editor_prefs_key": "Meta.XR.SDK.AI Agent Bridge.RemoteServer_Port",
+      "type": "int",
+      "value": 48735,
+      "rationale": "Use Meta's default authenticated remote-agent port."
+    },
+    {
+      "id": "meta.remote_agent_auto_start",
+      "editor_prefs_key": "Meta.XR.SDK.AI Agent Bridge.RemoteServer_AutoStart",
+      "type": "bool",
+      "value": false,
+      "rationale": "Expose the LAN remote-inference listener only for an explicit device session."
+    },
+    {
+      "id": "meta.mcp_bridge_port",
+      "editor_prefs_key": "Meta.XR.SDK.AI Tools Bridge.McpBridge_Port",
+      "type": "int",
+      "value": 48736,
+      "rationale": "Use Meta's default authenticated MCP port when the bridge is explicitly started."
+    },
+    {
+      "id": "meta.mcp_bridge_auto_start",
+      "editor_prefs_key": "Meta.XR.SDK.AI Tools Bridge.McpBridge_AutoStart",
+      "type": "bool",
+      "value": false,
+      "runtime_default": true,
+      "rationale": "Avoid all-interface port collisions and wrong-project routing when multiple Editors are open."
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+# Phala H200 GPU TEE deploy — public ai-dock ComfyUI image, NO build context, NO file mounts,
+# The model is fetched by an init sidecar into a shared volume; supply its URL as
+# an encrypted deployment environment variable rather than baking an asset ID into this file.
+#
+# Reserve the GPU via the dashboard GPU-TEE flow (On-Demand + a prod dstack-nvidia image), paste
+# this compose, add required `MODEL_URL` and `COMFYUI_BEARER_TOKEN` as
+# encrypted deployment environment variables. `MODEL_SHA256` and `MODEL_EXPECTED_BYTES` are optional integrity checks. Iterate in place with:
+#   phala deploy --cvm-id <app_id> -c <thisfile> -e .env
+#
+# Architecture: only Caddy:8780 is published. Caddy bearer-gates every request → ai-dock ComfyUI
+# (WEB_ENABLE_AUTH=false so OUR bearer is the single gate). Shell `$` is escaped `$$` so compose
+# does not interpolate it.
+services:
+  # One-shot: download the checkpoint into the shared volume, then exit. ComfyUI waits for this.
+  # Reuses an existing model only after every supplied integrity check passes.
+  model-init:
+    image: curlimages/curl:8.11.1
+    user: "0:0"                                   # run as root: curlimages/curl defaults to uid 100, but the
+                                                  # fresh named volume mounts root-owned 755 → non-root curl
+                                                  # can't create the output file → curl exit 23 (write error).
+    environment:
+      MODEL_URL: ${MODEL_URL}
+      MODEL_SHA256: ${MODEL_SHA256:-}
+      MODEL_EXPECTED_BYTES: ${MODEL_EXPECTED_BYTES:-}
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        set -eu
+        CKPT=/checkpoints/model.safetensors
+        : "$${MODEL_URL:?MODEL_URL is required}"
+        checksum_matches() {
+          sha256sum "$$CKPT" > /tmp/model.sha256
+          read -r actual_sha _ < /tmp/model.sha256
+          [ "$$actual_sha" = "$$MODEL_SHA256" ]
+        }
+        have=$$(wc -c < "$$CKPT" 2>/dev/null || echo 0)
+        if [ -f "$$CKPT" ] && { [ -n "$$MODEL_SHA256" ] || [ -n "$$MODEL_EXPECTED_BYTES" ]; }; then
+          if [ -n "$$MODEL_SHA256" ]; then
+            checksum_matches || { echo "[init] existing model checksum does not match MODEL_SHA256" >&2; exit 1; }
+          fi
+          if [ -n "$$MODEL_EXPECTED_BYTES" ] && [ "$$have" != "$$MODEL_EXPECTED_BYTES" ]; then
+            echo "[init] existing model size does not match MODEL_EXPECTED_BYTES" >&2; exit 1
+          fi
+          echo "[init] existing model passed supplied integrity checks — skip"
+        else
+          echo "[init] downloading model…"
+          curl -fL --retry 3 --retry-delay 5 -o "$$CKPT" "$$MODEL_URL"
+          got=$$(wc -c < "$$CKPT")
+          if [ -n "$$MODEL_EXPECTED_BYTES" ] && [ "$$got" != "$$MODEL_EXPECTED_BYTES" ]; then
+            echo "[init] downloaded size does not match MODEL_EXPECTED_BYTES" >&2; exit 1
+          fi
+          if [ -n "$$MODEL_SHA256" ]; then
+            checksum_matches || { echo "[init] downloaded checksum does not match MODEL_SHA256" >&2; exit 1; }
+          fi
+          echo "[init] downloaded and validated"
+        fi
+    volumes:
+      - checkpoints:/checkpoints
+    networks: [tee]
+
+  comfyui:
+    image: ghcr.io/ai-dock/comfyui:latest-cuda   # pin @sha256:… for reproducible attestation
+    depends_on:
+      model-init:
+        condition: service_completed_successfully
+    environment:
+      - WEB_ENABLE_AUTH=false                     # disable ai-dock basic-auth; Caddy is the only gate
+    volumes:
+      # ai-dock runs from /opt/ComfyUI and centralizes models at /opt/storage/stable_diffusion/models
+      # (checkpoints subdir = "ckpt"), NOT /workspace/ComfyUI/models. Mount at both real paths.
+      - checkpoints:/opt/storage/stable_diffusion/models/ckpt
+      - checkpoints:/opt/ComfyUI/models/checkpoints
+    expose:
+      - "8188"                                    # internal only; never published
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    networks: [tee]
+
+  caddy:
+    image: caddy:2
+    depends_on: [comfyui]
+    ports:
+      - "8780:8780"                               # the ONLY exposed surface
+    environment:
+      COMFYUI_BEARER_TOKEN: ${COMFYUI_BEARER_TOKEN}
+    command:
+      - sh
+      - -c
+      - |
+        : "$${COMFYUI_BEARER_TOKEN:?COMFYUI_BEARER_TOKEN is required}"
+        cat > /etc/caddy/Caddyfile <<'EOF'
+        {
+          admin off
+          auto_https off
+        }
+        :8780 {
+          @unauthorized not header Authorization "Bearer {$$COMFYUI_BEARER_TOKEN}"
+          respond @unauthorized "Unauthorized" 401
+          reverse_proxy comfyui:8188
+        }
+        EOF
+        exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile
+    networks: [tee]
+
+volumes:
+  checkpoints:
+
+networks:
+  tee:
+    driver: bridge

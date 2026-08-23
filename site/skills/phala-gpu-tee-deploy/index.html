@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/phala-gpu-tee-deploy/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.5ccb0703f30d.css">
+<link rel="stylesheet" href="/assets/site.94eed5e754cd.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -38,7 +38,7 @@
     </div>
   </header>
   <main>
-
+<div data-package-detail>
     <section class="skill-package">
       <div class="wrap">
         <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>house</span><span>/</span><span>phala-gpu-tee-deploy</span></p>
@@ -47,12 +47,9 @@
             <span class="explorer-mark" aria-hidden="true">PG</span>
             <div><p class="explorer-kicker">Hosted skill bundle · house · deployment</p><h1>Phala GPU TEE Deploy</h1><p class="lede">A guarded runbook for placing a GPU workload on a confidential Phala deployment and proving what actually ran.</p></div>
           </div>
-          <aside class="skill-install-card" data-install-mode="cli">
-            <span>Pinned install</span>
-            <div class="install-tabs" role="group" aria-label="Install method"><button type="button" data-install-tab="cli" aria-pressed="true">CLI</button><button type="button" data-install-tab="mcp" aria-pressed="false">MCP</button></div>
-            <div class="install-command" data-install-panel="cli"><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles</code><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles">Copy install</button></div>
-            <div class="install-command" data-install-panel="mcp" hidden><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md&quot; })</code><button type="button" class="btn btn-primary" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md&quot; })">Copy MCP call</button></div>
-            <div class="install-links"><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md" rel="noopener">Raw SKILL.md</a><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md" rel="noopener">Source</a></div>
+          <aside class="skill-install-card">
+            <span>Pinned install</span><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles</code>
+            <div><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/phala-gpu-tee-deploy/SKILL.md --sync-profiles">Copy install</button><a class="btn btn-ghost" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md" rel="noopener">Raw</a></div>
           </aside>
         </div>
         <dl class="skill-facts">
@@ -62,21 +59,21 @@
           <div><dt>Bundle</dt><dd>3 files · 2 resources · runnable · 19 KB</dd></div>
         </dl>
         <div class="meta skill-meta"><span class="tag">phala</span><span class="tag">gpu</span><span class="tag">tee</span><span class="tag">deployment</span><span class="badge">house</span></div>
-        <nav class="package-nav" aria-label="Package sections"><a href="#overview">Overview</a><a href="#bundle">Bundle</a><a href="#permissions">Permissions</a><a href="#provenance">Provenance</a><a href="#source">Source</a></nav>
+        <nav class="package-nav" aria-label="Package sections"><button type="button" data-package-tab="overview" aria-selected="true">Overview</button><button type="button" data-package-tab="bundle" aria-selected="false">Bundle <span>3</span></button><button type="button" data-package-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-package-tab="provenance" aria-selected="false">Provenance</button><button type="button" data-package-tab="source" aria-selected="false">Source</button></nav>
       </div>
     </section>
-    <section>
-      <div class="wrap prose">
-        <section class="package-section" id="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why</h2>
+    <section><div class="wrap package-detail-grid">
+      <main class="package-panels prose">
+        <section class="package-section" id="overview" data-package-panel="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why</h2>
 <p>Confidential compute has enough moving parts to make a green dashboard a bad proxy for a working service.</p>
 <h2>How</h2>
 <p>Reserve deliberately, deploy a compose-only workload, keep secrets in deployment environment variables, then check attestation, access control, and the actual GPU workload. Billing is part of the checklist because it always is.</p>
 <h2>Related</h2>
-<p>Use <a href="/skills/cloudflare-ops/">Cloudflare Ops</a> for public-edge operations and <a href="/skills/video-toolkit/">Video Toolkit</a> when the workload serves a media pipeline.</p></div></section>
-        <section class="package-section" id="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Package files</h2></div><a href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md" rel="noopener">View source</a></div><p class="muted">2 bundled resources; includes runnable files.</p><div class="skill-resource-grid"><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md" rel="noopener"><code>SKILL.md</code><span>skill definition · 12 KB</span></a><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/scripts/validate-model-file" rel="noopener"><code>scripts/validate-model-file</code><span>script · 822 B</span></a><a class="skill-resource" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/templates/comfyui.docker-compose.phala.yml" rel="noopener"><code>templates/comfyui.docker-compose.phala.yml</code><span>config · 4.8 KB</span></a></div></div></section>
-        <section class="package-section" id="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">Requires: name: COMFYUI_BEARER_TOKEN</p></section>
-        <section class="package-section" id="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are all linked here before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex, autojack</dd></div></dl><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/cloudflare-ops/">cloudflare-ops</a> <a class="tag" href="/skills/video-toolkit/">video-toolkit</a></div></section>
-        <section class="package-section" id="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
+<p>Use <a href="/skills/cloudflare-ops/">Cloudflare Ops</a> for public-edge operations and <a href="/skills/video-toolkit/">Video Toolkit</a> when the workload serves a media pipeline.</p><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/cloudflare-ops/">cloudflare-ops</a> <a class="tag" href="/skills/video-toolkit/">video-toolkit</a></div></div></section>
+        <section class="package-section" id="bundle" data-package-panel="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Inspect every package file</h2></div><span class="bundle-count">3 files</span></div><p class="muted">Select a file to preview it from this public package. Script-like files are inspection-only.</p><div class="package-bundle-grid"><nav class="package-resource-tree" aria-label="Bundle files"><div class="package-resource-group"><p>Skill root</p><div class="package-resource-row"><button type="button" data-package-file="SKILL.md"><span class="package-file-kind">markdown</span><span><strong>SKILL.md</strong><small>SKILL.md · 12 KB</small></span></button><a href="/bundles/phala-gpu-tee-deploy/SKILL.md" rel="noopener">raw</a></div></div><div class="package-resource-group"><p>Scripts</p><div class="package-resource-row"><button type="button" data-package-file="scripts/validate-model-file"><span class="package-file-kind">script</span><span><strong>Validate Model File</strong><small>scripts/validate-model-file · 822 B</small></span></button><a href="/bundles/phala-gpu-tee-deploy/scripts/validate-model-file" rel="noopener">raw</a></div></div><div class="package-resource-group"><p>Other files</p><div class="package-resource-row"><button type="button" data-package-file="templates/comfyui.docker-compose.phala.yml"><span class="package-file-kind">config</span><span><strong>Comfyui.Docker Compose.Phala</strong><small>templates/comfyui.docker-compose.phala.yml · 4.8 KB</small></span></button><a href="/bundles/phala-gpu-tee-deploy/templates/comfyui.docker-compose.phala.yml" rel="noopener">raw</a></div></div></nav><article class="package-resource-preview" data-package-preview><div class="package-resource-preview-head"><div><span data-package-preview-kind>markdown</span><strong data-package-preview-name>SKILL.md</strong></div><a data-package-preview-raw href="/bundles/phala-gpu-tee-deploy/SKILL.md">view raw →</a></div><div class="package-resource-summary"><h3>Inspect the bundle</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
+        <section class="package-section" id="permissions" data-package-panel="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">Requires: name: COMFYUI_BEARER_TOKEN</p></section>
+        <section class="package-section" id="provenance" data-package-panel="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are available before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex, autojack</dd></div></dl></section>
+        <section class="package-section" id="source" data-package-panel="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/phala-gpu-tee-deploy/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
 name: phala-gpu-tee-deploy
 description: &gt;-
   Use when deploying and verifying ComfyUI or vLLM on a Phala confidential
@@ -313,8 +310,11 @@ attestation + 401/200 verification. The deploy mechanics do not change.
 - Do not expect `phala cvms stop` to halt an on-demand GPU rental — terminate the
   order in the dashboard.
 </code></pre></section>
-      </div>
-    </section>
+      </main>
+      <aside class="package-rail"><section><p>Compatibility</p><div><span>claude-code</span><b>declared</b></div><div><span>codex</span><b>declared</b></div><div><span>autojack</span><b>declared</b></div></section><section><p>Metadata</p><dl><dt>version</dt><dd>1.0.0</dd><dt>size</dt><dd>19 KB</dd><dt>license</dt><dd>MIT</dd><dt>source</dt><dd>house</dd></dl></section><section><p>Permission summary</p><div><span>network</span><b>true</b></div><div><span>filesystem</span><b>readwrite</b></div><div><span>tools</span><b>[Bash, Read, Edit]</b></div></section></aside>
+    </div></section>
+    <script id="package-data" type="application/json">{"files":[{"path":"scripts/validate-model-file","kind":"script","group":"scripts","title":"Validate Model File","summary":"Runnable package helper. Inspect before running.","bytes":822,"url":"/bundles/phala-gpu-tee-deploy/scripts/validate-model-file"},{"path":"SKILL.md","kind":"markdown","group":"root","title":"SKILL.md","summary":"Primary agent instructions, frontmatter, workflow, and declared resource manifest.","bytes":12352,"url":"/bundles/phala-gpu-tee-deploy/SKILL.md"},{"path":"templates/comfyui.docker-compose.phala.yml","kind":"config","group":"other","title":"Comfyui.Docker Compose.Phala","summary":"Bundled package file.","bytes":4898,"url":"/bundles/phala-gpu-tee-deploy/templates/comfyui.docker-compose.phala.yml"}]}</script><script type="module" src="/assets/skill-detail.5f82bf8b3112.js"></script>
+  </div>
   </main>
   <footer>
     <div class="wrap foot-inner">

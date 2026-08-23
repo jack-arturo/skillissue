@@ -242,12 +242,22 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(browserHandPage, /7 files · 6 resources · runnable/);
     const babysitPage = fs.readFileSync(path.join(siteDir, "skills", "babysit", "index.html"), "utf8");
     assert.match(babysitPage, /class="package-overview"/);
-    assert.match(babysitPage, /data-install-mode="cli"/);
+    assert.match(babysitPage, /data-package-detail/);
+    assert.match(babysitPage, /data-package-tab="bundle"/);
+    assert.match(babysitPage, /data-package-file="references\/pr-labels\.md"/);
+    assert.match(babysitPage, /data-package-preview/);
     assert.match(babysitPage, /id="bundle"/);
     assert.match(babysitPage, /id="permissions"/);
     assert.match(babysitPage, /id="provenance"/);
     assert.match(babysitPage, /id="source"/);
     assert.match(babysitPage, /references\/pr-labels\.md/);
+    const detailAsset = babysitPage.match(/src="\/assets\/(skill-detail\.[a-f0-9]{12}\.js)"/)?.[1];
+    assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
+    assert.equal(fs.existsSync(path.join(siteDir, "assets", detailAsset)), true);
+    assert.equal(
+      fs.readFileSync(path.join(siteDir, "bundles", "babysit", "references", "pr-labels.md"), "utf8"),
+      fs.readFileSync(path.join(root, "skills", "babysit", "references", "pr-labels.md"), "utf8"),
+    );
     const deployment = metadata.skills.find((skill) => skill.name === "cloudflare-commerce-deploy");
     const design = metadata.skills.find((skill) => skill.name === "brand-bible-author");
     assert.equal(deployment.category, "deployment");
