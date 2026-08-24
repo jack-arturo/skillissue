@@ -155,12 +155,7 @@ bin:
 <h2>Prerequisites</h2>
 <ol>
 <li>The project should be a Cloudflare Pages or Workers project, or a static site that can accept a <code>functions/</code> directory.</li>
-<li>Wrangler should be available before remote setup or deployment.</li>
-</ol>
-<p>   If global Wrangler auth is already configured (<code>wrangler login</code> state and/or</p>
-<p>   <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> from shell startup), use it</p>
-<p>   directly as the default Cloudflare credential path.</p>
-<ol>
+<li>Wrangler should be available before remote setup or deployment. If global Wrangler auth is already configured (<code>wrangler login</code> state and/or <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> from shell startup), use it directly as the default Cloudflare credential path.</li>
 <li>The user must configure secrets from their own terminal. Never ask them to paste <code>RESEND_API_KEY</code>, <code>ADMIN_TOKEN</code>, <code>TURNSTILE_SECRET_KEY</code>, or Cloudflare credentials into chat.</li>
 <li>If the project already has form endpoints, inspect them first and preserve existing behavior unless the user explicitly asks to replace it.</li>
 </ol>
@@ -271,10 +266,7 @@ resend domains get &lt;domain-id&gt; -q   # poll; records[] should all be verifi
 <ul>
 <li>Do not paste, print, commit, or summarize raw API keys or admin tokens.</li>
 <li>Do not replace an existing form stack without reading it first.</li>
-<li>Do not force the scaffold over a project that already has signup, unsubscribe,</li>
-</ul>
-<p>  admin, or email-template endpoints; adapt it in adoption mode.</p>
-<ul>
+<li>Do not force the scaffold over a project that already has signup, unsubscribe, admin, or email-template endpoints; adapt it in adoption mode.</li>
 <li>Do not scaffold Pages Functions into an Astro SSR Worker project (no <code>functions/</code> runtime there) — use the Astro SSR variant instead.</li>
 <li>Do not skip server-side Turnstile validation; the widget alone is not protection.</li>
 <li>Do not use D1 as a bulk newsletter sender. Store contacts and events in D1, send through a real email provider, and respect unsubscribe state.</li>

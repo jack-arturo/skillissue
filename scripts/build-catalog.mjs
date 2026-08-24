@@ -337,6 +337,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
   const html = [];
   let inList = false;
   let listTag = "ul";
+  let lastListItem = -1;
   let inCode = false;
   let codeBuf = [];
   let inTable = false;
@@ -348,6 +349,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     if (inList) {
       html.push(`</${listTag}>`);
       inList = false;
+      lastListItem = -1;
     }
   };
   const flushTable = () => {
@@ -413,6 +415,16 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
       .replace(/\|$/, "")
       .split("|")
       .map((c) => c.trim());
+  const appendListContinuation = (line) => {
+    if (!inList || lastListItem < 0) return false;
+    const continuation = line.trim();
+    if (!continuation || /^(?:[-*]\s|\d+\.\s)/.test(continuation)) return false;
+    html[lastListItem] = html[lastListItem].replace(
+      /<\/li>$/,
+      ` ${inline(continuation)}</li>`,
+    );
+    return true;
+  };
 
   for (const line of lines) {
     if (line.startsWith("```")) {
@@ -432,6 +444,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
       codeBuf.push(line);
       continue;
     }
+    if (/^\s{2,}\S/.test(line) && appendListContinuation(line)) continue;
     // Allow raw HTML blocks for inline SVG figures (lines starting with <)
     if (/^<\/?(figure|div|svg|img|table|section)\b/i.test(line.trim())) {
       flushList();
@@ -475,6 +488,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
         inList = true;
       }
       html.push(`<li>${inline(line.slice(2))}</li>`);
+      lastListItem = html.length - 1;
     } else if (/^\d+\.\s/.test(line)) {
       if (!inList || listTag !== "ol") {
         flushList();
@@ -483,6 +497,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
         inList = true;
       }
       html.push(`<li>${inline(line.replace(/^\d+\.\s/, ""))}</li>`);
+      lastListItem = html.length - 1;
     } else if (/^---+$/.test(line.trim())) {
       flushList();
       html.push("<hr>");

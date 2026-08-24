@@ -105,11 +105,7 @@ bin:
 </ul>
 <h2>Prerequisites</h2>
 <ul>
-<li>Load <code>browser-hand</code> and use its documented remote-debug fallback. That</li>
-</ul>
-<p>  implementation currently requires the upstream <code>dev-browser</code> CLI</p>
-<p>  (<code>npm install -g dev-browser</code> and <code>dev-browser install</code>).</p>
-<ul>
+<li>Load <code>browser-hand</code> and use its documented remote-debug fallback. That implementation currently requires the upstream <code>dev-browser</code> CLI (<code>npm install -g dev-browser</code> and <code>dev-browser install</code>).</li>
 <li>Google Chrome <strong>launched with <code>--remote-debugging-port=9222</code> AND <code>--user-data-dir=&lt;non-default path&gt;</code></strong> and a logged-in <code>midjourney.com</code> tab. The skill attaches to that tab via Chrome DevTools Protocol — no Chrome extension is involved despite older docs that mention one.</li>
 </ul>
 <p>  - The <code>--user-data-dir</code> is REQUIRED on Chrome 136+ (May 2025): Chrome silently ignores <code>--remote-debugging-port</code> on the default profile as a security hardening. <code>bin/relaunch-chrome</code> provisions a dedicated profile under the user state directory; the user signs in there once and the profile persists across sessions.</p>

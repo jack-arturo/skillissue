@@ -74,26 +74,13 @@ requires-secrets:
 <p>deliverable, not the chat reply.</p>
 <h2>When to use / when not</h2>
 <ul>
-<li><strong>Use:</strong> &quot;build a dossier on X&quot;, &quot;research X and remember them&quot;, background</li>
+<li><strong>Use:</strong> &quot;build a dossier on X&quot;, &quot;research X and remember them&quot;, background on a person/company/concept that future conversations should recall.</li>
+<li><strong>Don't use:</strong> throwaway lookups (&quot;what's X's website&quot;), anything requiring non-public data about private individuals, or research the requester explicitly wants kept out of memory.</li>
 </ul>
-<p>  on a person/company/concept that future conversations should recall.</p>
-<ul>
-<li><strong>Don't use:</strong> throwaway lookups (&quot;what's X's website&quot;), anything requiring</li>
-</ul>
-<p>  non-public data about private individuals, or research the requester</p>
-<p>  explicitly wants kept out of memory.</p>
 <h2>Ritual</h2>
 <ol>
-<li><strong>Scope.</strong> Pin the entity type (person / organization / concept), why it</li>
-</ol>
-<p>   matters (meeting, collab, mailing list, curiosity), and how deep to go.</p>
-<ol>
-<li><strong>Research.</strong> Primary sources first — their own site, talks, repos,</li>
-</ol>
-<p>   published writing, filings. Record dates on claims, keep explicit</p>
-<p>   uncertainty (&quot;unverified&quot;, &quot;as of &lt;date&gt;&quot;), collect 3–6 topics and the</p>
-<p>   source URLs you actually used.</p>
-<ol>
+<li><strong>Scope.</strong> Pin the entity type (person / organization / concept), why it matters (meeting, collab, mailing list, curiosity), and how deep to go.</li>
+<li><strong>Research.</strong> Primary sources first — their own site, talks, repos, published writing, filings. Record dates on claims, keep explicit uncertainty (&quot;unverified&quot;, &quot;as of &lt;date&gt;&quot;), collect 3–6 topics and the source URLs you actually used.</li>
 <li><strong>Compose the payload</strong> as JSON:</li>
 </ol>
 <p>   ```json</p>
@@ -129,13 +116,9 @@ requires-secrets:
 <p>   <code>config/context-modules/&lt;id&gt;.json</code> activation descriptor) is opt-in and</p>
 <p>   needs an explicit request — never write it by default.</p>
 <ol>
-<li><strong>Verify.</strong> Recall with tags <code>[&quot;context-module:dossier&quot;, &quot;entity:people:&lt;slug&gt;&quot;]</code></li>
+<li><strong>Verify.</strong> Recall with tags <code>[&quot;context-module:dossier&quot;, &quot;entity:people:&lt;slug&gt;&quot;]</code> and confirm the stored dossier comes back. No recall, not done.</li>
+<li><strong>Report.</strong> One paragraph of findings, the stored memory ids from the script's JSON output, and a recommendation only if one was asked for.</li>
 </ol>
-<p>   and confirm the stored dossier comes back. No recall, not done.</p>
-<ol>
-<li><strong>Report.</strong> One paragraph of findings, the stored memory ids from the</li>
-</ol>
-<p>   script's JSON output, and a recommendation only if one was asked for.</p>
 <h2>Never</h2>
 <ul>
 <li>Store secrets, credentials, or non-public personal data.</li>

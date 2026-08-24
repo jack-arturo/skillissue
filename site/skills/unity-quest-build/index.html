@@ -93,17 +93,10 @@ bin:
 <h2>Start with the actual environment</h2>
 <ol>
 <li>Run <code>scripts/audit-unity-quest-toolchain --project &lt;path&gt; --json</code>.</li>
-<li>Read project instructions, package pins, build scripts, current Git state,</li>
+<li>Read project instructions, package pins, build scripts, current Git state, active Unity processes, and connected ADB devices.</li>
+<li>Preserve a validated Unity/Meta combination. Evaluate newer Editor streams in an isolated worktree before changing the production pin.</li>
+<li>Assign one mutation owner. Serialize Unity imports, MCP writes, builds, installs, captures, and other ADB operations.</li>
 </ol>
-<p>   active Unity processes, and connected ADB devices.</p>
-<ol>
-<li>Preserve a validated Unity/Meta combination. Evaluate newer Editor streams</li>
-</ol>
-<p>   in an isolated worktree before changing the production pin.</p>
-<ol>
-<li>Assign one mutation owner. Serialize Unity imports, MCP writes, builds,</li>
-</ol>
-<p>   installs, captures, and other ADB operations.</p>
 <p>The audit's <code>unity_license</code> section is limited to local Editor product</p>
 <p>entitlements. Verify the Unity AI subscription, named-user seat assignment, and</p>
 <p>project organization separately in the authenticated Unity Dashboard. Credits</p>
@@ -141,13 +134,7 @@ bin:
 <ol>
 <li>Static checks and EditMode tests.</li>
 <li>PlayMode tests using production scenes.</li>
-<li>Meta XR Simulator with Quest 3/OpenXR and real stereo structure. With Core</li>
-</ol>
-<p>   SDK v205+, drive this rung agent-side via Meta XR Operator: inject head and</p>
-<p>   controller poses, hold inputs across frames, capture the composited image,</p>
-<p>   and assert on it — closed-loop runtime verification without a human in the</p>
-<p>   headset. Operator evidence is simulator-grade, not device-grade.</p>
-<ol>
+<li>Meta XR Simulator with Quest 3/OpenXR and real stereo structure. With Core SDK v205+, drive this rung agent-side via Meta XR Operator: inject head and controller poses, hold inputs across frames, capture the composited image, and assert on it — closed-loop runtime verification without a human in the headset. Operator evidence is simulator-grade, not device-grade.</li>
 <li>Fresh IL2CPP/ARM64/Vulkan APK on Quest with runtime and human evidence.</li>
 </ol>
 <p>Do not weaken production tracking or permission checks to satisfy a simulator.</p>
@@ -173,29 +160,13 @@ bin:
 <p>together are proof.</p>
 <h2>Build and install deterministically</h2>
 <ul>
-<li>Use the exact Editor version pinned by <code>ProjectVersion.txt</code>; verify its</li>
+<li>Use the exact Editor version pinned by <code>ProjectVersion.txt</code>; verify its Android SDK, NDK, OpenJDK, and AndroidPlayer modules.</li>
+<li>Acquire the project's cross-worktree Unity/deployment lock before import, tests, build, or ADB mutation.</li>
+<li>Remove stale output before building. Require Unity exit zero, a non-empty new APK, expected embedded package ID, and restored protected project settings.</li>
+<li>If multiple Android devices exist, require <code>ANDROID_SERIAL</code>. Never restart an ADB daemon owned by another active tool; use the established endpoint.</li>
+<li>Install the exact accepted APK, launch its explicit package, then verify the process and resumed activity. Old installed builds are not evidence.</li>
+<li>Inspect the generated Android manifest, not only Unity templates. Re-add and validate required deep-link filters after Meta manifest processing.</li>
 </ul>
-<p>  Android SDK, NDK, OpenJDK, and AndroidPlayer modules.</p>
-<ul>
-<li>Acquire the project's cross-worktree Unity/deployment lock before import,</li>
-</ul>
-<p>  tests, build, or ADB mutation.</p>
-<ul>
-<li>Remove stale output before building. Require Unity exit zero, a non-empty new</li>
-</ul>
-<p>  APK, expected embedded package ID, and restored protected project settings.</p>
-<ul>
-<li>If multiple Android devices exist, require <code>ANDROID_SERIAL</code>. Never restart an</li>
-</ul>
-<p>  ADB daemon owned by another active tool; use the established endpoint.</p>
-<ul>
-<li>Install the exact accepted APK, launch its explicit package, then verify the</li>
-</ul>
-<p>  process and resumed activity. Old installed builds are not evidence.</p>
-<ul>
-<li>Inspect the generated Android manifest, not only Unity templates. Re-add and</li>
-</ul>
-<p>  validate required deep-link filters after Meta manifest processing.</p>
 <h3>Never kill a transactional build mid-flight</h3>
 <p>A build script that swaps project settings — render pipeline asset, application</p>
 <p>identifier, product name, vendor/XR config — and restores them in a <code>finally</code></p>
@@ -223,35 +194,14 @@ bin:
 <ul>
 <li>Bind every capture to the foreground package before and after acquisition.</li>
 <li>Require present, tracked, and pose-valid as separate XR conditions.</li>
-<li>For live passthrough cameras on hardware, finish normal XR warmup and wait for</li>
+<li>For live passthrough cameras on hardware, finish normal XR warmup and wait for a synchronized left/right pair. Camera feeds can arrive at 60 Hz while the headset renders at 72 Hz, so an arbitrary render frame is invalid evidence.</li>
+<li>After resume, require both eyes to advance beyond their pre-resume frame and timestamp baselines. A young frame can still be pre-resume.</li>
+<li>Require distinct left/right textures or XR array slices and fail closed on mono or left-eye-only rendering.</li>
+<li>Reject empty, uniform, or opaque-black eye images. The visual oracle must find the intended effect bounds/layers in both eyes, not merely hands, UI, or any nonzero pixels. Bound GPU readback and fail on timeout.</li>
+<li>Reject malformed or implausible eye baselines/projections; do not repair them into evidence with a fabricated default.</li>
+<li>Record an atomic bundle: package, build identity, frame token, per-eye hashes, timestamps/poses/intrinsics, visual oracle, logs, and performance trace.</li>
+<li>Use MQDH timed Perfetto capture for 72 Hz acceptance. Use MQDH casting when Android <code>screencap</code> or <code>scrcpy</code> returns black or zero-byte output.</li>
 </ul>
-<p>  a synchronized left/right pair. Camera feeds can arrive at 60 Hz while the</p>
-<p>  headset renders at 72 Hz, so an arbitrary render frame is invalid evidence.</p>
-<ul>
-<li>After resume, require both eyes to advance beyond their pre-resume frame and</li>
-</ul>
-<p>  timestamp baselines. A young frame can still be pre-resume.</p>
-<ul>
-<li>Require distinct left/right textures or XR array slices and fail closed on</li>
-</ul>
-<p>  mono or left-eye-only rendering.</p>
-<ul>
-<li>Reject empty, uniform, or opaque-black eye images. The visual oracle must find</li>
-</ul>
-<p>  the intended effect bounds/layers in both eyes, not merely hands, UI, or any</p>
-<p>  nonzero pixels. Bound GPU readback and fail on timeout.</p>
-<ul>
-<li>Reject malformed or implausible eye baselines/projections; do not repair them</li>
-</ul>
-<p>  into evidence with a fabricated default.</p>
-<ul>
-<li>Record an atomic bundle: package, build identity, frame token, per-eye hashes,</li>
-</ul>
-<p>  timestamps/poses/intrinsics, visual oracle, logs, and performance trace.</p>
-<ul>
-<li>Use MQDH timed Perfetto capture for 72 Hz acceptance. Use MQDH casting when</li>
-</ul>
-<p>  Android <code>screencap</code> or <code>scrcpy</code> returns black or zero-byte output.</p>
 <p>Read <code>references/failure-modes.md</code> when imports, shaders, simulator tracking,</p>
 <p>PCA, ADB, screenshots, or resume behavior is abnormal.</p>
 <h2>Acceptance contract</h2>

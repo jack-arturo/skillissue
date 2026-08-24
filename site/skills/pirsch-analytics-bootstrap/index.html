@@ -89,15 +89,10 @@ requires-secrets:
 <p>PostHog, etc. as the only analytics tool.</p>
 <h2>Prerequisites</h2>
 <ul>
-<li>The site repo is present and you can identify its head-tag insertion</li>
-</ul>
-<p>  point (VitePress <code>.vitepress/config.{ts,js}</code> <code>head[]</code>, Next.js</p>
-<p>  <code>_document.tsx</code>, Astro <code>&lt;Head&gt;</code>, plain HTML <code>&lt;head&gt;</code>, etc.).</p>
-<ul>
+<li>The site repo is present and you can identify its head-tag insertion point (VitePress <code>.vitepress/config.{ts,js}</code> <code>head[]</code>, Next.js <code>_document.tsx</code>, Astro <code>&lt;Head&gt;</code>, plain HTML <code>&lt;head&gt;</code>, etc.).</li>
 <li>The user has a Pirsch account at &lt;https://dashboard.pirsch.io/&gt;.</li>
-<li>The dashboard is reachable in a logged-in browser. Use <code>browser-hand</code> only</li>
+<li>The dashboard is reachable in a logged-in browser. Use <code>browser-hand</code> only when explicitly authorized — see step 2.</li>
 </ul>
-<p>  when explicitly authorized — see step 2.</p>
 <h2>Workflow</h2>
 <h3>1. Look for existing Pirsch credentials</h3>
 <p>If an mcp-pirsch checkout is already configured, check for the two variable</p>
@@ -127,17 +122,10 @@ done</code></pre>
 <ol>
 <li>Open &lt;https://dashboard.pirsch.io/&gt;.</li>
 <li>Click <strong>Add Website, Funnel, or Team</strong> → <strong>Add Website</strong>.</li>
-<li>Enter the hostname (e.g., <code>autovault.dev</code>), pick a subdomain and</li>
+<li>Enter the hostname (e.g., <code>autovault.dev</code>), pick a subdomain and timezone, save.</li>
+<li>Copy the <strong>identification code</strong> from the snippet Pirsch displays. It looks like: <code>data-code=&quot;ooKBAPbmvXCA4hyKwoBDBx66yNyNswJL&quot;</code>.</li>
+<li>Paste the snippet — or just the <code>data-code</code> value — back into the chat.</li>
 </ol>
-<p>   timezone, save.</p>
-<ol>
-<li>Copy the <strong>identification code</strong> from the snippet Pirsch displays.</li>
-</ol>
-<p>   It looks like: <code>data-code=&quot;ooKBAPbmvXCA4hyKwoBDBx66yNyNswJL&quot;</code>.</p>
-<ol>
-<li>Paste the snippet — or just the <code>data-code</code> value — back into the</li>
-</ol>
-<p>   chat.</p>
 <p><strong>Do not</strong> drive the dashboard via <code>browser-hand</code> unless the user</p>
 <p>explicitly authorizes UI clicks under their logged-in session. The</p>
 <p>auto-mode classifier blocks browser-driven account writes by default;</p>
@@ -209,15 +197,9 @@ browser-hand evaluate --page-name pirsch-verify \
 </ol>
 <p>Two installation patterns:</p>
 <ul>
-<li><strong>Single-credential MCP</strong> — replace the values in</li>
+<li><strong>Single-credential MCP</strong> — replace the values in <code>mcp-pirsch/.env</code>. Old domains lose access; new domain gains it.</li>
+<li><strong>Multi-credential</strong> — current mcp-pirsch only reads one set of credentials at a time. To run multi-domain you'd need a separate MCP server instance per credential set, or extend mcp-pirsch. Recommend the single-credential swap for solo use.</li>
 </ul>
-<p>  <code>mcp-pirsch/.env</code>. Old domains lose access; new domain gains it.</p>
-<ul>
-<li><strong>Multi-credential</strong> — current mcp-pirsch only reads one set of</li>
-</ul>
-<p>  credentials at a time. To run multi-domain you'd need a separate</p>
-<p>  MCP server instance per credential set, or extend mcp-pirsch.</p>
-<p>  Recommend the single-credential swap for solo use.</p>
 <p>After updating <code>.env</code>, restart the MCP server (<code>/mcp</code> in Claude Code or</p>
 <p>restart the host).</p>
 <h3>6. Add useful events and goals</h3>
@@ -233,29 +215,16 @@ browser-hand evaluate --page-name pirsch-verify \
 <p>After the user deploys:</p>
 <ol>
 <li>Visit the live site and exercise one configured event.</li>
-<li>Open the correct Pirsch property, or ask the user to do so when dashboard</li>
-</ol>
-<p>   writes were not authorized.</p>
-<ol>
+<li>Open the correct Pirsch property, or ask the user to do so when dashboard writes were not authorized.</li>
 <li>Confirm page traffic, the custom event, and any DNS verification state.</li>
 </ol>
 <p>If nothing appears, common causes:</p>
 <ul>
-<li><strong>AdBlocker / browser extension</strong> — Pirsch is sometimes flagged.</li>
+<li><strong>AdBlocker / browser extension</strong> — Pirsch is sometimes flagged. Test in a clean browser profile.</li>
+<li><strong>Hostname mismatch</strong> — the hostname registered in Pirsch must match the hostname the page is served from (or be a configured alias).</li>
+<li><strong>Page from cache</strong> — Cloudflare cache may serve a build from before the snippet was added. Force-refresh / purge cache.</li>
+<li><strong>Domain verification pending</strong> — confirm the exact TXT name/value and allow for DNS propagation before retrying Pirsch verification.</li>
 </ul>
-<p>  Test in a clean browser profile.</p>
-<ul>
-<li><strong>Hostname mismatch</strong> — the hostname registered in Pirsch must match</li>
-</ul>
-<p>  the hostname the page is served from (or be a configured alias).</p>
-<ul>
-<li><strong>Page from cache</strong> — Cloudflare cache may serve a build from before</li>
-</ul>
-<p>  the snippet was added. Force-refresh / purge cache.</p>
-<ul>
-<li><strong>Domain verification pending</strong> — confirm the exact TXT name/value and allow</li>
-</ul>
-<p>  for DNS propagation before retrying Pirsch verification.</p>
 <h2>Output</h2>
 <ul>
 <li>Edited config file with Pirsch snippet in <code>&lt;head&gt;</code>.</li>
@@ -263,48 +232,19 @@ browser-hand evaluate --page-name pirsch-verify \
 <li>Local pa.js fetch returns 200.</li>
 <li>DNS verification status when the property requires it.</li>
 <li>Custom event and goal status, including anything left for the operator.</li>
-<li>Brief follow-up note: deploy URL to test, dashboard verification result, and</li>
+<li>Brief follow-up note: deploy URL to test, dashboard verification result, and optional scoped API-client wiring for mcp-pirsch.</li>
 </ul>
-<p>  optional scoped API-client wiring for mcp-pirsch.</p>
 <h2>Anti-patterns</h2>
 <ul>
-<li><strong>Do not commit a <code>data-code</code></strong> as if it were secret. It's public</li>
-</ul>
-<p>  per design and ships in every HTML response. Just put it in the</p>
-<p>  config file directly.</p>
-<ul>
-<li><strong>Do not try <code>POST /api/v1/domain</code> from a domain-scoped API client.</strong></li>
-</ul>
-<p>  It returns 403. The dashboard is the only viable path for most</p>
-<p>  users.</p>
-<ul>
-<li>**Do not driver-click the Pirsch dashboard via <code>browser-hand</code> without</li>
-</ul>
-<p>  explicit user authorization for UI writes.** The auto-mode</p>
-<p>  classifier denies this by default — attempting it stalls the</p>
-<p>  workflow.</p>
-<ul>
-<li><strong>Do not assume localhost test traffic will appear in Pirsch.</strong> It</li>
-</ul>
-<p>  won't; pa.js auto-skips local hostnames.</p>
-<ul>
-<li><strong>Do not copy a DNS verification value between sites.</strong> Use the exact record</li>
-</ul>
-<p>  Pirsch displays for the current property.</p>
-<ul>
-<li><strong>Do not put personal data or secrets in event metadata.</strong> Keep event payloads</li>
-</ul>
-<p>  minimal and purpose-specific.</p>
-<ul>
-<li>**Do not store <code>PIRSCH_CLIENT_*</code> values in the website repo's</li>
-</ul>
-<p>  <code>.env</code>.** Tracking only needs the public <code>data-code</code>. Server-side</p>
-<p>  Pirsch API access lives in mcp-pirsch (or another isolated location).</p>
-<ul>
-<li>**Do not gate the snippet behind <code>NODE_ENV === &quot;production&quot;</code> unless</li>
-</ul>
-<p>  the user asks.** Pirsch's localhost filter already prevents noise,</p>
-<p>  and gating it complicates preview-deployment debugging.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
+<li><strong>Do not commit a <code>data-code</code></strong> as if it were secret. It's public per design and ships in every HTML response. Just put it in the config file directly.</li>
+<li><strong>Do not try <code>POST /api/v1/domain</code> from a domain-scoped API client.</strong> It returns 403. The dashboard is the only viable path for most users.</li>
+<li>**Do not driver-click the Pirsch dashboard via <code>browser-hand</code> without explicit user authorization for UI writes.** The auto-mode classifier denies this by default — attempting it stalls the workflow.</li>
+<li><strong>Do not assume localhost test traffic will appear in Pirsch.</strong> It won't; pa.js auto-skips local hostnames.</li>
+<li><strong>Do not copy a DNS verification value between sites.</strong> Use the exact record Pirsch displays for the current property.</li>
+<li><strong>Do not put personal data or secrets in event metadata.</strong> Keep event payloads minimal and purpose-specific.</li>
+<li>**Do not store <code>PIRSCH_CLIENT_*</code> values in the website repo's <code>.env</code>.** Tracking only needs the public <code>data-code</code>. Server-side Pirsch API access lives in mcp-pirsch (or another isolated location).</li>
+<li>**Do not gate the snippet behind <code>NODE_ENV === &quot;production&quot;</code> unless the user asks.** Pirsch's localhost filter already prevents noise, and gating it complicates preview-deployment debugging.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Analytics installs were inconsistent and sometimes created domains without asking.</p>
 <h2>History</h2>

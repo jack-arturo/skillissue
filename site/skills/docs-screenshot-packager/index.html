@@ -157,13 +157,9 @@ resources:
 <p>     weight and keep committed screenshot payload modest.</p>
 <h2>Script Interface</h2>
 <ul>
-<li><code>package-screenshots.mjs --manifest &lt;file&gt; [--report &lt;file&gt;]</code></li>
+<li><code>package-screenshots.mjs --manifest &lt;file&gt; [--report &lt;file&gt;]</code> writes optimized outputs and a JSON report.</li>
+<li><code>verify-screenshot-pack.mjs --manifest &lt;file&gt; [--markdown &lt;file&gt;...]</code> verifies outputs and local Markdown image references.</li>
 </ul>
-<p>  writes optimized outputs and a JSON report.</p>
-<ul>
-<li><code>verify-screenshot-pack.mjs --manifest &lt;file&gt; [--markdown &lt;file&gt;...]</code></li>
-</ul>
-<p>  verifies outputs and local Markdown image references.</p>
 <p>The scripts use Sharp when available. In Codex desktop they automatically try the</p>
 <p>bundled workspace dependency path before failing with an install hint.</p>
 <h2>Output</h2>
@@ -180,10 +176,7 @@ resources:
 <li>Do not commit raw/proof screenshots by default.</li>
 <li>Do not fake browser chrome except for explicit README hero or landing assets.</li>
 <li>Do not skip visual inspection because automated entropy checks passed.</li>
-<li>Do not include secrets, tokens, private account data, PII, or dashboard IDs in</li>
-</ul>
-<p>  screenshots, filenames, manifests, or reports.</p>
-<ul>
+<li>Do not include secrets, tokens, private account data, PII, or dashboard IDs in screenshots, filenames, manifests, or reports.</li>
 <li>Do not update marketing claims without checking repo truth and user intent.</li>
 <li>Do not pack every screen. Sparse screenshots are better documentation.</li>
 </ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/html-asset-renderer/"><span class="name">html-asset-renderer</span><span class="desc">Design exports needed dimension-checked production assets, not freehand screenshots.</span></a> <a class="sd-rel-tile" href="/skills/browser-hand/"><span class="name">browser-hand</span><span class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</span></a></div></div></div></article></section>

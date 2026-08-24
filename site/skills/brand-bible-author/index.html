@@ -231,9 +231,8 @@ resources:
 <ul>
 <li>Schema validity for every <code>examples/*.brief.json</code>.</li>
 <li>Reference integrity: every backtick-wrapped relative path in <code>SKILL.md</code> resolves.</li>
-<li>Locked-bible structure: required H2 sections, IS-NOT and do-not-cross bullet</li>
+<li>Locked-bible structure: required H2 sections, IS-NOT and do-not-cross bullet counts vs brief constraints, reference-pin filenames present on disk.</li>
 </ul>
-<p>  counts vs brief constraints, reference-pin filenames present on disk.</p>
 <pre><code>bash tests/run_all.sh --project /path/to/artist --brief examples/&lt;brief&gt;.json</code></pre>
 <p><strong>Tier 2 — coherence partial-check</strong> (<code>bin/coherence-lint</code>, on-demand):</p>
 <p>Tokenizes IS-NOT bullets from <code>identity.md</code>, locates each in <code>visual-language.md</code>,</p>

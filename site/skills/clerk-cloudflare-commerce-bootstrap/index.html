@@ -87,10 +87,7 @@ resources:
 <h2>Start with a fit check</h2>
 <p>Before mutating anything, inspect the repository and classify it:</p>
 <ul>
-<li><code>full-commerce</code>: needs identity, protected product access, Checkout, webhooks,</li>
-</ul>
-<p>  persistent application state, and preview isolation.</p>
-<ul>
+<li><code>full-commerce</code>: needs identity, protected product access, Checkout, webhooks, persistent application state, and preview isolation.</li>
 <li><code>auth-only</code>: needs sign-in or protected APIs but no paid flow.</li>
 <li><code>lead-capture</code>: needs forms or admin notification, not account billing.</li>
 <li><code>deploy-only</code>: needs hosting, bindings, or deployment hygiene.</li>
@@ -112,33 +109,13 @@ STRIPE_PRICE_ID=&lt;managed configuration value&gt;</code></pre>
 <p>reports, commit messages, or pull requests.</p>
 <h2>Sequence</h2>
 <ol>
-<li>Inspect deployment model, existing Cloudflare resources, application data,</li>
+<li>Inspect deployment model, existing Cloudflare resources, application data, auth surface, billing surface, and CI. Reuse matching resources rather than creating lookalikes.</li>
+<li>Establish production and preview resource boundaries: Pages/Workers deployment, D1/KV bindings where needed, and migrations. Preserve one canonical deployment path.</li>
+<li>Add Clerk using <code>clerk-cloudflare-auth</code>: client UI, edge verification, and an explicit mapping from verified identity to application data.</li>
+<li>Add Stripe Checkout using <code>stripe-commerce-checkout</code> in test mode. Verify signed webhook handling, idempotency, and recovery from delayed delivery.</li>
+<li>Supply preview and production environment variables through the provider configuration. Frontend build variables and runtime secrets can have different loading paths; validate both.</li>
+<li>Test locally and in a preview deployment. Verify signed-out public pages, signed-in routes, Checkout creation, webhook state updates, and the return path before considering production.</li>
 </ol>
-<p>   auth surface, billing surface, and CI. Reuse matching resources rather than</p>
-<p>   creating lookalikes.</p>
-<ol>
-<li>Establish production and preview resource boundaries: Pages/Workers</li>
-</ol>
-<p>   deployment, D1/KV bindings where needed, and migrations. Preserve one</p>
-<p>   canonical deployment path.</p>
-<ol>
-<li>Add Clerk using <code>clerk-cloudflare-auth</code>: client UI, edge verification, and</li>
-</ol>
-<p>   an explicit mapping from verified identity to application data.</p>
-<ol>
-<li>Add Stripe Checkout using <code>stripe-commerce-checkout</code> in test mode. Verify</li>
-</ol>
-<p>   signed webhook handling, idempotency, and recovery from delayed delivery.</p>
-<ol>
-<li>Supply preview and production environment variables through the provider</li>
-</ol>
-<p>   configuration. Frontend build variables and runtime secrets can have</p>
-<p>   different loading paths; validate both.</p>
-<ol>
-<li>Test locally and in a preview deployment. Verify signed-out public pages,</li>
-</ol>
-<p>   signed-in routes, Checkout creation, webhook state updates, and the return</p>
-<p>   path before considering production.</p>
 <h2>Live billing gate</h2>
 <p>After a user explicitly authorizes a scoped <code>live</code> action, confirm product,</p>
 <p>price, currency, and webhook endpoint before creating or modifying live Stripe</p>

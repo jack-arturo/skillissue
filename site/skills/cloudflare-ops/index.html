@@ -95,17 +95,9 @@ bin:
 <p>Cloudflare Pages supports two healthy deployment models. Detect which model the</p>
 <p>project already uses and preserve it unless the user explicitly asks to switch.</p>
 <ul>
-<li><strong>Git-connected Pages:</strong> <code>source.type == &quot;github&quot;</code> in the Pages project.</li>
+<li><strong>Git-connected Pages:</strong> <code>source.type == &quot;github&quot;</code> in the Pages project. Ongoing deploys happen from <code>git push</code> and Cloudflare's Git integration. In this model, do not run ad hoc local <code>wrangler pages deploy</code> for ongoing releases because it bypasses the connected build path.</li>
+<li><strong>Direct Upload from CI:</strong> the repo owns a GitHub Actions workflow that runs <code>wrangler pages deploy</code> with a commit hash/branch after tests and builds pass. This is valid when it is the canonical CI path; keep using the workflow and do not forcibly connect the Pages project to GitHub.</li>
 </ul>
-<p>  Ongoing deploys happen from <code>git push</code> and Cloudflare's Git integration. In</p>
-<p>  this model, do not run ad hoc local <code>wrangler pages deploy</code> for ongoing</p>
-<p>  releases because it bypasses the connected build path.</p>
-<ul>
-<li><strong>Direct Upload from CI:</strong> the repo owns a GitHub Actions workflow that runs</li>
-</ul>
-<p>  <code>wrangler pages deploy</code> with a commit hash/branch after tests and builds pass.</p>
-<p>  This is valid when it is the canonical CI path; keep using the workflow and do</p>
-<p>  not forcibly connect the Pages project to GitHub.</p>
 <p>The <code>deploy-pages</code> task in this skill is a setup/bootstrap helper. It can create</p>
 <p>the Pages project and attach domains. It should only connect the project to</p>
 <p>GitHub when the chosen deployment model is Git-connected Pages.</p>
@@ -137,21 +129,10 @@ bin:
 <ul>
 <li>The target repo is passed with <code>--repo &lt;path&gt;</code> for Pages/D1/tunnel tasks.</li>
 <li>Wrangler/cloudflared credentials stay outside chat and source control.</li>
-<li>If global Wrangler auth is already configured (<code>wrangler login</code> state and/or</li>
+<li>If global Wrangler auth is already configured (<code>wrangler login</code> state and/or <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> from shell startup / Autohub <code>.env</code> / System Configuration <code>secrets/.env</code>), treat that as the default credential path for all Cloudflare tasks in this skill. **Do not tell Jack you lack Cloudflare credentials without first running <code>wrangler whoami</code>.**</li>
+<li>AutoVault-stored credential helpers are fallback paths when global Wrangler auth is unavailable or lacks required scope.</li>
+<li>Billable Cloudflare actions still require explicit user confirmation in the conversation before the agent runs them. A single DNS TXT for domain verification is not billable — proceed.</li>
 </ul>
-<p>  <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> from shell startup / Autohub</p>
-<p>  <code>.env</code> / System Configuration <code>secrets/.env</code>), treat that as the default</p>
-<p>  credential path for all Cloudflare tasks in this skill. **Do not tell Jack</p>
-<p>  you lack Cloudflare credentials without first running <code>wrangler whoami</code>.**</p>
-<ul>
-<li>AutoVault-stored credential helpers are fallback paths when global Wrangler</li>
-</ul>
-<p>  auth is unavailable or lacks required scope.</p>
-<ul>
-<li>Billable Cloudflare actions still require explicit user confirmation in the</li>
-</ul>
-<p>  conversation before the agent runs them. A single DNS TXT for domain</p>
-<p>  verification is not billable — proceed.</p>
 <h2>DNS TXT for domain verification (wpfusion.com)</h2>
 <p>When Wordfence (or similar) asks for a TXT on <code>wpfusion.com</code>:</p>
 <div class="table-wrap"><table>
@@ -183,18 +164,9 @@ autovault skill sync cloudflare-ops --repo . --mode sidecar
 autovault skill run cloudflare-ops --repo . --task tunnel-start</code></pre>
 <h2>Supported Tasks</h2>
 <ul>
-<li><code>deploy-pages</code> — <strong>setup-only</strong> helper. Creates the Pages project and</li>
-</ul>
-<p>  attaches custom domains. If the chosen model is Git-connected Pages, it may</p>
-<p>  also connect the project to GitHub. If the chosen model is Direct Upload from</p>
-<p>  CI, ongoing deploys stay in the repo workflow.</p>
-<ul>
+<li><code>deploy-pages</code> — <strong>setup-only</strong> helper. Creates the Pages project and attaches custom domains. If the chosen model is Git-connected Pages, it may also connect the project to GitHub. If the chosen model is Direct Upload from CI, ongoing deploys stay in the repo workflow.</li>
 <li><code>setup-d1</code> — production D1 + KV pair.</li>
-<li><code>setup-d1-preview</code> — preview D1 + KV pair, designed to feed</li>
-</ul>
-<p>  <code>CLOUDFLARE_PREVIEW_D1_DATABASE_ID</code> and <code>CLOUDFLARE_PREVIEW_KV_NAMESPACE_ID</code></p>
-<p>  GitHub repo variables for PR-preview deploys.</p>
-<ul>
+<li><code>setup-d1-preview</code> — preview D1 + KV pair, designed to feed <code>CLOUDFLARE_PREVIEW_D1_DATABASE_ID</code> and <code>CLOUDFLARE_PREVIEW_KV_NAMESPACE_ID</code> GitHub repo variables for PR-preview deploys.</li>
 <li><code>tunnel-setup</code></li>
 <li><code>tunnel-start</code></li>
 <li>D1 migration targets: <code>local</code>, <code>preview</code>, <code>remote</code></li>
@@ -204,33 +176,17 @@ autovault skill run cloudflare-ops --repo . --task tunnel-start</code></pre>
 <p>PR-preview deploys must run against an isolated D1 + KV pair so preview traffic</p>
 <p>never writes to production data. The expected shape:</p>
 <ul>
-<li>One preview D1 database per project, named <code>&lt;project&gt;-preview</code> or</li>
+<li>One preview D1 database per project, named <code>&lt;project&gt;-preview</code> or <code>&lt;project&gt;-hosted-preview</code>. Capture both its <code>database_id</code> and <code>database_name</code>.</li>
+<li>One preview KV namespace per project, named <code>&lt;project&gt;-vault-objects-preview</code> or similar. Capture its <code>id</code>.</li>
+<li>Apply the same migrations to preview D1 that production uses. The <code>migrate --target preview</code> task is the supported path.</li>
+<li>Surface the IDs to CI as repository variables (not secrets — these IDs are safe to commit-adjacent and are referenced from <code>wrangler.preview.json</code> / <code>scripts/write-pages-preview-config.mjs</code> style generators):</li>
 </ul>
-<p>  <code>&lt;project&gt;-hosted-preview</code>. Capture both its <code>database_id</code> and</p>
-<p>  <code>database_name</code>.</p>
-<ul>
-<li>One preview KV namespace per project, named <code>&lt;project&gt;-vault-objects-preview</code></li>
-</ul>
-<p>  or similar. Capture its <code>id</code>.</p>
-<ul>
-<li>Apply the same migrations to preview D1 that production uses. The</li>
-</ul>
-<p>  <code>migrate --target preview</code> task is the supported path.</p>
-<ul>
-<li>Surface the IDs to CI as repository variables (not secrets — these IDs are</li>
-</ul>
-<p>  safe to commit-adjacent and are referenced from <code>wrangler.preview.json</code> /</p>
-<p>  <code>scripts/write-pages-preview-config.mjs</code> style generators):</p>
 <p>  - <code>CLOUDFLARE_PREVIEW_D1_DATABASE_ID</code></p>
 <p>  - <code>CLOUDFLARE_PREVIEW_D1_DATABASE_NAME</code></p>
 <p>  - <code>CLOUDFLARE_PREVIEW_KV_NAMESPACE_ID</code></p>
 <ul>
-<li>For per-environment Pages secrets (<code>CLERK_SECRET_KEY</code>, <code>STRIPE_SECRET_KEY</code>,</li>
+<li>For per-environment Pages secrets (<code>CLERK_SECRET_KEY</code>, <code>STRIPE_SECRET_KEY</code>, <code>STRIPE_WEBHOOK_SECRET</code>, <code>RESEND_API_KEY</code>, etc.) the standard <code>wrangler pages secret put</code> writes production only — see the <strong>Per-Environment Pages Env Vars</strong> section in <code>cloudflare-commerce-deploy</code> for the project-level PATCH endpoint that writes the preview environment.</li>
 </ul>
-<p>  <code>STRIPE_WEBHOOK_SECRET</code>, <code>RESEND_API_KEY</code>, etc.) the standard</p>
-<p>  <code>wrangler pages secret put</code> writes production only — see the</p>
-<p>  <strong>Per-Environment Pages Env Vars</strong> section in <code>cloudflare-commerce-deploy</code></p>
-<p>  for the project-level PATCH endpoint that writes the preview environment.</p>
 <p>When <code>setup-d1-preview</code> finishes, report the database name, database id, KV id,</p>
 <p>and the exact <code>gh variable set</code> lines the user can paste — never the</p>
 <p>production values.</p>
@@ -241,32 +197,15 @@ autovault skill run cloudflare-ops --repo . --task tunnel-start</code></pre>
 <p>provider-side secret references, never raw values.</p>
 <h2>Anti-Patterns</h2>
 <ul>
-<li>Do not run ad hoc local <code>wrangler pages deploy</code> against a Pages project whose</li>
-</ul>
-<p>  <code>source.type == &quot;github&quot;</code>. It bypasses that project's canonical build path</p>
-<p>  and creates split-brain deploys. Push to <code>main</code> instead.</p>
-<ul>
-<li>Do not &quot;fix&quot; a repo that already uses Direct Upload from CI by adding a second</li>
-</ul>
-<p>  Git-connected deploy path. Pick one deployment model and keep it singular.</p>
-<ul>
+<li>Do not run ad hoc local <code>wrangler pages deploy</code> against a Pages project whose <code>source.type == &quot;github&quot;</code>. It bypasses that project's canonical build path and creates split-brain deploys. Push to <code>main</code> instead.</li>
+<li>Do not &quot;fix&quot; a repo that already uses Direct Upload from CI by adding a second Git-connected deploy path. Pick one deployment model and keep it singular.</li>
 <li>When deploying a single HTML file to Cloudflare Pages (e.g. an artifact), do NOT pass the file path directly to <code>wrangler pages deploy file.html</code>. This uploads the file as <code>file.html</code> and it will not be served at the root URL. Instead, place the file in a directory, rename it to <code>index.html</code>, and deploy the directory: <code>mkdir dist &amp;&amp; cp file.html dist/index.html &amp;&amp; wrangler pages deploy dist</code>.</li>
 <li>Do not manually copy Cloudflare tokens into project files.</li>
-<li>Do not register domains or create billable resources without explicit user</li>
-</ul>
-<p>  confirmation.</p>
-<ul>
-<li>Do not bypass the repo helper scripts when they already encode project</li>
-</ul>
-<p>  conventions.</p>
-<ul>
-<li>Do not run <code>migrate --target remote</code> against production when the intent was</li>
-</ul>
-<p>  preview — the wrong target silently corrupts the wrong database.</p>
-<ul>
-<li>Do not point preview deploys at the production D1 or KV. The preview pair</li>
-</ul>
-<p>  exists specifically so PR traffic is isolated.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-lead-capture/"><span class="name">cloudflare-lead-capture</span><span class="desc">Hat Trick / waitlist work kept being rewritten. Packaged as scaffold + doctor + setup.</span></a> <a class="sd-rel-tile" href="/skills/cloudflare-commerce-deploy/"><span class="name">cloudflare-commerce-deploy</span><span class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</span></a></div></div></div></article></section>
+<li>Do not register domains or create billable resources without explicit user confirmation.</li>
+<li>Do not bypass the repo helper scripts when they already encode project conventions.</li>
+<li>Do not run <code>migrate --target remote</code> against production when the intent was preview — the wrong target silently corrupts the wrong database.</li>
+<li>Do not point preview deploys at the production D1 or KV. The preview pair exists specifically so PR traffic is isolated.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-lead-capture/"><span class="name">cloudflare-lead-capture</span><span class="desc">Hat Trick / waitlist work kept being rewritten. Packaged as scaffold + doctor + setup.</span></a> <a class="sd-rel-tile" href="/skills/cloudflare-commerce-deploy/"><span class="name">cloudflare-commerce-deploy</span><span class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain pages deploys.</p>
 <h2>History</h2>

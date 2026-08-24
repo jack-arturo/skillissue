@@ -85,45 +85,19 @@ resources:
 <p>operational failure from current logs and health evidence.</p>
 <h2>Safety contract</h2>
 <ul>
-<li>Preserve dirty worktrees. Inspect before editing, isolate repairs in a clean</li>
+<li>Preserve dirty worktrees. Inspect before editing, isolate repairs in a clean worktree, and stage only incident-related files.</li>
+<li>Treat reads, local checks, self/test-target messages, and reversible restarts as green actions. Ask before third-party messages, credential rotation, deploys, pushes, merges, destructive recovery, or production-data mutation.</li>
+<li>Never print or store tokens, environment values, process command lines, message bodies, capability URLs, or full Telegram history.</li>
+<li>A transient <code>BEGIN IMMEDIATE; ROLLBACK</code> probe may acquire a write lock but must not change rows or schema.</li>
+<li>Do not infer WAL health from file size. Retained allocation is not proof of contention.</li>
 </ul>
-<p>  worktree, and stage only incident-related files.</p>
-<ul>
-<li>Treat reads, local checks, self/test-target messages, and reversible</li>
-</ul>
-<p>  restarts as green actions. Ask before third-party messages, credential</p>
-<p>  rotation, deploys, pushes, merges, destructive recovery, or production-data</p>
-<p>  mutation.</p>
-<ul>
-<li>Never print or store tokens, environment values, process command lines,</li>
-</ul>
-<p>  message bodies, capability URLs, or full Telegram history.</p>
-<ul>
-<li>A transient <code>BEGIN IMMEDIATE; ROLLBACK</code> probe may acquire a write lock but</li>
-</ul>
-<p>  must not change rows or schema.</p>
-<ul>
-<li>Do not infer WAL health from file size. Retained allocation is not proof of</li>
-</ul>
-<p>  contention.</p>
 <h2>1. Resolve the runtime being diagnosed</h2>
 <ol>
-<li>Resolve the requested checkout, its canonical checkout, and any worktree</li>
+<li>Resolve the requested checkout, its canonical checkout, and any worktree gitdir.</li>
+<li>Inspect <code>git status --short --branch</code> in every checkout that could receive edits.</li>
+<li>Identify each running service by PID, port, cwd class, and loaded commit. Never inspect or print process command lines or environments.</li>
+<li>Record which checkout owns <code>logs/dev-all.log</code>, <code>data/hub-unified.db</code>, and the active <code>.env</code>. Do not assume the current shell cwd is the runtime cwd.</li>
 </ol>
-<p>   gitdir.</p>
-<ol>
-<li>Inspect <code>git status --short --branch</code> in every checkout that could receive</li>
-</ol>
-<p>   edits.</p>
-<ol>
-<li>Identify each running service by PID, port, cwd class, and loaded commit.</li>
-</ol>
-<p>   Never inspect or print process command lines or environments.</p>
-<ol>
-<li>Record which checkout owns <code>logs/dev-all.log</code>, <code>data/hub-unified.db</code>,</li>
-</ol>
-<p>   and the active <code>.env</code>. Do not assume the current shell cwd is the runtime</p>
-<p>   cwd.</p>
 <h2>2. Recall one incident context, early</h2>
 <p>Before analysis, perform exactly one broad AutoMem recall. Its purpose is to</p>
 <p>surface recent incident decisions, verified root causes, prior fixes, and</p>
@@ -215,10 +189,7 @@ resources:
 <p>Require:</p>
 <ol>
 <li>focused lint and deterministic tests;</li>
-<li>database <code>quick_check</code>, SHM active-frame facts, and an actual contention</li>
-</ol>
-<p>   probe before declaring global SQLite contention;</p>
-<ol>
+<li>database <code>quick_check</code>, SHM active-frame facts, and an actual contention probe before declaring global SQLite contention;</li>
 <li>a fresh process boundary when the old process was poisoned;</li>
 <li>post-boundary absence of the cascade for the incident's observation window;</li>
 <li>the real user/caller surface, using only a dedicated self/test target.</li>
@@ -264,13 +235,9 @@ resources:
 <h2>Incident acceptance check</h2>
 <p>This workflow passes the motivating incident only if it identifies both:</p>
 <ul>
-<li>a timed-out adapter transaction poisoned a process-local Prisma mutex because</li>
+<li>a timed-out adapter transaction poisoned a process-local Prisma mutex because forced rollback bypassed the adapter transaction's release path;</li>
+<li>an empty/unsupported Telegram update was acknowledged too late and drove a retry cascade.</li>
 </ul>
-<p>  forced rollback bypassed the adapter transaction's release path;</p>
-<ul>
-<li>an empty/unsupported Telegram update was acknowledged too late and drove a</li>
-</ul>
-<p>  retry cascade.</p>
 <p>It must not call retained WAL allocation global contention when <code>quick_check</code>,</p>
 <p>SHM active-frame state, an external write-lock probe, and cross-process writes</p>
 <p>are healthy.</p></div></article></section>

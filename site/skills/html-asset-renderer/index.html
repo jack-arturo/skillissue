@@ -78,21 +78,11 @@ bin:
 <p>other fixed-size artwork rendered in the browser.</p>
 <h2>When to use</h2>
 <ul>
-<li>The user gives a folder of <code>.html</code> files and asks for screenshots at exact</li>
+<li>The user gives a folder of <code>.html</code> files and asks for screenshots at exact dimensions.</li>
+<li>The source has a fixed canvas element such as <code>.canvas</code>, <code>.artboard</code>, <code>[data-render-asset]</code>, or a named asset wrapper.</li>
+<li>The output needs production checks: exact width and height, file size, metadata merge notes, and visual QA.</li>
+<li>The user asks to turn a Claude Design, Figma-to-HTML, or hand-authored HTML export into static image assets.</li>
 </ul>
-<p>  dimensions.</p>
-<ul>
-<li>The source has a fixed canvas element such as <code>.canvas</code>, <code>.artboard</code>,</li>
-</ul>
-<p>  <code>[data-render-asset]</code>, or a named asset wrapper.</p>
-<ul>
-<li>The output needs production checks: exact width and height, file size,</li>
-</ul>
-<p>  metadata merge notes, and visual QA.</p>
-<ul>
-<li>The user asks to turn a Claude Design, Figma-to-HTML, or hand-authored</li>
-</ul>
-<p>  HTML export into static image assets.</p>
 <h2>Workflow</h2>
 <ol>
 <li>Inspect the source folder first.</li>
@@ -157,22 +147,12 @@ bin:
 <h2>Anti-patterns</h2>
 <ul>
 <li>Do not bundle project-specific brand files or copy into this skill.</li>
-<li>Do not ship stale source screenshots as production assets; render from the</li>
-</ul>
-<p>  editable HTML/CSS source.</p>
-<ul>
+<li>Do not ship stale source screenshots as production assets; render from the editable HTML/CSS source.</li>
 <li>Do not claim success without exact dimension verification.</li>
-<li>Do not rewrite product positioning inside the generic workflow; make those</li>
-</ul>
-<p>  edits in the project source before rendering.</p>
-<ul>
-<li>Do not create destructive cleanup steps. Only write to the requested output</li>
-</ul>
-<p>  directory and report path.</p>
-<ul>
-<li>Do not store secrets, tokens, or private account data in manifests, reports,</li>
-</ul>
-<p>  or generated assets.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
+<li>Do not rewrite product positioning inside the generic workflow; make those edits in the project source before rendering.</li>
+<li>Do not create destructive cleanup steps. Only write to the requested output directory and report path.</li>
+<li>Do not store secrets, tokens, or private account data in manifests, reports, or generated assets.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Design exports needed dimension-checked production assets, not freehand screenshots.</p>
 <h2>History</h2>

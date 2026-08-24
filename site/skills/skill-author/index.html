@@ -143,15 +143,11 @@ metadata:
   filesystem: readonly
   tools: [Read]</code></pre>
 <ul>
-<li>Set <code>network</code> to true when any workflow or bundled action contacts a remote</li>
-</ul>
-<p>  service.</p>
-<ul>
+<li>Set <code>network</code> to true when any workflow or bundled action contacts a remote service.</li>
 <li>Use <code>filesystem: readwrite</code> when any step creates, edits, or deletes files.</li>
 <li>List the actual host tools and runtimes used by the body and resources.</li>
-<li>Declare secrets only by environment-variable name and purpose; never include</li>
+<li>Declare secrets only by environment-variable name and purpose; never include secret values in a bundle.</li>
 </ul>
-<p>  secret values in a bundle.</p>
 <p>Under-declaration is rejected by the capability cross-check. Over-declaration</p>
 <p>unnecessarily expands the skill's claimed authority.</p>
 <h2>6. Validate before writing</h2>
@@ -160,30 +156,19 @@ metadata:
 <p>Handle the result explicitly:</p>
 <ul>
 <li><code>would_accept</code>: schema, security, capability, and dedup checks passed.</li>
-<li><code>duplicate</code>: inspect <code>existing_match</code> and choose whether to reuse, replace,</li>
-</ul>
-<p>  merge, or keep both.</p>
-<ul>
+<li><code>duplicate</code>: inspect <code>existing_match</code> and choose whether to reuse, replace, merge, or keep both.</li>
 <li><code>invalid</code>: repair the listed schema or bundle errors.</li>
-<li><code>security_blocked</code>: remove unsafe behavior or correct an inaccurate</li>
+<li><code>security_blocked</code>: remove unsafe behavior or correct an inaccurate capability declaration; do not bypass strict validation.</li>
 </ul>
-<p>  capability declaration; do not bypass strict validation.</p>
 <p>For an existing reviewed directory, the local CLI path is</p>
 <p><code>autovault add &lt;path&gt; --dry-run</code>. A successful dry run does not write or sync</p>
 <p>profiles.</p>
 <h2>7. Admit the reviewed bundle</h2>
 <ul>
-<li>Use <code>propose_skill({skill_md: &quot;&lt;full SKILL.md&gt;&quot;, resources: [...]})</code> for</li>
+<li>Use <code>propose_skill({skill_md: &quot;&lt;full SKILL.md&gt;&quot;, resources: [...]})</code> for caller-held draft bytes.</li>
+<li>Use <code>add_skill({source: &quot;local&quot;, skill_dir: &quot;&lt;directory&gt;&quot;})</code> for a reviewed local directory.</li>
+<li>Use <code>add_skill({source: &quot;github&quot;, identifier: &quot;owner/repo:path/SKILL.md&quot;})</code> for a source-backed GitHub bundle.</li>
 </ul>
-<p>  caller-held draft bytes.</p>
-<ul>
-<li>Use <code>add_skill({source: &quot;local&quot;, skill_dir: &quot;&lt;directory&gt;&quot;})</code> for a reviewed</li>
-</ul>
-<p>  local directory.</p>
-<ul>
-<li>Use <code>add_skill({source: &quot;github&quot;, identifier: &quot;owner/repo:path/SKILL.md&quot;})</code></li>
-</ul>
-<p>  for a source-backed GitHub bundle.</p>
 <p>Confirm the accepted name, inferred resources, target agents, and profile-sync</p>
 <p>warnings. AutoVault signs <code>SKILL.md</code>, resources, and source metadata as one</p>
 <p>installed bundle.</p>

@@ -102,26 +102,20 @@ bin:
 <p><code>cloudflare-ops</code>.</p>
 <h2>Preconditions</h2>
 <ol>
-<li>Prefer existing Wrangler/operator auth first. If the machine already has</li>
+<li>Prefer existing Wrangler/operator auth first. If the machine already has <code>wrangler login</code> state or <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> exported in shell startup (for example <code>~/.zshrc</code>), use it directly:</li>
 </ol>
-<p>   <code>wrangler login</code> state or <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code></p>
-<p>   exported in shell startup (for example <code>~/.zshrc</code>), use it directly:</p>
 <pre><code>npx wrangler whoami</code></pre>
 <ol>
-<li>If Wrangler auth is missing or insufficient for the requested action, ask</li>
+<li>If Wrangler auth is missing or insufficient for the requested action, ask the user to run:</li>
 </ol>
-<p>   the user to run:</p>
 <pre><code>autovault skill setup cloudflare-commerce-deploy</code></pre>
 <ol>
-<li>To verify available operator access (Wrangler auth and/or AutoVault</li>
+<li>To verify available operator access (Wrangler auth and/or AutoVault credential profile), ask them to run:</li>
 </ol>
-<p>   credential profile), ask them to run:</p>
 <pre><code>autovault skill doctor cloudflare-commerce-deploy</code></pre>
 <ol>
-<li>Never ask the user to paste Cloudflare tokens into chat. If setup is used,</li>
+<li>Never ask the user to paste Cloudflare tokens into chat. If setup is used, it opens the relevant Cloudflare pages and stores the token outside the repository under the AutoVault storage root.</li>
 </ol>
-<p>   it opens the relevant Cloudflare pages and stores the token outside the</p>
-<p>   repository under the AutoVault storage root.</p>
 <h2>Credential Profile</h2>
 <p>The setup action stores a local credential profile at:</p>
 <pre><code>$AUTOVAULT_STORAGE_PATH/credentials/cloudflare-commerce.json</code></pre>
@@ -166,10 +160,7 @@ bin:
     }
   }'</code></pre>
 <ol>
-<li>Set build command and output directory in the dashboard or via PATCH</li>
-</ol>
-<p>   <code>deployment_configs.{preview,production}.build_config</code>.</p>
-<ol>
+<li>Set build command and output directory in the dashboard or via PATCH <code>deployment_configs.{preview,production}.build_config</code>.</li>
 <li><code>git push origin main</code>. Cloudflare auto-builds.</li>
 </ol>
 <p>Verify the wiring with <code>GET …/pages/projects/&lt;project_name&gt;</code> and confirm</p>
@@ -189,11 +180,8 @@ bin:
 <p>   - Workers for Worker-first apps.</p>
 <p>   - D1/KV/R2/Queues only when the app actually needs those bindings.</p>
 <ol>
-<li>Build a non-secret project manifest from</li>
+<li>Build a non-secret project manifest from <code>templates/cloudflare-commerce.json</code> when the repo lacks one. Store account IDs, zone IDs, Pages project names, domains, bindings, and secret reference names only.</li>
 </ol>
-<p>   <code>templates/cloudflare-commerce.json</code> when the repo lacks one. Store account</p>
-<p>   IDs, zone IDs, Pages project names, domains, bindings, and secret reference</p>
-<p>   names only.</p>
 <ol>
 <li>Before deployment, run safe checks:</li>
 </ol>
@@ -207,18 +195,11 @@ bin:
 <p>   - <code>direct-upload-ci</code> when GitHub Actions builds and uploads with Wrangler.</p>
 <p>   - <code>manual-only</code> only for throwaway artifacts, never for production commerce.</p>
 <ol>
-<li>For custom domains, attach the domain to the Pages project or Worker route</li>
+<li>For custom domains, attach the domain to the Pages project or Worker route first, then create or update DNS. For Pages, do not rely on manually adding a CNAME alone. For Git-connected Pages, follow the order in &quot;Git-connected Pages&quot; above: create project → attach domains → connect to GitHub → push. For Direct Upload from CI, attach domains and keep deployment in the checked-in workflow.</li>
 </ol>
-<p>   first, then create or update DNS. For Pages, do not rely on manually adding a</p>
-<p>   CNAME alone. For Git-connected Pages, follow the order in</p>
-<p>   &quot;Git-connected Pages&quot; above: create project → attach domains → connect to</p>
-<p>   GitHub → push. For Direct Upload from CI, attach domains and keep deployment</p>
-<p>   in the checked-in workflow.</p>
 <ol>
-<li>For logs and post-deploy triage, use available Workers/Pages logs, Workers</li>
+<li>For logs and post-deploy triage, use available Workers/Pages logs, Workers Tail, Pages deployment logs, Analytics, and Logpush/Logpull permissions when configured.</li>
 </ol>
-<p>   Tail, Pages deployment logs, Analytics, and Logpush/Logpull permissions when</p>
-<p>   configured.</p>
 <h2>Per-Environment Pages Env Vars</h2>
 <p>Cloudflare Pages projects have separate <code>preview</code> and <code>production</code> environments</p>
 <p>with independent environment variables and secrets. Driving these correctly is</p>
@@ -272,51 +253,24 @@ JSON</code></pre>
 <p>sets it to empty — usually not what is wanted.</p>
 <h3>Recommended split</h3>
 <ul>
-<li>Preview environment: test-mode keys only (<code>sk_test_…</code>, <code>pk_test_…</code>,</li>
+<li>Preview environment: test-mode keys only (<code>sk_test_…</code>, <code>pk_test_…</code>, <code>whsec_test_…</code>, Clerk dev/test instance keys).</li>
+<li>Production environment: live-mode keys, gated by the test-mode-default rule in <code>stripe-commerce-checkout</code>.</li>
+<li>Vite/VitePress browser keys are build-time inputs: <code>VITE_CLERK_PUBLISHABLE_KEY</code> must be available to the build command, not only present as a runtime Pages env var. Prefer CI source variables named <code>VITE_CLERK_PREVIEW_PUBLISHABLE_KEY=pk_test_…</code> and <code>VITE_CLERK_PRODUCTION_PUBLISHABLE_KEY=pk_live_…</code>, then set the app-facing <code>VITE_CLERK_PUBLISHABLE_KEY</code> from the matching source variable before the static build.</li>
+<li>Plain-text (non-secret) values, e.g. <code>AUTOVAULT_ENVIRONMENT=preview</code> vs <code>production</code>, also belong in <code>env_vars</code> with <code>type: plain_text</code>.</li>
+<li>Preview D1/KV bindings should point at preview resources for any form, checkout, auth, CMS, or admin surface that writes data. If an existing repo shares production bindings in preview, report it as a data-isolation gap before enabling PR-preview traffic.</li>
 </ul>
-<p>  <code>whsec_test_…</code>, Clerk dev/test instance keys).</p>
-<ul>
-<li>Production environment: live-mode keys, gated by the test-mode-default rule</li>
-</ul>
-<p>  in <code>stripe-commerce-checkout</code>.</p>
-<ul>
-<li>Vite/VitePress browser keys are build-time inputs: <code>VITE_CLERK_PUBLISHABLE_KEY</code></li>
-</ul>
-<p>  must be available to the build command, not only present as a runtime Pages</p>
-<p>  env var. Prefer CI source variables named</p>
-<p>  <code>VITE_CLERK_PREVIEW_PUBLISHABLE_KEY=pk_test_…</code> and</p>
-<p>  <code>VITE_CLERK_PRODUCTION_PUBLISHABLE_KEY=pk_live_…</code>, then set the app-facing</p>
-<p>  <code>VITE_CLERK_PUBLISHABLE_KEY</code> from the matching source variable before the</p>
-<p>  static build.</p>
-<ul>
-<li>Plain-text (non-secret) values, e.g. <code>AUTOVAULT_ENVIRONMENT=preview</code> vs</li>
-</ul>
-<p>  <code>production</code>, also belong in <code>env_vars</code> with <code>type: plain_text</code>.</p>
-<ul>
-<li>Preview D1/KV bindings should point at preview resources for any form,</li>
-</ul>
-<p>  checkout, auth, CMS, or admin surface that writes data. If an existing repo</p>
-<p>  shares production bindings in preview, report it as a data-isolation gap</p>
-<p>  before enabling PR-preview traffic.</p>
 <h3>Anti-patterns specific to this surface</h3>
 <ul>
 <li>Do not assume <code>wrangler pages secret put</code> covers preview — it doesn't.</li>
-<li>Do not paste production live secrets into the preview environment &quot;to keep</li>
+<li>Do not paste production live secrets into the preview environment &quot;to keep things consistent.&quot; Preview is the test-mode surface.</li>
+<li>Do not try to read a <code>secret_text</code> value back; the API returns it redacted. Re-provide from the user's secret store.</li>
 </ul>
-<p>  things consistent.&quot; Preview is the test-mode surface.</p>
-<ul>
-<li>Do not try to read a <code>secret_text</code> value back; the API returns it redacted.</li>
-</ul>
-<p>  Re-provide from the user's secret store.</p>
 <h2>Domain Registration Rule</h2>
 <p>Domain registration is billable and non-refundable. Before calling a Registrar</p>
 <p>registration endpoint:</p>
 <ol>
 <li>Run an immediate availability and pricing check.</li>
-<li>Present the exact domain, registration period, price, currency, and renewal</li>
-</ol>
-<p>   behavior to the user.</p>
-<ol>
+<li>Present the exact domain, registration period, price, currency, and renewal behavior to the user.</li>
 <li>Require an explicit confirmation in the current conversation.</li>
 <li>Do not register premium domains through the API.</li>
 <li>Leave <code>auto_renew</code> off unless the user explicitly asks for it.</li>
@@ -327,23 +281,14 @@ JSON</code></pre>
 <li>Deployed project name and URL.</li>
 <li>Custom domains attached and DNS records changed.</li>
 <li>Bindings created or reused.</li>
-<li>Secrets set by name only — and which environment (preview, production, or</li>
-</ul>
-<p>  both) each was applied to.</p>
-<ul>
+<li>Secrets set by name only — and which environment (preview, production, or both) each was applied to.</li>
 <li>Any billable actions confirmed by the user.</li>
 <li>Logs or checks inspected after deploy.</li>
 </ul>
 <h2>Anti-Patterns</h2>
 <ul>
-<li>Do not use ad hoc local <code>wrangler pages deploy</code> for ongoing deploys on a</li>
-</ul>
-<p>  GitHub-connected Pages project. Push to <code>main</code> and let Cloudflare auto-build.</p>
-<ul>
-<li>Do not add Git-connected auto-builds to a repo that already uses Direct Upload</li>
-</ul>
-<p>  from CI without intentionally migrating the deployment model.</p>
-<ul>
+<li>Do not use ad hoc local <code>wrangler pages deploy</code> for ongoing deploys on a GitHub-connected Pages project. Push to <code>main</code> and let Cloudflare auto-build.</li>
+<li>Do not add Git-connected auto-builds to a repo that already uses Direct Upload from CI without intentionally migrating the deployment model.</li>
 <li>When deploying a single HTML file to Cloudflare Pages, do NOT pass the file path directly to <code>wrangler pages deploy file.html</code>. This uploads the file as <code>file.html</code> and it will not be served at the root URL. Instead, place the file in a directory, rename it to <code>index.html</code>, and deploy the directory: <code>mkdir dist &amp;&amp; cp file.html dist/index.html &amp;&amp; wrangler pages deploy dist</code>.</li>
 <li>Do not paste, print, commit, or summarize raw Cloudflare tokens.</li>
 <li>Do not register domains without explicit confirmation after live price check.</li>

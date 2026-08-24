@@ -68,10 +68,7 @@ capabilities:
 <p>and present it to the user for approval before any commit is made.</p>
 <h2>When to use</h2>
 <ul>
-<li>The user asks you to &quot;commit this&quot;, &quot;write a commit message&quot;, &quot;stage and</li>
-</ul>
-<p>  commit&quot;, or similar.</p>
-<ul>
+<li>The user asks you to &quot;commit this&quot;, &quot;write a commit message&quot;, &quot;stage and commit&quot;, or similar.</li>
 <li>The user has finished a change and is about to run <code>git commit</code>.</li>
 <li>Staged changes exist but no message has been drafted yet.</li>
 </ul>
@@ -114,9 +111,8 @@ git diff --staged</code></pre>
 <li>Imperative mood (&quot;add X&quot;, not &quot;added X&quot; or &quot;adds X&quot;)</li>
 <li>No trailing period</li>
 <li>Target ≤ 72 characters</li>
-<li>Describe the <em>intent</em>, not the mechanics (&quot;fix login redirect loop&quot;, not</li>
+<li>Describe the <em>intent</em>, not the mechanics (&quot;fix login redirect loop&quot;, not &quot;change if-statement in login.ts&quot;)</li>
 </ul>
-<p>  &quot;change if-statement in login.ts&quot;)</p>
 <h3>5. Write the body (if the change warrants one)</h3>
 <p>Skip the body for trivial changes. Include a body when:</p>
 <ul>
@@ -142,14 +138,8 @@ the session in-place so downstream services see the new factor immediately.
 <h2>Anti-patterns to avoid</h2>
 <ul>
 <li>Vague subjects like &quot;update code&quot;, &quot;small fixes&quot;, &quot;misc&quot;.</li>
-<li>Subjects that narrate the mechanical edit (&quot;move function&quot;, &quot;rename</li>
-</ul>
-<p>  variable&quot;) rather than the intent.</p>
-<ul>
-<li>Bodies that restate the diff. If a reader can learn the same thing from</li>
-</ul>
-<p>  <code>git show</code>, the body is noise.</p>
-<ul>
+<li>Subjects that narrate the mechanical edit (&quot;move function&quot;, &quot;rename variable&quot;) rather than the intent.</li>
+<li>Bodies that restate the diff. If a reader can learn the same thing from <code>git show</code>, the body is noise.</li>
 <li>Committing without showing the user the draft first.</li>
 </ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>

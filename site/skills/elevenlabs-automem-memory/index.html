@@ -82,13 +82,9 @@ resources:
 <ul>
 <li>A supported memory API and MCP bridge are deployed and reachable.</li>
 <li>The memory service has persistent storage appropriate for the provider.</li>
-<li>The bridge requires an authorization header from clients; it must not fall</li>
+<li>The bridge requires an authorization header from clients; it must not fall back to an embedded upstream credential for anonymous requests.</li>
+<li><code>ELEVENLABS_API_KEY</code> and <code>AUTOMEM_API_TOKEN</code> are configured outside the repository. Never put either in a command, example file, or chat transcript.</li>
 </ul>
-<p>  back to an embedded upstream credential for anonymous requests.</p>
-<ul>
-<li><code>ELEVENLABS_API_KEY</code> and <code>AUTOMEM_API_TOKEN</code> are configured outside the</li>
-</ul>
-<p>  repository. Never put either in a command, example file, or chat transcript.</p>
 <h2>Deploy the memory service</h2>
 <p>Use the provider's normal deployment controls. Configure public, non-secret</p>
 <p>settings as environment variables and send secrets through its secret manager</p>
@@ -131,24 +127,19 @@ EMBEDDING_API_KEY=&lt;managed secret, if required&gt;</code></pre>
 <li>Hold a real test conversation that should trigger a recall or store.</li>
 <li>Inspect that conversation's transcript or tool-call record in ElevenLabs.</li>
 <li>Confirm the expected MCP tool name and a successful result.</li>
-<li>Inspect the memory service's safe operational logs for a corresponding,</li>
+<li>Inspect the memory service's safe operational logs for a corresponding, redacted request.</li>
 </ol>
-<p>   redacted request.</p>
 <p>If no tool call appears, verify the MCP server is attached to the active agent,</p>
 <p>the agent is eligible for MCP use under its privacy/retention settings, the</p>
 <p>authorization header reaches the bridge, and the bridge rejects missing tokens.</p>
 <h2>Security rules</h2>
 <ul>
 <li>Keep browser-accessible agent configuration free of API tokens.</li>
-<li>Require a client token at the bridge; a health check is not evidence that</li>
-</ul>
-<p>  authorization is enforced.</p>
-<ul>
+<li>Require a client token at the bridge; a health check is not evidence that authorization is enforced.</li>
 <li>Use headers rather than query parameters for authentication.</li>
 <li>Do not reuse one persona's memory token for another persona's store.</li>
-<li>Rotate tokens through the secret manager and reconnect the bridge after a</li>
-</ul>
-<p>  suspected exposure.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
+<li>Rotate tokens through the secret manager and reconnect the bridge after a suspected exposure.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Voice agents need continuity, but an MCP bridge is only useful when its access boundary is deliberate and testable.</p>
 <h2>How</h2>

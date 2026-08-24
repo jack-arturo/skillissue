@@ -286,6 +286,13 @@ test("strict build exposes only public skills and writes canonical redirects", (
       /<div class="sd-perm-row"><span class="ico no">×<\/span><span>network<\/span><span class="scope">false<\/span><\/div>/,
       "disabled capabilities render as unavailable rather than as a success",
     );
+    const automemOverview = automemPage.match(/<section id="overview"[\s\S]*?<\/section>/)?.[0] || "";
+    assert.match(
+      automemOverview,
+      /<li><strong>User correction or override\.<\/strong> Phrases:[\s\S]*?not X, Y[\s\S]*?Store as <code>Preference<\/code>,[\s\S]*?<\/li>\s*<li><strong>Decision stabilizes/,
+      "wrapped list-item instructions stay in their original numbered item",
+    );
+    assert.doesNotMatch(automemOverview, /<\/ol>\s*<p>\s*X, Y&quot;/);
     const detailAsset = babysitPage.match(/src="\/assets\/(skill-detail\.[a-f0-9]{12}\.js)"/)?.[1];
     assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
     assert.equal(fs.existsSync(path.join(siteDir, "assets", detailAsset)), true);

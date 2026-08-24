@@ -87,38 +87,18 @@ VITE_CLERK_PUBLISHABLE_KEY=&lt;managed build variable&gt;</code></pre>
 <p>read or print their contents unless the user explicitly asks.</p>
 <h2>Integration shape</h2>
 <ol>
-<li>Inspect the application: framework, Pages Functions or Workers entry point,</li>
+<li>Inspect the application: framework, Pages Functions or Workers entry point, existing session model, public/protected routes, and application records keyed to users or accounts.</li>
+<li>Add Clerk's framework package in the client and Clerk's server package where the edge runtime verifies tokens. Follow current official Clerk and Cloudflare documentation for the package-specific initialization API.</li>
+<li>Initialize the client from <code>VITE_CLERK_PUBLISHABLE_KEY</code>. Render a clear signed-out fallback if it is absent in a local build.</li>
+<li>Verify the session token at every protected Pages Function or Worker route; never treat client-side visibility as authorization.</li>
+<li>Map the verified Clerk user or organization ID to D1/application records only where the product needs internal data. Keep Stripe customer and subscription truth in the billing layer rather than duplicating it in identity claims.</li>
 </ol>
-<p>   existing session model, public/protected routes, and application records</p>
-<p>   keyed to users or accounts.</p>
-<ol>
-<li>Add Clerk's framework package in the client and Clerk's server package where</li>
-</ol>
-<p>   the edge runtime verifies tokens. Follow current official Clerk and</p>
-<p>   Cloudflare documentation for the package-specific initialization API.</p>
-<ol>
-<li>Initialize the client from <code>VITE_CLERK_PUBLISHABLE_KEY</code>. Render a clear</li>
-</ol>
-<p>   signed-out fallback if it is absent in a local build.</p>
-<ol>
-<li>Verify the session token at every protected Pages Function or Worker route;</li>
-</ol>
-<p>   never treat client-side visibility as authorization.</p>
-<ol>
-<li>Map the verified Clerk user or organization ID to D1/application records</li>
-</ol>
-<p>   only where the product needs internal data. Keep Stripe customer and</p>
-<p>   subscription truth in the billing layer rather than duplicating it in</p>
-<p>   identity claims.</p>
 <h2>Frontend rules</h2>
 <ul>
 <li>Prefer the framework's reactive Clerk APIs over polling global state.</li>
 <li>Request a fresh token immediately before authenticated API calls.</li>
 <li>Guard against a late anonymous response replacing a newer signed-in state.</li>
-<li>Configure Clerk appearance through its supported configuration object, not</li>
-</ul>
-<p>  brittle global CSS overrides.</p>
-<ul>
+<li>Configure Clerk appearance through its supported configuration object, not brittle global CSS overrides.</li>
 <li>Keep static marketing pages static; add identity only where it is needed.</li>
 </ul>
 <h2>Edge authorization</h2>

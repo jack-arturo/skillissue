@@ -92,40 +92,19 @@ capabilities:
 <p>Invoke on any of these three trigger families. Listen for the literal phrases</p>
 <p>— pattern-matching silently is how memory hygiene degrades.</p>
 <ol>
-<li><strong>User correction or override.</strong> Phrases: &quot;actually&quot;, &quot;no, I prefer&quot;, &quot;not</li>
+<li><strong>User correction or override.</strong> Phrases: &quot;actually&quot;, &quot;no, I prefer&quot;, &quot;not X, Y&quot;, &quot;that's wrong&quot;, &quot;stop doing X&quot;, &quot;never do X&quot;, &quot;I told you before&quot;, &quot;we decided X already&quot;, &quot;you keep doing Y&quot;. Store as <code>Preference</code>, importance 0.9, confidence 0.95. Associate <code>INVALIDATED_BY</code> to the prior memory it overrides. Store this turn, not later.</li>
+<li><strong>Decision stabilizes after at least one round of discussion.</strong> Phrases: &quot;let's go with X&quot;, &quot;yeah that's the plan&quot;, &quot;do it that way&quot;, &quot;ship it&quot;, &quot;okay let's do that&quot;. Signal: the decision survived pushback. One-turn ideas don't qualify. Store as <code>Decision</code>, importance 0.85–0.9. If alternatives came up, associate <code>PREFERS_OVER</code> against them.</li>
+<li><strong>Pattern articulated, not inferred.</strong> Phrases: &quot;I always do X&quot;, &quot;every time&quot;, &quot;this is how I usually&quot;, or you observing &quot;you tend to do X&quot; and the user confirming. Patterns get stored when <strong>articulated</strong>, not when you pattern-match silently. Store as <code>Pattern</code>, importance 0.8. Associate <code>EXEMPLIFIES</code> to concrete examples.</li>
 </ol>
-<p>   X, Y&quot;, &quot;that's wrong&quot;, &quot;stop doing X&quot;, &quot;never do X&quot;, &quot;I told you before&quot;,</p>
-<p>   &quot;we decided X already&quot;, &quot;you keep doing Y&quot;. Store as <code>Preference</code>,</p>
-<p>   importance 0.9, confidence 0.95. Associate <code>INVALIDATED_BY</code> to the prior</p>
-<p>   memory it overrides. Store this turn, not later.</p>
-<ol>
-<li><strong>Decision stabilizes after at least one round of discussion.</strong> Phrases:</li>
-</ol>
-<p>   &quot;let's go with X&quot;, &quot;yeah that's the plan&quot;, &quot;do it that way&quot;, &quot;ship it&quot;,</p>
-<p>   &quot;okay let's do that&quot;. Signal: the decision survived pushback. One-turn</p>
-<p>   ideas don't qualify. Store as <code>Decision</code>, importance 0.85–0.9. If</p>
-<p>   alternatives came up, associate <code>PREFERS_OVER</code> against them.</p>
-<ol>
-<li><strong>Pattern articulated, not inferred.</strong> Phrases: &quot;I always do X&quot;, &quot;every</li>
-</ol>
-<p>   time&quot;, &quot;this is how I usually&quot;, or you observing &quot;you tend to do X&quot; and</p>
-<p>   the user confirming. Patterns get stored when <strong>articulated</strong>, not when</p>
-<p>   you pattern-match silently. Store as <code>Pattern</code>, importance 0.8. Associate</p>
-<p>   <code>EXEMPLIFIES</code> to concrete examples.</p>
 <p>Also invoke when you need to update a fact (URL, version, deployment state)</p>
 <p>or invalidate one (a deprecation), even without a trigger phrase.</p>
 <h2>The atomic ritual — every store runs all four steps</h2>
 <ol>
 <li><strong>Recall</strong> with a tight query (<code>limit: 5</code>) to find what this relates to.</li>
 <li><strong>Store</strong> with <code>type</code>, <code>importance</code>, <code>tags</code>, and a non-default <code>confidence</code>.</li>
-<li><strong>Verify</strong> with a recall on a distinctive phrase from the content you just</li>
+<li><strong>Verify</strong> with a recall on a distinctive phrase from the content you just stored. Retry the store once if verify misses (silent-fail insurance — <code>store_memory</code> can return success while failing to persist).</li>
+<li><strong>Associate</strong> to the memory found in step 1, if plausible (<code>INVALIDATED_BY</code>, <code>PREFERS_OVER</code>, or <code>EXEMPLIFIES</code> per the trigger family above).</li>
 </ol>
-<p>   stored. Retry the store once if verify misses (silent-fail insurance —</p>
-<p>   <code>store_memory</code> can return success while failing to persist).</p>
-<ol>
-<li><strong>Associate</strong> to the memory found in step 1, if plausible (<code>INVALIDATED_BY</code>,</li>
-</ol>
-<p>   <code>PREFERS_OVER</code>, or <code>EXEMPLIFIES</code> per the trigger family above).</p>
 <p>Step 4 is where the graph gets built. Skipping it is the #1 reason AutoMem</p>
 <p>degrades into a flat bag of notes. Skip association only if the step-1</p>
 <p>related-memory search returns nothing plausible.</p>
@@ -141,24 +120,15 @@ capabilities:
 <p>Use <strong>bare</strong> tags. The corpus has 9,000+ memories tagged this way; namespace</p>
 <p>prefixes (<code>project/&lt;slug&gt;</code>, <code>lang/&lt;x&gt;</code>) silently bifurcate recall.</p>
 <ul>
-<li>One category tag when applicable: <code>preference</code> | <code>decision</code> | <code>pattern</code> |</li>
-</ul>
-<p>  <code>bugfix</code> | <code>solution</code> | <code>milestone</code> | <code>deployment</code> | <code>build</code> | <code>test</code>.</p>
-<ul>
-<li>Project slug (bare) when project-specific, e.g., <code>mcp-automem</code>. Omit if</li>
-</ul>
-<p>  the slug collides with a common topic word (<code>video</code>, <code>test</code>, <code>api</code>).</p>
-<ul>
+<li>One category tag when applicable: <code>preference</code> | <code>decision</code> | <code>pattern</code> | <code>bugfix</code> | <code>solution</code> | <code>milestone</code> | <code>deployment</code> | <code>build</code> | <code>test</code>.</li>
+<li>Project slug (bare) when project-specific, e.g., <code>mcp-automem</code>. Omit if the slug collides with a common topic word (<code>video</code>, <code>test</code>, <code>api</code>).</li>
 <li>Language tag (bare): <code>typescript</code>, <code>python</code>, <code>go</code>, etc.</li>
 </ul>
 <p>Hierarchical entity tags the server injects (<code>entity:people:jack</code>) use</p>
 <p>colons — do not author these by hand.</p>
 <h3>Importance scale (how much this matters)</h3>
 <ul>
-<li><code>0.9–1.0</code> — user preferences, architectural decisions, prod deployments,</li>
-</ul>
-<p>  critical bugs.</p>
-<ul>
+<li><code>0.9–1.0</code> — user preferences, architectural decisions, prod deployments, critical bugs.</li>
 <li><code>0.7–0.8</code> — features, non-critical bug fixes, articulated patterns.</li>
 <li><code>0.5–0.6</code> — standard context, session milestones.</li>
 <li><code>&lt;0.5</code> — low-signal; let it decay.</li>
@@ -205,40 +175,21 @@ capabilities:
 })</code></pre>
 <h2>Content guidelines</h2>
 <ul>
-<li><strong>Target:</strong> 150–300 chars. One paragraph. Format: &quot;Title. Context.</li>
-</ul>
-<p>  Outcome.&quot;</p>
-<ul>
+<li><strong>Target:</strong> 150–300 chars. One paragraph. Format: &quot;Title. Context. Outcome.&quot;</li>
 <li><strong>Soft limit:</strong> 500 chars (server auto-summarizes above).</li>
 <li><strong>Hard limit:</strong> 2000 chars (rejected).</li>
 <li><strong>If more detail is needed:</strong> split into atomic memories and associate.</li>
-<li><strong>Put structured data in <code>metadata</code></strong>, not <code>content</code>. Exit codes, file</li>
+<li><strong>Put structured data in <code>metadata</code></strong>, not <code>content</code>. Exit codes, file paths, commit SHAs, metrics belong there.</li>
 </ul>
-<p>  paths, commit SHAs, metrics belong there.</p>
 <h2>Never store</h2>
 <ul>
 <li>Secrets, credentials, API keys, private tokens, PII.</li>
-<li>Session summaries. Ever. &quot;End of session, here's what we accomplished&quot; is</li>
-</ul>
-<p>  the pattern that creates most corpus garbage.</p>
-<ul>
+<li>Session summaries. Ever. &quot;End of session, here's what we accomplished&quot; is the pattern that creates most corpus garbage.</li>
 <li>Agent task-result dumps. Same family.</li>
-<li>&quot;Useful context that might matter later.&quot; Speculative stores are noise.</li>
-</ul>
-<p>  If unsure, skip.</p>
-<ul>
-<li>Things the user said they'll remember themselves — calendar, plans,</li>
-</ul>
-<p>  casual opinions.</p>
-<ul>
-<li>Confirmations. &quot;Great, that worked&quot; doesn't need a memory. The decision</li>
-</ul>
-<p>  that preceded it might.</p>
-<ul>
-<li>Anything stored to perform attentiveness. Memory is for future-you, not</li>
-</ul>
-<p>  for showing the user you were listening.</p>
-<ul>
+<li>&quot;Useful context that might matter later.&quot; Speculative stores are noise. If unsure, skip.</li>
+<li>Things the user said they'll remember themselves — calendar, plans, casual opinions.</li>
+<li>Confirmations. &quot;Great, that worked&quot; doesn't need a memory. The decision that preceded it might.</li>
+<li>Anything stored to perform attentiveness. Memory is for future-you, not for showing the user you were listening.</li>
 <li>Temporary build output, logs, debug dumps.</li>
 <li>Large code blocks. Store the pattern or decision instead.</li>
 <li>Duplicate memories. Recall first.</li>
@@ -252,18 +203,9 @@ capabilities:
 <ul>
 <li>Storing at the end of a session as a summary dump.</li>
 <li>Defaulting <code>confidence</code> to 0.95 for everything (flattens the decay signal).</li>
-<li>Using namespace-prefixed tags (<code>project/foo</code>, <code>lang/typescript</code>) — these</li>
-</ul>
-<p>  silently bifurcate recall.</p>
-<ul>
-<li>Re-recalling mid-conversation when the topic hasn't shifted. The 1M</li>
-</ul>
-<p>  context already holds turn-1's recall results.</p>
-<ul>
-<li>Storing a new memory when <code>update_memory</code> would have updated the old one</li>
-</ul>
-<p>  in place.</p>
-<ul>
+<li>Using namespace-prefixed tags (<code>project/foo</code>, <code>lang/typescript</code>) — these silently bifurcate recall.</li>
+<li>Re-recalling mid-conversation when the topic hasn't shifted. The 1M context already holds turn-1's recall results.</li>
+<li>Storing a new memory when <code>update_memory</code> would have updated the old one in place.</li>
 <li>Skipping step 4 (association). A flat bag of notes is not a memory graph.</li>
 </ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/entity-dossier/"><span class="name">entity-dossier</span><span class="desc">Pre-meeting context kept dying with the chat. The dossier in AutoMem is the deliverable.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>

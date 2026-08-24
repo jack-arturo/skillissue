@@ -88,64 +88,33 @@ resources:
 <ul>
 <li>Image generation (ComfyUI plus a user-approved checkpoint) on a private endpoint.</li>
 <li>Text serving (vLLM plus a user-approved model) on the same TEE pattern.</li>
-<li>Any workload that must run inside a TEE with hardware attestation and a single</li>
+<li>Any workload that must run inside a TEE with hardware attestation and a single authenticated ingress, with model weights and tokens kept off public storage.</li>
 </ul>
-<p>  authenticated ingress, with model weights and tokens kept off public storage.</p>
 <p>The deploy artifact is one <code>docker-compose.phala.yml</code>. The same flow serves both</p>
 <p>image and text workloads — only the compose changes.</p>
 <h2>Preconditions</h2>
 <ol>
-<li><code>phala</code> CLI installed and authenticated. Confirm with <code>phala auth status</code> /</li>
+<li><code>phala</code> CLI installed and authenticated. Confirm with <code>phala auth status</code> / <code>phala cvms list</code>; do not inspect or copy its credential files.</li>
+<li>A Phala Cloud account with balance. A successful on-demand H200 launch commits a <strong>24-hour minimum (~$115.20 at $4.80/GPU/hr)</strong> — this is the gated, billable action.</li>
+<li>A <strong>public</strong> container image (e.g. <code>ghcr.io/ai-dock/comfyui:latest-cuda</code>, <code>caddy:2</code>, <code>curlimages/curl</code>). <code>phala deploy -c</code> uploads the <strong>compose only</strong> — no local files, no build context reach the CVM.</li>
+<li>Supply required <code>MODEL_URL</code> and <code>COMFYUI_BEARER_TOKEN</code> as deployment environment variables. <code>MODEL_SHA256</code> and <code>MODEL_EXPECTED_BYTES</code> are optional integrity checks. Pass them with <code>-e .env</code> or the dashboard's encrypted-secret UI; never commit or print them.</li>
 </ol>
-<p>   <code>phala cvms list</code>; do not inspect or copy its credential files.</p>
-<ol>
-<li>A Phala Cloud account with balance. A successful on-demand H200 launch commits</li>
-</ol>
-<p>   a <strong>24-hour minimum (~$115.20 at $4.80/GPU/hr)</strong> — this is the gated,</p>
-<p>   billable action.</p>
-<ol>
-<li>A <strong>public</strong> container image (e.g. <code>ghcr.io/ai-dock/comfyui:latest-cuda</code>,</li>
-</ol>
-<p>   <code>caddy:2</code>, <code>curlimages/curl</code>). <code>phala deploy -c</code> uploads the <strong>compose only</strong> —</p>
-<p>   no local files, no build context reach the CVM.</p>
-<ol>
-<li>Supply required <code>MODEL_URL</code> and <code>COMFYUI_BEARER_TOKEN</code> as deployment</li>
-</ol>
-<p>   environment variables. <code>MODEL_SHA256</code></p>
-<p>   and <code>MODEL_EXPECTED_BYTES</code> are optional integrity checks. Pass them with</p>
-<p>   <code>-e .env</code> or the dashboard's encrypted-secret UI; never commit or print them.</p>
 <h2>Key Reality: GPU reservation is dashboard-only</h2>
 <p>This is the load-bearing fact and the easiest day to lose.</p>
 <ul>
-<li><code>phala deploy -t h200.small --image dstack-nvidia-*</code> from the CLI returns</li>
+<li><code>phala deploy -t h200.small --image dstack-nvidia-*</code> from the CLI returns <strong>&quot;No available resources&quot;</strong> and bills nothing. The CLI can only place a workload onto <em>existing</em> workspace teepods, which are CPU-only (`phala nodes list` shows prod5/prod9, no GPU). It <strong>cannot reserve a GPU</strong>.</li>
+<li>A GPU is reserved through the <strong>dashboard</strong> GPU-TEE flow: <code>cloud.phala.com/&lt;org&gt;/gpu-tee</code> → <strong>Launch GPU Instance</strong>.</li>
+<li><code>phala instance-types</code> lists an <code>h200.small</code> in a global <em>catalog</em> — that does not mean your workspace can schedule one from the CLI. Do not trust the catalog as proof of CLI capability.</li>
 </ul>
-<p>  <strong>&quot;No available resources&quot;</strong> and bills nothing. The CLI can only place a</p>
-<p>  workload onto <em>existing</em> workspace teepods, which are CPU-only (`phala nodes</p>
-<p>  list` shows prod5/prod9, no GPU). It <strong>cannot reserve a GPU</strong>.</p>
-<ul>
-<li>A GPU is reserved through the <strong>dashboard</strong> GPU-TEE flow:</li>
-</ul>
-<p>  <code>cloud.phala.com/&lt;org&gt;/gpu-tee</code> → <strong>Launch GPU Instance</strong>.</p>
-<ul>
-<li><code>phala instance-types</code> lists an <code>h200.small</code> in a global <em>catalog</em> — that does</li>
-</ul>
-<p>  not mean your workspace can schedule one from the CLI. Do not trust the catalog</p>
-<p>  as proof of CLI capability.</p>
 <p>After the GPU CVM exists, the CLI is fully usable for everything <em>except</em></p>
 <p>reserving/stopping it (see Lifecycle).</p>
 <h2>Step 1 — Reserve the GPU (dashboard)</h2>
 <p><code>cloud.phala.com/&lt;org&gt;/gpu-tee</code> → <strong>Launch GPU Instance</strong> → Custom Configuration.</p>
 <p>Two traps that cost money or fail the attestation gate:</p>
 <ol>
-<li><strong>Pricing defaults to a 6-month commitment (~$16,416).</strong> Explicitly select</li>
+<li><strong>Pricing defaults to a 6-month commitment (~$16,416).</strong> Explicitly select <strong>On-Demand</strong> ($4.80/GPU/hr, 24h minimum ~$115.20). Do not accept the default.</li>
+<li><strong>OS defaults to a dev image</strong> (<code>dstack-nvidia-dev-*</code>) whose attestation quote is <strong>debug-flagged</strong> — it would fail a strict CC-attestation gate (it does add SSH, which is the only reason to ever pick it). Choose a <strong>prod</strong> <code>dstack-nvidia-*</code> image and verify externally instead of relying on on-box SSH.</li>
 </ol>
-<p>   <strong>On-Demand</strong> ($4.80/GPU/hr, 24h minimum ~$115.20). Do not accept the default.</p>
-<ol>
-<li><strong>OS defaults to a dev image</strong> (<code>dstack-nvidia-dev-*</code>) whose attestation quote</li>
-</ol>
-<p>   is <strong>debug-flagged</strong> — it would fail a strict CC-attestation gate (it does add</p>
-<p>   SSH, which is the only reason to ever pick it). Choose a <strong>prod</strong></p>
-<p>   <code>dstack-nvidia-*</code> image and verify externally instead of relying on on-box SSH.</p>
 <p>Fill: H200 / 1 GPU, disk ≥ 80 GB (image + weights + outputs + headroom), paste</p>
 <p>the compose, add Encrypted Secrets (the same keys as your <code>.env</code>), launch.</p>
 <p>Driving the form with a browser-automation tool: the editor is CodeMirror 6 — set</p>
@@ -154,81 +123,27 @@ resources:
 <p>Because only the compose is uploaded, deliver everything inline. See</p>
 <p><code>templates/comfyui.docker-compose.phala.yml</code> for the proven file. The pattern:</p>
 <ul>
-<li><strong>Single ingress = Caddy</strong>, the only published port. Caddy bearer-gates every</li>
-</ul>
-<p>  request, then reverse-proxies the app on an internal-only port. The app's own</p>
-<p>  auth is disabled (<code>WEB_ENABLE_AUTH=false</code>) so the Caddy bearer is the one gate.</p>
-<p>  Write the Caddyfile inline with a <strong>quoted heredoc</strong> (<code>&lt;&lt;'EOF'</code>) so</p>
-<p>  <code>{$BEARER}</code> is written literally and Caddy expands it from env at runtime — the</p>
-<p>  token never lands in the rendered file.</p>
-<ul>
-<li><strong>Model fetch = an init sidecar</strong>, not an app-specific downloader. Use an</li>
-</ul>
-<p>  explicit <code>curl</code> sidecar that downloads into a shared named volume and exits.</p>
-<p>  Give it <code>MODEL_URL</code> and, when available, <code>MODEL_SHA256</code> or</p>
-<p>  <code>MODEL_EXPECTED_BYTES</code> so restart validation is generic rather than tied to a</p>
-<p>  particular asset.</p>
-<ul>
-<li>The app <code>depends_on</code> the init sidecar with</li>
-</ul>
-<p>  <code>condition: service_completed_successfully</code> — so a non-zero init exit aborts the</p>
-<p>  whole stack (see Debugging).</p>
-<ul>
-<li><strong>Escape shell <code>$</code> as <code>$$</code></strong> inside <code>command:</code> scripts so docker-compose does</li>
-</ul>
-<p>  not interpolate it; the shell/Caddy expands it at runtime.</p>
-<ul>
+<li><strong>Single ingress = Caddy</strong>, the only published port. Caddy bearer-gates every request, then reverse-proxies the app on an internal-only port. The app's own auth is disabled (<code>WEB_ENABLE_AUTH=false</code>) so the Caddy bearer is the one gate. Write the Caddyfile inline with a <strong>quoted heredoc</strong> (<code>&lt;&lt;'EOF'</code>) so <code>{$BEARER}</code> is written literally and Caddy expands it from env at runtime — the token never lands in the rendered file.</li>
+<li><strong>Model fetch = an init sidecar</strong>, not an app-specific downloader. Use an explicit <code>curl</code> sidecar that downloads into a shared named volume and exits. Give it <code>MODEL_URL</code> and, when available, <code>MODEL_SHA256</code> or <code>MODEL_EXPECTED_BYTES</code> so restart validation is generic rather than tied to a particular asset.</li>
+<li>The app <code>depends_on</code> the init sidecar with <code>condition: service_completed_successfully</code> — so a non-zero init exit aborts the whole stack (see Debugging).</li>
+<li><strong>Escape shell <code>$</code> as <code>$$</code></strong> inside <code>command:</code> scripts so docker-compose does not interpolate it; the shell/Caddy expands it at runtime.</li>
 <li>The template resolves <code>${MODEL_URL}</code>, optional <code>${MODEL_SHA256}</code> / <code>${MODEL_EXPECTED_BYTES}</code>, and <code>${COMFYUI_BEARER_TOKEN}</code> from deployment environment variables.</li>
-<li>The Caddy service fails at startup when <code>COMFYUI_BEARER_TOKEN</code> is empty; this</li>
-</ul>
-<p>  template has no implicit ungated mode.</p>
-<ul>
-<li>To preflight an existing model file locally, run</li>
-</ul>
-<p>  <code>scripts/validate-model-file &lt;file&gt; &lt;sha256-or-empty&gt; &lt;expected-bytes-or-empty&gt;</code>.</p>
-<ul>
+<li>The Caddy service fails at startup when <code>COMFYUI_BEARER_TOKEN</code> is empty; this template has no implicit ungated mode.</li>
+<li>To preflight an existing model file locally, run <code>scripts/validate-model-file &lt;file&gt; &lt;sha256-or-empty&gt; &lt;expected-bytes-or-empty&gt;</code>.</li>
 <li>Validate locally: <code>docker compose -f docker-compose.phala.yml config</code> exits 0.</li>
 </ul>
 <h2>Step 3 — Deploy and update</h2>
 <ul>
-<li><strong>First launch:</strong> the dashboard flow in Step 1 (this is what reserves the GPU</li>
+<li><strong>First launch:</strong> the dashboard flow in Step 1 (this is what reserves the GPU and commits the 24h order).</li>
+<li><strong>In-place updates (no new order, no extra charge):</strong> ```bash phala deploy --cvm-id &lt;app_id&gt; -c docker-compose.phala.yml -e .env ``` Use this to ship compose fixes onto the already-reserved GPU. This is how you iterate without re-reserving.</li>
 </ul>
-<p>  and commits the 24h order).</p>
-<ul>
-<li><strong>In-place updates (no new order, no extra charge):</strong></li>
-</ul>
-<p>  ```bash</p>
-<p>  phala deploy --cvm-id &lt;app_id&gt; -c docker-compose.phala.yml -e .env</p>
-<p>  ```</p>
-<p>  Use this to ship compose fixes onto the already-reserved GPU. This is how you</p>
-<p>  iterate without re-reserving.</p>
 <h2>Step 4 — Verify (the gate)</h2>
 <ol>
-<li><strong>GPU landing (do first — silent-CPU risk):</strong> <code>phala cvms get &lt;app_id&gt;</code> /</li>
+<li><strong>GPU landing (do first — silent-CPU risk):</strong> <code>phala cvms get &lt;app_id&gt;</code> / <code>phala cvms list</code> shows the H200 instance running. Through the app, confirm a real GPU — e.g. ComfyUI <code>/system_stats</code> reports <code>NVIDIA H200</code> with ~149 GB VRAM. If it landed on CPU, tear down and redo the dashboard flow.</li>
+<li><strong>Attestation:</strong> <code>phala cvms attestation &lt;app_id&gt; -j</code> → expect `is_online: true<code>, </code>tcb_info<code> present, </code>app_certificates` present. <strong>Be precise about what this proves.</strong> On a <strong>prod</strong> image this confirms the platform/dstack attestation chain is online and the TCB is present. It does <strong>not</strong> independently confirm the GPU is in confidential-compute mode (<code>nvidia-smi conf-compute -q → CC State: ON</code>), because the prod image blocks on-box shell access. Do not write or report &quot;CC verified&quot; — report &quot;platform attestation online, TCB present; GPU CC mode not independently checked on the prod image.&quot; Over-claiming here is exactly how stale deploy lore forms.</li>
+<li><strong>Bearer gate:</strong> <code>curl -s -o /dev/null -w '%{http_code}' https://&lt;app_id&gt;-&lt;port&gt;.&lt;gateway&gt;/</code> → <strong>401</strong>; same with <code>-H &quot;Authorization: Bearer &lt;token&gt;&quot;</code> → <strong>200</strong>.</li>
+<li><strong>End-to-end:</strong> drive the real workload (queue a ComfyUI prompt, poll history, pull the image) and retrieve output locally. That is the gate.</li>
 </ol>
-<p>   <code>phala cvms list</code> shows the H200 instance running. Through the app, confirm a</p>
-<p>   real GPU — e.g. ComfyUI <code>/system_stats</code> reports <code>NVIDIA H200</code> with ~149 GB</p>
-<p>   VRAM. If it landed on CPU, tear down and redo the dashboard flow.</p>
-<ol>
-<li><strong>Attestation:</strong> <code>phala cvms attestation &lt;app_id&gt; -j</code> → expect `is_online:</li>
-</ol>
-<p>   true<code>, </code>tcb_info<code> present, </code>app_certificates` present.</p>
-<p>   <strong>Be precise about what this proves.</strong> On a <strong>prod</strong> image this confirms the</p>
-<p>   platform/dstack attestation chain is online and the TCB is present. It does</p>
-<p>   <strong>not</strong> independently confirm the GPU is in confidential-compute mode</p>
-<p>   (<code>nvidia-smi conf-compute -q → CC State: ON</code>), because the prod image blocks</p>
-<p>   on-box shell access. Do not write or report &quot;CC verified&quot; — report</p>
-<p>   &quot;platform attestation online, TCB present; GPU CC mode not independently</p>
-<p>   checked on the prod image.&quot; Over-claiming here is exactly how stale deploy</p>
-<p>   lore forms.</p>
-<ol>
-<li><strong>Bearer gate:</strong> <code>curl -s -o /dev/null -w '%{http_code}' https://&lt;app_id&gt;-&lt;port&gt;.&lt;gateway&gt;/</code></li>
-</ol>
-<p>   → <strong>401</strong>; same with <code>-H &quot;Authorization: Bearer &lt;token&gt;&quot;</code> → <strong>200</strong>.</p>
-<ol>
-<li><strong>End-to-end:</strong> drive the real workload (queue a ComfyUI prompt, poll history,</li>
-</ol>
-<p>   pull the image) and retrieve output locally. That is the gate.</p>
 <p>Endpoint scheme: <code>https://&lt;app_id&gt;-&lt;port&gt;.&lt;gateway_base_domain&gt;</code> — e.g.</p>
 <p><code>https://&lt;app_id&gt;-8780.dstack-pha-use2.phala.network</code>. The hostname is derived</p>
 <p>from the stable <code>app_id</code>, so a stop/restart keeps the same URL and sealed bearer;</p>
@@ -237,55 +152,21 @@ resources:
 <p>Both surfaced as a CVM that reaches &quot;Multi-User System&quot; fine but whose stack never</p>
 <p>serves. Diagnose from the <strong>init container logs</strong>, not the boot log.</p>
 <ol>
-<li><strong><code>curl</code> exit 23 (~0.7s), aborts the stack.</strong> <code>curlimages/curl</code> runs as uid</li>
+<li><strong><code>curl</code> exit 23 (~0.7s), aborts the stack.</strong> <code>curlimages/curl</code> runs as uid 100, but a fresh named volume mounts root-owned 755 → non-root curl can't create the output file → exit 23 (write error). The init sidecar's non-zero exit kills the stack via <code>service_completed_successfully</code>. Fix: run the init sidecar as <strong><code>user: &quot;0:0&quot;</code></strong>.</li>
+<li><strong>App sees an empty model list.</strong> <code>ai-dock/comfyui</code> runs from <strong><code>/opt/ComfyUI</code></strong> and centralizes checkpoints at <strong><code>/opt/storage/stable_diffusion/models/ckpt</code></strong>, not <code>/workspace/ComfyUI/models/checkpoints</code>. Mount the checkpoint volume at the real paths (mounting both <code>/opt/storage/stable_diffusion/models/ckpt</code> and <code>/opt/ComfyUI/models/checkpoints</code> is belt-and-suspenders).</li>
 </ol>
-<p>   100, but a fresh named volume mounts root-owned 755 → non-root curl can't</p>
-<p>   create the output file → exit 23 (write error). The init sidecar's non-zero</p>
-<p>   exit kills the stack via <code>service_completed_successfully</code>. Fix: run the init</p>
-<p>   sidecar as <strong><code>user: &quot;0:0&quot;</code></strong>.</p>
-<ol>
-<li><strong>App sees an empty model list.</strong> <code>ai-dock/comfyui</code> runs from <strong><code>/opt/ComfyUI</code></strong></li>
-</ol>
-<p>   and centralizes checkpoints at <strong><code>/opt/storage/stable_diffusion/models/ckpt</code></strong>,</p>
-<p>   not <code>/workspace/ComfyUI/models/checkpoints</code>. Mount the checkpoint volume at the</p>
-<p>   real paths (mounting both <code>/opt/storage/stable_diffusion/models/ckpt</code> and</p>
-<p>   <code>/opt/ComfyUI/models/checkpoints</code> is belt-and-suspenders).</p>
 <h2>Debugging a CVM that won't stay up</h2>
 <ul>
-<li>A stack that dies in &lt;1 min with <code>instance_id: null</code> and no containers is</li>
+<li>A stack that dies in &lt;1 min with <code>instance_id: null</code> and no containers is usually <strong>not</strong> a VM/GPU crash. The VM boots fine; the <strong>App Compose Service</strong> fails. Look for <code>service &quot;&lt;x&gt;&quot; didn't complete successfully: exit &lt;code&gt;</code>.</li>
+<li><strong>Read the failing container's logs, don't guess from the symptom.</strong> <code>phala cvms logs -c dstack-&lt;service&gt;-1 &lt;app_id&gt;</code> works while the VM is running. Ephemeral init containers are removed after they exit, so their logs vanish once the VM stops — read the dashboard VM log, or restart and catch it live.</li>
+<li>Exit-code shorthand: <strong>23 = curl write error</strong> (permission or disk-full; a sub-second failure means permission, not disk). A multi-second failure during a large download points at disk size — bump <code>--disk-size</code>.</li>
 </ul>
-<p>  usually <strong>not</strong> a VM/GPU crash. The VM boots fine; the <strong>App Compose Service</strong></p>
-<p>  fails. Look for <code>service &quot;&lt;x&gt;&quot; didn't complete successfully: exit &lt;code&gt;</code>.</p>
-<ul>
-<li><strong>Read the failing container's logs, don't guess from the symptom.</strong></li>
-</ul>
-<p>  <code>phala cvms logs -c dstack-&lt;service&gt;-1 &lt;app_id&gt;</code> works while the VM is running.</p>
-<p>  Ephemeral init containers are removed after they exit, so their logs vanish once</p>
-<p>  the VM stops — read the dashboard VM log, or restart and catch it live.</p>
-<ul>
-<li>Exit-code shorthand: <strong>23 = curl write error</strong> (permission or disk-full; a</li>
-</ul>
-<p>  sub-second failure means permission, not disk). A multi-second failure during a</p>
-<p>  large download points at disk size — bump <code>--disk-size</code>.</p>
 <h2>Lifecycle &amp; Billing</h2>
 <ul>
-<li>A successful on-demand launch commits the <strong>24h minimum (~$115.20)</strong> with no</li>
+<li>A successful on-demand launch commits the <strong>24h minimum (~$115.20)</strong> with no extra prompt. Within that window, stopping vs. leaving it running costs the same — the minimum is sunk.</li>
+<li><strong>On-demand GPU CVMs cannot be stopped with <code>phala cvms stop</code></strong> — it returns *&quot;This CVM is managed by an on-demand GPU rental order and cannot be manually controlled.&quot;* To actually cap billing you must **terminate the rental order in the dashboard**, or <code>phala cvms delete &lt;app_id&gt;</code> (destructive — loses the app_id/URL). Plan for this: do all GPU work inside the paid window, and terminate via dashboard before the order's hour-24 to avoid continuation charges.</li>
+<li>In-place compose updates (<code>phala deploy --cvm-id</code>) do <strong>not</strong> create a new order or charge.</li>
 </ul>
-<p>  extra prompt. Within that window, stopping vs. leaving it running costs the</p>
-<p>  same — the minimum is sunk.</p>
-<ul>
-<li><strong>On-demand GPU CVMs cannot be stopped with <code>phala cvms stop</code></strong> — it returns</li>
-</ul>
-<p>  *&quot;This CVM is managed by an on-demand GPU rental order and cannot be manually</p>
-<p>  controlled.&quot;* To actually cap billing you must **terminate the rental order in</p>
-<p>  the dashboard**, or <code>phala cvms delete &lt;app_id&gt;</code> (destructive — loses the</p>
-<p>  app_id/URL). Plan for this: do all GPU work inside the paid window, and</p>
-<p>  terminate via dashboard before the order's hour-24 to avoid continuation</p>
-<p>  charges.</p>
-<ul>
-<li>In-place compose updates (<code>phala deploy --cvm-id</code>) do <strong>not</strong> create a new order</li>
-</ul>
-<p>  or charge.</p>
 <h2>Reuse for other workloads (e.g. vLLM)</h2>
 <p>Same flow; swap the compose. For text serving: a vLLM container behind the same</p>
 <p>Caddy bearer gate, model pulled by the same</p>
@@ -293,40 +174,20 @@ resources:
 <p>attestation + 401/200 verification. The deploy mechanics do not change.</p>
 <h2>Security</h2>
 <ul>
-<li>Never commit or print <code>.env</code>, bearer tokens, or model-download tokens. They are</li>
-</ul>
-<p>  gitignored locally and sealed as Phala Encrypted Secrets at deploy.</p>
-<ul>
+<li>Never commit or print <code>.env</code>, bearer tokens, or model-download tokens. They are gitignored locally and sealed as Phala Encrypted Secrets at deploy.</li>
 <li>Do not publish internal scripts/compose with real tokens to public storage.</li>
-<li>Content scope for generation workloads stays lawful (e.g. adult content is in</li>
+<li>Content scope for generation workloads stays lawful (e.g. adult content is in scope where authorized; CSAM/illegal content is always out of scope).</li>
 </ul>
-<p>  scope where authorized; CSAM/illegal content is always out of scope).</p>
 <h2>Anti-Patterns</h2>
 <ul>
-<li>Do not try to reserve a GPU from the CLI (<code>phala deploy -t h200.small</code>) — it</li>
-</ul>
-<p>  fails &quot;No available resources.&quot; Use the dashboard GPU-TEE flow.</p>
-<ul>
+<li>Do not try to reserve a GPU from the CLI (<code>phala deploy -t h200.small</code>) — it fails &quot;No available resources.&quot; Use the dashboard GPU-TEE flow.</li>
 <li>Do not accept the dashboard's default 6-month pricing or default dev OS image.</li>
-<li>Do not bind-mount local files or use a build context — only the compose is</li>
-</ul>
-<p>  uploaded.</p>
-<ul>
-<li>Do not rely on an app-specific downloader when a public deployment needs an</li>
-</ul>
-<p>  auditable model-fetch path — use the explicit curl sidecar.</p>
-<ul>
-<li>Do not run the curl init sidecar as the default non-root user against a fresh</li>
-</ul>
-<p>  named volume — it exits 23.</p>
-<ul>
-<li>Do not report &quot;CC attestation verified&quot; from <code>is_online</code>+TCB alone on a prod</li>
-</ul>
-<p>  image — state what was and wasn't checked.</p>
-<ul>
-<li>Do not expect <code>phala cvms stop</code> to halt an on-demand GPU rental — terminate the</li>
-</ul>
-<p>  order in the dashboard.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a> <a class="sd-rel-tile" href="/skills/video-toolkit/"><span class="name">video-toolkit</span><span class="desc">A configurable production toolkit for assembling generated assets and Remotion renders without losing the thread.</span></a></div></div></div></article></section>
+<li>Do not bind-mount local files or use a build context — only the compose is uploaded.</li>
+<li>Do not rely on an app-specific downloader when a public deployment needs an auditable model-fetch path — use the explicit curl sidecar.</li>
+<li>Do not run the curl init sidecar as the default non-root user against a fresh named volume — it exits 23.</li>
+<li>Do not report &quot;CC attestation verified&quot; from <code>is_online</code>+TCB alone on a prod image — state what was and wasn't checked.</li>
+<li>Do not expect <code>phala cvms stop</code> to halt an on-demand GPU rental — terminate the order in the dashboard.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a> <a class="sd-rel-tile" href="/skills/video-toolkit/"><span class="name">video-toolkit</span><span class="desc">A configurable production toolkit for assembling generated assets and Remotion renders without losing the thread.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Confidential compute has enough moving parts to make a green dashboard a bad proxy for a working service.</p>
 <h2>How</h2>

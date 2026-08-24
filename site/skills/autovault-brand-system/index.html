@@ -93,36 +93,16 @@ resources:
 <p>motion assets from one canonical brand source.</p>
 <h2>When to use</h2>
 <ul>
-<li>The user asks for an AutoVault-branded surface, demo, README asset, social</li>
+<li>The user asks for an AutoVault-branded surface, demo, README asset, social card, video bumper, checkout visual, terminal prompt, or iconography pass.</li>
+<li>A project already uses the AutoVault vault mark and needs consistent colors, type, motion, interaction responses, or reduced-motion behavior.</li>
+<li>A surface has strict rendering constraints such as SVG-only web output, terminal ASCII, raster illustration, or video-safe animation.</li>
 </ul>
-<p>  card, video bumper, checkout visual, terminal prompt, or iconography pass.</p>
-<ul>
-<li>A project already uses the AutoVault vault mark and needs consistent colors,</li>
-</ul>
-<p>  type, motion, interaction responses, or reduced-motion behavior.</p>
-<ul>
-<li>A surface has strict rendering constraints such as SVG-only web output,</li>
-</ul>
-<p>  terminal ASCII, raster illustration, or video-safe animation.</p>
 <h2>Workflow</h2>
 <ol>
-<li>Identify the target surface: web SVG/CSS, terminal ASCII/TUI, static docs,</li>
-</ol>
-<p>   social/raster, mascot illustration, or video-style motion.</p>
-<ol>
-<li>Load <code>references/identity.md</code> first. Keep AutoVault as the canonical brand</li>
-</ol>
-<p>   scope.</p>
-<ol>
-<li>Load <code>references/motion.md</code> whenever animation, interaction states, hover</li>
-</ol>
-<p>   behavior, reveal timing, or reduced-motion behavior is involved.</p>
-<ol>
-<li>Load <code>references/surface-adaptation.md</code> when translating the mark across</li>
-</ol>
-<p>   constrained media such as SVG, terminal ASCII, raster images, video, and</p>
-<p>   hosted checkout contexts.</p>
-<ol>
+<li>Identify the target surface: web SVG/CSS, terminal ASCII/TUI, static docs, social/raster, mascot illustration, or video-style motion.</li>
+<li>Load <code>references/identity.md</code> first. Keep AutoVault as the canonical brand scope.</li>
+<li>Load <code>references/motion.md</code> whenever animation, interaction states, hover behavior, reveal timing, or reduced-motion behavior is involved.</li>
+<li>Load <code>references/surface-adaptation.md</code> when translating the mark across constrained media such as SVG, terminal ASCII, raster images, video, and hosted checkout contexts.</li>
 <li>Reuse or adapt the files under <code>assets/</code>:</li>
 </ol>
 <p>   - <code>brand-mark.svg</code> for static web or document marks.</p>
@@ -132,47 +112,31 @@ resources:
 <p>   - <code>mascot-prompt.md</code> for friendly raster/video mascot prompt direction.</p>
 <p>   - <code>usage-examples.md</code> for copy-paste implementation recipes.</p>
 <ol>
-<li>Validate the result against the surface constraints: no text overlap, clear</li>
+<li>Validate the result against the surface constraints: no text overlap, clear contrast on charcoal, stable mark anatomy, reduced-motion fallback, and no asset path or network dependency that the target environment cannot load.</li>
 </ol>
-<p>   contrast on charcoal, stable mark anatomy, reduced-motion fallback, and no</p>
-<p>   asset path or network dependency that the target environment cannot load.</p>
 <h2>Output</h2>
 <p>Produce the smallest useful artifact for the user's surface:</p>
 <ul>
 <li>A patched SVG/CSS component for web UI.</li>
 <li>ASCII frames or a TUI-safe loader treatment for terminal contexts.</li>
 <li>A prompt and art-direction checklist for mascot, social, or video generation.</li>
-<li>A short implementation note explaining which brand tokens, mark state, and</li>
+<li>A short implementation note explaining which brand tokens, mark state, and motion state were used.</li>
 </ul>
-<p>  motion state were used.</p>
 <h2>Brand Rules</h2>
 <ul>
 <li>The public brand is AutoVault.</li>
-<li>The canonical mark is a rounded vault body with two bottom stubs and a dial</li>
-</ul>
-<p>  that communicates locked, unlocked, scan, or admitted state.</p>
-<ul>
+<li>The canonical mark is a rounded vault body with two bottom stubs and a dial that communicates locked, unlocked, scan, or admitted state.</li>
 <li>The primary environment is charcoal with mint <code>#5ad6c0</code> as the active signal.</li>
-<li>Use Inter for interface text, JetBrains Mono for terminal/code/micro-labels,</li>
+<li>Use Inter for interface text, JetBrains Mono for terminal/code/micro-labels, and Instrument Serif only for selective editorial emphasis.</li>
+<li>Motion should feel like scanning, admitting, syncing, or locking. Avoid springy celebration unless the product moment is explicitly successful.</li>
+<li>Treat <code>assets/mascot-checkout-logo-draft.png</code>, when present in a project, as reference material only. It is not a canonical source asset.</li>
 </ul>
-<p>  and Instrument Serif only for selective editorial emphasis.</p>
-<ul>
-<li>Motion should feel like scanning, admitting, syncing, or locking. Avoid</li>
-</ul>
-<p>  springy celebration unless the product moment is explicitly successful.</p>
-<ul>
-<li>Treat <code>assets/mascot-checkout-logo-draft.png</code>, when present in a project, as</li>
-</ul>
-<p>  reference material only. It is not a canonical source asset.</p>
 <h2>Anti-patterns</h2>
 <ul>
 <li>Do not add an unrelated parent-brand lockup.</li>
 <li>Do not replace hosted checkout raster constraints with SVG-only assumptions.</li>
 <li>Do not make the mascot draft PNG canonical or require it as an input.</li>
-<li>Do not use mint as the only color in every surface; charcoal, ink, warning,</li>
-</ul>
-<p>  blue, violet, and error accents have specific jobs.</p>
-<ul>
+<li>Do not use mint as the only color in every surface; charcoal, ink, warning, blue, violet, and error accents have specific jobs.</li>
 <li>Do not ship looping motion without a reduced-motion fallback.</li>
 </ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/html-asset-renderer/"><span class="name">html-asset-renderer</span><span class="desc">Design exports needed dimension-checked production assets, not freehand screenshots.</span></a> <a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>

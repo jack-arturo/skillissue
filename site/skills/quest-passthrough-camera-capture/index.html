@@ -82,15 +82,9 @@ resources:
 Graphics.Blit(source, _target);</code></pre>
 <p>Sizing and format both matter:</p>
 <ul>
-<li>Size from the source texture each time, not once at startup.</li>
+<li>Size from the source texture each time, not once at startup. <code>CurrentResolution</code> is what the device <em>granted</em>, not what you requested, and it can differ from the request or change mid-session.</li>
+<li>Match <code>source.graphicsFormat</code>. The feed is <code>R8G8B8A8_SRGB</code>; blitting into a linear target darkens the whole image subtly enough to read as &quot;the capture is murky&quot; rather than as a color-space bug.</li>
 </ul>
-<p>  <code>CurrentResolution</code> is what the device <em>granted</em>, not what you requested, and</p>
-<p>  it can differ from the request or change mid-session.</p>
-<ul>
-<li>Match <code>source.graphicsFormat</code>. The feed is <code>R8G8B8A8_SRGB</code>; blitting into a</li>
-</ul>
-<p>  linear target darkens the whole image subtly enough to read as &quot;the capture</p>
-<p>  is murky&quot; rather than as a color-space bug.</p>
 <h2>Guard every access on `enabled &amp;&amp; IsPlaying`</h2>
 <p><code>GetTexture()</code> internally validates state and <strong>logs an error</strong> when the</p>
 <p>component is disabled or unpermitted. An unguarded per-frame call produces a</p>
