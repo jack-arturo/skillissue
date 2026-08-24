@@ -335,9 +335,7 @@ function parseFrontmatter(text) {
 function mdToHtml(md, { resourceUrls = new Map() } = {}) {
   const lines = md.split("\n");
   const html = [];
-  let inList = false;
-  let listTag = "ul";
-  let lastListItem = -1;
+  let listStack = [];
   let inCode = false;
   let codeBuf = [];
   let inTable = false;
@@ -345,12 +343,12 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
   let inBq = false;
   let bqBuf = [];
 
+  const renderList = (list) =>
+    `<${list.tag}>${list.items.map((item) => `<li>${inline(item.content)}${item.children.map(renderList).join("")}</li>`).join("")}</${list.tag}>`;
   const flushList = () => {
-    if (inList) {
-      html.push(`</${listTag}>`);
-      inList = false;
-      lastListItem = -1;
-    }
+    if (!listStack.length) return;
+    html.push(renderList(listStack[0]));
+    listStack = [];
   };
   const flushTable = () => {
     if (!inTable) return;
@@ -415,14 +413,40 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
       .replace(/\|$/, "")
       .split("|")
       .map((c) => c.trim());
+  const appendListItem = (match) => {
+    const [, whitespace, marker, content] = match;
+    const indent = whitespace.replace(/\t/g, "  ").length;
+    const tag = /^\d+\.$/.test(marker) ? "ol" : "ul";
+    const item = { content, children: [] };
+    if (!listStack.length) {
+      listStack.push({ indent, tag, items: [item] });
+      return;
+    }
+    let current = listStack.at(-1);
+    if (indent > current.indent && current.items.length) {
+      const child = { indent, tag, items: [item] };
+      current.items.at(-1).children.push(child);
+      listStack.push(child);
+      return;
+    }
+    while (listStack.length > 1 && indent < current.indent) {
+      listStack.pop();
+      current = listStack.at(-1);
+    }
+    if (indent === current.indent && tag === current.tag) {
+      current.items.push(item);
+      return;
+    }
+    flushList();
+    listStack.push({ indent, tag, items: [item] });
+  };
   const appendListContinuation = (line) => {
-    if (!inList || lastListItem < 0) return false;
+    const current = listStack.at(-1);
+    const item = current?.items.at(-1);
+    if (!item) return false;
     const continuation = line.trim();
-    if (!continuation || /^(?:[-*]\s|\d+\.\s)/.test(continuation)) return false;
-    html[lastListItem] = html[lastListItem].replace(
-      /<\/li>$/,
-      ` ${inline(continuation)}</li>`,
-    );
+    if (!continuation) return false;
+    item.content += ` ${continuation}`;
     return true;
   };
 
@@ -442,6 +466,13 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     }
     if (inCode) {
       codeBuf.push(line);
+      continue;
+    }
+    const listItem = line.match(/^(\s*)([-*]|\d+\.)\s+(.+)$/);
+    if (listItem) {
+      flushTable();
+      flushBq();
+      appendListItem(listItem);
       continue;
     }
     if (/^\s{2,}\S/.test(line) && appendListContinuation(line)) continue;
@@ -471,33 +502,12 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     }
     if (inTable) flushTable();
 
-    if (/^### /.test(line)) {
+    const heading = line.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
       flushList();
-      html.push(`<h3>${esc(line.slice(4))}</h3>`);
-    } else if (/^## /.test(line)) {
-      flushList();
-      html.push(`<h2>${esc(line.slice(3))}</h2>`);
-    } else if (/^# /.test(line)) {
-      flushList();
-      html.push(`<h2>${esc(line.slice(2))}</h2>`);
-    } else if (/^[-*] /.test(line)) {
-      if (!inList || listTag !== "ul") {
-        flushList();
-        listTag = "ul";
-        html.push("<ul>");
-        inList = true;
-      }
-      html.push(`<li>${inline(line.slice(2))}</li>`);
-      lastListItem = html.length - 1;
-    } else if (/^\d+\.\s/.test(line)) {
-      if (!inList || listTag !== "ol") {
-        flushList();
-        listTag = "ol";
-        html.push("<ol>");
-        inList = true;
-      }
-      html.push(`<li>${inline(line.replace(/^\d+\.\s/, ""))}</li>`);
-      lastListItem = html.length - 1;
+      const level = heading[1].length;
+      const tag = level < 3 ? "h2" : `h${level}`;
+      html.push(`<${tag}>${esc(heading[2])}</${tag}>`);
     } else if (/^---+$/.test(line.trim())) {
       flushList();
       html.push("<hr>");

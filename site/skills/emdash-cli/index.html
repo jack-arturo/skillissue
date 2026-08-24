@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/emdash-cli/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -78,18 +78,10 @@ resources:
     type: file
 ---</pre></div><h2>EmDash CLI</h2>
 <p>The EmDash CLI (<code>emdash</code> or <code>ec</code>) manages EmDash CMS instances. Commands fall into two categories:</p>
-<ul>
-<li><strong>Local commands</strong> — work directly on a SQLite file, no running server needed: <code>init</code>, <code>dev</code>, <code>seed</code>, <code>export-seed</code>, <code>auth secret</code></li>
-<li><strong>Remote commands</strong> — talk to a running EmDash instance via HTTP: <code>types</code>, <code>login</code>, <code>logout</code>, <code>whoami</code>, <code>content</code>, <code>schema</code>, <code>media</code>, <code>search</code>, <code>taxonomy</code>, <code>menu</code></li>
-</ul>
+<ul><li><strong>Local commands</strong> — work directly on a SQLite file, no running server needed: <code>init</code>, <code>dev</code>, <code>seed</code>, <code>export-seed</code>, <code>auth secret</code></li><li><strong>Remote commands</strong> — talk to a running EmDash instance via HTTP: <code>types</code>, <code>login</code>, <code>logout</code>, <code>whoami</code>, <code>content</code>, <code>schema</code>, <code>media</code>, <code>search</code>, <code>taxonomy</code>, <code>menu</code></li></ul>
 <h2>Authentication</h2>
 <p>Remote commands resolve auth automatically:</p>
-<ol>
-<li><code>--token</code> flag</li>
-<li><code>EMDASH_TOKEN</code> env var</li>
-<li>Stored credentials from <code>emdash login</code></li>
-<li>Dev bypass (localhost only — no token needed)</li>
-</ol>
+<ol><li><code>--token</code> flag</li><li><code>EMDASH_TOKEN</code> env var</li><li>Stored credentials from <code>emdash login</code></li><li>Dev bypass (localhost only — no token needed)</li></ol>
 <p>For local dev servers, just run the command — auth is handled automatically. For remote instances, run <code>emdash login --url https://my-site.pages.dev</code> first.</p>
 <h2>Custom Headers &amp; Reverse Proxies</h2>
 <p>Sites behind Cloudflare Access or other reverse proxies need auth headers on every request. The CLI supports this via <code>--header</code> flags and environment variables.</p>
@@ -109,11 +101,7 @@ npx emdash login --url https://my-site.pages.dev</code></pre>
 <p>Headers are persisted to <code>~/.config/emdash/auth.json</code> after login, so subsequent commands inherit them automatically.</p>
 <h3>Cloudflare Access Browser Flow</h3>
 <p>If you don't have service tokens and <code>cloudflared</code> is installed, the CLI will automatically:</p>
-<ol>
-<li>Detect when Access blocks the request</li>
-<li>Try to get a cached JWT via <code>cloudflared access token</code></li>
-<li>Fall back to <code>cloudflared access login</code> for browser-based auth</li>
-</ol>
+<ol><li>Detect when Access blocks the request</li><li>Try to get a cached JWT via <code>cloudflared access token</code></li><li>Fall back to <code>cloudflared access login</code> for browser-based auth</li></ol>
 <p>This works for interactive use but isn't suitable for CI. Use service tokens for automation.</p>
 <h3>Generic Reverse Proxy Auth</h3>
 <p>The <code>--header</code> flag works with any auth scheme:</p>
@@ -233,11 +221,7 @@ npx emdash taxonomy add-term categories --name &quot;Frontend&quot; --parent 01P
 npx emdash menu get primary</code></pre>
 <h2>Drafts and Publishing</h2>
 <p>The CLI auto-publishes on <code>create</code> and <code>update</code> by default. This means:</p>
-<ul>
-<li><strong><code>create</code></strong> creates the item and immediately publishes it</li>
-<li><strong><code>update</code></strong> updates the item and publishes if a draft revision was created</li>
-<li><strong><code>get</code></strong> returns draft data if a pending draft exists (e.g. from the admin UI)</li>
-</ul>
+<ul><li><strong><code>create</code></strong> creates the item and immediately publishes it</li><li><strong><code>update</code></strong> updates the item and publishes if a draft revision was created</li><li><strong><code>get</code></strong> returns draft data if a pending draft exists (e.g. from the admin UI)</li></ul>
 <p>Use <code>--draft</code> on create/update to skip auto-publishing. Use <code>--published</code> on get to ignore pending drafts.</p>
 <p>Collections that support revisions store edits as draft revisions. The CLI handles this transparently — agents don't need to know whether a collection uses revisions or not.</p>
 <h2>JSON Output</h2>

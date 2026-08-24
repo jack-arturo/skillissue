@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/browser-hand/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -83,23 +83,11 @@ resources:
 <p>This is a <strong>skill</strong>, not an MCP server: no always-on tool list and no extra MCP process. The agent loads it when the task matches (signed-in browser work).</p>
 <h2>When to load this skill</h2>
 <p><strong>Load it when any of these are true:</strong></p>
-<ul>
-<li>The task needs a site the user is <strong>already signed into</strong>.</li>
-<li>The user mentions <strong>existing tabs, cookies, “my Chrome,” “logged in,” or a real account</strong>.</li>
-<li>Remote debugging / a fresh Chromium would lose auth or get blocked (common with Google and other OAuth).</li>
-</ul>
+<ul><li>The task needs a site the user is <strong>already signed into</strong>.</li><li>The user mentions <strong>existing tabs, cookies, “my Chrome,” “logged in,” or a real account</strong>.</li><li>Remote debugging / a fresh Chromium would lose auth or get blocked (common with Google and other OAuth).</li></ul>
 <p><strong>Skip it when:</strong></p>
-<ul>
-<li>A public page can be fetched with HTTP / <code>WebFetch</code>.</li>
-<li>The user only wants a <strong>disposable headless</strong> browser (use the upstream <code>dev-browser</code> CLI).</li>
-</ul>
+<ul><li>A public page can be fetched with HTTP / <code>WebFetch</code>.</li><li>The user only wants a <strong>disposable headless</strong> browser (use the upstream <code>dev-browser</code> CLI).</li></ul>
 <h2>Why this instead of remote debugging</h2>
-<ol>
-<li>Modern Chrome <strong>will not</strong> attach a remote-debug port to the <strong>default</strong> profile without a separate user-data dir.</li>
-<li>Sites often <strong>block</strong> debugger/automation-shaped sessions (including Google OAuth).</li>
-<li>This stack defaults to <strong>background tabs</strong> — no stealing OS focus while the user works.</li>
-<li>Recovery paths for password-manager wedges and multi-step agent flows; local <strong>challenge gym</strong> for agent-shaped failures.</li>
-</ol>
+<ol><li>Modern Chrome <strong>will not</strong> attach a remote-debug port to the <strong>default</strong> profile without a separate user-data dir.</li><li>Sites often <strong>block</strong> debugger/automation-shaped sessions (including Google OAuth).</li><li>This stack defaults to <strong>background tabs</strong> — no stealing OS focus while the user works.</li><li>Recovery paths for password-manager wedges and multi-step agent flows; local <strong>challenge gym</strong> for agent-shaped failures.</li></ol>
 <h2>Pieces (repo root)</h2>
 <div class="table-wrap"><table>
 <thead><tr><th>Piece</th><th>Command / path</th></tr></thead>
@@ -129,14 +117,7 @@ browser-hand evaluate --page-name work --code 'document.title'
 browser-hand screenshot --page-name work</code></pre>
 <p>Full reference: <code>references/extension-cli.md</code>.</p>
 <h2>Agent rules</h2>
-<ul>
-<li>Prefer <strong>named pages</strong> (<code>--page-name</code>) for multi-step work.</li>
-<li><code>open/goto/snapshot/screenshot/evaluate</code> create a named tab if missing; <code>click/type/fill/autofill-profile</code> attach to an existing one and error instead. Pass the same <code>--page-name</code> you opened with — omitting it acts on whichever tab is active.</li>
-<li><strong>Do not</strong> request window focus for ordinary fill/click/snapshot. Only use <code>focus --focus window --reason &quot;…&quot;</code> when a human must act (2FA, captcha, confirm).</li>
-<li>Snapshot or screenshot <strong>before and after</strong> writes; verify with evaluate when critical.</li>
-<li>On username/password manager weirdness, soft recovery is built in — retry evaluate/fill; re-open the named page if screenshot still fails.</li>
-<li>Append new platform quirks to <code>references/platform-gotchas.md</code> on the same run.</li>
-</ul>
+<ul><li>Prefer <strong>named pages</strong> (<code>--page-name</code>) for multi-step work.</li><li><code>open/goto/snapshot/screenshot/evaluate</code> create a named tab if missing; <code>click/type/fill/autofill-profile</code> attach to an existing one and error instead. Pass the same <code>--page-name</code> you opened with — omitting it acts on whichever tab is active.</li><li><strong>Do not</strong> request window focus for ordinary fill/click/snapshot. Only use <code>focus --focus window --reason &quot;…&quot;</code> when a human must act (2FA, captcha, confirm).</li><li>Snapshot or screenshot <strong>before and after</strong> writes; verify with evaluate when critical.</li><li>On username/password manager weirdness, soft recovery is built in — retry evaluate/fill; re-open the named page if screenshot still fails.</li><li>Append new platform quirks to <code>references/platform-gotchas.md</code> on the same run.</li></ul>
 <h2>Optional headless</h2>
 <p>For CI / empty profile only: upstream <code>dev-browser --headless</code> or <code>--connect</code> to a <strong>non-default</strong> debug profile. See <code>references/remote-debug-fallback.md</code>. Never treat that as “drive my daily Chrome.”</p>
 <h2>Read-only / audit</h2>

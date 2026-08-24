@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/tui-design/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -174,12 +174,7 @@ resources:
 <tr><td><strong>Minimum size gate</strong></td><td>Display &quot;terminal too small&quot; if below usable minimum</td></tr>
 </tbody></table></div>
 <p><strong>Rules:</strong></p>
-<ul>
-<li>Define a minimum terminal size (typically 80x24). Below that, show a resize message.</li>
-<li>Never crash on resize. Handle <code>SIGWINCH</code> gracefully.</li>
-<li>Use constraint-based layouts (percentages, min/max, ratios), not absolute positions.</li>
-<li>Test at 80x24, 120x40, and 200x60 to verify scaling.</li>
-</ul>
+<ul><li>Define a minimum terminal size (typically 80x24). Below that, show a resize message.</li><li>Never crash on resize. Handle <code>SIGWINCH</code> gracefully.</li><li>Use constraint-based layouts (percentages, min/max, ratios), not absolute positions.</li><li>Test at 80x24, 120x40, and 200x60 to verify scaling.</li></ul>
 <hr>
 <h2>3. Interaction Model</h2>
 <h3>Navigation Style Selector</h3>
@@ -202,37 +197,13 @@ resources:
 <tr><td><strong>L3: Power</strong></td><td>Composed commands, macros, custom bindings</td><td>Power users</td><td>Docs only</td></tr>
 </tbody></table></div>
 <p><strong>Keybinding conventions (lingua franca):</strong></p>
-<ul>
-<li><code>j</code>/<code>k</code>, move down/up</li>
-<li><code>h</code>/<code>l</code>, move left/right (or collapse/expand)</li>
-<li><code>/</code>, search</li>
-<li><code>?</code>, help overlay</li>
-<li><code>:</code>, command mode</li>
-<li><code>q</code>, quit (or <code>Esc</code> to go back one level)</li>
-<li><code>Enter</code>, select / confirm / drill in</li>
-<li><code>Tab</code>, switch focus between panels</li>
-<li><code>Space</code>, toggle selection</li>
-<li><code>g</code>/<code>G</code>, jump to top/bottom</li>
-</ul>
+<ul><li><code>j</code>/<code>k</code>, move down/up</li><li><code>h</code>/<code>l</code>, move left/right (or collapse/expand)</li><li><code>/</code>, search</li><li><code>?</code>, help overlay</li><li><code>:</code>, command mode</li><li><code>q</code>, quit (or <code>Esc</code> to go back one level)</li><li><code>Enter</code>, select / confirm / drill in</li><li><code>Tab</code>, switch focus between panels</li><li><code>Space</code>, toggle selection</li><li><code>g</code>/<code>G</code>, jump to top/bottom</li></ul>
 <p><strong>Never bind:</strong> <code>Ctrl+C</code> (interrupt), <code>Ctrl+Z</code> (suspend), <code>Ctrl+\</code> (quit signal). These belong to the terminal.</p>
 <h3>Focus Management</h3>
-<ul>
-<li>Only one widget receives keyboard input at a time</li>
-<li><strong>Tab</strong> cycles focus forward, <strong>Shift+Tab</strong> backward</li>
-<li>Focus indicator: highlighted border, color change, or cursor presence</li>
-<li>Unfocused panels: dimmed or thinner borders</li>
-<li>Modal dialogs create focus traps, background receives no events</li>
-<li>Nested focus: outer container routes events to focused child</li>
-</ul>
+<ul><li>Only one widget receives keyboard input at a time</li><li><strong>Tab</strong> cycles focus forward, <strong>Shift+Tab</strong> backward</li><li>Focus indicator: highlighted border, color change, or cursor presence</li><li>Unfocused panels: dimmed or thinner borders</li><li>Modal dialogs create focus traps, background receives no events</li><li>Nested focus: outer container routes events to focused child</li></ul>
 <h3>Search &amp; Filtering</h3>
 <p>The universal pattern: press <code>/</code>, type query, results filter live.</p>
-<ul>
-<li><code>n</code>/<code>N</code>, next/previous match</li>
-<li><code>Esc</code>, dismiss search</li>
-<li>Fuzzy matching by default, <code>'</code> prefix for exact match</li>
-<li>Highlight matched characters in results</li>
-<li>Preview pane updates for highlighted result</li>
-</ul>
+<ul><li><code>n</code>/<code>N</code>, next/previous match</li><li><code>Esc</code>, dismiss search</li><li>Fuzzy matching by default, <code>'</code> prefix for exact match</li><li>Highlight matched characters in results</li><li>Preview pane updates for highlighted result</li></ul>
 <h3>Help System: Three Tiers</h3>
 <div class="table-wrap"><table>
 <thead><tr><th>Tier</th><th>Trigger</th><th>Content</th><th>Audience</th></tr></thead>
@@ -252,11 +223,7 @@ resources:
 <tr><td>Severe (drop database)</td><td>Modal dialog requiring resource name input</td></tr>
 <tr><td>Irreversible batch</td><td><code>--dry-run</code> flag + explicit confirmation</td></tr>
 </tbody></table></div>
-<ul>
-<li>Modal overlays: render popup on top of dimmed/blurred background</li>
-<li>Toast notifications: auto-dismiss after 3-5 seconds, no interaction required</li>
-<li>Status bar messages: vim-style one-liner feedback, auto-fade</li>
-</ul>
+<ul><li>Modal overlays: render popup on top of dimmed/blurred background</li><li>Toast notifications: auto-dismiss after 3-5 seconds, no interaction required</li><li>Status bar messages: vim-style one-liner feedback, auto-fade</li></ul>
 <hr>
 <h2>4. Color Design System</h2>
 <h3>Terminal Color Tiers</h3>
@@ -269,12 +236,7 @@ resources:
 <tr><td><strong>True Color</strong></td><td><code>\033[38;2;{r};{g};{b}m</code></td><td>16.7M (absolute)</td><td>Full control. Requires <code>COLORTERM=truecolor</code>.</td></tr>
 </tbody></table></div>
 <p><strong>Detection hierarchy:</strong></p>
-<ol>
-<li><code>$COLORTERM</code> = <code>truecolor</code> or <code>24bit</code> → true color</li>
-<li><code>$TERM</code> contains <code>256color</code> → 256 colors</li>
-<li><code>$NO_COLOR</code> is set → disable all color</li>
-<li>Default → 16 ANSI colors</li>
-</ol>
+<ol><li><code>$COLORTERM</code> = <code>truecolor</code> or <code>24bit</code> → true color</li><li><code>$TERM</code> contains <code>256color</code> → 256 colors</li><li><code>$NO_COLOR</code> is set → disable all color</li><li>Default → 16 ANSI colors</li></ol>
 <p><strong>Golden rule:</strong> Your TUI must be _usable_ in 16-color mode. True color _enhances_, it never _creates_ the hierarchy.</p>
 <h3>Semantic Color Slots</h3>
 <p>Define colors by function, not appearance. Map semantics to actual colors through your theme:</p>
@@ -315,18 +277,10 @@ resources:
 <p>Each step ~5-8% lighter in dark themes. The eye perceives depth from the contrast gradient. This reduces the need for box-drawing borders while maintaining clear visual zones.</p>
 <h3>Theme Architecture</h3>
 <p>Follow the Base16 pattern: define 16 named color slots, map them semantically:</p>
-<ul>
-<li><strong>8 monotones</strong> (base00-base07): background/foreground gradient</li>
-<li><strong>8 accents</strong> (base08-base0F): syntax/semantic colors</li>
-</ul>
+<ul><li><strong>8 monotones</strong> (base00-base07): background/foreground gradient</li><li><strong>8 accents</strong> (base08-base0F): syntax/semantic colors</li></ul>
 <p>Ship a dark theme by default. Detect light/dark terminal via OSC escape query or <code>terminal-light</code> crate. Provide at least one light variant. Respect <code>NO_COLOR</code>.</p>
 <h3>Accessibility Requirements</h3>
-<ul>
-<li><strong>WCAG AA contrast</strong>: 4.5:1 ratio for body text, 3:1 for large text/UI elements</li>
-<li><strong>Never use color alone</strong>: Pair with symbols (checkmark, X, triangle), text labels, position, or typography</li>
-<li><strong>Color blindness safe pairs</strong>: blue+orange, blue+yellow, black+white. Avoid relying on red vs green.</li>
-<li><strong>Test</strong>: monochrome mode, color blindness simulator, 3+ terminal emulators, light and dark themes</li>
-</ul>
+<ul><li><strong>WCAG AA contrast</strong>: 4.5:1 ratio for body text, 3:1 for large text/UI elements</li><li><strong>Never use color alone</strong>: Pair with symbols (checkmark, X, triangle), text labels, position, or typography</li><li><strong>Color blindness safe pairs</strong>: blue+orange, blue+yellow, black+white. Avoid relying on red vs green.</li><li><strong>Test</strong>: monochrome mode, color blindness simulator, 3+ terminal emulators, light and dark themes</li></ul>
 <hr>
 <h2>5. Data Visualization</h2>
 <h3>Character-Resolution Building Blocks</h3>
@@ -364,11 +318,7 @@ resources:
 <h2>6. Animation &amp; Motion</h2>
 <h3>Flicker-Free Rendering Stack</h3>
 <p>Three layers, all required for smooth TUI rendering:</p>
-<ol>
-<li><strong>Double buffering</strong>: Render to off-screen buffer, diff against previous frame, emit only changed cells</li>
-<li><strong>Synchronized output</strong>: Wrap frame in <code>CSI ? 2026 h</code> ... <code>CSI ? 2026 l</code> for atomic terminal render</li>
-<li><strong>Batched writes</strong>: Combine all escape sequences into a single <code>write()</code> syscall</li>
-</ol>
+<ol><li><strong>Double buffering</strong>: Render to off-screen buffer, diff against previous frame, emit only changed cells</li><li><strong>Synchronized output</strong>: Wrap frame in <code>CSI ? 2026 h</code> ... <code>CSI ? 2026 l</code> for atomic terminal render</li><li><strong>Batched writes</strong>: Combine all escape sequences into a single <code>write()</code> syscall</li></ol>
 <h3>When to Animate</h3>
 <div class="table-wrap"><table>
 <thead><tr><th>Situation</th><th>Animation</th><th>Duration</th></tr></thead>
@@ -382,35 +332,16 @@ resources:
 </tbody></table></div>
 <p><strong>Rule:</strong> Animations must never delay user input. If the user presses a key during a transition, cancel it and respond immediately.</p>
 <h3>Real-Time Updates</h3>
-<ul>
-<li>Cap refresh to 15-30 FPS for dashboards (saves CPU, prevents flicker)</li>
-<li>Use differential updates, only redraw changed cells</li>
-<li>Stream text (AI responses, logs) at a readable pace, not network burst speed</li>
-<li>Background operations: show status in a status bar widget, never block the main loop</li>
-</ul>
+<ul><li>Cap refresh to 15-30 FPS for dashboards (saves CPU, prevents flicker)</li><li>Use differential updates, only redraw changed cells</li><li>Stream text (AI responses, logs) at a readable pace, not network burst speed</li><li>Background operations: show status in a status bar widget, never block the main loop</li></ul>
 <hr>
 <h2>7. The Seven Design Principles</h2>
-<ol>
-<li><strong>Keyboard-first, mouse-optional</strong>: Every feature accessible via keyboard. Mouse enhances but never replaces. <code>Shift+click</code> must bypass mouse capture for text selection.</li>
-</ol>
-<ol>
-<li><strong>Spatial consistency</strong>: Panels stay in fixed positions. Users build mental maps. Never rearrange without explicit user action. Tabs provide stable landmarks.</li>
-</ol>
-<ol>
-<li><strong>Progressive disclosure</strong>: Show 5 essential shortcuts in the footer. Full help behind <code>?</code>. Complete reference in docs. The floor is accessible, the ceiling is unlimited.</li>
-</ol>
-<ol>
-<li><strong>Async everything</strong>: Never freeze the UI. File operations, network requests, scans all run in the background with progress indication. Cancel with <code>Esc</code>.</li>
-</ol>
-<ol>
-<li><strong>Semantic color</strong>: Color encodes meaning, not decoration. If you removed all color, the interface should still be _usable_ through layout, typography, and symbols.</li>
-</ol>
-<ol>
-<li><strong>Contextual intelligence</strong>: Keybindings update per panel. Status bars reflect current state. Help shows what's actionable right now, not everything ever.</li>
-</ol>
-<ol>
-<li><strong>Design in layers</strong>: Start monochrome (usable?). Add 16 ANSI colors (readable?). Layer true color (beautiful?). Each tier must stand independently.</li>
-</ol>
+<ol><li><strong>Keyboard-first, mouse-optional</strong>: Every feature accessible via keyboard. Mouse enhances but never replaces. <code>Shift+click</code> must bypass mouse capture for text selection.</li></ol>
+<ol><li><strong>Spatial consistency</strong>: Panels stay in fixed positions. Users build mental maps. Never rearrange without explicit user action. Tabs provide stable landmarks.</li></ol>
+<ol><li><strong>Progressive disclosure</strong>: Show 5 essential shortcuts in the footer. Full help behind <code>?</code>. Complete reference in docs. The floor is accessible, the ceiling is unlimited.</li></ol>
+<ol><li><strong>Async everything</strong>: Never freeze the UI. File operations, network requests, scans all run in the background with progress indication. Cancel with <code>Esc</code>.</li></ol>
+<ol><li><strong>Semantic color</strong>: Color encodes meaning, not decoration. If you removed all color, the interface should still be _usable_ through layout, typography, and symbols.</li></ol>
+<ol><li><strong>Contextual intelligence</strong>: Keybindings update per panel. Status bars reflect current state. Help shows what's actionable right now, not everything ever.</li></ol>
+<ol><li><strong>Design in layers</strong>: Start monochrome (usable?). Add 16 ANSI colors (readable?). Layer true color (beautiful?). Each tier must stand independently.</li></ol>
 <hr>
 <h2>Anti-Patterns</h2>
 <p>Validate your design against these ranked pitfalls (ordered by real-world complaint frequency):</p>
@@ -430,28 +361,12 @@ resources:
 </tbody></table></div>
 <h2>9. Compatibility Checklist</h2>
 <p>Before shipping, verify:</p>
-<ul>
-<li>[ ] Works at 80x24 minimum terminal size</li>
-<li>[ ] Handles terminal resize without crash</li>
-<li>[ ] Looks correct on dark AND light terminal themes</li>
-<li>[ ] Respects <code>NO_COLOR</code> environment variable</li>
-<li>[ ] Works inside tmux / zellij / screen</li>
-<li>[ ] Functions over SSH (no features require local-only protocols)</li>
-<li>[ ] Mouse capture doesn't break text selection (<code>Shift+click</code>)</li>
-<li>[ ] All features accessible via keyboard alone</li>
-<li>[ ] No ANSI escape sequence leaks to piped/redirected output</li>
-<li>[ ] Exits cleanly on <code>Ctrl+C</code> / <code>SIGINT</code> (restores terminal state)</li>
-</ul>
+<ul><li>[ ] Works at 80x24 minimum terminal size</li><li>[ ] Handles terminal resize without crash</li><li>[ ] Looks correct on dark AND light terminal themes</li><li>[ ] Respects <code>NO_COLOR</code> environment variable</li><li>[ ] Works inside tmux / zellij / screen</li><li>[ ] Functions over SSH (no features require local-only protocols)</li><li>[ ] Mouse capture doesn't break text selection (<code>Shift+click</code>)</li><li>[ ] All features accessible via keyboard alone</li><li>[ ] No ANSI escape sequence leaks to piped/redirected output</li><li>[ ] Exits cleanly on <code>Ctrl+C</code> / <code>SIGINT</code> (restores terminal state)</li></ul>
 <hr>
 <p>For Unicode character reference tables and border style gallery, see <a href="/bundles/tui-design/references/visual-catalog.md.txt">visual-catalog.md</a>.</p>
 <p>For real-world TUI app design analysis and inspiration, see <a href="/bundles/tui-design/references/app-patterns.md.txt">app-patterns.md</a>.</p>
 <h2>What This Skill is NOT</h2>
-<ul>
-<li>Not a framework-specific API reference.</li>
-<li>Not an excuse to over-decorate terminal tools.</li>
-<li>Not a replacement for testing in real terminal emulators.</li>
-<li>Not only for Rust; the patterns apply across TUI frameworks.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/bubble-tea-tui-builder/"><span class="name">bubble-tea-tui-builder</span><span class="desc">Practical defaults for fast, testable Go terminal interfaces built with Bubble Tea.</span></a> <a class="sd-rel-tile" href="/skills/cli-installer-ux/"><span class="name">cli-installer-ux</span><span class="desc">Install scripts leaked machine output into user-facing copy. This skill is the UX gate.</span></a></div></div></div></article></section>
+<ul><li>Not a framework-specific API reference.</li><li>Not an excuse to over-decorate terminal tools.</li><li>Not a replacement for testing in real terminal emulators.</li><li>Not only for Rust; the patterns apply across TUI frameworks.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/bubble-tea-tui-builder/"><span class="name">bubble-tea-tui-builder</span><span class="desc">Practical defaults for fast, testable Go terminal interfaces built with Bubble Tea.</span></a> <a class="sd-rel-tile" href="/skills/cli-installer-ux/"><span class="name">cli-installer-ux</span><span class="desc">Install scripts leaked machine output into user-facing copy. This skill is the UX gate.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Terminal interfaces are compact by necessity, not by excuse. A dense screen can still be calm.</p>
 <h2>How</h2>

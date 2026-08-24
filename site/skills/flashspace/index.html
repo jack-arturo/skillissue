@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/flashspace/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -247,34 +247,15 @@ flashspace open-space-control</code></pre>
 <hr>
 <h2>AutoJack / agent quick paths</h2>
 <p>When Jack says:</p>
-<ol>
-<li><strong>&quot;Go to Code / Web / Chat / Terminal / AI / Build&quot;</strong> → <code>flashspace workspace --name &lt;Name&gt;</code> (quote multi-word names).</li>
-<li><strong>&quot;What's my layout?&quot; / &quot;which space am I on?&quot;</strong> → <code>get-profile</code> + <code>get-workspace</code> + <code>list-workspaces --with-display</code>.</li>
-<li><strong>&quot;Put this app on Code&quot;</strong> (active app implied) → <code>flashspace assign-app --workspace Code --show-notification</code>.</li>
-<li><strong>&quot;Float this&quot;</strong> → <code>flashspace floating-apps toggle --show-notification</code>.</li>
-<li><strong>&quot;Clean this space&quot;</strong> → <code>flashspace workspace --name &quot;$(flashspace get-workspace)&quot; --clean</code> or <code>flashspace hide-unassigned-apps</code>.</li>
-<li><strong>&quot;Next space&quot;</strong> → <code>flashspace workspace --next --skip-empty</code>.</li>
-</ol>
+<ol><li><strong>&quot;Go to Code / Web / Chat / Terminal / AI / Build&quot;</strong> → <code>flashspace workspace --name &lt;Name&gt;</code> (quote multi-word names).</li><li><strong>&quot;What's my layout?&quot; / &quot;which space am I on?&quot;</strong> → <code>get-profile</code> + <code>get-workspace</code> + <code>list-workspaces --with-display</code>.</li><li><strong>&quot;Put this app on Code&quot;</strong> (active app implied) → <code>flashspace assign-app --workspace Code --show-notification</code>.</li><li><strong>&quot;Float this&quot;</strong> → <code>flashspace floating-apps toggle --show-notification</code>.</li><li><strong>&quot;Clean this space&quot;</strong> → <code>flashspace workspace --name &quot;$(flashspace get-workspace)&quot; --clean</code> or <code>flashspace hide-unassigned-apps</code>.</li><li><strong>&quot;Next space&quot;</strong> → <code>flashspace workspace --next --skip-empty</code>.</li></ol>
 <p>Prefer exact workspace names from <code>list-workspaces</code>. Do not invent</p>
 <p>aliases (<code>coding</code> ≠ <code>Code</code>).</p>
 <hr>
 <h2>Naming &amp; quoting rules</h2>
-<ul>
-<li>Workspace names are <strong>case-sensitive</strong> and may contain spaces (<code>Project Mgmt</code>). Always quote multi-word names.</li>
-<li>App identity accepts <strong>display name or bundle id</strong>. Prefer bundle id when two apps share a label (e.g. ChatGPT vs Codex both branded ChatGPT-ish).</li>
-<li>Display names come from <code>list-displays</code> (<code>Studio Display</code>, <code>Built-in Retina Display</code>) — pass them exactly to <code>create-workspace --display</code> / <code>update-workspace --display</code>.</li>
-<li>Profiles are independent workspace sets. Mutations apply to the <strong>active</strong> profile unless a command takes <code>--profile</code>.</li>
-</ul>
+<ul><li>Workspace names are <strong>case-sensitive</strong> and may contain spaces (<code>Project Mgmt</code>). Always quote multi-word names.</li><li>App identity accepts <strong>display name or bundle id</strong>. Prefer bundle id when two apps share a label (e.g. ChatGPT vs Codex both branded ChatGPT-ish).</li><li>Display names come from <code>list-displays</code> (<code>Studio Display</code>, <code>Built-in Retina Display</code>) — pass them exactly to <code>create-workspace --display</code> / <code>update-workspace --display</code>.</li><li>Profiles are independent workspace sets. Mutations apply to the <strong>active</strong> profile unless a command takes <code>--profile</code>.</li></ul>
 <hr>
 <h2>Anti-patterns</h2>
-<ul>
-<li>Do <strong>not</strong> shell out to <code>osascript</code> / <code>yabai</code> / raw Accessibility to fake workspace switching when FlashSpace is installed.</li>
-<li>Do <strong>not</strong> delete workspaces or profiles to &quot;tidy up&quot; without explicit confirmation.</li>
-<li>Do <strong>not</strong> <code>assign-visible-apps</code> as a silent default — it rebinds every on-screen app.</li>
-<li>Do <strong>not</strong> hard-code the 2026-07-19 inventory as truth; re-list when the answer depends on current state.</li>
-<li>Do <strong>not</strong> treat FlashSpace workspaces as macOS Mission Control Spaces — different system; mixing the two confuses the user.</li>
-<li>Do <strong>not</strong> store secrets or Accessibility tokens; there are none.</li>
-</ul>
+<ul><li>Do <strong>not</strong> shell out to <code>osascript</code> / <code>yabai</code> / raw Accessibility to fake workspace switching when FlashSpace is installed.</li><li>Do <strong>not</strong> delete workspaces or profiles to &quot;tidy up&quot; without explicit confirmation.</li><li>Do <strong>not</strong> <code>assign-visible-apps</code> as a silent default — it rebinds every on-screen app.</li><li>Do <strong>not</strong> hard-code the 2026-07-19 inventory as truth; re-list when the answer depends on current state.</li><li>Do <strong>not</strong> treat FlashSpace workspaces as macOS Mission Control Spaces — different system; mixing the two confuses the user.</li><li>Do <strong>not</strong> store secrets or Accessibility tokens; there are none.</li></ul>
 <hr>
 <h2>Troubleshooting</h2>
 <div class="table-wrap"><table>

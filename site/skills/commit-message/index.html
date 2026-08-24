@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/commit-message/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -67,18 +67,11 @@ capabilities:
 <p>Turn the current staged diff into a well-formed conventional-commit message</p>
 <p>and present it to the user for approval before any commit is made.</p>
 <h2>When to use</h2>
-<ul>
-<li>The user asks you to &quot;commit this&quot;, &quot;write a commit message&quot;, &quot;stage and commit&quot;, or similar.</li>
-<li>The user has finished a change and is about to run <code>git commit</code>.</li>
-<li>Staged changes exist but no message has been drafted yet.</li>
-</ul>
+<ul><li>The user asks you to &quot;commit this&quot;, &quot;write a commit message&quot;, &quot;stage and commit&quot;, or similar.</li><li>The user has finished a change and is about to run <code>git commit</code>.</li><li>Staged changes exist but no message has been drafted yet.</li></ul>
 <p>Do not use this skill to commit on the user's behalf without approval. The</p>
 <p>output of this skill is a <em>draft message</em>, not a commit action.</p>
 <h2>Prerequisites</h2>
-<ul>
-<li>A git repository in the current working directory.</li>
-<li>At least one staged change (<code>git diff --staged</code> returns non-empty output).</li>
-</ul>
+<ul><li>A git repository in the current working directory.</li><li>At least one staged change (<code>git diff --staged</code> returns non-empty output).</li></ul>
 <p>If nothing is staged, stop and ask the user what they want staged.</p>
 <h2>Workflow</h2>
 <h3>1. Inspect the staged change</h3>
@@ -90,16 +83,7 @@ git diff --staged</code></pre>
 <p>and anything that looks mechanical (whitespace-only, import reordering).</p>
 <h3>2. Classify the change</h3>
 <p>Pick one <code>type</code> from the conventional-commits vocabulary:</p>
-<ul>
-<li><code>feat</code> — new user-visible capability</li>
-<li><code>fix</code> — bug fix</li>
-<li><code>refactor</code> — code change that neither adds a feature nor fixes a bug</li>
-<li><code>docs</code> — documentation only</li>
-<li><code>test</code> — test-only</li>
-<li><code>chore</code> — tooling, deps, CI, build scripts</li>
-<li><code>perf</code> — performance improvement</li>
-<li><code>style</code> — formatting only (rare; prefer <code>chore</code> unless explicitly stylistic)</li>
-</ul>
+<ul><li><code>feat</code> — new user-visible capability</li><li><code>fix</code> — bug fix</li><li><code>refactor</code> — code change that neither adds a feature nor fixes a bug</li><li><code>docs</code> — documentation only</li><li><code>test</code> — test-only</li><li><code>chore</code> — tooling, deps, CI, build scripts</li><li><code>perf</code> — performance improvement</li><li><code>style</code> — formatting only (rare; prefer <code>chore</code> unless explicitly stylistic)</li></ul>
 <p>When in doubt between <code>feat</code> and <code>refactor</code>: if a user would notice, it's</p>
 <p><code>feat</code>. If only developers would notice, it's <code>refactor</code>.</p>
 <h3>3. Pick a scope (optional)</h3>
@@ -107,19 +91,10 @@ git diff --staged</code></pre>
 <p>Keep it short and lowercase (<code>auth</code>, <code>parser</code>, <code>cli</code>, <code>storage</code>).</p>
 <h3>4. Write the subject line</h3>
 <p>Format: <code>&lt;type&gt;(&lt;scope&gt;): &lt;imperative summary&gt;</code></p>
-<ul>
-<li>Imperative mood (&quot;add X&quot;, not &quot;added X&quot; or &quot;adds X&quot;)</li>
-<li>No trailing period</li>
-<li>Target ≤ 72 characters</li>
-<li>Describe the <em>intent</em>, not the mechanics (&quot;fix login redirect loop&quot;, not &quot;change if-statement in login.ts&quot;)</li>
-</ul>
+<ul><li>Imperative mood (&quot;add X&quot;, not &quot;added X&quot; or &quot;adds X&quot;)</li><li>No trailing period</li><li>Target ≤ 72 characters</li><li>Describe the <em>intent</em>, not the mechanics (&quot;fix login redirect loop&quot;, not &quot;change if-statement in login.ts&quot;)</li></ul>
 <h3>5. Write the body (if the change warrants one)</h3>
 <p>Skip the body for trivial changes. Include a body when:</p>
-<ul>
-<li>The <em>why</em> isn't obvious from the subject.</li>
-<li>There are trade-offs or non-obvious consequences.</li>
-<li>The change fixes an issue or implements an RFC — reference it.</li>
-</ul>
+<ul><li>The <em>why</em> isn't obvious from the subject.</li><li>There are trade-offs or non-obvious consequences.</li><li>The change fixes an issue or implements an RFC — reference it.</li></ul>
 <p>Format: one blank line after the subject, then wrapped paragraphs at ≤ 72</p>
 <p>columns. Use bullet points for multi-part rationale.</p>
 <h3>6. Present for approval</h3>
@@ -136,12 +111,7 @@ the session in-place so downstream services see the new factor immediately.
 - preserves original issued_at for audit
 - no-op for sessions issued under the new factor</code></pre>
 <h2>Anti-patterns to avoid</h2>
-<ul>
-<li>Vague subjects like &quot;update code&quot;, &quot;small fixes&quot;, &quot;misc&quot;.</li>
-<li>Subjects that narrate the mechanical edit (&quot;move function&quot;, &quot;rename variable&quot;) rather than the intent.</li>
-<li>Bodies that restate the diff. If a reader can learn the same thing from <code>git show</code>, the body is noise.</li>
-<li>Committing without showing the user the draft first.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
+<ul><li>Vague subjects like &quot;update code&quot;, &quot;small fixes&quot;, &quot;misc&quot;.</li><li>Subjects that narrate the mechanical edit (&quot;move function&quot;, &quot;rename variable&quot;) rather than the intent.</li><li>Bodies that restate the diff. If a reader can learn the same thing from <code>git show</code>, the body is noise.</li><li>Committing without showing the user the draft first.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Commit messages were either empty or novels. This drafts from the staged diff.</p>
 <h2>History</h2>

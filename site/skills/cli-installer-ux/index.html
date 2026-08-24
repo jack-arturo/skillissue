@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/cli-installer-ux/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -75,42 +75,13 @@ resources:
 ---</pre></div><h2>CLI Installer UX</h2>
 <p>Use this when a project needs a command-line installer, updater, setup wizard, doctor command, or other user-facing CLI surface that should feel compact and intentional while keeping diagnostics, subprocess logs, and machine output out of the default path.</p>
 <h2>When to use</h2>
-<ul>
-<li>The user asks for a CLI installer, upgrader, first-run setup flow, doctor command, or command catalog.</li>
-<li>A CLI currently dumps raw JSON, structured logs, child-process output, stack traces, or verbose internals during normal success paths.</li>
-<li>A project needs both human output and parseable <code>--json</code> output.</li>
-<li>An installer must support interactive terminals, redirected stdout, CI/headless agents, and quiet or verbose modes.</li>
-</ul>
+<ul><li>The user asks for a CLI installer, upgrader, first-run setup flow, doctor command, or command catalog.</li><li>A CLI currently dumps raw JSON, structured logs, child-process output, stack traces, or verbose internals during normal success paths.</li><li>A project needs both human output and parseable <code>--json</code> output.</li><li>An installer must support interactive terminals, redirected stdout, CI/headless agents, and quiet or verbose modes.</li></ul>
 <h2>Workflow</h2>
-<ol>
-<li>Inspect the current command surfaces before editing. Find entrypoints, shell installers, update commands, logging helpers, subprocess calls, and tests. Capture which commands are human-facing, which are machine-facing, and which mutate user state.</li>
-<li>Define the output contract. Human mode gets compact branded status, plan-first summaries, bounded tables, and explicit next actions. Machine mode gets strict JSON only. Errors go to stderr. Internal diagnostics stay behind verbose flags or log files.</li>
-<li>Build tiny shared UI primitives rather than one-off strings: theme/color detection, ASCII fallback, badges, key/value rows, list truncation, safe text escaping, task spinners, and success/error summaries.</li>
-<li>Keep installers plan-first. Print platform, runtime, install path, storage path, current version, target version, install state, and release notes before writing anything. Support <code>--dry-run</code>, <code>--yes</code>, <code>--quiet</code>, <code>--verbose</code>, and <code>--notes</code> where they make sense.</li>
-<li>Contain subprocess noise. Route child stdout/stderr to a temp log during success paths. Show a short tail only on failure, or in explicit verbose mode when the output is useful. For library calls that log internally, wrap them in the project's log-suppression helper.</li>
-<li>Treat interactivity as a capability, not an assumption. If stdin is not a TTY but <code>/dev/tty</code> is available, attach the guided flow there. If no TTY exists, defer the wizard and print the exact command to resume. Do not execute mutating updates from a non-TTY session unless an explicit yes flag is present.</li>
-<li>Add passive update notices only to human output. Keep them compact: current to latest, run command, disable command. Never append notices to JSON, markdown, or other machine-readable output.</li>
-<li>Make review and repair flows safe by default. Summarize counts first, hide long diagnostic detail until review/advanced/verbose modes, recommend non-destructive choices first, and show restore commands after backup-style actions.</li>
-<li>Test the transcript as a public API. Cover human snapshots with color off, JSON parseability, stderr cleanliness, suppressed child noise on success, log tails on failure, non-TTY behavior, quiet output, verbose output, command suggestions, and update notice gating.</li>
-</ol>
+<ol><li>Inspect the current command surfaces before editing. Find entrypoints, shell installers, update commands, logging helpers, subprocess calls, and tests. Capture which commands are human-facing, which are machine-facing, and which mutate user state.</li><li>Define the output contract. Human mode gets compact branded status, plan-first summaries, bounded tables, and explicit next actions. Machine mode gets strict JSON only. Errors go to stderr. Internal diagnostics stay behind verbose flags or log files.</li><li>Build tiny shared UI primitives rather than one-off strings: theme/color detection, ASCII fallback, badges, key/value rows, list truncation, safe text escaping, task spinners, and success/error summaries.</li><li>Keep installers plan-first. Print platform, runtime, install path, storage path, current version, target version, install state, and release notes before writing anything. Support <code>--dry-run</code>, <code>--yes</code>, <code>--quiet</code>, <code>--verbose</code>, and <code>--notes</code> where they make sense.</li><li>Contain subprocess noise. Route child stdout/stderr to a temp log during success paths. Show a short tail only on failure, or in explicit verbose mode when the output is useful. For library calls that log internally, wrap them in the project's log-suppression helper.</li><li>Treat interactivity as a capability, not an assumption. If stdin is not a TTY but <code>/dev/tty</code> is available, attach the guided flow there. If no TTY exists, defer the wizard and print the exact command to resume. Do not execute mutating updates from a non-TTY session unless an explicit yes flag is present.</li><li>Add passive update notices only to human output. Keep them compact: current to latest, run command, disable command. Never append notices to JSON, markdown, or other machine-readable output.</li><li>Make review and repair flows safe by default. Summarize counts first, hide long diagnostic detail until review/advanced/verbose modes, recommend non-destructive choices first, and show restore commands after backup-style actions.</li><li>Test the transcript as a public API. Cover human snapshots with color off, JSON parseability, stderr cleanliness, suppressed child noise on success, log tails on failure, non-TTY behavior, quiet output, verbose output, command suggestions, and update notice gating.</li></ol>
 <h2>Output standards</h2>
-<ul>
-<li>Default output should fit in a short terminal viewport and answer: what happened, what changed, what needs attention, and what to run next.</li>
-<li><code>--json</code> output must be parseable with no banners, update notices, warnings, or trailing prose.</li>
-<li>Normal successful commands should not print server logs, storage warnings, dependency install transcripts, stack traces, or raw API payloads.</li>
-<li>Every interactive prompt should have a safe default and a clear recovery command if skipped.</li>
-</ul>
+<ul><li>Default output should fit in a short terminal viewport and answer: what happened, what changed, what needs attention, and what to run next.</li><li><code>--json</code> output must be parseable with no banners, update notices, warnings, or trailing prose.</li><li>Normal successful commands should not print server logs, storage warnings, dependency install transcripts, stack traces, or raw API payloads.</li><li>Every interactive prompt should have a safe default and a clear recovery command if skipped.</li></ul>
 <h2>Anti-patterns</h2>
-<ul>
-<li>Printing debug logs because they are technically useful.</li>
-<li>Letting passive notices contaminate JSON or other machine-readable streams.</li>
-<li>Showing full subprocess output on success.</li>
-<li>Using animation without a deterministic non-TTY fallback.</li>
-<li>Repeating large brand marks throughout a transcript.</li>
-<li>Treating <code>--verbose</code> as the default user experience.</li>
-<li>Performing destructive or persistent changes before showing the plan and asking or honoring an explicit yes flag.</li>
-<li>Hiding failures completely; suppress success noise, but surface failure tails and actionable next steps.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/autovault-skill/"><span class="name">autovault-skill</span><span class="desc">Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</span></a></div></div></div></article></section>
+<ul><li>Printing debug logs because they are technically useful.</li><li>Letting passive notices contaminate JSON or other machine-readable streams.</li><li>Showing full subprocess output on success.</li><li>Using animation without a deterministic non-TTY fallback.</li><li>Repeating large brand marks throughout a transcript.</li><li>Treating <code>--verbose</code> as the default user experience.</li><li>Performing destructive or persistent changes before showing the plan and asking or honoring an explicit yes flag.</li><li>Hiding failures completely; suppress success noise, but surface failure tails and actionable next steps.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/autovault-skill/"><span class="name">autovault-skill</span><span class="desc">Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Install scripts leaked machine output into user-facing copy. This skill is the UX gate.</p>
 <h2>History</h2>

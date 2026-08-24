@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/context-engineering-audit/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -90,12 +90,7 @@ resources:
 <p>Record the total. A restructure that doesn't move it is a restructure you can</p>
 <p>skip.</p>
 <h2>2. Classify every section into four buckets</h2>
-<ul>
-<li><strong>Gotcha</strong> — non-obvious, expensive to rediscover, cheap to state. Keep upfront. (&quot;Tags are a hard gate: they filter before scoring.&quot; &quot;stdout is reserved for the MCP protocol.&quot;)</li>
-<li><strong>Runbook</strong> — needed by a minority of sessions, in full when needed. Move to a doc or skill and link it.</li>
-<li><strong>Restates the tree</strong> — a table of paths that a directory listing already shows. Delete.</li>
-<li><strong>Duplicate</strong> — the same instruction in a second place. Pick one home.</li>
-</ul>
+<ul><li><strong>Gotcha</strong> — non-obvious, expensive to rediscover, cheap to state. Keep upfront. (&quot;Tags are a hard gate: they filter before scoring.&quot; &quot;stdout is reserved for the MCP protocol.&quot;)</li><li><strong>Runbook</strong> — needed by a minority of sessions, in full when needed. Move to a doc or skill and link it.</li><li><strong>Restates the tree</strong> — a table of paths that a directory listing already shows. Delete.</li><li><strong>Duplicate</strong> — the same instruction in a second place. Pick one home.</li></ul>
 <p>The tell for a runbook is a command sequence. The tell for a duplicate is that</p>
 <p>you've read it twice in one file.</p>
 <h2>3. Coupling-check before deleting anything</h2>
@@ -107,10 +102,7 @@ resources:
 <p>framing), format contract (move it into the schema or tool description), or</p>
 <p>residue (delete).</p>
 <p>Two failure modes worth knowing, both real:</p>
-<ul>
-<li>A prompt asserting something the harness doesn't actually do (&quot;your work will not be delivered unless you call X&quot; — when a fallback path exists). Fix the claim, don't preserve it.</li>
-<li>A prompt whose output is discarded downstream. Reasoning scaffolds are the usual case: check whether a sanitizer strips the very blocks you're asking for.</li>
-</ul>
+<ul><li>A prompt asserting something the harness doesn't actually do (&quot;your work will not be delivered unless you call X&quot; — when a fallback path exists). Fix the claim, don't preserve it.</li><li>A prompt whose output is discarded downstream. Reasoning scaffolds are the usual case: check whether a sanitizer strips the very blocks you're asking for.</li></ul>
 <p><code>references/coupling-check.md</code> has the search patterns and the verdict table.</p>
 <h2>4. Rewrite coercion as product-context facts</h2>
 <p>On current model generations, exhaustive prohibitions cost quality rather than</p>
@@ -130,11 +122,7 @@ assert.ok((text.match(/\b(NEVER|ALWAYS|MUST|CRITICAL|MANDATORY)\b/g) || []).leng
 <p>Verify with <code>/context</code> in a fresh session before and after, and re-run the</p>
 <p>suites that touch prompt assembly.</p>
 <h2>Notes from practice</h2>
-<ul>
-<li>Rule density is often lowest in the files people suspect first. Measure imperatives per 1k chars before assuming an instruction file is the problem — the offender is frequently a plugin or a runtime prompt nobody reads.</li>
-<li>A repo's own history can tell you whether coercion worked. Commits that fix &quot;the model hesitated&quot; or &quot;the model looped&quot; are usually patching damage an earlier absolute rule caused.</li>
-<li>Moving content beats deleting it when a prior finding says a model generation still wants the structure. Progressive disclosure is generation-neutral; rule-density rewrites are not.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/skill-author/"><span class="name">skill-author</span><span class="desc">Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</span></a> <a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
+<ul><li>Rule density is often lowest in the files people suspect first. Measure imperatives per 1k chars before assuming an instruction file is the problem — the offender is frequently a plugin or a runtime prompt nobody reads.</li><li>A repo's own history can tell you whether coercion worked. Commits that fix &quot;the model hesitated&quot; or &quot;the model looped&quot; are usually patching damage an earlier absolute rule caused.</li><li>Moving content beats deleting it when a prior finding says a model generation still wants the structure. Progressive disclosure is generation-neutral; rule-density rewrites are not.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/skill-author/"><span class="name">skill-author</span><span class="desc">Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</span></a> <a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Instruction files accrete. Without measurement, trimming them is just trading useful constraints for vibes.</p>
 <h2>How</h2>

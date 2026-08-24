@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/building-emdash-site/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -86,21 +86,11 @@ resources:
 <p>EmDash is a CMS built on Astro. It stores schema in the database (not in code), serves content via live content collections, and provides a full admin UI at <code>/_emdash/admin</code>. Sites are standard Astro projects with the <code>emdash</code> integration.</p>
 <h2>Common Gotchas</h2>
 <p>These are the things that silently break sites. Know them before you start.</p>
-<ol>
-<li><strong>Image fields are objects, not strings.</strong> <code>post.data.featured_image</code> is <code>{ id, src, alt }</code>. Writing <code>&lt;img src={post.data.featured_image} /&gt;</code> renders <code>[object Object]</code>. Use <code>&lt;Image image={post.data.featured_image} /&gt;</code> from <code>&quot;emdash/ui&quot;</code>.</li>
-</ol>
-<ol>
-<li><strong><code>entry.id</code> vs <code>entry.data.id</code> are different things.</strong> <code>entry.id</code> is the slug (use in URLs). <code>entry.data.id</code> is the database ULID (use for <code>getEntryTerms</code>, <code>Comments</code>, and other API calls that need the real ID). Mixing them up causes silent empty results.</li>
-</ol>
-<ol>
-<li><strong>Taxonomy names must match the seed exactly.</strong> If your seed defines <code>&quot;name&quot;: &quot;category&quot;</code>, you must query <code>getTerm(&quot;category&quot;, slug)</code> -- not <code>&quot;categories&quot;</code>. Wrong name = empty results, no error.</li>
-</ol>
-<ol>
-<li><strong>Always pass <code>cacheHint</code> to <code>Astro.cache.set()</code>.</strong> Every query returns a <code>cacheHint</code>. Call <code>Astro.cache.set(cacheHint)</code> on every page that queries content, or cache invalidation won't work when editors publish changes.</li>
-</ol>
-<ol>
-<li><strong>No <code>getStaticPaths</code> for CMS content.</strong> EmDash content is dynamic. Pages must be server-rendered (<code>output: &quot;server&quot;</code> in <code>astro.config.mjs</code>).</li>
-</ol>
+<ol><li><strong>Image fields are objects, not strings.</strong> <code>post.data.featured_image</code> is <code>{ id, src, alt }</code>. Writing <code>&lt;img src={post.data.featured_image} /&gt;</code> renders <code>[object Object]</code>. Use <code>&lt;Image image={post.data.featured_image} /&gt;</code> from <code>&quot;emdash/ui&quot;</code>.</li></ol>
+<ol><li><strong><code>entry.id</code> vs <code>entry.data.id</code> are different things.</strong> <code>entry.id</code> is the slug (use in URLs). <code>entry.data.id</code> is the database ULID (use for <code>getEntryTerms</code>, <code>Comments</code>, and other API calls that need the real ID). Mixing them up causes silent empty results.</li></ol>
+<ol><li><strong>Taxonomy names must match the seed exactly.</strong> If your seed defines <code>&quot;name&quot;: &quot;category&quot;</code>, you must query <code>getTerm(&quot;category&quot;, slug)</code> -- not <code>&quot;categories&quot;</code>. Wrong name = empty results, no error.</li></ol>
+<ol><li><strong>Always pass <code>cacheHint</code> to <code>Astro.cache.set()</code>.</strong> Every query returns a <code>cacheHint</code>. Call <code>Astro.cache.set(cacheHint)</code> on every page that queries content, or cache invalidation won't work when editors publish changes.</li></ol>
+<ol><li><strong>No <code>getStaticPaths</code> for CMS content.</strong> EmDash content is dynamic. Pages must be server-rendered (<code>output: &quot;server&quot;</code> in <code>astro.config.mjs</code>).</li></ol>
 <h2>File Structure</h2>
 <p>Every EmDash site has these key files:</p>
 <pre><code>my-site/
@@ -172,12 +162,7 @@ import LiveSearch from &quot;emdash/ui/search&quot;;
 import { createPublicPageContext } from &quot;emdash/page&quot;;</code></pre>
 <h2>Plugins</h2>
 <p>EmDash supports plugins for extending the CMS with hooks, storage, settings, admin UI, API routes, and custom Portable Text block types. Consider a plugin when you need to:</p>
-<ul>
-<li>React to content lifecycle events (e.g., send a notification on publish, sync to an external service)</li>
-<li>Add custom admin pages or dashboard widgets</li>
-<li>Add custom block types to the Portable Text editor (e.g., embedded maps, code playgrounds, CTAs)</li>
-<li>Provide a reusable service (e.g., analytics, forms, comments via a third-party provider)</li>
-</ul>
+<ul><li>React to content lifecycle events (e.g., send a notification on publish, sync to an external service)</li><li>Add custom admin pages or dashboard widgets</li><li>Add custom block types to the Portable Text editor (e.g., embedded maps, code playgrounds, CTAs)</li><li>Provide a reusable service (e.g., analytics, forms, comments via a third-party provider)</li></ul>
 <p>Plugins are registered in <code>astro.config.mjs</code>:</p>
 <pre><code>emdash({
   database: sqlite({ url: &quot;file:./data.db&quot; }),
@@ -188,13 +173,7 @@ import { createPublicPageContext } from &quot;emdash/page&quot;;</code></pre>
 <h2>Version currency (do this first on every new site)</h2>
 <p>Canonical CMS: <strong><a href="https://github.com/emdash-cms/emdash" rel="noopener">emdash-cms/emdash</a></strong> · npm <code>emdash</code>.</p>
 <p><strong>Not</strong> <a href="https://github.com/generalaction/emdash" rel="noopener">generalaction/emdash</a> (different product).</p>
-<ol>
-<li>Resolve latest: <code>npm view emdash version</code> + <code>npm view @emdash-cms/cloudflare version</code></li>
-<li>Diff vs last project / AutoMem baseline</li>
-<li>Read GitHub releases <code>emdash@X.Y.Z</code> for the gap</li>
-<li>Summarize + propose (or auto-adopt under full autonomy)</li>
-<li>Pin <strong>latest stable</strong> in <code>package.json</code> — never hard-code an old skill example</li>
-</ol>
+<ol><li>Resolve latest: <code>npm view emdash version</code> + <code>npm view @emdash-cms/cloudflare version</code></li><li>Diff vs last project / AutoMem baseline</li><li>Read GitHub releases <code>emdash@X.Y.Z</code> for the gap</li><li>Summarize + propose (or auto-adopt under full autonomy)</li><li>Pin <strong>latest stable</strong> in <code>package.json</code> — never hard-code an old skill example</li></ol>
 <p>Full ritual: <strong><a href="/bundles/building-emdash-site/references/version-currency.md.txt">references/version-currency.md</a></strong>.</p>
 <h2>Reference Documents</h2>
 <div class="table-wrap"><table>

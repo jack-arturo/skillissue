@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/award-travel-research/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -74,61 +74,22 @@ resources:
 <h2>Non-negotiable rule: search live inventory</h2>
 <p>Every answer about availability, price, fees, or transfer value must include a live search performed during the current task for the requested route and dates. Static tables, cached results, old screenshots, blogs, prior searches, and examples in this skill are context only.</p>
 <p>Use the best live source available:</p>
-<ol>
-<li>The booking program's own website or app.</li>
-<li>A live award-search provider, API, or agent tool.</li>
-<li>A browser or web search that reaches a current provider result.</li>
-</ol>
+<ol><li>The booking program's own website or app.</li><li>A live award-search provider, API, or agent tool.</li><li>A browser or web search that reaches a current provider result.</li></ol>
 <p>Provider-specific tools such as an award-search wrapper or Seats.aero are optional accelerators, not prerequisites. If one is unavailable, continue with another live source. If no live source can be reached, state that current availability could not be verified, provide direct booking-program links and a verification checklist, and do not recommend a transfer.</p>
 <h2>Inputs</h2>
 <p>Collect or infer:</p>
-<ul>
-<li>Origin and destination; prefer IATA codes.</li>
-<li>Departure date and optional return date.</li>
-<li>Passenger count.</li>
-<li>Cabin.</li>
-<li>Relevant booking programs and point balances.</li>
-<li>Known fallback offer, if any.</li>
-<li>Flexibility on dates, airports, mixed cabins, and positioning flights.</li>
-</ul>
+<ul><li>Origin and destination; prefer IATA codes.</li><li>Departure date and optional return date.</li><li>Passenger count.</li><li>Cabin.</li><li>Relevant booking programs and point balances.</li><li>Known fallback offer, if any.</li><li>Flexibility on dates, airports, mixed cabins, and positioning flights.</li></ul>
 <p>Call out any assumption that could materially change the result.</p>
 <h2>Search workflow</h2>
-<ol>
-<li>Search the exact route, date, cabin, and passenger count live.</li>
-<li>Expand to flexible dates or nearby airports only after recording the exact-search outcome.</li>
-<li>Treat cached discovery results as leads until a live provider or the booking program confirms them.</li>
-<li>Check the operating carrier, every segment's cabin, seat count, taxes, surcharges, and cancellation rules.</li>
-<li>Check current transfer partners, transfer ratios, transfer times, and any bonus with a live authoritative source.</li>
-<li>Compare against a live cash fare when making a value claim.</li>
-<li>Recheck the chosen itinerary immediately before advising a transfer.</li>
-</ol>
+<ol><li>Search the exact route, date, cabin, and passenger count live.</li><li>Expand to flexible dates or nearby airports only after recording the exact-search outcome.</li><li>Treat cached discovery results as leads until a live provider or the booking program confirms them.</li><li>Check the operating carrier, every segment's cabin, seat count, taxes, surcharges, and cancellation rules.</li><li>Check current transfer partners, transfer ratios, transfer times, and any bonus with a live authoritative source.</li><li>Compare against a live cash fare when making a value claim.</li><li>Recheck the chosen itinerary immediately before advising a transfer.</li></ol>
 <p>Never invent availability, infer a seat from a route schedule, or present a stale price as current.</p>
 <h2>Transfer safety</h2>
 <p>Do not recommend transferring bank points unless a live source confirms the same:</p>
-<ul>
-<li>Route and date.</li>
-<li>Cabin on every relevant segment.</li>
-<li>Passenger count and available seats.</li>
-<li>Points price and taxes or fees.</li>
-<li>Booking program.</li>
-</ul>
+<ul><li>Route and date.</li><li>Cabin on every relevant segment.</li><li>Passenger count and available seats.</li><li>Points price and taxes or fees.</li><li>Booking program.</li></ul>
 <p>Explain that transfers are commonly irreversible and that availability can disappear. Name the final verification step the traveler must complete before transferring.</p>
 <h2>Normalized result</h2>
 <p>For each option, record:</p>
-<ul>
-<li><code>program</code></li>
-<li><code>points_per_person</code></li>
-<li><code>total_points</code></li>
-<li><code>taxes_fees</code></li>
-<li><code>seats</code></li>
-<li><code>cabin</code></li>
-<li><code>segments</code></li>
-<li><code>transfer_partners</code></li>
-<li><code>source</code></li>
-<li><code>checked_at</code></li>
-<li><code>confidence</code></li>
-<li><code>verification_status</code></li>
-</ul>
+<ul><li><code>program</code></li><li><code>points_per_person</code></li><li><code>total_points</code></li><li><code>taxes_fees</code></li><li><code>seats</code></li><li><code>cabin</code></li><li><code>segments</code></li><li><code>transfer_partners</code></li><li><code>source</code></li><li><code>checked_at</code></li><li><code>confidence</code></li><li><code>verification_status</code></li></ul>
 <p>Then provide the best verified option, the best unverified lead if useful, a live benchmark comparison, the transfer-risk note, and direct next-step links.</p>
 <h2>Historical figures are not inventory</h2>
 <p>An old route, points price, tax figure, or transfer promotion can help explain a</p>

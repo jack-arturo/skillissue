@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/clerk-cloudflare-auth/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -86,21 +86,9 @@ VITE_CLERK_PUBLISHABLE_KEY=&lt;managed build variable&gt;</code></pre>
 <p>configuration. For local development, use ignored environment files and do not</p>
 <p>read or print their contents unless the user explicitly asks.</p>
 <h2>Integration shape</h2>
-<ol>
-<li>Inspect the application: framework, Pages Functions or Workers entry point, existing session model, public/protected routes, and application records keyed to users or accounts.</li>
-<li>Add Clerk's framework package in the client and Clerk's server package where the edge runtime verifies tokens. Follow current official Clerk and Cloudflare documentation for the package-specific initialization API.</li>
-<li>Initialize the client from <code>VITE_CLERK_PUBLISHABLE_KEY</code>. Render a clear signed-out fallback if it is absent in a local build.</li>
-<li>Verify the session token at every protected Pages Function or Worker route; never treat client-side visibility as authorization.</li>
-<li>Map the verified Clerk user or organization ID to D1/application records only where the product needs internal data. Keep Stripe customer and subscription truth in the billing layer rather than duplicating it in identity claims.</li>
-</ol>
+<ol><li>Inspect the application: framework, Pages Functions or Workers entry point, existing session model, public/protected routes, and application records keyed to users or accounts.</li><li>Add Clerk's framework package in the client and Clerk's server package where the edge runtime verifies tokens. Follow current official Clerk and Cloudflare documentation for the package-specific initialization API.</li><li>Initialize the client from <code>VITE_CLERK_PUBLISHABLE_KEY</code>. Render a clear signed-out fallback if it is absent in a local build.</li><li>Verify the session token at every protected Pages Function or Worker route; never treat client-side visibility as authorization.</li><li>Map the verified Clerk user or organization ID to D1/application records only where the product needs internal data. Keep Stripe customer and subscription truth in the billing layer rather than duplicating it in identity claims.</li></ol>
 <h2>Frontend rules</h2>
-<ul>
-<li>Prefer the framework's reactive Clerk APIs over polling global state.</li>
-<li>Request a fresh token immediately before authenticated API calls.</li>
-<li>Guard against a late anonymous response replacing a newer signed-in state.</li>
-<li>Configure Clerk appearance through its supported configuration object, not brittle global CSS overrides.</li>
-<li>Keep static marketing pages static; add identity only where it is needed.</li>
-</ul>
+<ul><li>Prefer the framework's reactive Clerk APIs over polling global state.</li><li>Request a fresh token immediately before authenticated API calls.</li><li>Guard against a late anonymous response replacing a newer signed-in state.</li><li>Configure Clerk appearance through its supported configuration object, not brittle global CSS overrides.</li><li>Keep static marketing pages static; add identity only where it is needed.</li></ul>
 <h2>Edge authorization</h2>
 <p>At the server boundary, extract and verify the Clerk session token using the</p>
 <p>official backend SDK. Return <code>401</code> for a missing/invalid session and <code>403</code> for</p>
@@ -109,13 +97,7 @@ VITE_CLERK_PUBLISHABLE_KEY=&lt;managed build variable&gt;</code></pre>
 <p>inherit account-only checks.</p>
 <h2>Verification</h2>
 <p>Before deployment, test:</p>
-<ul>
-<li>Signed-out visitors can reach public pages and cannot call protected APIs.</li>
-<li>A signed-in test user receives the expected account data.</li>
-<li>Expired or malformed tokens are rejected by the edge route.</li>
-<li>Local and preview builds receive the appropriate Clerk environment values.</li>
-<li>Any D1 user mapping is idempotent and uses the verified Clerk identifier.</li>
-</ul>
+<ul><li>Signed-out visitors can reach public pages and cannot call protected APIs.</li><li>A signed-in test user receives the expected account data.</li><li>Expired or malformed tokens are rejected by the edge route.</li><li>Local and preview builds receive the appropriate Clerk environment values.</li><li>Any D1 user mapping is idempotent and uses the verified Clerk identifier.</li></ul>
 <p>Use <a href="/skills/cloudflare-commerce-deploy/">Cloudflare Commerce Deploy</a> for</p>
 <p>provider configuration and <a href="/skills/stripe-commerce-checkout/">Stripe Commerce Checkout</a></p>
 <p>when authentication gates paid product access.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-commerce-deploy/"><span class="name">cloudflare-commerce-deploy</span><span class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</span></a> <a class="sd-rel-tile" href="/skills/stripe-commerce-checkout/"><span class="name">stripe-commerce-checkout</span><span class="desc">A test-first pattern for a branded Stripe Checkout endpoint that keeps secrets server-side and live mutations explicit.</span></a></div></div></div></article></section>

@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/quest-passthrough-camera-capture/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -81,10 +81,7 @@ resources:
 <pre><code>_target = new RenderTexture(source.width, source.height, 0, source.graphicsFormat);
 Graphics.Blit(source, _target);</code></pre>
 <p>Sizing and format both matter:</p>
-<ul>
-<li>Size from the source texture each time, not once at startup. <code>CurrentResolution</code> is what the device <em>granted</em>, not what you requested, and it can differ from the request or change mid-session.</li>
-<li>Match <code>source.graphicsFormat</code>. The feed is <code>R8G8B8A8_SRGB</code>; blitting into a linear target darkens the whole image subtly enough to read as &quot;the capture is murky&quot; rather than as a color-space bug.</li>
-</ul>
+<ul><li>Size from the source texture each time, not once at startup. <code>CurrentResolution</code> is what the device <em>granted</em>, not what you requested, and it can differ from the request or change mid-session.</li><li>Match <code>source.graphicsFormat</code>. The feed is <code>R8G8B8A8_SRGB</code>; blitting into a linear target darkens the whole image subtly enough to read as &quot;the capture is murky&quot; rather than as a color-space bug.</li></ul>
 <h2>Guard every access on `enabled &amp;&amp; IsPlaying`</h2>
 <p><code>GetTexture()</code> internally validates state and <strong>logs an error</strong> when the</p>
 <p>component is disabled or unpermitted. An unguarded per-frame call produces a</p>

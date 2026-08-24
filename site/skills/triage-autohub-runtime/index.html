@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/triage-autohub-runtime/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -84,20 +84,9 @@ resources:
 <p>Use this incident-response workflow to diagnose an active or recent AutoHub</p>
 <p>operational failure from current logs and health evidence.</p>
 <h2>Safety contract</h2>
-<ul>
-<li>Preserve dirty worktrees. Inspect before editing, isolate repairs in a clean worktree, and stage only incident-related files.</li>
-<li>Treat reads, local checks, self/test-target messages, and reversible restarts as green actions. Ask before third-party messages, credential rotation, deploys, pushes, merges, destructive recovery, or production-data mutation.</li>
-<li>Never print or store tokens, environment values, process command lines, message bodies, capability URLs, or full Telegram history.</li>
-<li>A transient <code>BEGIN IMMEDIATE; ROLLBACK</code> probe may acquire a write lock but must not change rows or schema.</li>
-<li>Do not infer WAL health from file size. Retained allocation is not proof of contention.</li>
-</ul>
+<ul><li>Preserve dirty worktrees. Inspect before editing, isolate repairs in a clean worktree, and stage only incident-related files.</li><li>Treat reads, local checks, self/test-target messages, and reversible restarts as green actions. Ask before third-party messages, credential rotation, deploys, pushes, merges, destructive recovery, or production-data mutation.</li><li>Never print or store tokens, environment values, process command lines, message bodies, capability URLs, or full Telegram history.</li><li>A transient <code>BEGIN IMMEDIATE; ROLLBACK</code> probe may acquire a write lock but must not change rows or schema.</li><li>Do not infer WAL health from file size. Retained allocation is not proof of contention.</li></ul>
 <h2>1. Resolve the runtime being diagnosed</h2>
-<ol>
-<li>Resolve the requested checkout, its canonical checkout, and any worktree gitdir.</li>
-<li>Inspect <code>git status --short --branch</code> in every checkout that could receive edits.</li>
-<li>Identify each running service by PID, port, cwd class, and loaded commit. Never inspect or print process command lines or environments.</li>
-<li>Record which checkout owns <code>logs/dev-all.log</code>, <code>data/hub-unified.db</code>, and the active <code>.env</code>. Do not assume the current shell cwd is the runtime cwd.</li>
-</ol>
+<ol><li>Resolve the requested checkout, its canonical checkout, and any worktree gitdir.</li><li>Inspect <code>git status --short --branch</code> in every checkout that could receive edits.</li><li>Identify each running service by PID, port, cwd class, and loaded commit. Never inspect or print process command lines or environments.</li><li>Record which checkout owns <code>logs/dev-all.log</code>, <code>data/hub-unified.db</code>, and the active <code>.env</code>. Do not assume the current shell cwd is the runtime cwd.</li></ol>
 <h2>2. Recall one incident context, early</h2>
 <p>Before analysis, perform exactly one broad AutoMem recall. Its purpose is to</p>
 <p>surface recent incident decisions, verified root causes, prior fixes, and</p>
@@ -132,24 +121,13 @@ resources:
 <h2>4. Establish the restart boundary</h2>
 <p>Find the latest complete process restart boundary before clustering errors.</p>
 <p>Split evidence into:</p>
-<ul>
-<li>pre-boundary symptoms, which cannot prove the new process is unhealthy;</li>
-<li>startup/authentication results for the new process;</li>
-<li>post-boundary first error;</li>
-<li>downstream repeats, retries, and secondary failures.</li>
-</ul>
+<ul><li>pre-boundary symptoms, which cannot prove the new process is unhealthy;</li><li>startup/authentication results for the new process;</li><li>post-boundary first error;</li><li>downstream repeats, retries, and secondary failures.</li></ul>
 <p>A healthy HTTP readiness endpoint proves only readiness. It does not prove an</p>
 <p>authenticated tool operation, and an authenticated tool operation does not</p>
 <p>prove the user-facing surface. Capture all three layers when relevant.</p>
 <h2>5. Build a causal timeline</h2>
 <p>Order events by first occurrence after the boundary:</p>
-<ol>
-<li>triggering input or operation;</li>
-<li>first failing subsystem;</li>
-<li>lock, retry, or fallback behavior;</li>
-<li>downstream model, persistence, and reply failures;</li>
-<li>recovery action and first green evidence.</li>
-</ol>
+<ol><li>triggering input or operation;</li><li>first failing subsystem;</li><li>lock, retry, or fallback behavior;</li><li>downstream model, persistence, and reply failures;</li><li>recovery action and first green evidence.</li></ol>
 <p>Prefer the earliest mechanism that explains every later cluster. Count repeated</p>
 <p>signatures, but do not let a high-volume retry cascade outrank its first cause.</p>
 <p>Consult <code>references/failure-signatures.md</code> before classifying SQLite, Telegram,</p>
@@ -158,15 +136,7 @@ resources:
 <p>each has a distinct signature, and the wrong gate's knobs are inert.</p>
 <h2>6. Classify before changing code</h2>
 <p>Assign every cluster to one of these buckets:</p>
-<ul>
-<li>code defect;</li>
-<li>process-local poisoned state;</li>
-<li>credential provenance/config-copy drift;</li>
-<li>external permission or recipient-resolution failure;</li>
-<li>upstream payload/contract drift;</li>
-<li>intentional fallback with successful downstream completion;</li>
-<li>unknown, requiring more evidence.</li>
-</ul>
+<ul><li>code defect;</li><li>process-local poisoned state;</li><li>credential provenance/config-copy drift;</li><li>external permission or recipient-resolution failure;</li><li>upstream payload/contract drift;</li><li>intentional fallback with successful downstream completion;</li><li>unknown, requiring more evidence.</li></ul>
 <p>For credential failures, compare hash prefixes across the canonical <code>.env</code>,</p>
 <p>copied host configs, and loaded process status. Never compare or print values.</p>
 <p>Sync a stale host copy before proposing rotation.</p>
@@ -187,13 +157,7 @@ resources:
 <p>masks persisted config drift is not acceptance evidence.</p>
 <h2>8. Verify recovery on the real surface</h2>
 <p>Require:</p>
-<ol>
-<li>focused lint and deterministic tests;</li>
-<li>database <code>quick_check</code>, SHM active-frame facts, and an actual contention probe before declaring global SQLite contention;</li>
-<li>a fresh process boundary when the old process was poisoned;</li>
-<li>post-boundary absence of the cascade for the incident's observation window;</li>
-<li>the real user/caller surface, using only a dedicated self/test target.</li>
-</ol>
+<ol><li>focused lint and deterministic tests;</li><li>database <code>quick_check</code>, SHM active-frame facts, and an actual contention probe before declaring global SQLite contention;</li><li>a fresh process boundary when the old process was poisoned;</li><li>post-boundary absence of the cascade for the incident's observation window;</li><li>the real user/caller surface, using only a dedicated self/test target.</li></ol>
 <p>Use the repository's raw evidence block:</p>
 <pre><code>## Verification Evidence
 - Surface: &lt;surface&gt;
@@ -234,10 +198,7 @@ resources:
 <p>blocker rather than continuing unattended.</p>
 <h2>Incident acceptance check</h2>
 <p>This workflow passes the motivating incident only if it identifies both:</p>
-<ul>
-<li>a timed-out adapter transaction poisoned a process-local Prisma mutex because forced rollback bypassed the adapter transaction's release path;</li>
-<li>an empty/unsupported Telegram update was acknowledged too late and drove a retry cascade.</li>
-</ul>
+<ul><li>a timed-out adapter transaction poisoned a process-local Prisma mutex because forced rollback bypassed the adapter transaction's release path;</li><li>an empty/unsupported Telegram update was acknowledged too late and drove a retry cascade.</li></ul>
 <p>It must not call retained WAL allocation global contention when <code>quick_check</code>,</p>
 <p>SHM active-frame state, an external write-lock probe, and cross-process writes</p>
 <p>are healthy.</p></div></article></section>

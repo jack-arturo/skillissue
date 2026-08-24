@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/long-haul-parallel-repair/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -75,11 +75,7 @@ resources:
 ---</pre></div><h2>Long-Haul Parallel Repair</h2>
 <h2>Activation Contract</h2>
 <p><strong>Authorized when any of these hold:</strong></p>
-<ol>
-<li><strong>≥2 independent streams</strong> that materially advance the goal (default multi-slice / SDD posture — no special phrase required).</li>
-<li>The user authorizes subagents, delegation, fan-out, or long-running autonomous work (phrases: &quot;fan out&quot;, &quot;dispatch agents&quot;, &quot;subagents&quot;, &quot;work for hours&quot;, &quot;full autonomy&quot;, &quot;no human input&quot;, long-haul time budget).</li>
-<li>Solving every item under 8/10 confidence through evidence, fixes, and verification was explicitly requested.</li>
-</ol>
+<ol><li><strong>≥2 independent streams</strong> that materially advance the goal (default multi-slice / SDD posture — no special phrase required).</li><li>The user authorizes subagents, delegation, fan-out, or long-running autonomous work (phrases: &quot;fan out&quot;, &quot;dispatch agents&quot;, &quot;subagents&quot;, &quot;work for hours&quot;, &quot;full autonomy&quot;, &quot;no human input&quot;, long-haul time budget).</li><li>Solving every item under 8/10 confidence through evidence, fixes, and verification was explicitly requested.</li></ol>
 <p>Requests for &quot;thoroughness&quot; or &quot;deep investigation&quot; <strong>alone</strong> are not enough</p>
 <p>if there is only one stream and no autonomy language.</p>
 <p>If authorization is still ambiguous (single stream, no fan-out language, and</p>
@@ -92,30 +88,14 @@ resources:
 <p>spawn, wait, and close when exposed, or Claude Code's Agent tool when that is</p>
 <p>the available mechanism.</p>
 <p>Before spawning agents, write a short decomposition:</p>
-<ol>
-<li>Independent evidence questions.</li>
-<li>Independent implementation or test slices.</li>
-<li>Verification surfaces.</li>
-<li>The immediate task the orchestrator will do locally.</li>
-</ol>
+<ol><li>Independent evidence questions.</li><li>Independent implementation or test slices.</li><li>Verification surfaces.</li><li>The immediate task the orchestrator will do locally.</li></ol>
 <p>Spawn agents early when at least two streams are independent and materially</p>
 <p>advance the goal. Do not delegate the task that blocks your next local step.</p>
 <h2>Fan-Out Rules</h2>
 <p>Use explorer-style agents for bounded read-only work:</p>
-<ul>
-<li>log and database forensics</li>
-<li>code ownership and blast-radius tracing</li>
-<li>existing issue or PR dedupe</li>
-<li>regression-test discovery</li>
-<li>independent verification of a suspected root cause</li>
-</ul>
+<ul><li>log and database forensics</li><li>code ownership and blast-radius tracing</li><li>existing issue or PR dedupe</li><li>regression-test discovery</li><li>independent verification of a suspected root cause</li></ul>
 <p>Use worker-style agents for bounded changes:</p>
-<ul>
-<li>tests in a disjoint file</li>
-<li>one implementation slice with a clear owner path</li>
-<li>docs or workflow updates</li>
-<li>small scripts or queries</li>
-</ul>
+<ul><li>tests in a disjoint file</li><li>one implementation slice with a clear owner path</li><li>docs or workflow updates</li><li>small scripts or queries</li></ul>
 <p>Give every worker an explicit, path-bounded, disjoint write set. Tell workers</p>
 <p>they are not alone in the codebase, must not revert unrelated edits, and must</p>
 <p>adapt to concurrent changes.</p>
@@ -126,47 +106,21 @@ resources:
 <tbody>
 </tbody></table></div>
 <p>Every item below 8/10 confidence must become one of:</p>
-<ul>
-<li>a concrete evidence query</li>
-<li>a failing regression test</li>
-<li>a bounded implementation task</li>
-<li>a delegated explorer task</li>
-<li>a delegated worker task</li>
-<li>an explicit blocker with proof</li>
-</ul>
+<ul><li>a concrete evidence query</li><li>a failing regression test</li><li>a bounded implementation task</li><li>a delegated explorer task</li><li>a delegated worker task</li><li>an explicit blocker with proof</li></ul>
 <p>Do not final while any item below 8/10 remains merely speculative.</p>
 <h2>Long-Run Loop</h2>
 <p>Use long waits only when integration is blocked on a running agent result.</p>
 <p>Otherwise continue non-overlapping local work immediately.</p>
 <p>After an agent returns:</p>
-<ol>
-<li>Read the result and changed files.</li>
-<li>Verify claims with local commands or direct evidence.</li>
-<li>Integrate or reject the result.</li>
-<li>Update the confidence ledger.</li>
-<li>Close the agent when no longer needed.</li>
-</ol>
+<ol><li>Read the result and changed files.</li><li>Verify claims with local commands or direct evidence.</li><li>Integrate or reject the result.</li><li>Update the confidence ledger.</li><li>Close the agent when no longer needed.</li></ol>
 <p>If the runtime cannot keep working for the requested duration, leave a durable</p>
 <p>handoff artifact such as an issue, task, workflow, or todo with evidence and</p>
 <p>the next exact command or query to run.</p>
 <h2>Completion Gate</h2>
 <p>Do not send final until:</p>
-<ul>
-<li>all worker agents are complete and closed</li>
-<li>any unfinished agents are read-only and explicitly non-blocking</li>
-<li>all changed code has been linted and tested with fresh commands</li>
-<li>every sub-8/10 finding is fixed, evidence-solved, or blocked with proof</li>
-<li>the final answer names remaining risks honestly</li>
-<li>the final answer reports what was verified, not just what was attempted</li>
-</ul>
+<ul><li>all worker agents are complete and closed</li><li>any unfinished agents are read-only and explicitly non-blocking</li><li>all changed code has been linted and tested with fresh commands</li><li>every sub-8/10 finding is fixed, evidence-solved, or blocked with proof</li><li>the final answer names remaining risks honestly</li><li>the final answer reports what was verified, not just what was attempted</li></ul>
 <h2>Anti-Patterns</h2>
-<ul>
-<li>Reporting a ranked list and stopping while repair was authorized.</li>
-<li>Spawning multiple agents on overlapping write scopes.</li>
-<li>Waiting idly while agents run and local non-overlapping work exists.</li>
-<li>Trusting agent self-report without checking evidence.</li>
-<li>Treating historical telemetry counts as reduced by a code change; only new telemetry can prove recurrence reduction.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
+<ul><li>Reporting a ranked list and stopping while repair was authorized.</li><li>Spawning multiple agents on overlapping write scopes.</li><li>Waiting idly while agents run and local non-overlapping work exists.</li><li>Trusting agent self-report without checking evidence.</li><li>Treating historical telemetry counts as reduced by a code change; only new telemetry can prove recurrence reduction.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Agents would either under-delegate or fan out without authorization. This skill is the contract for when &quot;work for hours&quot; is real.</p>
 <h2>History</h2>

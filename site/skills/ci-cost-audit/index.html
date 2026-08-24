@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/ci-cost-audit/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -73,22 +73,12 @@ resources:
 <p>change, so verify the current official GitHub billing and Actions documentation</p>
 <p>before calculating or recommending a cost change.</p>
 <h2>When to use</h2>
-<ul>
-<li>Included CI usage is exhausted or jobs are blocked for billing reasons.</li>
-<li>A team needs to explain a monthly Actions charge.</li>
-<li>A workflow or runner change needs a cost comparison.</li>
-<li>An Apple-platform project also uses Xcode Cloud.</li>
-</ul>
+<ul><li>Included CI usage is exhausted or jobs are blocked for billing reasons.</li><li>A team needs to explain a monthly Actions charge.</li><li>A workflow or runner change needs a cost comparison.</li><li>An Apple-platform project also uses Xcode Cloud.</li></ul>
 <h2>Billing facts to verify live</h2>
 <p>Do not hard-code rates, allowances, operating-system multipliers, or billing</p>
 <p>endpoint behavior. Confirm these in the current official documentation and the</p>
 <p>account's billing report:</p>
-<ol>
-<li>Standard GitHub-hosted runners are free for public repositories.</li>
-<li>Larger GitHub-hosted runners are billed, including when used by public repositories.</li>
-<li>Hosted-runner cost is calculated from the billing report's SKU and current per-SKU rate, not from a guessed global multiplier.</li>
-<li>Self-hosted runners remove GitHub-hosted runner charges but still have infrastructure, administration, availability, and security costs.</li>
-</ol>
+<ol><li>Standard GitHub-hosted runners are free for public repositories.</li><li>Larger GitHub-hosted runners are billed, including when used by public repositories.</li><li>Hosted-runner cost is calculated from the billing report's SKU and current per-SKU rate, not from a guessed global multiplier.</li><li>Self-hosted runners remove GitHub-hosted runner charges but still have infrastructure, administration, availability, and security costs.</li></ol>
 <h2>Gather current evidence</h2>
 <p>Use the account or organization billing experience and its supported API/export</p>
 <p>for the month under review. Save a redacted copy only when the user has asked</p>
@@ -103,14 +93,7 @@ resources:
 <p>available), and time window. Separate Actions compute from storage, data</p>
 <p>transfer, and non-GitHub services before drawing conclusions.</p>
 <h2>Method</h2>
-<ol>
-<li>Pull the current-month report and identify each Actions-related SKU.</li>
-<li>Classify the runner behind each costly SKU as standard hosted, larger hosted, or self-hosted. Use workflow <code>runs-on</code> labels and the current runner configuration; repository visibility alone is insufficient.</li>
-<li>Rank line items by recorded cost and quantity. Use the report's own SKU rate and amount—do not apply historical OS multipliers.</li>
-<li>For the top repository/workflow, inspect run count, jobs per run, matrix width, queue time, and job duration.</li>
-<li>Compare the current daily rate with the period before and after any workflow change. A historical spike may already be fixed.</li>
-<li>State uncertainty plainly when the report cannot attribute shared usage to a repository or workflow.</li>
-</ol>
+<ol><li>Pull the current-month report and identify each Actions-related SKU.</li><li>Classify the runner behind each costly SKU as standard hosted, larger hosted, or self-hosted. Use workflow <code>runs-on</code> labels and the current runner configuration; repository visibility alone is insufficient.</li><li>Rank line items by recorded cost and quantity. Use the report's own SKU rate and amount—do not apply historical OS multipliers.</li><li>For the top repository/workflow, inspect run count, jobs per run, matrix width, queue time, and job duration.</li><li>Compare the current daily rate with the period before and after any workflow change. A historical spike may already be fixed.</li><li>State uncertainty plainly when the report cannot attribute shared usage to a repository or workflow.</li></ol>
 <p>Useful workflow evidence:</p>
 <pre><code>gh api &quot;repos/&lt;org&gt;/&lt;repo&gt;/actions/runs?created=&gt;=&lt;yyyy-mm-01&gt;&amp;per_page=100&quot; \
   --paginate --jq '.workflow_runs[] | [.name, .created_at[0:10]] | @tsv' \
@@ -119,13 +102,7 @@ resources:
 gh api repos/&lt;org&gt;/&lt;repo&gt;/actions/runs/&lt;run_id&gt;/jobs --jq .total_count</code></pre>
 <h2>Levers</h2>
 <p>Choose the smallest change justified by the data:</p>
-<ol>
-<li>Narrow triggers with paths, labels, concurrency, or an intentional schedule.</li>
-<li>Remove unnecessary matrix entries or duplicate jobs after checking coverage.</li>
-<li>Reduce slow work through caching, test partitioning, or targeted checks.</li>
-<li>Move suitable work to a standard runner when a larger runner is not needed.</li>
-<li>Consider self-hosted capacity only with an explicit operational-cost and reliability comparison.</li>
-</ol>
+<ol><li>Narrow triggers with paths, labels, concurrency, or an intentional schedule.</li><li>Remove unnecessary matrix entries or duplicate jobs after checking coverage.</li><li>Reduce slow work through caching, test partitioning, or targeted checks.</li><li>Move suitable work to a standard runner when a larger runner is not needed.</li><li>Consider self-hosted capacity only with an explicit operational-cost and reliability comparison.</li></ol>
 <p>Never recommend making a repository public solely for cost without explicit</p>
 <p>product and security approval. Never promise a runner choice is free without</p>
 <p>checking its current billing class and the account's plan.</p>
@@ -140,13 +117,7 @@ gh api repos/&lt;org&gt;/&lt;repo&gt;/actions/runs/&lt;run_id&gt;/jobs --jq .tot
 <p>change with its trade-off. Name the source and retrieval time for every billing</p>
 <p>claim.</p>
 <h2>Anti-patterns</h2>
-<ul>
-<li>Applying stale multiplier tables or included-minute allowances.</li>
-<li>Treating all public-repository work as free without checking for larger runners.</li>
-<li>Inferring cost from wall-clock duration when the billing report has SKU data.</li>
-<li>Calling self-hosted infrastructure free because GitHub does not bill its compute minutes.</li>
-<li>Recommending a fix without checking whether a recent workflow change already altered the current burn rate.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
+<ul><li>Applying stale multiplier tables or included-minute allowances.</li><li>Treating all public-repository work as free without checking for larger runners.</li><li>Inferring cost from wall-clock duration when the billing report has SKU data.</li><li>Calling self-hosted infrastructure free because GitHub does not bill its compute minutes.</li><li>Recommending a fix without checking whether a recent workflow change already altered the current burn rate.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>CI billing is full of misleading totals. The expensive workflow is often not the loudest one.</p>
 <h2>How</h2>

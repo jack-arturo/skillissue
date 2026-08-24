@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/essays/skills-are-the-new-mcp-bloat/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -48,13 +48,7 @@
 <p>Skills are great. Until you have ten bad ones. Or forty highly optimized ones. Then the model starts guessing wrong, burning tokens on descriptions it will never use, and confidently skipping the skill that would have saved the turn.</p>
 <p><strong>It's the same failure mode. Different file extension.</strong></p>
 <h2>Short version</h2>
-<ol>
-<li><strong>MCP taught us</strong> that &quot;register everything and hope the model picks correctly&quot; dies at scale — tool definitions are expensive, always-on context is radioactive, and selection accuracy falls off a cliff.</li>
-<li><strong>Skills sell progressive disclosure</strong> — name + description always loaded, body on demand. That fixes <em>definition</em> bloat. It does <strong>not</strong> fix <em>selection</em> bloat when the catalog is huge, cloned, or contradictory.</li>
-<li><strong>AutoHub already solved the MCP side</strong> with a lean baseline, intent rules, a scanned registry, lazy server start, and an escape hatch when routing misses.</li>
-<li><strong>The skills wave is replaying 2025.</strong> Public catalogs fill with clones; research is measuring non-monotonic returns past a handful of skills; agents that dump every description into the system prompt are back at square one.</li>
-<li><strong>The durable pattern:</strong> inventory big, <strong>load small</strong>, escalate only when intent is clear — whether the unit is an MCP tool or a <code>SKILL.md</code>.</li>
-</ol>
+<ol><li><strong>MCP taught us</strong> that &quot;register everything and hope the model picks correctly&quot; dies at scale — tool definitions are expensive, always-on context is radioactive, and selection accuracy falls off a cliff.</li><li><strong>Skills sell progressive disclosure</strong> — name + description always loaded, body on demand. That fixes <em>definition</em> bloat. It does <strong>not</strong> fix <em>selection</em> bloat when the catalog is huge, cloned, or contradictory.</li><li><strong>AutoHub already solved the MCP side</strong> with a lean baseline, intent rules, a scanned registry, lazy server start, and an escape hatch when routing misses.</li><li><strong>The skills wave is replaying 2025.</strong> Public catalogs fill with clones; research is measuring non-monotonic returns past a handful of skills; agents that dump every description into the system prompt are back at square one.</li><li><strong>The durable pattern:</strong> inventory big, <strong>load small</strong>, escalate only when intent is clear — whether the unit is an MCP tool or a <code>SKILL.md</code>.</li></ol>
 <h2>Inventory is not context</h2>
 <p>On this machine's AutoHub config (July 2026), the honest inventory looks like this:</p>
 <div class="table-wrap"><table>
@@ -100,22 +94,10 @@
 <p>Until that post is live, the data and chart sources are in this repo: <a href="https://github.com/jack-arturo/skillissue/blob/main/content/data/tool-timeline.json" rel="noopener"><code>content/data/tool-timeline.json</code></a> and <a href="https://github.com/jack-arturo/skillissue/tree/main/content/assets/charts" rel="noopener"><code>content/assets/charts/</code></a>.</p>
 <h2>If you're drowning</h2>
 <p>Stop adding. Start routing.</p>
-<ul>
-<li>Don't install every marketplace skill into every agent profile.</li>
-<li>Keep a baseline. Expand on intent. Give the model an explicit way to ask for more.</li>
-<li>Prefer fewer, better skills over seventeen near-clones of <code>extract-pdf</code>.</li>
-<li>When someone says &quot;skills fixed MCP context bloat,&quot; ask: <strong>for the body, or for the catalog?</strong> Only one of those is automatic.</li>
-</ul>
+<ul><li>Don't install every marketplace skill into every agent profile.</li><li>Keep a baseline. Expand on intent. Give the model an explicit way to ask for more.</li><li>Prefer fewer, better skills over seventeen near-clones of <code>extract-pdf</code>.</li><li>When someone says &quot;skills fixed MCP context bloat,&quot; ask: <strong>for the body, or for the catalog?</strong> Only one of those is automatic.</li></ul>
 <p>— Jack</p>
 <h3>Further reading</h3>
-<ul>
-<li>Deep post (this story with charts) — <a href="https://drunk.support" rel="noopener">drunk.support</a> <em>(Inventory Is Not Context)</em></li>
-<li><a href="https://autovault.dev" rel="noopener">AutoVault</a> — the six problems + vault model</li>
-<li>Anthropic — <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" rel="noopener">Agent Skills</a>, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" rel="noopener">context engineering</a></li>
-<li>SkillsBench — <a href="https://arxiv.org/html/2602.12670v1" rel="noopener">arXiv</a></li>
-<li>Survey — <a href="https://arxiv.org/html/2602.12430v3" rel="noopener">Agent Skills for LLMs</a></li>
-<li>Install skills from this site — <a href="/install/">/install/</a></li>
-</ul></div></section>
+<ul><li>Deep post (this story with charts) — <a href="https://drunk.support" rel="noopener">drunk.support</a> <em>(Inventory Is Not Context)</em></li><li><a href="https://autovault.dev" rel="noopener">AutoVault</a> — the six problems + vault model</li><li>Anthropic — <a href="https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills" rel="noopener">Agent Skills</a>, <a href="https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents" rel="noopener">context engineering</a></li><li>SkillsBench — <a href="https://arxiv.org/html/2602.12670v1" rel="noopener">arXiv</a></li><li>Survey — <a href="https://arxiv.org/html/2602.12430v3" rel="noopener">Agent Skills for LLMs</a></li><li>Install skills from this site — <a href="/install/">/install/</a></li></ul></div></section>
   </main>
   <footer>
     <div class="wrap foot-inner">

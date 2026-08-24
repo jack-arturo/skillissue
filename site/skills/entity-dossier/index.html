@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/entity-dossier/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -73,16 +73,9 @@ requires-secrets:
 <p>service, voice memory) can activate later. The AutoMem write is the</p>
 <p>deliverable, not the chat reply.</p>
 <h2>When to use / when not</h2>
-<ul>
-<li><strong>Use:</strong> &quot;build a dossier on X&quot;, &quot;research X and remember them&quot;, background on a person/company/concept that future conversations should recall.</li>
-<li><strong>Don't use:</strong> throwaway lookups (&quot;what's X's website&quot;), anything requiring non-public data about private individuals, or research the requester explicitly wants kept out of memory.</li>
-</ul>
+<ul><li><strong>Use:</strong> &quot;build a dossier on X&quot;, &quot;research X and remember them&quot;, background on a person/company/concept that future conversations should recall.</li><li><strong>Don't use:</strong> throwaway lookups (&quot;what's X's website&quot;), anything requiring non-public data about private individuals, or research the requester explicitly wants kept out of memory.</li></ul>
 <h2>Ritual</h2>
-<ol>
-<li><strong>Scope.</strong> Pin the entity type (person / organization / concept), why it matters (meeting, collab, mailing list, curiosity), and how deep to go.</li>
-<li><strong>Research.</strong> Primary sources first — their own site, talks, repos, published writing, filings. Record dates on claims, keep explicit uncertainty (&quot;unverified&quot;, &quot;as of &lt;date&gt;&quot;), collect 3–6 topics and the source URLs you actually used.</li>
-<li><strong>Compose the payload</strong> as JSON:</li>
-</ol>
+<ol><li><strong>Scope.</strong> Pin the entity type (person / organization / concept), why it matters (meeting, collab, mailing list, curiosity), and how deep to go.</li><li><strong>Research.</strong> Primary sources first — their own site, talks, repos, published writing, filings. Record dates on claims, keep explicit uncertainty (&quot;unverified&quot;, &quot;as of &lt;date&gt;&quot;), collect 3–6 topics and the source URLs you actually used.</li><li><strong>Compose the payload</strong> as JSON:</li></ol>
 <p>   ```json</p>
 <p>   {</p>
 <p>     &quot;module&quot;: { &quot;id&quot;: &quot;steven-cotler&quot;, &quot;name&quot;: &quot;Steven Cotler dossier&quot; },</p>
@@ -100,9 +93,7 @@ requires-secrets:
 <p>   ```</p>
 <p>   <code>module.id</code> is the stable slug recall will key on. Multiple people in one</p>
 <p>   module are fine (rosters); one person is the common case.</p>
-<ol>
-<li><strong>Store</strong> — from the AutoHub workspace:</li>
-</ol>
+<ol><li><strong>Store</strong> — from the AutoHub workspace:</li></ol>
 <p>   ```bash</p>
 <p>   node --env-file-if-exists=.env scripts/build-context-module.js --input /absolute/path/entity.json</p>
 <p>   ```</p>
@@ -115,16 +106,9 @@ requires-secrets:
 <p>   omit it for durable profiles. <code>--emit-module &lt;path&gt;</code> (writing a</p>
 <p>   <code>config/context-modules/&lt;id&gt;.json</code> activation descriptor) is opt-in and</p>
 <p>   needs an explicit request — never write it by default.</p>
-<ol>
-<li><strong>Verify.</strong> Recall with tags <code>[&quot;context-module:dossier&quot;, &quot;entity:people:&lt;slug&gt;&quot;]</code> and confirm the stored dossier comes back. No recall, not done.</li>
-<li><strong>Report.</strong> One paragraph of findings, the stored memory ids from the script's JSON output, and a recommendation only if one was asked for.</li>
-</ol>
+<ol><li><strong>Verify.</strong> Recall with tags <code>[&quot;context-module:dossier&quot;, &quot;entity:people:&lt;slug&gt;&quot;]</code> and confirm the stored dossier comes back. No recall, not done.</li><li><strong>Report.</strong> One paragraph of findings, the stored memory ids from the script's JSON output, and a recommendation only if one was asked for.</li></ol>
 <h2>Never</h2>
-<ul>
-<li>Store secrets, credentials, or non-public personal data.</li>
-<li>Fabricate or pad sources/topics — fewer, real ones win.</li>
-<li>Skip the verification recall or report &quot;done&quot; on the script exit code alone.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
+<ul><li>Store secrets, credentials, or non-public personal data.</li><li>Fabricate or pad sources/topics — fewer, real ones win.</li><li>Skip the verification recall or report &quot;done&quot; on the script exit code alone.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Pre-meeting context kept dying with the chat. The dossier in AutoMem is the deliverable.</p>
 <h2>History</h2>

@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/wordpress-theme-to-emdash/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -132,14 +132,7 @@ resources:
 ---</pre></div><h2>WordPress Theme to EmDash</h2>
 <p>Port WordPress themes to EmDash in six phases. <strong>Read the phase file before starting each phase.</strong></p>
 <h2>Critical Rules</h2>
-<ol>
-<li><strong>Copy scaffold first</strong> - Start every theme by copying <code>scaffold/</code> from this skill</li>
-<li><strong>Take screenshots of demo</strong> - Identify the demo URL and capture all page types using agent-browser before starting work</li>
-<li><strong>No hard-coded content</strong> - Use <code>getSiteSettings()</code> for title/tagline, <code>getMenu()</code> for navigation</li>
-<li><strong>Server-rendered pages</strong> - Never use <code>getStaticPaths()</code> for EmDash content</li>
-<li><strong>Astro 6</strong> - Use <code>ClientRouter</code> not <code>ViewTransitions</code>, Zod 4 syntax, Node 22+</li>
-<li><strong>Use emdash Image component</strong> - For all images, import Image from &quot;emdash/ui&quot;</li>
-</ol>
+<ol><li><strong>Copy scaffold first</strong> - Start every theme by copying <code>scaffold/</code> from this skill</li><li><strong>Take screenshots of demo</strong> - Identify the demo URL and capture all page types using agent-browser before starting work</li><li><strong>No hard-coded content</strong> - Use <code>getSiteSettings()</code> for title/tagline, <code>getMenu()</code> for navigation</li><li><strong>Server-rendered pages</strong> - Never use <code>getStaticPaths()</code> for EmDash content</li><li><strong>Astro 6</strong> - Use <code>ClientRouter</code> not <code>ViewTransitions</code>, Zod 4 syntax, Node 22+</li><li><strong>Use emdash Image component</strong> - For all images, import Image from &quot;emdash/ui&quot;</li></ol>
 <h2>Phases</h2>
 <div class="table-wrap"><table>
 <thead><tr><th>Phase</th><th>File</th><th>Summary</th></tr></thead>
@@ -153,58 +146,21 @@ resources:
 </tbody></table></div>
 <h2>Checklist</h2>
 <h3>Setup</h3>
-<ul>
-<li>[ ] Copy <code>scaffold/</code> to new theme directory. Unless otherwise specified by the user, make this a subdirectory of <code>themes/</code> and name it after the WordPress theme (e.g., <code>themes/twentytwentyfour/</code>).</li>
-<li>[ ] Rename folder, update <code>package.json</code></li>
-<li>[ ] Verify build: <code>pnpm build</code></li>
-</ul>
+<ul><li>[ ] Copy <code>scaffold/</code> to new theme directory. Unless otherwise specified by the user, make this a subdirectory of <code>themes/</code> and name it after the WordPress theme (e.g., <code>themes/twentytwentyfour/</code>).</li><li>[ ] Rename folder, update <code>package.json</code></li><li>[ ] Verify build: <code>pnpm build</code></li></ul>
 <h3>Phase 1: Discovery</h3>
-<ul>
-<li>[ ] Theme source downloaded</li>
-<li>[ ] Demo site identified</li>
-<li>[ ] <code>discovery/</code> folder created with <code>screenshots/</code>, <code>images/</code>, <code>notes.md</code></li>
-<li>[ ] All page types screenshotted</li>
-<li>[ ] Sample images downloaded</li>
-</ul>
+<ul><li>[ ] Theme source downloaded</li><li>[ ] Demo site identified</li><li>[ ] <code>discovery/</code> folder created with <code>screenshots/</code>, <code>images/</code>, <code>notes.md</code></li><li>[ ] All page types screenshotted</li><li>[ ] Sample images downloaded</li></ul>
 <h3>Phase 2: Design</h3>
-<ul>
-<li>[ ] CSS variables in <code>global.css</code></li>
-<li>[ ] Fonts loading</li>
-<li>[ ] Colors match demo</li>
-</ul>
+<ul><li>[ ] CSS variables in <code>global.css</code></li><li>[ ] Fonts loading</li><li>[ ] Colors match demo</li></ul>
 <h3>Phase 3: Templates</h3>
-<ul>
-<li>[ ] Homepage, single post, archive, category, tag, page, 404</li>
-<li>[ ] Components extracted (PostCard, etc.)</li>
-</ul>
+<ul><li>[ ] Homepage, single post, archive, category, tag, page, 404</li><li>[ ] Components extracted (PostCard, etc.)</li></ul>
 <h3>Phase 4: Dynamic</h3>
-<ul>
-<li>[ ] Site settings (title, tagline, logo from CMS)</li>
-<li>[ ] Navigation menus (from CMS, not hard-coded)</li>
-<li>[ ] Taxonomies</li>
-<li>[ ] Widget areas (if applicable)</li>
-</ul>
+<ul><li>[ ] Site settings (title, tagline, logo from CMS)</li><li>[ ] Navigation menus (from CMS, not hard-coded)</li><li>[ ] Taxonomies</li><li>[ ] Widget areas (if applicable)</li></ul>
 <h3>Phase 5: Seed</h3>
-<ul>
-<li>[ ] Seed file created with demo images at <code>.emdash/seed.json</code> (or wired up via <code>package.json#emdash.seed</code>)</li>
-</ul>
+<ul><li>[ ] Seed file created with demo images at <code>.emdash/seed.json</code> (or wired up via <code>package.json#emdash.seed</code>)</li></ul>
 <h3>Phase 6: Verify</h3>
-<ul>
-<li>[ ] Dev server applied seed cleanly on first request (no validation errors in logs)</li>
-<li>[ ] Output screenshots captured</li>
-<li>[ ] Visual comparison done</li>
-<li>[ ] Build succeeds: <code>pnpm build</code></li>
-<li>[ ] LICENSE file downloaded (GPL-2.0 in most cases)</li>
-<li>[ ] README credits original theme</li>
-</ul>
+<ul><li>[ ] Dev server applied seed cleanly on first request (no validation errors in logs)</li><li>[ ] Output screenshots captured</li><li>[ ] Visual comparison done</li><li>[ ] Build succeeds: <code>pnpm build</code></li><li>[ ] LICENSE file downloaded (GPL-2.0 in most cases)</li><li>[ ] README credits original theme</li></ul>
 <h2>Reference Documents</h2>
-<ul>
-<li><code>references/astro-essentials.md</code> - Astro 6 patterns</li>
-<li><code>references/template-patterns.md</code> - PHP → Astro conversion</li>
-<li><code>references/concept-mapping.md</code> - WP → EmDash concepts</li>
-<li><code>references/emdash-api.md</code> - Full API reference</li>
-<li><code>references/design-extraction.md</code> - CSS extraction techniques</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/building-emdash-site/"><span class="name">building-emdash-site</span><span class="desc">The EmDash-on-Astro playbook for content models, rendering, and the CMS details that are easy to misread.</span></a> <a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a></div></div></div></article></section>
+<ul><li><code>references/astro-essentials.md</code> - Astro 6 patterns</li><li><code>references/template-patterns.md</code> - PHP → Astro conversion</li><li><code>references/concept-mapping.md</code> - WP → EmDash concepts</li><li><code>references/emdash-api.md</code> - Full API reference</li><li><code>references/design-extraction.md</code> - CSS extraction techniques</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/building-emdash-site/"><span class="name">building-emdash-site</span><span class="desc">The EmDash-on-Astro playbook for content models, rendering, and the CMS details that are easy to misread.</span></a> <a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Theme migrations go sideways when a pretty homepage hides missing archives, menus, and content behavior.</p>
 <h2>How</h2>

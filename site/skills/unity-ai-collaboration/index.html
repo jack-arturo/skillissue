@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/unity-ai-collaboration/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -100,11 +100,7 @@ bin:
 <p>to another writer. Never ask Unity Assistant and an external agent to edit the</p>
 <p>same project concurrently.</p>
 <h2>Use Assistant modes deliberately</h2>
-<ul>
-<li><strong>Ask</strong>: explain, inspect supplied context, answer API/tooling questions, and propose focused diagnostics. Keep it read-only unless the operator explicitly changes the task.</li>
-<li><strong>Plan</strong>: explore the project read-only, define files/tools/evidence, identify risks, and produce an ordered plan. A Plan is not permission to execute it.</li>
-<li><strong>Agent</strong>: execute an approved, bounded editor-local task as the assigned writer, then run relevant tests and report exact changes and evidence.</li>
-</ul>
+<ul><li><strong>Ask</strong>: explain, inspect supplied context, answer API/tooling questions, and propose focused diagnostics. Keep it read-only unless the operator explicitly changes the task.</li><li><strong>Plan</strong>: explore the project read-only, define files/tools/evidence, identify risks, and produce an ordered plan. A Plan is not permission to execute it.</li><li><strong>Agent</strong>: execute an approved, bounded editor-local task as the assigned writer, then run relevant tests and report exact changes and evidence.</li></ul>
 <p>Start a new Assistant conversation after adding, changing, rescanning, allowing,</p>
 <p>or denying an AI Skill. Old conversations retain their original skill context.</p>
 <p>Read <code>references/responsibility-matrix.md</code> before combining surfaces.</p>
@@ -113,16 +109,7 @@ bin:
 <p>and the intended task; the settings helper rejects provider/service/model keys</p>
 <p>before it can write EditorPrefs.</p>
 <h2>Route by comparative advantage</h2>
-<ul>
-<li>Use Unity Assistant for scene-aware, visual, asset, and short editor-local work where live Unity context matters.</li>
-<li>Use Unity Default/Lite for routine work. Use a higher-cost model only when the visual or architectural difficulty justifies it.</li>
-<li>Use AI Gateway's bundled Codex only for short editor-local tasks. Use Codex Desktop for repository-scale changes, history, scripts, broad filesystem context, and multi-file verification.</li>
-<li>Use the official Unity MCP relay for supported high-level operations, explicit project/PID targeting, and paid Unity AI generation (<code>Unity_AssetGeneration_GetModels</code> then <code>GenerateAsset</code>: materials + PBR, meshes with retopology/texture/rig, sprites/images/cubemaps, humanoid animation from text or video, sound). Prompts for materials/shaders must state the render pipeline (URP) and mobile/Quest target explicitly, or generation defaults to Standard-shader output that renders magenta on URP.</li>
-<li>Use IvanMurzak MCP for path-scoped reads, JSON patching, deep object/asset access, tests, profiler, screenshots, packages, particles, editor C# execution (<code>script-execute</code>, <code>reflection-method-*</code>), and other verified editor surfaces.</li>
-<li>Use the Meta XR runtime bridge (Meta XR Core SDK AI Tools) for Quest project-setup validation and auto-fix (<code>UPSTTools</code>), structured compile state (<code>CompilationTools</code>, <code>CodeAnalysisTools</code>), async test runs (<code>TestRunnerTools</code>), GameObject/component operations (<code>SceneObjectsTools</code>), Building Block install/config (<code>BuildingBlocksTools</code>), and editor-window capture/drive (<code>UIVerificationTools</code>, <code>InteractionTestingTools</code>).</li>
-<li>Use Meta XR Operator (Core SDK v205+, OpenXR API layer) to drive and verify a RUNNING XR session: head/controller pose injection, controller input, composited-image capture, spatial entities. Runtime-only — its tools error outside an active session, and its evidence is simulator-grade.</li>
-<li>Use shell scripts for deterministic builds, manifests/APKs, Git, locks, and reproducible audits. Use Meta XR Simulator, MQDH, and physical Quest hardware for progressively stronger runtime evidence.</li>
-</ul>
+<ul><li>Use Unity Assistant for scene-aware, visual, asset, and short editor-local work where live Unity context matters.</li><li>Use Unity Default/Lite for routine work. Use a higher-cost model only when the visual or architectural difficulty justifies it.</li><li>Use AI Gateway's bundled Codex only for short editor-local tasks. Use Codex Desktop for repository-scale changes, history, scripts, broad filesystem context, and multi-file verification.</li><li>Use the official Unity MCP relay for supported high-level operations, explicit project/PID targeting, and paid Unity AI generation (<code>Unity_AssetGeneration_GetModels</code> then <code>GenerateAsset</code>: materials + PBR, meshes with retopology/texture/rig, sprites/images/cubemaps, humanoid animation from text or video, sound). Prompts for materials/shaders must state the render pipeline (URP) and mobile/Quest target explicitly, or generation defaults to Standard-shader output that renders magenta on URP.</li><li>Use IvanMurzak MCP for path-scoped reads, JSON patching, deep object/asset access, tests, profiler, screenshots, packages, particles, editor C# execution (<code>script-execute</code>, <code>reflection-method-*</code>), and other verified editor surfaces.</li><li>Use the Meta XR runtime bridge (Meta XR Core SDK AI Tools) for Quest project-setup validation and auto-fix (<code>UPSTTools</code>), structured compile state (<code>CompilationTools</code>, <code>CodeAnalysisTools</code>), async test runs (<code>TestRunnerTools</code>), GameObject/component operations (<code>SceneObjectsTools</code>), Building Block install/config (<code>BuildingBlocksTools</code>), and editor-window capture/drive (<code>UIVerificationTools</code>, <code>InteractionTestingTools</code>).</li><li>Use Meta XR Operator (Core SDK v205+, OpenXR API layer) to drive and verify a RUNNING XR session: head/controller pose injection, controller input, composited-image capture, spatial entities. Runtime-only — its tools error outside an active session, and its evidence is simulator-grade.</li><li>Use shell scripts for deterministic builds, manifests/APKs, Git, locks, and reproducible audits. Use Meta XR Simulator, MQDH, and physical Quest hardware for progressively stronger runtime evidence.</li></ul>
 <p>All of these surfaces drive the same live Editor. The single-writer rule</p>
 <p>applies across servers, not per server: overlapping tools (IvanMurzak</p>
 <p><code>tests-run</code> vs <code>TestRunnerTools</code>; <code>gameobject-*</code> vs <code>SceneObjectsTools</code>)</p>

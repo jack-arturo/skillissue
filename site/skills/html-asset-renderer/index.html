@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/html-asset-renderer/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -77,48 +77,17 @@ bin:
 <p>previews, favicons, docs images, app-store screenshots, campaign images, or</p>
 <p>other fixed-size artwork rendered in the browser.</p>
 <h2>When to use</h2>
-<ul>
-<li>The user gives a folder of <code>.html</code> files and asks for screenshots at exact dimensions.</li>
-<li>The source has a fixed canvas element such as <code>.canvas</code>, <code>.artboard</code>, <code>[data-render-asset]</code>, or a named asset wrapper.</li>
-<li>The output needs production checks: exact width and height, file size, metadata merge notes, and visual QA.</li>
-<li>The user asks to turn a Claude Design, Figma-to-HTML, or hand-authored HTML export into static image assets.</li>
-</ul>
+<ul><li>The user gives a folder of <code>.html</code> files and asks for screenshots at exact dimensions.</li><li>The source has a fixed canvas element such as <code>.canvas</code>, <code>.artboard</code>, <code>[data-render-asset]</code>, or a named asset wrapper.</li><li>The output needs production checks: exact width and height, file size, metadata merge notes, and visual QA.</li><li>The user asks to turn a Claude Design, Figma-to-HTML, or hand-authored HTML export into static image assets.</li></ul>
 <h2>Workflow</h2>
-<ol>
-<li>Inspect the source folder first.</li>
-</ol>
-<p>   - List HTML files and supporting CSS/assets.</p>
-<p>   - Identify the target selector; prefer <code>.canvas</code>, then</p>
-<p>     <code>[data-render-asset]</code>, then a manifest-provided selector.</p>
-<p>   - Look for stale product copy, fake metrics, placeholder paths, and</p>
-<p>     platform-specific crop requirements.</p>
-<ol>
-<li>Create a render manifest when output names or dimensions matter.</li>
-</ol>
-<p>   - Use JSON with an <code>assets</code> array.</p>
-<p>   - Each item may define <code>source</code>, <code>output</code>, <code>width</code>, <code>height</code>, <code>selector</code>,</p>
-<p>     <code>format</code>, and <code>maxBytes</code>.</p>
-<p>   - Keep brand/product copy in the project source, not in this generic skill.</p>
-<ol>
-<li>Render with the bundled script.</li>
-</ol>
-<p>   - Find the script with <code>autovault skill which html-asset-renderer render</code></p>
-<p>     or use the installed resource path directly.</p>
-<p>   - Use system Chrome by default; set <code>CHROME_PATH</code> or pass <code>--chrome</code> when</p>
-<p>     needed.</p>
+<ol><li>Inspect the source folder first.<ul><li>List HTML files and supporting CSS/assets.</li><li>Identify the target selector; prefer <code>.canvas</code>, then <code>[data-render-asset]</code>, then a manifest-provided selector.</li><li>Look for stale product copy, fake metrics, placeholder paths, and platform-specific crop requirements.</li></ul></li></ol>
+<ol><li>Create a render manifest when output names or dimensions matter.<ul><li>Use JSON with an <code>assets</code> array.</li><li>Each item may define <code>source</code>, <code>output</code>, <code>width</code>, <code>height</code>, <code>selector</code>, <code>format</code>, and <code>maxBytes</code>.</li><li>Keep brand/product copy in the project source, not in this generic skill.</li></ul></li></ol>
+<ol><li>Render with the bundled script.<ul><li>Find the script with <code>autovault skill which html-asset-renderer render</code> or use the installed resource path directly.</li><li>Use system Chrome by default; set <code>CHROME_PATH</code> or pass <code>--chrome</code> when needed.</li></ul></li></ol>
 <pre><code>node ~/.autovault/skills/html-asset-renderer/scripts/render-html-assets.mjs \
   ./source-html ./public \
   --manifest ./social-assets.manifest.json \
   --selector .canvas \
   --report ./social-assets.report.json</code></pre>
-<ol>
-<li>Verify and merge.</li>
-</ol>
-<p>   - Confirm every generated PNG exists at the expected dimensions.</p>
-<p>   - Check file sizes against platform limits.</p>
-<p>   - Update the project metadata that points at the assets.</p>
-<p>   - Run the repo's normal tests/builds.</p>
-<p>   - Visually inspect native-size outputs before handoff.</p>
+<ol><li>Verify and merge.<ul><li>Confirm every generated PNG exists at the expected dimensions.</li><li>Check file sizes against platform limits.</li><li>Update the project metadata that points at the assets.</li><li>Run the repo's normal tests/builds.</li><li>Visually inspect native-size outputs before handoff.</li></ul></li></ol>
 <h2>Manifest shape</h2>
 <pre><code>{
   &quot;assets&quot;: [
@@ -137,22 +106,9 @@ bin:
 <p><code>&lt;source-basename&gt;.png</code>.</p>
 <h2>Output</h2>
 <p>Return a concise checklist:</p>
-<ul>
-<li>Source folder and output folder.</li>
-<li>Generated asset names with dimensions and byte sizes.</li>
-<li>Any skipped source files and why.</li>
-<li>Metadata or route files that should point at the new assets.</li>
-<li>Visual QA notes and remaining risk.</li>
-</ul>
+<ul><li>Source folder and output folder.</li><li>Generated asset names with dimensions and byte sizes.</li><li>Any skipped source files and why.</li><li>Metadata or route files that should point at the new assets.</li><li>Visual QA notes and remaining risk.</li></ul>
 <h2>Anti-patterns</h2>
-<ul>
-<li>Do not bundle project-specific brand files or copy into this skill.</li>
-<li>Do not ship stale source screenshots as production assets; render from the editable HTML/CSS source.</li>
-<li>Do not claim success without exact dimension verification.</li>
-<li>Do not rewrite product positioning inside the generic workflow; make those edits in the project source before rendering.</li>
-<li>Do not create destructive cleanup steps. Only write to the requested output directory and report path.</li>
-<li>Do not store secrets, tokens, or private account data in manifests, reports, or generated assets.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
+<ul><li>Do not bundle project-specific brand files or copy into this skill.</li><li>Do not ship stale source screenshots as production assets; render from the editable HTML/CSS source.</li><li>Do not claim success without exact dimension verification.</li><li>Do not rewrite product positioning inside the generic workflow; make those edits in the project source before rendering.</li><li>Do not create destructive cleanup steps. Only write to the requested output directory and report path.</li><li>Do not store secrets, tokens, or private account data in manifests, reports, or generated assets.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Design exports needed dimension-checked production assets, not freehand screenshots.</p>
 <h2>History</h2>

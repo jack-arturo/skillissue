@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/stripe-commerce-checkout/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -83,27 +83,14 @@ resources:
 <p>Supply <code>STRIPE_SECRET_KEY</code> and, where applicable, <code>STRIPE_WEBHOOK_SECRET</code> through the host's secret manager or local environment. Never request them in chat, put them in a repository, pass them on a command line, or print them. Prefer a project-scoped restricted key over an account-wide key.</p>
 <p>The Stripe CLI is useful for test-mode provisioning. Keep its credentials separate from application configuration; a CLI login key is not an application secret. Set environment variables in the deployment platform and use <code>.dev.vars</code> or an equivalent ignored local file for local work.</p>
 <h2>Build the endpoint</h2>
-<ol>
-<li>Decide whether the offer is one-time, subscription, donation, or deposit.</li>
-<li>Accept only a documented <code>offerId</code> from the browser. Resolve its Stripe Price ID, product display data, quantity, and metadata from a server-side allowlist; never accept amounts, price IDs, product names, quantities, client reference IDs, or arbitrary metadata from the browser.</li>
-<li>Start from <code>templates/cloudflare-pages-checkout.js</code>; wire its fail-closed authenticated-user adapter to the application's server-side session, then configure its server-side offer map. It creates a Checkout Session using <code>STRIPE_SECRET_KEY</code> and returns <code>{ id, url }</code> for the newly created session.</li>
-<li>Apply non-secret branding through <code>branding_settings</code>. Session branding does not replace account-level legal, receipt, Link, or portal branding; verify those in the Stripe Dashboard.</li>
-<li>For subscriptions, add a verified webhook and a user-return reconciliation path. The webhook remains the source of truth; reconciliation is only a fast path after a user returns from Checkout.</li>
-<li>Verify a new test-mode session after every endpoint or branding change. Existing session URLs are not a reliable test of a new deployment.</li>
-</ol>
+<ol><li>Decide whether the offer is one-time, subscription, donation, or deposit.</li><li>Accept only a documented <code>offerId</code> from the browser. Resolve its Stripe Price ID, product display data, quantity, and metadata from a server-side allowlist; never accept amounts, price IDs, product names, quantities, client reference IDs, or arbitrary metadata from the browser.</li><li>Start from <code>templates/cloudflare-pages-checkout.js</code>; wire its fail-closed authenticated-user adapter to the application's server-side session, then configure its server-side offer map. It creates a Checkout Session using <code>STRIPE_SECRET_KEY</code> and returns <code>{ id, url }</code> for the newly created session.</li><li>Apply non-secret branding through <code>branding_settings</code>. Session branding does not replace account-level legal, receipt, Link, or portal branding; verify those in the Stripe Dashboard.</li><li>For subscriptions, add a verified webhook and a user-return reconciliation path. The webhook remains the source of truth; reconciliation is only a fast path after a user returns from Checkout.</li><li>Verify a new test-mode session after every endpoint or branding change. Existing session URLs are not a reliable test of a new deployment.</li></ol>
 <h2>Webhooks and portal</h2>
 <p>Verify the Stripe signature using <code>STRIPE_WEBHOOK_SECRET</code> before changing entitlement or subscription state. Make handlers idempotent. On a Checkout return, retrieve the session server-side and verify that its client reference or metadata belongs to the authenticated user; never trust a browser-submitted customer or subscription ID.</p>
 <p>Billing Portal branding is account-level, unlike Checkout Session branding. A distinct product may need a distinct Stripe account if the portal must have separate global branding.</p>
 <h2>Stripe App route</h2>
 <p>Stripe does not offer an API that mints new API keys. If installed accounts need a project-scoped key, use a reviewed Stripe App configuration such as <code>templates/stripe-app.json</code>, request the narrowest permissions possible, and let the account owner approve the install. Do not automate credential creation outside Stripe's supported flow.</p>
 <h2>Safety rules</h2>
-<ul>
-<li>Default all mutations to test mode.</li>
-<li>Treat a configured live key as configuration, not authorization.</li>
-<li>Never expose a secret key or webhook secret in client code, logs, commits, or reports.</li>
-<li>Validate server-side ownership before granting access after Checkout.</li>
-<li>Report secret names and test evidence, never secret values.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-commerce-deploy/"><span class="name">cloudflare-commerce-deploy</span><span class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</span></a> <a class="sd-rel-tile" href="/skills/clerk-cloudflare-commerce-bootstrap/"><span class="name">clerk-cloudflare-commerce-bootstrap</span><span class="desc">A test-first orchestration path for Clerk identity, Cloudflare hosting, and Stripe Checkout.</span></a></div></div></div></article></section>
+<ul><li>Default all mutations to test mode.</li><li>Treat a configured live key as configuration, not authorization.</li><li>Never expose a secret key or webhook secret in client code, logs, commits, or reports.</li><li>Validate server-side ownership before granting access after Checkout.</li><li>Report secret names and test evidence, never secret values.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-commerce-deploy/"><span class="name">cloudflare-commerce-deploy</span><span class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</span></a> <a class="sd-rel-tile" href="/skills/clerk-cloudflare-commerce-bootstrap/"><span class="name">clerk-cloudflare-commerce-bootstrap</span><span class="desc">A test-first orchestration path for Clerk identity, Cloudflare hosting, and Stripe Checkout.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Payments code should make the safe path the default and make the expensive path impossible to mistake for a dry run.</p>
 <h2>How</h2>

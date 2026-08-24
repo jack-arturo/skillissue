@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/video-toolkit/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -80,21 +80,9 @@ resources:
 ---</pre></div><h2>Video Toolkit</h2>
 <p>This is a public, tool-agnostic production workflow—not an installable renderer or cloud-GPU client. Choose tools that are already available in the project or explicitly approved by the user. Do not assume a local checkout, command layout, container image, provider account, or environment variable exists.</p>
 <h2>Workflow</h2>
-<ol>
-<li>Write an approved brief: audience, claims, runtime, aspect ratio, visual source plan, audio plan, rights constraints, and acceptance checks.</li>
-<li>Inventory available tools and their costs before generating anything. If a provider needs credentials, let the user configure it through its own secret manager; do not name, request, or persist credentials here.</li>
-<li>Work in a project-approved scratch directory. Keep generated media, prompts, and transient metadata out of the repository unless the user explicitly requests assets in version control.</li>
-<li>Generate or collect one asset class at a time. Record source, rights status, and any simulation/redaction note beside the scratch artifact.</li>
-<li>Assemble the edit in the project's chosen editor or renderer. If the project uses Remotion, follow its installed documentation and conventions; this package supplies no code or command wrapper.</li>
-<li>Verify duration, resolution, frame zero, readable text, audio presence/mix, captions, and basic playback before review. Use a human review gate before publishing.</li>
-</ol>
+<ol><li>Write an approved brief: audience, claims, runtime, aspect ratio, visual source plan, audio plan, rights constraints, and acceptance checks.</li><li>Inventory available tools and their costs before generating anything. If a provider needs credentials, let the user configure it through its own secret manager; do not name, request, or persist credentials here.</li><li>Work in a project-approved scratch directory. Keep generated media, prompts, and transient metadata out of the repository unless the user explicitly requests assets in version control.</li><li>Generate or collect one asset class at a time. Record source, rights status, and any simulation/redaction note beside the scratch artifact.</li><li>Assemble the edit in the project's chosen editor or renderer. If the project uses Remotion, follow its installed documentation and conventions; this package supplies no code or command wrapper.</li><li>Verify duration, resolution, frame zero, readable text, audio presence/mix, captions, and basic playback before review. Use a human review gate before publishing.</li></ol>
 <h2>Boundaries</h2>
-<ul>
-<li>Never invent commands for an unbundled toolkit.</li>
-<li>Never assume a hosted generation provider is authorized or free.</li>
-<li>Keep provider secrets out of prompts, code, logs, and reports.</li>
-<li>Label generated or simulated footage honestly.</li>
-</ul>
+<ul><li>Never invent commands for an unbundled toolkit.</li><li>Never assume a hosted generation provider is authorized or free.</li><li>Keep provider secrets out of prompts, code, logs, and reports.</li><li>Label generated or simulated footage honestly.</li></ul>
 <p>Read the references for planning checklists, composition decisions, and recovery steps rather than executable commands.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/repo-demo-video-director/"><span class="name">repo-demo-video-director</span><span class="desc">The pre-production pass for a truthful README video: claims, storyboard, assets, audio, and a human gate.</span></a> <a class="sd-rel-tile" href="/skills/repo-demo-video-publisher/"><span class="name">repo-demo-video-publisher</span><span class="desc">A gated workflow for rendering, checking, uploading, and embedding a repository demo video without polluting the repo.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Video work turns into a folder of mysteries fast: which asset won, which job is still running, and why the render drifted.</p>

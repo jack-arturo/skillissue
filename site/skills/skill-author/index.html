@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/skill-author/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -69,12 +69,7 @@ capabilities:
 <p>capability declarations, validation, deduplication, and signed installation.</p>
 <h2>Scope</h2>
 <p>Use this skill when:</p>
-<ul>
-<li>a workflow or draft already exists and needs valid AutoVault frontmatter;</li>
-<li>a bundle has support files that must be inventoried and declared;</li>
-<li>an AutoVault validation, security, or dedup result needs remediation; or</li>
-<li>a reviewed bundle is ready for <code>propose_skill</code> or <code>add_skill</code>.</li>
-</ul>
+<ul><li>a workflow or draft already exists and needs valid AutoVault frontmatter;</li><li>a bundle has support files that must be inventoried and declared;</li><li>an AutoVault validation, security, or dedup result needs remediation; or</li><li>a reviewed bundle is ready for <code>propose_skill</code> or <code>add_skill</code>.</li></ul>
 <p>Do not use it for open-ended workflow invention, trigger design, or general</p>
 <p>skill-writing pedagogy. Use the host-native <code>skill-creator</code> or equivalent design</p>
 <p>tool first, then return here once there is a concrete draft to package.</p>
@@ -88,13 +83,7 @@ capabilities:
 <p>is not an error.</p>
 <h2>2. Inventory the complete bundle</h2>
 <p>Treat the skill directory as one unit:</p>
-<ul>
-<li><code>SKILL.md</code> is the entry point.</li>
-<li>Every regular sibling file under the directory is a resource.</li>
-<li>Exclude OS/editor metadata and generated caches.</li>
-<li>Reject symlinks, path traversal, device files, and other non-regular entries.</li>
-<li>Review executable resources as carefully as the skill body.</li>
-</ul>
+<ul><li><code>SKILL.md</code> is the entry point.</li><li>Every regular sibling file under the directory is a resource.</li><li>Exclude OS/editor metadata and generated caches.</li><li>Reject symlinks, path traversal, device files, and other non-regular entries.</li><li>Review executable resources as carefully as the skill body.</li></ul>
 <p>For a GitHub source, AutoVault fetches all regular sibling files beneath the</p>
 <p>selected skill directory at one immutable commit. It does not rely on the</p>
 <p>upstream author having declared every file. Missing <code>resources</code> declarations</p>
@@ -109,12 +98,7 @@ agents: [claude-code, codex]
 metadata:
   version: &quot;1.0.0&quot;
 ---</code></pre>
-<ul>
-<li><code>name</code> must match the bundle directory and storage name.</li>
-<li><code>description</code> must be at least 20 characters and cover both what and when.</li>
-<li><code>agents</code> must contain at least one valid target profile.</li>
-<li><code>metadata.version</code> should describe the packaged revision.</li>
-</ul>
+<ul><li><code>name</code> must match the bundle directory and storage name.</li><li><code>description</code> must be at least 20 characters and cover both what and when.</li><li><code>agents</code> must contain at least one valid target profile.</li><li><code>metadata.version</code> should describe the packaged revision.</li></ul>
 <p>Useful optional fields include <code>license</code>, <code>tags</code>, <code>category</code>, <code>capabilities</code>,</p>
 <p><code>requires-secrets</code>, <code>resources</code>, and <code>bin</code>.</p>
 <h2>4. Declare resources and actions</h2>
@@ -142,57 +126,26 @@ metadata:
   network: false
   filesystem: readonly
   tools: [Read]</code></pre>
-<ul>
-<li>Set <code>network</code> to true when any workflow or bundled action contacts a remote service.</li>
-<li>Use <code>filesystem: readwrite</code> when any step creates, edits, or deletes files.</li>
-<li>List the actual host tools and runtimes used by the body and resources.</li>
-<li>Declare secrets only by environment-variable name and purpose; never include secret values in a bundle.</li>
-</ul>
+<ul><li>Set <code>network</code> to true when any workflow or bundled action contacts a remote service.</li><li>Use <code>filesystem: readwrite</code> when any step creates, edits, or deletes files.</li><li>List the actual host tools and runtimes used by the body and resources.</li><li>Declare secrets only by environment-variable name and purpose; never include secret values in a bundle.</li></ul>
 <p>Under-declaration is rejected by the capability cross-check. Over-declaration</p>
 <p>unnecessarily expands the skill's claimed authority.</p>
 <h2>6. Validate before writing</h2>
 <p>With MCP compatibility tools available, dry-run the exact bytes:</p>
 <pre><code>propose_skill({skill_md: &quot;&lt;full SKILL.md&gt;&quot;, resources: [], check: true})</code></pre>
 <p>Handle the result explicitly:</p>
-<ul>
-<li><code>would_accept</code>: schema, security, capability, and dedup checks passed.</li>
-<li><code>duplicate</code>: inspect <code>existing_match</code> and choose whether to reuse, replace, merge, or keep both.</li>
-<li><code>invalid</code>: repair the listed schema or bundle errors.</li>
-<li><code>security_blocked</code>: remove unsafe behavior or correct an inaccurate capability declaration; do not bypass strict validation.</li>
-</ul>
+<ul><li><code>would_accept</code>: schema, security, capability, and dedup checks passed.</li><li><code>duplicate</code>: inspect <code>existing_match</code> and choose whether to reuse, replace, merge, or keep both.</li><li><code>invalid</code>: repair the listed schema or bundle errors.</li><li><code>security_blocked</code>: remove unsafe behavior or correct an inaccurate capability declaration; do not bypass strict validation.</li></ul>
 <p>For an existing reviewed directory, the local CLI path is</p>
 <p><code>autovault add &lt;path&gt; --dry-run</code>. A successful dry run does not write or sync</p>
 <p>profiles.</p>
 <h2>7. Admit the reviewed bundle</h2>
-<ul>
-<li>Use <code>propose_skill({skill_md: &quot;&lt;full SKILL.md&gt;&quot;, resources: [...]})</code> for caller-held draft bytes.</li>
-<li>Use <code>add_skill({source: &quot;local&quot;, skill_dir: &quot;&lt;directory&gt;&quot;})</code> for a reviewed local directory.</li>
-<li>Use <code>add_skill({source: &quot;github&quot;, identifier: &quot;owner/repo:path/SKILL.md&quot;})</code> for a source-backed GitHub bundle.</li>
-</ul>
+<ul><li>Use <code>propose_skill({skill_md: &quot;&lt;full SKILL.md&gt;&quot;, resources: [...]})</code> for caller-held draft bytes.</li><li>Use <code>add_skill({source: &quot;local&quot;, skill_dir: &quot;&lt;directory&gt;&quot;})</code> for a reviewed local directory.</li><li>Use <code>add_skill({source: &quot;github&quot;, identifier: &quot;owner/repo:path/SKILL.md&quot;})</code> for a source-backed GitHub bundle.</li></ul>
 <p>Confirm the accepted name, inferred resources, target agents, and profile-sync</p>
 <p>warnings. AutoVault signs <code>SKILL.md</code>, resources, and source metadata as one</p>
 <p>installed bundle.</p>
 <h2>Packaging checklist</h2>
-<ul>
-<li>[ ] A concrete draft exists; general design work is already complete.</li>
-<li>[ ] The name is safe, unique, and matches the directory.</li>
-<li>[ ] The description states what and when.</li>
-<li>[ ] Target agents are explicit.</li>
-<li>[ ] Every regular bundle file was reviewed.</li>
-<li>[ ] Resource and <code>bin</code> paths are relative and remain inside the bundle.</li>
-<li>[ ] Capabilities describe the body and every resource honestly.</li>
-<li>[ ] No credentials, personal data, caches, or OS metadata are included.</li>
-<li>[ ] The exact candidate passed a dry-run validation.</li>
-<li>[ ] Any inferred resources and functional-duplicate warning were reviewed.</li>
-</ul>
+<ul><li>[ ] A concrete draft exists; general design work is already complete.</li><li>[ ] The name is safe, unique, and matches the directory.</li><li>[ ] The description states what and when.</li><li>[ ] Target agents are explicit.</li><li>[ ] Every regular bundle file was reviewed.</li><li>[ ] Resource and <code>bin</code> paths are relative and remain inside the bundle.</li><li>[ ] Capabilities describe the body and every resource honestly.</li><li>[ ] No credentials, personal data, caches, or OS metadata are included.</li><li>[ ] The exact candidate passed a dry-run validation.</li><li>[ ] Any inferred resources and functional-duplicate warning were reviewed.</li></ul>
 <h2>Anti-patterns</h2>
-<ul>
-<li>Designing a new workflow here instead of using the host's design skill.</li>
-<li>Writing directly into the managed vault and bypassing validation/signing.</li>
-<li>Declaring only files mentioned by upstream while ignoring sibling files.</li>
-<li>Treating a dedup warning as proof that two workflows are interchangeable.</li>
-<li>Weakening strict security to admit a blocked bundle.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/autovault-skill/"><span class="name">autovault-skill</span><span class="desc">Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</span></a></div></div></div></article></section>
+<ul><li>Designing a new workflow here instead of using the host's design skill.</li><li>Writing directly into the managed vault and bypassing validation/signing.</li><li>Declaring only files mentioned by upstream while ignoring sibling files.</li><li>Treating a dedup warning as proof that two workflows are interchangeable.</li><li>Weakening strict security to admit a blocked bundle.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/autovault-skill/"><span class="name">autovault-skill</span><span class="desc">Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
 <p>Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</p>
 <h2>History</h2>

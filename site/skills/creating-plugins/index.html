@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/creating-plugins/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -99,10 +99,7 @@ resources:
 <p><strong>Native is an escape hatch</strong> for plugins that need React admin components, direct DB access, or custom Astro components. Native plugins can only run in <code>plugins: []</code> -- they cannot be sandboxed or published to the marketplace.</p>
 <h2>Plugin Anatomy</h2>
 <p>Every plugin has two parts that <strong>run in different contexts</strong>:</p>
-<ol>
-<li><strong>Plugin descriptor</strong> (<code>PluginDescriptor</code>) — returned by the factory function in <code>index.ts</code>. Declares metadata (id, version, capabilities, storage). <strong>Runs at build time in Vite</strong> (imported in <code>astro.config.mjs</code>). Must be side-effect-free.</li>
-<li><strong>Plugin definition</strong> (<code>definePlugin()</code>) — contains the runtime logic (hooks, routes). <strong>Runs at request time on the deployed server.</strong> Has access to the full plugin context (<code>ctx</code>). Lives in a separate file (typically <code>sandbox-entry.ts</code>).</li>
-</ol>
+<ol><li><strong>Plugin descriptor</strong> (<code>PluginDescriptor</code>) — returned by the factory function in <code>index.ts</code>. Declares metadata (id, version, capabilities, storage). <strong>Runs at build time in Vite</strong> (imported in <code>astro.config.mjs</code>). Must be side-effect-free.</li><li><strong>Plugin definition</strong> (<code>definePlugin()</code>) — contains the runtime logic (hooks, routes). <strong>Runs at request time on the deployed server.</strong> Has access to the full plugin context (<code>ctx</code>). Lives in a separate file (typically <code>sandbox-entry.ts</code>).</li></ol>
 <p>These must be in <strong>separate entrypoints</strong> because they execute in completely different environments:</p>
 <pre><code>my-plugin/
 ├── src/
@@ -142,19 +139,9 @@ export default definePlugin({
 });</code></pre>
 <p>The descriptor is what gets imported in <code>astro.config.mjs</code>. The <code>entrypoint</code> field points to the module containing the <code>definePlugin()</code> default export. For standard plugins, this is the <code>./sandbox</code> export from <code>package.json</code>.</p>
 <p>Key differences from native format:</p>
-<ul>
-<li>No <code>id</code>, <code>version</code>, or <code>capabilities</code> in <code>definePlugin()</code> -- those live in the descriptor</li>
-<li><code>definePlugin()</code> is an identity function providing type inference</li>
-<li>Hook handlers use <code>(event, ctx)</code> two-arg pattern</li>
-<li>Route handlers use <code>(routeCtx, ctx)</code> two-arg pattern</li>
-<li>Exported as <code>default</code> (not a factory function)</li>
-</ul>
+<ul><li>No <code>id</code>, <code>version</code>, or <code>capabilities</code> in <code>definePlugin()</code> -- those live in the descriptor</li><li><code>definePlugin()</code> is an identity function providing type inference</li><li>Hook handlers use <code>(event, ctx)</code> two-arg pattern</li><li>Route handlers use <code>(routeCtx, ctx)</code> two-arg pattern</li><li>Exported as <code>default</code> (not a factory function)</li></ul>
 <h2>Plugin ID Rules</h2>
-<ul>
-<li>Lowercase alphanumeric + hyphens only</li>
-<li>Simple (<code>my-plugin</code>) or scoped (<code>@my-org/my-plugin</code>)</li>
-<li>Unique across all installed plugins</li>
-</ul>
+<ul><li>Lowercase alphanumeric + hyphens only</li><li>Simple (<code>my-plugin</code>) or scoped (<code>@my-org/my-plugin</code>)</li><li>Unique across all installed plugins</li></ul>
 <h2>Registration</h2>
 <p>The descriptor is imported in <code>astro.config.mjs</code> (Vite context):</p>
 <pre><code>import { myPlugin } from &quot;@my-org/my-plugin&quot;;
@@ -186,20 +173,10 @@ export default defineConfig({
 </tbody></table></div>
 <h3>Trusted Mode</h3>
 <p>Trusted plugins are npm packages or local files added in <code>astro.config.mjs</code>. They run in-process with your Astro site.</p>
-<ul>
-<li><strong>Capabilities are documentation only.</strong> Declaring <code>[&quot;content:read&quot;]</code> documents intent but isn't enforced — the plugin has full process access.</li>
-<li>Only install from sources you trust. A malicious trusted plugin has the same access as your application code.</li>
-</ul>
+<ul><li><strong>Capabilities are documentation only.</strong> Declaring <code>[&quot;content:read&quot;]</code> documents intent but isn't enforced — the plugin has full process access.</li><li>Only install from sources you trust. A malicious trusted plugin has the same access as your application code.</li></ul>
 <h3>Sandboxed Mode</h3>
 <p>Sandboxed plugins run in isolated V8 isolates on Cloudflare Workers via <a href="https://developers.cloudflare.com/workers/runtime-apis/bindings/worker-loader/" rel="noopener">Dynamic Worker Loader</a>. Each plugin gets its own isolate.</p>
-<ul>
-<li><strong>Capabilities are enforced.</strong> If a plugin declares <code>[&quot;content:read&quot;]</code>, it can only call <code>ctx.content.get()</code> and <code>ctx.content.list()</code>. Attempting <code>ctx.content.create()</code> throws a permission error.</li>
-<li><strong>Network is blocked by default.</strong> Direct <code>fetch()</code> calls fail. Plugins must use <code>ctx.http.fetch()</code>, which validates against <code>allowedHosts</code>.</li>
-<li><strong>Storage is scoped.</strong> A plugin can only access its own KV and storage collections.</li>
-<li><strong>Admin UI uses Block Kit.</strong> Sandboxed plugins describe their UI as JSON blocks -- no plugin JavaScript runs in the browser. See <a href="/bundles/creating-plugins/references/block-kit.md.txt">Block Kit reference</a>.</li>
-<li><strong>No Portable Text block types.</strong> PT blocks require Astro components for site-side rendering (<code>componentsEntry</code>), which are loaded at build time from npm. Sandboxed plugins are installed at runtime and can't ship components. PT blocks are a native-plugin-only feature.</li>
-<li><strong>Routes work.</strong> Standard plugin routes are available in both trusted and sandboxed modes via the sandbox runner's <code>invokeRoute()</code> RPC.</li>
-</ul>
+<ul><li><strong>Capabilities are enforced.</strong> If a plugin declares <code>[&quot;content:read&quot;]</code>, it can only call <code>ctx.content.get()</code> and <code>ctx.content.list()</code>. Attempting <code>ctx.content.create()</code> throws a permission error.</li><li><strong>Network is blocked by default.</strong> Direct <code>fetch()</code> calls fail. Plugins must use <code>ctx.http.fetch()</code>, which validates against <code>allowedHosts</code>.</li><li><strong>Storage is scoped.</strong> A plugin can only access its own KV and storage collections.</li><li><strong>Admin UI uses Block Kit.</strong> Sandboxed plugins describe their UI as JSON blocks -- no plugin JavaScript runs in the browser. See <a href="/bundles/creating-plugins/references/block-kit.md.txt">Block Kit reference</a>.</li><li><strong>No Portable Text block types.</strong> PT blocks require Astro components for site-side rendering (<code>componentsEntry</code>), which are loaded at build time from npm. Sandboxed plugins are installed at runtime and can't ship components. PT blocks are a native-plugin-only feature.</li><li><strong>Routes work.</strong> Standard plugin routes are available in both trusted and sandboxed modes via the sandbox runner's <code>invokeRoute()</code> RPC.</li></ul>
 <p>Sandboxing is not available on Node.js. All plugins run in trusted mode on non-Cloudflare platforms.</p>
 <h3>Developing for Both Modes</h3>
 <p>Write the same code. Develop locally in trusted mode (faster iteration, easier debugging). Deploy to sandboxed mode in production without code changes. With the standard format, the same entrypoint serves both modes -- no separate sandbox entry needed.</p>
@@ -242,11 +219,7 @@ export default definePlugin({
 </tbody></table></div>
 <p>Storage (<code>ctx.storage</code>) and KV (<code>ctx.kv</code>) are <strong>always available</strong> — no capability needed. They're automatically scoped to the plugin.</p>
 <p><strong>Email capabilities are distinct:</strong></p>
-<ul>
-<li><code>email:send</code> — for plugins that _consume_ email (call <code>ctx.email.send()</code>)</li>
-<li><code>hooks.email-transport:register</code> — for plugins that _deliver_ email (implement the transport, e.g. Resend, SMTP)</li>
-<li><code>hooks.email-events:register</code> — for plugins that _observe or transform_ email (middleware hooks)</li>
-</ul>
+<ul><li><code>email:send</code> — for plugins that _consume_ email (call <code>ctx.email.send()</code>)</li><li><code>hooks.email-transport:register</code> — for plugins that _deliver_ email (implement the transport, e.g. Resend, SMTP)</li><li><code>hooks.email-events:register</code> — for plugins that _observe or transform_ email (middleware hooks)</li></ul>
 <pre><code>// In the descriptor (index.ts)
 export function myPlugin(): PluginDescriptor {
   return {
@@ -305,15 +278,7 @@ emdash plugin publish --tarball dist/my-plugin-1.0.0.tar.gz</code></pre>
 <tr><td><strong>Site Components</strong></td><td><code>componentsEntry</code></td><td>No</td><td>Yes</td><td>Astro components for rendering blocks on the site</td></tr>
 </tbody></table></div>
 <p>See the reference files for detailed syntax:</p>
-<ul>
-<li><strong><a href="/bundles/creating-plugins/references/hooks.md.txt">Hooks Reference</a></strong> — All hook types, signatures, configuration</li>
-<li><strong><a href="/bundles/creating-plugins/references/storage.md.txt">Storage &amp; Settings</a></strong> — Collections, KV, settings schema</li>
-<li><strong><a href="/bundles/creating-plugins/references/admin-ui.md.txt">Admin UI</a></strong> — Pages, widgets, entry point structure</li>
-<li><strong><a href="/bundles/creating-plugins/references/api-routes.md.txt">API Routes</a></strong> — Route handlers, validation, context</li>
-<li><strong><a href="/bundles/creating-plugins/references/block-kit.md.txt">Block Kit</a></strong> — Declarative UI for sandboxed plugins (similar to Slack Block Kit but not identical)</li>
-<li><strong><a href="/bundles/creating-plugins/references/portable-text-blocks.md.txt">Portable Text Blocks</a></strong> — Custom block types + frontend rendering</li>
-<li><strong><a href="/bundles/creating-plugins/references/publishing.md.txt">Publishing</a></strong> — Bundle format, validation, marketplace publishing</li>
-</ul>
+<ul><li><strong><a href="/bundles/creating-plugins/references/hooks.md.txt">Hooks Reference</a></strong> — All hook types, signatures, configuration</li><li><strong><a href="/bundles/creating-plugins/references/storage.md.txt">Storage &amp; Settings</a></strong> — Collections, KV, settings schema</li><li><strong><a href="/bundles/creating-plugins/references/admin-ui.md.txt">Admin UI</a></strong> — Pages, widgets, entry point structure</li><li><strong><a href="/bundles/creating-plugins/references/api-routes.md.txt">API Routes</a></strong> — Route handlers, validation, context</li><li><strong><a href="/bundles/creating-plugins/references/block-kit.md.txt">Block Kit</a></strong> — Declarative UI for sandboxed plugins (similar to Slack Block Kit but not identical)</li><li><strong><a href="/bundles/creating-plugins/references/portable-text-blocks.md.txt">Portable Text Blocks</a></strong> — Custom block types + frontend rendering</li><li><strong><a href="/bundles/creating-plugins/references/publishing.md.txt">Publishing</a></strong> — Bundle format, validation, marketplace publishing</li></ul>
 <h2>Complete Example: Standard Plugin with Hooks, Routes, and Storage</h2>
 <pre><code>// src/index.ts — descriptor factory, runs in Vite at build time
 import type { PluginDescriptor } from &quot;emdash&quot;;
@@ -459,17 +424,9 @@ export function myPlugin(): PluginDescriptor {
 }</code></pre>
 <h2>Output Checklist</h2>
 <p>When creating a standard-format plugin, provide:</p>
-<ol>
-<li><strong><code>src/index.ts</code></strong> -- Descriptor factory (runs in Vite at build time)</li>
-<li><strong><code>src/sandbox-entry.ts</code></strong> -- <code>definePlugin({ hooks, routes })</code> as default export (runs at request time)</li>
-<li><strong><code>package.json</code></strong> -- With exports <code>&quot;.&quot;</code> (descriptor) and <code>&quot;./sandbox&quot;</code> (implementation)</li>
-<li><strong><code>tsconfig.json</code></strong> -- Standard TypeScript config</li>
-</ol>
+<ol><li><strong><code>src/index.ts</code></strong> -- Descriptor factory (runs in Vite at build time)</li><li><strong><code>src/sandbox-entry.ts</code></strong> -- <code>definePlugin({ hooks, routes })</code> as default export (runs at request time)</li><li><strong><code>package.json</code></strong> -- With exports <code>&quot;.&quot;</code> (descriptor) and <code>&quot;./sandbox&quot;</code> (implementation)</li><li><strong><code>tsconfig.json</code></strong> -- Standard TypeScript config</li></ol>
 <p>For native-format plugins (React admin, PT blocks, Astro components), also provide:</p>
-<ol>
-<li><strong><code>src/admin.tsx</code></strong> -- Admin entry point with React components</li>
-<li><strong><code>src/astro/index.ts</code></strong> -- Block components export (if PT blocks)</li>
-</ol><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/building-emdash-site/"><span class="name">building-emdash-site</span><span class="desc">The EmDash-on-Astro playbook for content models, rendering, and the CMS details that are easy to misread.</span></a> <a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a></div></div></div></article></section>
+<ol><li><strong><code>src/admin.tsx</code></strong> -- Admin entry point with React components</li><li><strong><code>src/astro/index.ts</code></strong> -- Block components export (if PT blocks)</li></ol><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/building-emdash-site/"><span class="name">building-emdash-site</span><span class="desc">The EmDash-on-Astro playbook for content models, rendering, and the CMS details that are easy to misread.</span></a> <a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>Plugins become hard to maintain when runtime, admin, and storage boundaries are treated as one blob.</p>
 <h2>How</h2>

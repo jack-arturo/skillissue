@@ -293,6 +293,15 @@ test("strict build exposes only public skills and writes canonical redirects", (
       "wrapped list-item instructions stay in their original numbered item",
     );
     assert.doesNotMatch(automemOverview, /<\/ol>\s*<p>\s*X, Y&quot;/);
+    const brandOverview = linkedStory.match(/<section id="overview"[\s\S]*?<\/section>/)?.[0] || "";
+    assert.match(
+      brandOverview,
+      /<li>Reuse or adapt the files under <code>assets\/<\/code>:<ul>\s*<li><code>brand-mark\.svg<\/code> for static web or document marks\.<\/li>/,
+      "indented Markdown list items render as children of their parent item",
+    );
+    const mcpBuilderPage = fs.readFileSync(path.join(siteDir, "skills", "mcp-builder", "index.html"), "utf8");
+    assert.match(mcpBuilderPage, /<h4>1\.1 Understand Modern MCP Design<\/h4>/);
+    assert.doesNotMatch(mcpBuilderPage, /<p>#### 1\.1 Understand Modern MCP Design<\/p>/);
     const detailAsset = babysitPage.match(/src="\/assets\/(skill-detail\.[a-f0-9]{12}\.js)"/)?.[1];
     assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
     assert.equal(fs.existsSync(path.join(siteDir, "assets", detailAsset)), true);

@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/midjourney-iteration/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -89,29 +89,11 @@ bin:
 ---</pre></div><h2>Midjourney Iteration</h2>
 <p>Drive Midjourney through a closed-loop generate → vision-evaluate → refine → re-roll cycle, attached to the user's existing logged-in Chrome session. Returns the top picks with the prompts that produced them, plus a session log.</p>
 <h2>When to use</h2>
-<ul>
-<li>The user is working on cover art, music-video stills, IG posts, mood-board pieces, or any MJ output where one-shot prompting won't get them to the brief.</li>
-<li>The user describes a brief that has <em>taste constraints</em> worth iterating on (composition, palette, negatives) — not just &quot;make me a picture of X.&quot;</li>
-<li>The user asks to &quot;iterate on a Midjourney prompt&quot;, &quot;find a generation that hits the brief&quot;, or &quot;run an MJ loop until it lands.&quot;</li>
-<li>A written creative brief is available, including the intended subject, composition, style, and constraints.</li>
-</ul>
+<ul><li>The user is working on cover art, music-video stills, IG posts, mood-board pieces, or any MJ output where one-shot prompting won't get them to the brief.</li><li>The user describes a brief that has <em>taste constraints</em> worth iterating on (composition, palette, negatives) — not just &quot;make me a picture of X.&quot;</li><li>The user asks to &quot;iterate on a Midjourney prompt&quot;, &quot;find a generation that hits the brief&quot;, or &quot;run an MJ loop until it lands.&quot;</li><li>A written creative brief is available, including the intended subject, composition, style, and constraints.</li></ul>
 <h2>When NOT to use</h2>
-<ul>
-<li>One-shot generations the user can do faster manually.</li>
-<li>Tasks that need the user's subjective taste in real time — this skill is for unattended iteration with a clear written brief.</li>
-<li>Anything that requires scraping other artists' work or downloading from <code>/explore</code>.</li>
-<li>Continuous farms / 24-7 generation loops. This skill is for bursty creative sessions only.</li>
-<li><strong>Divergent / discovery phases.</strong> This skill converges on ONE composition described by a structured brief. If the user is still trying to figure out the broad creative direction (e.g., &quot;explore 5 different concepts for this character&quot;), they need a <em>different</em> shape: 1 round per prompt across N varied prompts, then the agent reports which directions hit. That mode is on the roadmap (see <code>roadmap</code> section in <code>refine-patterns.md</code>), not yet implemented as a separate orchestration path. For now, run multiple briefs serially or work outside the skill until divergent-mode lands.</li>
-</ul>
+<ul><li>One-shot generations the user can do faster manually.</li><li>Tasks that need the user's subjective taste in real time — this skill is for unattended iteration with a clear written brief.</li><li>Anything that requires scraping other artists' work or downloading from <code>/explore</code>.</li><li>Continuous farms / 24-7 generation loops. This skill is for bursty creative sessions only.</li><li><strong>Divergent / discovery phases.</strong> This skill converges on ONE composition described by a structured brief. If the user is still trying to figure out the broad creative direction (e.g., &quot;explore 5 different concepts for this character&quot;), they need a <em>different</em> shape: 1 round per prompt across N varied prompts, then the agent reports which directions hit. That mode is on the roadmap (see <code>roadmap</code> section in <code>refine-patterns.md</code>), not yet implemented as a separate orchestration path. For now, run multiple briefs serially or work outside the skill until divergent-mode lands.</li></ul>
 <h2>Prerequisites</h2>
-<ul>
-<li>Load <code>browser-hand</code> and use its documented remote-debug fallback. That implementation currently requires the upstream <code>dev-browser</code> CLI (<code>npm install -g dev-browser</code> and <code>dev-browser install</code>).</li>
-<li>Google Chrome <strong>launched with <code>--remote-debugging-port=9222</code> AND <code>--user-data-dir=&lt;non-default path&gt;</code></strong> and a logged-in <code>midjourney.com</code> tab. The skill attaches to that tab via Chrome DevTools Protocol — no Chrome extension is involved despite older docs that mention one.</li>
-</ul>
-<p>  - The <code>--user-data-dir</code> is REQUIRED on Chrome 136+ (May 2025): Chrome silently ignores <code>--remote-debugging-port</code> on the default profile as a security hardening. <code>bin/relaunch-chrome</code> provisions a dedicated profile under the user state directory; the user signs in there once and the profile persists across sessions.</p>
-<ul>
-<li><code>bin/preflight</code> verifies all three. If Chrome isn't on the debug port, it prints the relaunch command and follows <code>MJ_ITER_BROWSER_MODE=prompt|never|always</code>.</li>
-</ul>
+<ul><li>Load <code>browser-hand</code> and use its documented remote-debug fallback. That implementation currently requires the upstream <code>dev-browser</code> CLI (<code>npm install -g dev-browser</code> and <code>dev-browser install</code>).</li><li>Google Chrome <strong>launched with <code>--remote-debugging-port=9222</code> AND <code>--user-data-dir=&lt;non-default path&gt;</code></strong> and a logged-in <code>midjourney.com</code> tab. The skill attaches to that tab via Chrome DevTools Protocol — no Chrome extension is involved despite older docs that mention one.<ul><li>The <code>--user-data-dir</code> is REQUIRED on Chrome 136+ (May 2025): Chrome silently ignores <code>--remote-debugging-port</code> on the default profile as a security hardening. <code>bin/relaunch-chrome</code> provisions a dedicated profile under the user state directory; the user signs in there once and the profile persists across sessions.</li></ul></li><li><code>bin/preflight</code> verifies all three. If Chrome isn't on the debug port, it prints the relaunch command and follows <code>MJ_ITER_BROWSER_MODE=prompt|never|always</code>.</li></ul>
 <h2>Why Browser Hand's remote-debug fallback specifically</h2>
 <p>Cloudflare bot-detection on Midjourney passes a real Chrome with the user's real session/fingerprint and rejects fresh Playwright/Chromium. CDP-attaching to user-Chrome is load-bearing — do not &quot;simplify&quot; by switching to plain Playwright.</p>
 <h2>Workflow</h2>
@@ -122,10 +104,7 @@ bin:
 <p>Briefs are structured JSON — see <code>brief-schema.md</code> for the full shape. At minimum: <code>subject</code>, <code>composition</code>, <code>style</code>, <code>negative</code>. Optional: <code>palette</code>, <code>references</code>, <code>max_rounds</code> (default 8), <code>starting_prompt</code>, and <code>output_dir</code>.</p>
 <p>If the user passed a prose brief, convert it to the structured shape first and confirm with them before running the loop.</p>
 <p><strong>Session output location.</strong> Resolve the session-log dir from <code>brief.output_dir</code> once at the start of the run:</p>
-<ul>
-<li>If <code>output_dir</code> is set: <code>&lt;output_dir&gt;/&lt;timestamp&gt;-&lt;slug&gt;/</code></li>
-<li>Otherwise: <code>${XDG_STATE_HOME:-$HOME/.local/state}/midjourney-iteration/&lt;timestamp&gt;-&lt;slug&gt;/</code></li>
-</ul>
+<ul><li>If <code>output_dir</code> is set: <code>&lt;output_dir&gt;/&lt;timestamp&gt;-&lt;slug&gt;/</code></li><li>Otherwise: <code>${XDG_STATE_HOME:-$HOME/.local/state}/midjourney-iteration/&lt;timestamp&gt;-&lt;slug&gt;/</code></li></ul>
 <p>Use that path for every subsequent round's prompt file, screenshot copy, <code>eval-notes.jsonl</code>, and <code>picks.json</code>. The Chrome user-data-dir is independent and set by <code>MJ_ITER_CHROME_PROFILE_DIR</code>.</p>
 <h3>3. Attach to the Midjourney tab</h3>
 <pre><code>dev-browser --connect &lt;&lt;'EOF'
@@ -146,39 +125,17 @@ EOF</code></pre>
 <p>Load the screenshot. Score each of the 4 images against <code>eval-rubric.md</code>. Record per-image hit/miss plus the dominant failure mode.</p>
 <p>A round wins if <strong>≥2 of the 4 images</strong> pass the rubric.</p>
 <h3>6. Decide: continue, refine, or stop</h3>
-<ul>
-<li><strong>Stop early</strong> if this round won AND total accumulated hits ≥3.</li>
-<li><strong>Stop hard</strong> if <code>round_index &gt;= brief.max_rounds</code>.</li>
-<li><strong>Otherwise refine.</strong> Match the dominant failure mode against <code>refine-patterns.md</code>, apply the prompt-edit recipe, and loop back to step 4.</li>
-</ul>
+<ul><li><strong>Stop early</strong> if this round won AND total accumulated hits ≥3.</li><li><strong>Stop hard</strong> if <code>round_index &gt;= brief.max_rounds</code>.</li><li><strong>Otherwise refine.</strong> Match the dominant failure mode against <code>refine-patterns.md</code>, apply the prompt-edit recipe, and loop back to step 4.</li></ul>
 <p>After every round, append the round's prompt + screenshot path + per-image scores to <code>&lt;session-log-dir&gt;/log.jsonl</code> (or <code>eval-notes.jsonl</code>), where <code>&lt;session-log-dir&gt;</code> was resolved in §2 from <code>brief.output_dir</code>.</p>
 <h3>7. Return the top 3 picks</h3>
 <p>Sort all hit images across all rounds by rubric score; return the top 3 with:</p>
-<ul>
-<li>The prompt that produced each</li>
-<li>The screenshot path</li>
-<li>A one-line note on what made it a hit</li>
-</ul>
+<ul><li>The prompt that produced each</li><li>The screenshot path</li><li>A one-line note on what made it a hit</li></ul>
 <p>Save the final ranking to <code>picks.json</code> in the session-log directory.</p>
 <h2>Output</h2>
 <p>Return a concise summary to the user:</p>
-<ul>
-<li>Rounds run, total hits, early-stop reason if any</li>
-<li>Top 3 picks with prompts and image paths</li>
-<li>Pointer to the session-log directory for full history</li>
-<li>Any new refine-patterns observed (so they can be appended to <code>refine-patterns.md</code>)</li>
-</ul>
+<ul><li>Rounds run, total hits, early-stop reason if any</li><li>Top 3 picks with prompts and image paths</li><li>Pointer to the session-log directory for full history</li><li>Any new refine-patterns observed (so they can be appended to <code>refine-patterns.md</code>)</li></ul>
 <h2>Anti-patterns</h2>
-<ul>
-<li>Do <strong>not</strong> scrape other artists' work or download from <code>/explore</code>. This skill is for the user's own generations only.</li>
-<li>Do <strong>not</strong> run continuous generation farms — bursty iteration sessions only. ToS-safe is what humans do during creative work.</li>
-<li>Do <strong>not</strong> open Chrome without printing the relaunch command first. <code>bin/preflight</code> and <code>bin/relaunch-chrome</code> honor <code>MJ_ITER_BROWSER_MODE</code>; the agent should not bypass that.</li>
-<li>Do <strong>not</strong> skip the vision evaluation step. If you can't load the screenshot for any reason, <strong>stop the loop and report</strong> — never keep firing prompts blind.</li>
-<li>Do <strong>not</strong> add a project, artist, or client aesthetic to the base rubric. Keep those constraints in the user-provided brief.</li>
-<li>Do <strong>not</strong> swap Browser Hand's CDP fallback for fresh Playwright/Chromium. Cloudflare blocks it and MJ won't be logged in. The CDP attach is load-bearing.</li>
-<li>Do <strong>not</strong> try to fold the three per-round invocations into one script. The fallback's 120s timeout cap is real; one MJ generation often exceeds it.</li>
-<li>Do <strong>not</strong> auto-quit the user's running Chrome to relaunch with <code>--remote-debugging-port=9222</code> — it will lose their other tabs. Print the command and ask.</li>
-</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/browser-hand/"><span class="name">browser-hand</span><span class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</span></a> <a class="sd-rel-tile" href="/skills/brand-bible-author/"><span class="name">brand-bible-author</span><span class="desc">Turns tested visual exploration and taste decisions into a locked, reusable identity and visual-language contract.</span></a></div></div></div></article></section>
+<ul><li>Do <strong>not</strong> scrape other artists' work or download from <code>/explore</code>. This skill is for the user's own generations only.</li><li>Do <strong>not</strong> run continuous generation farms — bursty iteration sessions only. ToS-safe is what humans do during creative work.</li><li>Do <strong>not</strong> open Chrome without printing the relaunch command first. <code>bin/preflight</code> and <code>bin/relaunch-chrome</code> honor <code>MJ_ITER_BROWSER_MODE</code>; the agent should not bypass that.</li><li>Do <strong>not</strong> skip the vision evaluation step. If you can't load the screenshot for any reason, <strong>stop the loop and report</strong> — never keep firing prompts blind.</li><li>Do <strong>not</strong> add a project, artist, or client aesthetic to the base rubric. Keep those constraints in the user-provided brief.</li><li>Do <strong>not</strong> swap Browser Hand's CDP fallback for fresh Playwright/Chromium. Cloudflare blocks it and MJ won't be logged in. The CDP attach is load-bearing.</li><li>Do <strong>not</strong> try to fold the three per-round invocations into one script. The fallback's 120s timeout cap is real; one MJ generation often exceeds it.</li><li>Do <strong>not</strong> auto-quit the user's running Chrome to relaunch with <code>--remote-debugging-port=9222</code> — it will lose their other tabs. Print the command and ask.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/browser-hand/"><span class="name">browser-hand</span><span class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</span></a> <a class="sd-rel-tile" href="/skills/brand-bible-author/"><span class="name">brand-bible-author</span><span class="desc">Turns tested visual exploration and taste decisions into a locked, reusable identity and visual-language contract.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why</h2>
 <p>One prompt is a lottery ticket. A short loop with a rubric gives the taste call somewhere to stand.</p>
 <h2>How</h2>

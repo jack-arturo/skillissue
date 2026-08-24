@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/raycast/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.44690da010a4.css">
+<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -142,12 +142,7 @@ resources:
 <tr><td>Bulk backup</td><td>Export/Import Preferences &amp; Data (<code>.rayconfig</code>)</td><td>UI, coarse</td></tr>
 </tbody></table></div>
 <h3>Not supported (don't fake it)</h3>
-<ul>
-<li>Programmatic CRUD of every extension preference</li>
-<li>Silent Store install + OAuth without user</li>
-<li>Reading live Raycast UI state from <code>raycast-enc.sqlite</code></li>
-<li>Treating plist keys under <code>com.raycast.macos</code> as a stable API</li>
-</ul>
+<ul><li>Programmatic CRUD of every extension preference</li><li>Silent Store install + OAuth without user</li><li>Reading live Raycast UI state from <code>raycast-enc.sqlite</code></li><li>Treating plist keys under <code>com.raycast.macos</code> as a stable API</li></ul>
 <hr>
 <h2>Autohub Raycast scripts (`raycast-autojack`)</h2>
 <p>Repo path: <code>autohub/raycast/</code> — <code>quick-reply.js</code>, <code>context-reply.js</code>,</p>
@@ -160,15 +155,7 @@ autovault skill smoke raycast-autojack --repo .</code></pre>
 <p>Do not re-implement installers in this skill; load <strong><code>raycast-autojack</code></strong>.</p>
 <hr>
 <h2>Anti-patterns</h2>
-<ul>
-<li>Do <strong>not</strong> invent an MCP server that only shells <code>open raycast://…</code>.</li>
-<li>Do <strong>not</strong> use <code>npx ray</code> as an ops tool.</li>
-<li>Do <strong>not</strong> cat secrets from <code>config.json</code> / <code>providers.yaml</code> api_keys.</li>
-<li>Do <strong>not</strong> hand-edit <code>raycast-enc.sqlite</code> or treat plist keys as API.</li>
-<li>Do <strong>not</strong> confuse Raycast AI Skills with AutoVault operator skills — different consumers; share formats carefully.</li>
-<li>Do <strong>not</strong> claim Agents/extension prefs are fully automatable.</li>
-<li>Prefer <strong><code>flashspace</code> CLI</strong> over FlashSpace Raycast extension for workspace switching when both exist.</li>
-</ul>
+<ul><li>Do <strong>not</strong> invent an MCP server that only shells <code>open raycast://…</code>.</li><li>Do <strong>not</strong> use <code>npx ray</code> as an ops tool.</li><li>Do <strong>not</strong> cat secrets from <code>config.json</code> / <code>providers.yaml</code> api_keys.</li><li>Do <strong>not</strong> hand-edit <code>raycast-enc.sqlite</code> or treat plist keys as API.</li><li>Do <strong>not</strong> confuse Raycast AI Skills with AutoVault operator skills — different consumers; share formats carefully.</li><li>Do <strong>not</strong> claim Agents/extension prefs are fully automatable.</li><li>Prefer <strong><code>flashspace</code> CLI</strong> over FlashSpace Raycast extension for workspace switching when both exist.</li></ul>
 <hr>
 <h2>Reference files</h2>
 <div class="table-wrap"><table>
