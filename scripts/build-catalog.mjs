@@ -325,7 +325,7 @@ function parseFrontmatter(text) {
   return { fm, body };
 }
 
-function mdToHtml(md) {
+function mdToHtml(md, { resourceUrls = new Map() } = {}) {
   const lines = md.split("\n");
   const html = [];
   let inList = false;
@@ -386,14 +386,18 @@ function mdToHtml(md) {
       /!\[([^\]]*)\]\(([^)]+)\)/g,
       '<figure class="chart"><img src="$2" alt="$1" loading="lazy" /></figure>',
     );
-    t = t.replace(
-      /\[([^\]]+)\]\((https?:[^)]+|\/[^)]+|\.\.\/([a-z0-9]+(?:-[a-z0-9]+)*)\/story\.md)\)/g,
-      (_, label, href, localSkill) => {
+    t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (source, label, href) => {
+      const packagePath = href.replace(/^\.\//, "");
+      const packageUrl = resourceUrls.get(packagePath);
+      if (packageUrl) return `<a href="${esc(packageUrl)}">${label}</a>`;
+      const localSkill = href.match(/^\.\.\/([a-z0-9]+(?:-[a-z0-9]+)*)\/story\.md$/)?.[1];
+      if (/^https?:/.test(href) || href.startsWith("/") || localSkill) {
         const canonicalHref = localSkill ? `/skills/${localSkill}/` : href;
         const rel = canonicalHref.startsWith("http") ? ' rel="noopener"' : "";
         return `<a href="${canonicalHref}"${rel}>${label}</a>`;
-      },
-    );
+      }
+      return source;
+    });
     return t;
   };
   const parseRow = (line) =>
@@ -799,6 +803,9 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     ? structuredSecretNames
     : normalList(skillFm["requires-secrets"]);
   const bundleSize = bundleBytes(publishedBundleFiles);
+  const packageResourceUrls = new Map(
+    publishedBundleFiles.map((file) => [file.path, `/bundles/${name}/${file.path}.txt`]),
+  );
   bundleSnapshots.push({
     name,
     version,
@@ -824,7 +831,7 @@ for (const name of fs.readdirSync(skillsDir).sort()) {
     related: normalList(storyFm.related),
     first_used: storyFm.first_used || "",
     bodyHtml: mdToHtml(storyBody || `## ${name}\n\n${summary}`),
-    skillBodyHtml: mdToHtml(skillBody || `## ${name}\n\n${description}`),
+    skillBodyHtml: mdToHtml(skillBody || `## ${name}\n\n${description}`, { resourceUrls: packageResourceUrls }),
     skillSource: skillRaw,
     capabilities,
     requiresSecrets,
@@ -1035,7 +1042,7 @@ for (const s of publicSkills) {
     <nav class="sd-tabs" aria-label="Skill detail tabs"><button type="button" data-package-tab="overview" aria-selected="true">Overview</button><button type="button" data-package-tab="bundle" aria-selected="false">Bundle <span class="ct">${s.bundleFileCount}</span></button><button type="button" data-package-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-package-tab="provenance" aria-selected="false">Provenance</button><button type="button" data-package-tab="source" aria-selected="false">Source <span class="ct">1</span></button></nav>
     <div class="sd-body"><main>
       <section id="overview" data-package-panel="overview"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">SKILL.md</span><a class="raw" href="${esc(s.rawSourceUrl)}" rel="noopener">view raw →</a></div><div class="sd-md-body"><div class="sd-frontmatter"><pre>${esc(frontmatter)}</pre></div>${s.skillBodyHtml}${related ? `<div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related">${related}</div></div>` : ""}</div></article></section>
-      <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>${s.bundleFileCount}</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files">${resourceTree}</nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/${esc(s.name)}/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
+      <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>${s.bundleFileCount}</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files">${resourceTree}</nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/${esc(s.name)}/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3 data-package-preview-title>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts">${capabilityRows}</dl>${secrets}</div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This ${esc(s.provenance)} package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">${esc(shortPackageSourcePin)}</span><span class="k">source</span><a class="v accent" href="${esc(s.sourceUrl)}" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">${esc(agents.join(", "))}</span></div></div></section>
       <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v${esc(s.version)}<span class="latest">latest</span></span><span>${s.bundleFileCount} files · ${esc(formatBytes(s.bundleSize))}</span><span>${esc(s.provenance)}</span><code>${esc(shortPackageSourcePin)}</code><a href="${esc(s.rawSourceUrl)}" rel="noopener">SKILL.md</a></div></div></section>

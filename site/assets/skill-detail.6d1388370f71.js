@@ -67,6 +67,7 @@ function initPackageDetail() {
     fileButtons.forEach((button) => button.setAttribute("aria-current", String(button.dataset.packageFile === path)));
     preview.querySelector("[data-package-preview-kind]").textContent = file.kind || resourceKind(file.path);
     preview.querySelector("[data-package-preview-name]").textContent = file.path;
+    preview.querySelector("[data-package-preview-title]").textContent = file.title || file.path;
     preview.querySelector("[data-package-preview-summary]").textContent = file.summary || "Bundled package file.";
     const raw = preview.querySelector("[data-package-preview-raw]");
     raw.href = file.url;
