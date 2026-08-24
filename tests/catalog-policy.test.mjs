@@ -273,6 +273,10 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(babysitOverview, /Create or take over a GitHub PR and keep working until it is merge-ready/);
     assert.doesNotMatch(babysitOverview, /PR review loops were eating whole sessions/);
     assert.match(babysitOverview, /href="\/bundles\/babysit\/references\/preflight-and-pr-creation\.md\.txt">references\/preflight-and-pr-creation\.md<\/a>/);
+    const babysitStory = babysitPage.match(/<section id="story"[\s\S]*?<\/section>/)?.[0] || "";
+    assert.match(babysitPage, /data-package-tab="story"[^>]*>Story/);
+    assert.match(babysitStory, /story\.md/);
+    assert.match(babysitStory, /PR review loops were eating whole sessions/);
     assert.match(babysitPage, /<h3 data-package-preview-title>SKILL\.md<\/h3>/);
     const automemPage = fs.readFileSync(path.join(siteDir, "skills", "automem", "index.html"), "utf8");
     assert.match(
