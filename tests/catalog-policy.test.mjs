@@ -341,3 +341,39 @@ test("strict build exposes only public skills and writes canonical redirects", (
   }
   assert.equal(fs.readFileSync(repositoryReport, "utf-8"), reportBefore);
 });
+
+test("non-strict builds do not invent a story.md tab", () => {
+  const fixture = fs.mkdtempSync(path.join(os.tmpdir(), "skillissue-no-story-"));
+  const fixtureRoot = path.join(fixture, "repo");
+  const siteDir = path.join(fixture, "site");
+  try {
+    fs.cpSync(root, fixtureRoot, {
+      recursive: true,
+      filter(source) {
+        return ![".git", "node_modules", "site"].includes(path.basename(source));
+      },
+    });
+    fs.rmSync(path.join(fixtureRoot, "skills", "babysit", "story.md"));
+    execFileSync("git", ["init", "--quiet"], { cwd: fixtureRoot });
+    execFileSync("git", ["config", "user.email", "test@example.com"], { cwd: fixtureRoot });
+    execFileSync("git", ["config", "user.name", "Test"], { cwd: fixtureRoot });
+    execFileSync("git", ["add", "."], { cwd: fixtureRoot });
+    execFileSync("git", ["commit", "--quiet", "-m", "fixture"], { cwd: fixtureRoot });
+
+    const result = spawnSync(process.execPath, ["scripts/build-catalog.mjs"], {
+      cwd: fixtureRoot,
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        SKILLISSUE_SITE_DIR: siteDir,
+        SKILLISSUE_REPORT_PATH: path.join(siteDir, "report.json"),
+      },
+    });
+    assert.equal(result.status, 0, result.stderr);
+    const babysitPage = fs.readFileSync(path.join(siteDir, "skills", "babysit", "index.html"), "utf8");
+    assert.doesNotMatch(babysitPage, /data-package-tab="story"/);
+    assert.doesNotMatch(babysitPage, /data-package-panel="story"/);
+  } finally {
+    fs.rmSync(fixture, { recursive: true, force: true });
+  }
+});
