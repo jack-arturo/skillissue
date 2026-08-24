@@ -235,6 +235,8 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.equal(fs.existsSync(path.join(siteDir, "assets", cssAsset)), true);
     const explorerCss = fs.readFileSync(path.join(siteDir, "assets", cssAsset), "utf-8");
     assert.match(explorerCss, /\.explorer-card-footer\s*\{[^}]*border:\s*0;[^}]*padding:\s*0;/);
+    assert.match(explorerCss, /\.sd-md-body \.table-wrap\s*\{[^}]*overflow-x:\s*auto;/);
+    assert.match(explorerCss, /\.sd-md-body pre\s*\{[^}]*overflow-x:\s*auto;/);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", "catalog-explorer.js")), false);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", "site.css")), false);
     const linkedStory = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
