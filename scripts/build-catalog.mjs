@@ -143,6 +143,13 @@ function normalList(value) {
   return [];
 }
 
+function capabilityIsDisabled(value) {
+  if (value === false) return true;
+  if (Array.isArray(value)) return value.length === 0;
+  return ["false", "none", "denied", "disabled", "off", "no", "[]", "{}"]
+    .includes(String(value).trim().toLowerCase());
+}
+
 function frontmatterMap(text, key) {
   const match = text.match(new RegExp(`^${key}:\\s*\\n((?:[ \\t]+[^\\n]+\\n?)*)`, "m"));
   if (!match) return {};
@@ -1027,7 +1034,10 @@ for (const s of publicSkills) {
   const agentColors = ["#ffb020", "#5ca8ff", "#3dff9a", "#cc8cff"];
   const railAgents = agents.map((agent, index) => `<div class="sd-agent-row"><span class="swatch" style="background:${agentColors[index % agentColors.length]}"></span><span class="lbl">${esc(agent)}</span><span class="stat">declared</span></div>`).join("");
   const permissionRail = Object.entries(s.capabilities).length
-    ? Object.entries(s.capabilities).map(([key, value]) => `<div class="sd-perm-row"><span class="ico ok">✓</span><span>${esc(key)}</span><span class="scope">${esc(value)}</span></div>`).join("")
+    ? Object.entries(s.capabilities).map(([key, value]) => {
+      const disabled = capabilityIsDisabled(value);
+      return `<div class="sd-perm-row"><span class="ico ${disabled ? "no" : "ok"}">${disabled ? "×" : "✓"}</span><span>${esc(key)}</span><span class="scope">${esc(value)}</span></div>`;
+    }).join("")
     : '<div class="sd-perm-row"><span class="ico">—</span><span>capabilities</span><span class="scope">not declared</span></div>';
   const body = `<div class="sd-page" data-package-detail>
     <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>${esc(s.provenance)}</span><span class="sep">/</span><span class="cur">${esc(s.name)}</span></nav>

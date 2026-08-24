@@ -274,6 +274,12 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.doesNotMatch(babysitOverview, /PR review loops were eating whole sessions/);
     assert.match(babysitOverview, /href="\/bundles\/babysit\/references\/preflight-and-pr-creation\.md\.txt">references\/preflight-and-pr-creation\.md<\/a>/);
     assert.match(babysitPage, /<h3 data-package-preview-title>SKILL\.md<\/h3>/);
+    const automemPage = fs.readFileSync(path.join(siteDir, "skills", "automem", "index.html"), "utf8");
+    assert.match(
+      automemPage,
+      /<div class="sd-perm-row"><span class="ico no">×<\/span><span>network<\/span><span class="scope">false<\/span><\/div>/,
+      "disabled capabilities render as unavailable rather than as a success",
+    );
     const detailAsset = babysitPage.match(/src="\/assets\/(skill-detail\.[a-f0-9]{12}\.js)"/)?.[1];
     assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
     assert.equal(fs.existsSync(path.join(siteDir, "assets", detailAsset)), true);
