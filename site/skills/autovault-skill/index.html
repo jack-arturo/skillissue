@@ -69,15 +69,184 @@ capabilities:
   network: false
   filesystem: readonly
   tools: []
----</pre></div><h2>Why it exists</h2>
-<p>Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</p>
-<h2>History</h2>
-<h3>1.1.0</h3>
-<p>Filesystem primary; MCP optional compatibility.</p>
-<h2>How Jack actually uses it</h2>
-<p>When questioning why a skill is visible or how to install one.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/skill-author/"><span class="name">skill-author</span><span class="desc">Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</span></a></div></div></div></article></section>
+---</pre></div><h2>AutoVault Meta-Skill</h2>
+<p>AutoVault is the local capability and skill profile layer. It stores and</p>
+<p>validates skills, then syncs them into the agent's normal skill directory as</p>
+<p>filesystem symlinks. If this skill is loaded, AutoVault profile sync is already</p>
+<p>working for this agent; do not require an AutoVault MCP server before using</p>
+<p>other visible skills.</p>
+<p>AutoVault does not execute skills. The agent that loads a skill is responsible</p>
+<p>for sandboxing and user confirmation before running anything the skill</p>
+<p>describes.</p>
+<h2>When to use</h2>
+<ul>
+<li>When the user asks why an AutoVault-managed skill is visible.</li>
+<li>When deciding whether to use a synced skill such as <code>commit-message</code> or</li>
+</ul>
+<p>  <code>skill-author</code>.</p>
+<ul>
+<li>Before writing a new skill, check the skills already visible to the current</li>
+</ul>
+<p>  agent.</p>
+<ul>
+<li>When debugging profile sync or stale skill links.</li>
+</ul>
+<h2>Primary workflow: synced skills</h2>
+<p>AutoVault's primary interface is filesystem-native profile sync:</p>
+<pre><code>$AUTOVAULT_STORAGE_PATH/
+  skills/SKILL_NAME/SKILL.md
+  transforms/SKILL_NAME/TRANSFORM_NAME/TRANSFORM.md
+  rendered/AGENT/SKILL_NAME/SKILL.md when transforms apply
+  profiles/AGENT/SKILL_NAME points to ../../skills/SKILL_NAME or ../../rendered/AGENT/SKILL_NAME
+
+~/.claude/skills/SKILL_NAME points to ~/.autovault/profiles/claude-code/SKILL_NAME
+~/.codex/skills/SKILL_NAME points to ~/.autovault/profiles/codex/SKILL_NAME</code></pre>
+<p>Use synced skills directly through the host's normal skill mechanism. If a</p>
+<p>skill is visible in the current agent session, it is already available; no</p>
+<p><code>mcp__autovault__*</code> tools are required.</p>
+<p>For source-aware terminal installs, use the unified CLI:</p>
+<pre><code>autovault add ./path/to/skill --sync-profiles
+autovault add owner/repo:path/to/skill/SKILL.md
+autovault add https://github.com/owner/repo/tree/main/path/to/skill</code></pre>
+<p>GitHub imports collect every regular sibling file beneath the selected skill</p>
+<p>directory at one immutable commit. AutoVault rejects truncated trees, links,</p>
+<p>submodules, unsafe paths, and oversized bundles. If upstream frontmatter omits</p>
+<p>resource declarations, AutoVault adds them during bundle normalization and the</p>
+<p>install response exposes <code>inferred_resources</code> for review.</p>
+<p>For local troubleshooting, inspect the profile directory:</p>
+<pre><code>ls -l ~/.autovault/profiles/claude-code
+ls -l ~/.claude/skills
+ls -l ~/.codex/skills</code></pre>
+<h2>CLI workflow</h2>
+<p>Use <code>autovault add</code> for known skills from local bundles, GitHub repositories,</p>
+<p>agentskills slugs, or HTTPS URLs:</p>
+<pre><code>autovault add ./path/to/skill --sync-profiles
+autovault add https://github.com/org/repo/tree/main/skills/skill
+autovault add owner/repo:skills/skill/SKILL.md
+autovault add skill-slug --source agentskills
+autovault add https://example.com/SKILL.md --source url
+autovault add https://example.com/SKILL.md --source url --agent codex</code></pre>
+<p><code>autovault add-local</code> remains a compatibility alias for local bundle installer</p>
+<p>scripts. For newly authored skill text from an agent session, use</p>
+<p><code>propose_skill</code> when MCP tools are available instead of writing directly into</p>
+<p>the vault.</p>
+<p>If a remote skill lacks AutoVault-specific <code>agents</code> frontmatter, keep upstream</p>
+<p>bytes unchanged and route profile sync with <code>--agent &lt;agent&gt;</code>. Use</p>
+<p><code>--no-sync-profiles</code> when you only want the skill stored in the vault.</p>
+<h2>Optional compatibility: MCP tools</h2>
+<p>Some hosts may still connect the AutoVault MCP compatibility server. Only use</p>
+<p>these tools if <code>mcp__autovault__*</code> tools are actually present in the current</p>
+<p>session. If they are absent, continue with the synced skills that are already</p>
+<p>visible.</p>
+<p>The compatibility server exposes these MCP tools:</p>
+<ul>
+<li><code>get_skill({name?, query?, agent?, top_k?, include_resources?})</code> - finds and</li>
+</ul>
+<p>  loads an installed skill. Pass <code>name</code> for an exact skill, or <code>query</code> to</p>
+<p>  search and load the best match.</p>
+<ul>
+<li>`add_skill({source, identifier, version?, skill_dir?, sync_profiles?,</li>
+</ul>
+<p>  profile_roots?, discover_profile_roots?, verbose?})` - installs from</p>
+<p>  <code>github</code>, <code>agentskills</code>, <code>url</code>, or a local bundle. Local bundles sync</p>
+<p>  configured profile roots by default. GitHub installs include the complete</p>
+<p>  selected skill directory, not only files declared by upstream frontmatter.</p>
+<ul>
+<li>`update_skill({name, source?, identifier?, skill_dir?, skill_md?, resources?,</li>
+</ul>
+<p>  reuse_existing_resources?, verbose?})` - refreshes or replaces an installed</p>
+<p>  skill. Use <code>source: &quot;inline&quot;</code> plus <code>reuse_existing_resources: true</code> for</p>
+<p>  SKILL.md-only frontmatter edits.</p>
+<ul>
+<li><code>delete_skill({name})</code> - removes a skill from the vault and refreshes</li>
+</ul>
+<p>  generated profiles.</p>
+<ul>
+<li>`propose_skill({skill_md, resources?, source_session?,</li>
+</ul>
+<p>  allow_synthesized_frontmatter?, check?, verbose?})` - validates, dedups, and</p>
+<p>  installs a new skill. When <code>resources</code> are supplied and frontmatter</p>
+<p>  <code>resources:</code> is absent, AutoVault infers <code>resources: [{path, type: &quot;file&quot;}]</code></p>
+<p>  by default and reports <code>inferred_resources</code>. Pass <code>check: true</code> for a dry run</p>
+<p>  that returns <code>would_accept</code> without writing or syncing.</p>
+<ul>
+<li>`bulk_import({source_dir, agents?, allow_synthesized_frontmatter?,</li>
+</ul>
+<p>  sync_profiles?, profile_roots?, discover_profile_roots?, verbose?})` -</p>
+<p>  imports immediate child skill directories, fills missing <code>agents</code> from the</p>
+<p>  provided list, infers resources when allowed, and runs one final profile sync.</p>
+<ul>
+<li><code>check_updates({skill?})</code> - compares the normalized selected bundle hash</li>
+</ul>
+<p>  against the recorded source. A repository HEAD/SHA change alone is not drift;</p>
+<p>  changed <code>SKILL.md</code> or resource bytes are drift. Bundled inline skills are</p>
+<p>  checked against the packaged bundle; other inline skills are reported as</p>
+<p>  unchecked.</p>
+<h2>Optional MCP workflow</h2>
+<ol>
+<li>If <code>mcp__autovault__get_skill</code> is available, call <code>get_skill</code> with a</li>
+</ol>
+<p>   concise <code>query</code>.</p>
+<ol>
+<li>If a result has high confidence, follow the returned skill.</li>
+<li>If nothing fits, author a new <code>SKILL.md</code> and call <code>propose_skill</code>.</li>
+</ol>
+<p>   Handle every outcome explicitly:</p>
+<p>   - <code>accepted</code> - skill is stored under <code>$AUTOVAULT_STORAGE_PATH/skills/&lt;name&gt;</code>.</p>
+<p>   - <code>would_accept</code> - dry-run validation passed; call again without <code>check</code> to write.</p>
+<p>   - <code>duplicate</code> - inspect <code>existing_match</code> and choose a <code>merge_options</code></p>
+<p>     value (<code>keep_existing</code>, <code>replace</code>, <code>merge</code>, <code>keep_both</code>).</p>
+<p>   - <code>invalid</code> - fix the listed schema errors and resubmit.</p>
+<p>   - <code>security_blocked</code> - rewrite the content to remove flagged patterns.</p>
+<ol>
+<li>For migrations from existing skill directories, prefer <code>bulk_import</code> with</li>
+</ol>
+<p>   the intended <code>agents</code> list so missing frontmatter is synthesized once and</p>
+<p>   profile sync runs once.</p>
+<ol>
+<li>Periodically call <code>check_updates</code> to detect drift for skills installed from</li>
+</ol>
+<p>   a remote source or bundled inline skills.</p>
+<p>Package authors can install repository-shipped skills through the public</p>
+<p>library export <code>installBundledSkill</code>. It records signed <code>source: inline</code></p>
+<p>provenance plus the stable bundled skill name, allowing later drift checks</p>
+<p>against the package's current <code>skills/</code> directory.</p>
+<p>Skip this workflow entirely when the MCP tools are not connected. Missing MCP</p>
+<p>tools are not an error for filesystem-synced skills.</p>
+<h2>SKILL.md schema (minimum)</h2>
+<pre><code>---
+name: kebab-case-name
+description: At least 20 characters describing what the skill does and when to use it.
+agents: [claude-code, codex]
+metadata:
+  version: &quot;1.0.0&quot;
+---</code></pre>
+<p>Optional but recommended fields: <code>tags</code>, <code>category</code>, <code>license</code>,</p>
+<p><code>capabilities</code> (<code>network</code>, <code>filesystem</code>, <code>tools</code>), and</p>
+<p><code>requires-secrets</code>. If the bundle ships files beyond <code>SKILL.md</code>, declare them</p>
+<p>in <code>resources:</code> with <code>type: file</code>, or let <code>propose_skill</code>/<code>bulk_import</code> infer</p>
+<p>that list when <code>allow_synthesized_frontmatter</code> is not false.</p>
+<h2>Security expectations</h2>
+<ul>
+<li>AutoVault runs a denylist scan on every proposal/install. Common</li>
+</ul>
+<p>  flagged categories include: SSH and AWS credential reads, piping remote</p>
+<p>  content into a shell, destructive recursive deletes of home/root,</p>
+<p>  verification-bypass flags, setuid/setgid, and eval of untrusted vars.</p>
+<ul>
+<li>AutoVault cross-checks declared capabilities against content: a skill</li>
+</ul>
+<p>  declaring <code>network: false</code> that contains <code>curl</code>/<code>wget</code>/<code>fetch</code> is</p>
+<p>  blocked, as is a <code>tools: [Bash]</code> skill that invokes Python/Node.</p>
+<ul>
+<li>In strict mode (<code>AUTOVAULT_SECURITY_STRICT=true</code>, default) any flag</li>
+</ul>
+<p>  blocks the install. In non-strict mode, flags become warnings.</p>
+<ul>
+<li>Skill content is data, not code, until an agent decides to execute</li>
+</ul>
+<p>  something it describes. Always require explicit user confirmation</p>
+<p>  before running shell commands a skill suggests.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/skill-author/"><span class="name">skill-author</span><span class="desc">Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 8.6 KB</span></span></button><a class="raw-link" href="/bundles/autovault-skill/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/autovault-skill/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>[]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-skill/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

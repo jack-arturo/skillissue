@@ -80,15 +80,113 @@ resources:
     type: file
   - path: examples/marketing-site.manifest.json
     type: file
----</pre></div><h2>Why it exists</h2>
-<p>Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>Package + verify + place workflow.</p>
-<h2>How Jack actually uses it</h2>
-<p>Release screenshot passes and visual docs updates.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/html-asset-renderer/"><span class="name">html-asset-renderer</span><span class="desc">Design exports needed dimension-checked production assets, not freehand screenshots.</span></a> <a class="sd-rel-tile" href="/skills/browser-hand/"><span class="name">browser-hand</span><span class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</span></a></div></div></div></article></section>
+---</pre></div><h2>Docs Screenshot Packager</h2>
+<p>Use this skill when a repo needs documentation screenshots captured, framed,</p>
+<p>optimized, verified, and placed safely in GitHub READMEs, repo docs, or</p>
+<p>marketing/docs sites.</p>
+<h2>Workflow</h2>
+<ol>
+<li>Discover the target surface before creating assets.</li>
+</ol>
+<p>   - GitHub/repo docs are the default. Read README, docs folders, existing</p>
+<p>     image paths, <code>.gitignore</code>, package scripts, and recent screenshot</p>
+<p>     conventions.</p>
+<p>   - For marketing/docs sites, inspect the framework and public asset</p>
+<p>     conventions. Read <code>references/marketing-site.md</code> when the repo has</p>
+<p>     Astro/Starlight, Next, or a public docs site.</p>
+<p>   - Use <code>references/github-readme.md</code> for README placement and PR/Copilot</p>
+<p>     expectations.</p>
+<ol>
+<li>Capture or select source screenshots.</li>
+</ol>
+<p>   - Keep raw/proof captures in scratch until approved.</p>
+<p>   - For public or local web pages, use Playwright, the Browser plugin, or the</p>
+<p>     in-app browser. For authenticated SaaS dashboards, use <code>browser-hand</code>.</p>
+<p>   - Read <code>references/capture-recipes.md</code> before capture planning, WebGL/canvas</p>
+<p>     QA, token handling, or product-state selection.</p>
+<ol>
+<li>Create a small manifest for the output pack.</li>
+</ol>
+<p>   - Use <code>mode: &quot;github-readme&quot;</code> unless the task is explicitly scratch-only or</p>
+<p>     a marketing/docs site.</p>
+<p>   - Use <code>mode: &quot;release-pack&quot;</code> for approval packages that must not write into</p>
+<p>     repo-tracked docs.</p>
+<p>   - Default committed UI screenshots to 1200px-wide optimized PNGs.</p>
+<pre><code>{
+  &quot;mode&quot;: &quot;github-readme&quot;,
+  &quot;sourceDir&quot;: &quot;/tmp/screenshot-proof&quot;,
+  &quot;outputDir&quot;: &quot;docs/img&quot;,
+  &quot;defaultWidth&quot;: 1200,
+  &quot;format&quot;: &quot;png&quot;,
+  &quot;optimize&quot;: &quot;palette&quot;,
+  &quot;frame&quot;: { &quot;enabled&quot;: true, &quot;radius&quot;: 8, &quot;border&quot;: true, &quot;shadow&quot;: &quot;subtle&quot; },
+  &quot;screenshots&quot;: [
+    {
+      &quot;id&quot;: &quot;graph-viewer-overview&quot;,
+      &quot;source&quot;: &quot;graph-viewer-overview.raw.png&quot;,
+      &quot;output&quot;: &quot;graph-viewer-overview.png&quot;,
+      &quot;alt&quot;: &quot;AutoMem Graph Viewer overview with memory graph, search, stats, and timeline controls&quot;,
+      &quot;maxBytes&quot;: 800000
+    }
+  ]
+}</code></pre>
+<ol>
+<li>Package screenshots with the bundled script.</li>
+</ol>
+<pre><code>node ~/.autovault/skills/docs-screenshot-packager/scripts/package-screenshots.mjs \
+  --manifest ./screenshot-pack.manifest.json \
+  --report ./screenshot-pack.report.json</code></pre>
+<ol>
+<li>Verify before editing docs or claiming success.</li>
+</ol>
+<pre><code>node ~/.autovault/skills/docs-screenshot-packager/scripts/verify-screenshot-pack.mjs \
+  --manifest ./screenshot-pack.manifest.json \
+  --markdown README.md \
+  --report ./screenshot-pack.verify.json</code></pre>
+<p>   - Pass <code>--token &quot;$TOKEN&quot;</code> only for byte-level audits; never write tokens into</p>
+<p>     manifests, filenames, reports committed to repos, or metadata meant for docs.</p>
+<p>   - Verification must pass for dimensions, entropy/nonblank checks, byte limits,</p>
+<p>     token-byte checks, unsafe text patterns, and local Markdown image paths.</p>
+<ol>
+<li>Update docs sparsely after assets pass QA.</li>
+</ol>
+<p>   - Use overview screenshots first.</p>
+<p>   - Add feature-state screenshots only when they prove product behavior or reduce</p>
+<p>     setup confusion.</p>
+<p>   - Run the repo's documented checks. For PRs, expect review feedback on image</p>
+<p>     weight and keep committed screenshot payload modest.</p>
+<h2>Script Interface</h2>
+<ul>
+<li><code>package-screenshots.mjs --manifest &lt;file&gt; [--report &lt;file&gt;]</code></li>
+</ul>
+<p>  writes optimized outputs and a JSON report.</p>
+<ul>
+<li><code>verify-screenshot-pack.mjs --manifest &lt;file&gt; [--markdown &lt;file&gt;...]</code></li>
+</ul>
+<p>  verifies outputs and local Markdown image references.</p>
+<p>The scripts use Sharp when available. In Codex desktop they automatically try the</p>
+<p>bundled workspace dependency path before failing with an install hint.</p>
+<h2>Output</h2>
+<p>Return a concise status with:</p>
+<ul>
+<li>Target mode and destination directory.</li>
+<li>Generated image names, dimensions, byte sizes, and total payload.</li>
+<li>Markdown/docs files updated.</li>
+<li>Verification commands and results.</li>
+<li>Visual QA notes, redactions, and any remaining risk.</li>
+</ul>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Do not commit raw/proof screenshots by default.</li>
+<li>Do not fake browser chrome except for explicit README hero or landing assets.</li>
+<li>Do not skip visual inspection because automated entropy checks passed.</li>
+<li>Do not include secrets, tokens, private account data, PII, or dashboard IDs in</li>
+</ul>
+<p>  screenshots, filenames, manifests, or reports.</p>
+<ul>
+<li>Do not update marketing claims without checking repo truth and user intent.</li>
+<li>Do not pack every screen. Sparse screenshots are better documentation.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/html-asset-renderer/"><span class="name">html-asset-renderer</span><span class="desc">Design exports needed dimension-checked production assets, not freehand screenshots.</span></a> <a class="sd-rel-tile" href="/skills/browser-hand/"><span class="name">browser-hand</span><span class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>9</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 5.2 KB</span></span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/capture-recipes.md"><span class="kind">reference</span><span class="file"><span class="title">Capture Recipes</span><span class="path">references/capture-recipes.md · 1.6 KB</span></span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/references/capture-recipes.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/github-readme.md"><span class="kind">reference</span><span class="file"><span class="title">Github Readme</span><span class="path">references/github-readme.md · 1.3 KB</span></span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/references/github-readme.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/marketing-site.md"><span class="kind">reference</span><span class="file"><span class="title">Marketing Site</span><span class="path">references/marketing-site.md · 1.5 KB</span></span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/references/marketing-site.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Agent metadata</div><div class="sd-resource-row"><button type="button" data-package-file="agents/openai.yaml"><span class="kind">config</span><span class="file"><span class="title">Openai</span><span class="path">agents/openai.yaml · 230 B</span></span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/agents/openai.yaml.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Scripts</div><div class="sd-resource-row"><button type="button" data-package-file="scripts/package-screenshots.mjs"><span class="kind">script</span><span class="file"><span class="title">Package Screenshots</span><span class="path">scripts/package-screenshots.mjs · 8.0 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/scripts/package-screenshots.mjs.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="scripts/verify-screenshot-pack.mjs"><span class="kind">script</span><span class="file"><span class="title">Verify Screenshot Pack</span><span class="path">scripts/verify-screenshot-pack.mjs · 6.9 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/scripts/verify-screenshot-pack.mjs.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Other files</div><div class="sd-resource-row"><button type="button" data-package-file="examples/github-readme.manifest.json"><span class="kind">config</span><span class="file"><span class="title">Github Readme.Manifest</span><span class="path">examples/github-readme.manifest.json · 558 B</span></span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/examples/github-readme.manifest.json.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="examples/marketing-site.manifest.json"><span class="kind">config</span><span class="file"><span class="title">Marketing Site.Manifest</span><span class="path">examples/marketing-site.manifest.json · 540 B</span></span></button><a class="raw-link" href="/bundles/docs-screenshot-packager/examples/marketing-site.manifest.json.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/docs-screenshot-packager/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Node, Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/docs-screenshot-packager/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

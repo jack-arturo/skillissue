@@ -69,12 +69,72 @@ requires-secrets:
 resources:
   - path: story.md
     type: file
----</pre></div><h2>Why</h2>
-<p>Award availability disappears faster than advice pages update. A nice-looking redemption is useless if the seat is gone.</p>
-<h2>How</h2>
-<p>Search current inventory, normalize the itineraries, and verify the exact seat again before recommending a transfer. The transfer warning is part of the answer, not the fine print.</p>
-<h2>Related</h2>
-<p>Use <a href="/skills/browser-hand/">Browser Hand</a> when a logged-in booking search is the live source.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/browser-hand/"><span class="name">browser-hand</span><span class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</span></a></div></div></div></article></section>
+---</pre></div><h2>Award Travel Research</h2>
+<p>Use this workflow for miles, points, award seats, redemptions, transfer bonuses, or comparisons between an award and a cash fare.</p>
+<h2>Non-negotiable rule: search live inventory</h2>
+<p>Every answer about availability, price, fees, or transfer value must include a live search performed during the current task for the requested route and dates. Static tables, cached results, old screenshots, blogs, prior searches, and examples in this skill are context only.</p>
+<p>Use the best live source available:</p>
+<ol>
+<li>The booking program's own website or app.</li>
+<li>A live award-search provider, API, or agent tool.</li>
+<li>A browser or web search that reaches a current provider result.</li>
+</ol>
+<p>Provider-specific tools such as an award-search wrapper or Seats.aero are optional accelerators, not prerequisites. If one is unavailable, continue with another live source. If no live source can be reached, state that current availability could not be verified, provide direct booking-program links and a verification checklist, and do not recommend a transfer.</p>
+<h2>Inputs</h2>
+<p>Collect or infer:</p>
+<ul>
+<li>Origin and destination; prefer IATA codes.</li>
+<li>Departure date and optional return date.</li>
+<li>Passenger count.</li>
+<li>Cabin.</li>
+<li>Relevant booking programs and point balances.</li>
+<li>Known fallback offer, if any.</li>
+<li>Flexibility on dates, airports, mixed cabins, and positioning flights.</li>
+</ul>
+<p>Call out any assumption that could materially change the result.</p>
+<h2>Search workflow</h2>
+<ol>
+<li>Search the exact route, date, cabin, and passenger count live.</li>
+<li>Expand to flexible dates or nearby airports only after recording the exact-search outcome.</li>
+<li>Treat cached discovery results as leads until a live provider or the booking program confirms them.</li>
+<li>Check the operating carrier, every segment's cabin, seat count, taxes, surcharges, and cancellation rules.</li>
+<li>Check current transfer partners, transfer ratios, transfer times, and any bonus with a live authoritative source.</li>
+<li>Compare against a live cash fare when making a value claim.</li>
+<li>Recheck the chosen itinerary immediately before advising a transfer.</li>
+</ol>
+<p>Never invent availability, infer a seat from a route schedule, or present a stale price as current.</p>
+<h2>Transfer safety</h2>
+<p>Do not recommend transferring bank points unless a live source confirms the same:</p>
+<ul>
+<li>Route and date.</li>
+<li>Cabin on every relevant segment.</li>
+<li>Passenger count and available seats.</li>
+<li>Points price and taxes or fees.</li>
+<li>Booking program.</li>
+</ul>
+<p>Explain that transfers are commonly irreversible and that availability can disappear. Name the final verification step the traveler must complete before transferring.</p>
+<h2>Normalized result</h2>
+<p>For each option, record:</p>
+<ul>
+<li><code>program</code></li>
+<li><code>points_per_person</code></li>
+<li><code>total_points</code></li>
+<li><code>taxes_fees</code></li>
+<li><code>seats</code></li>
+<li><code>cabin</code></li>
+<li><code>segments</code></li>
+<li><code>transfer_partners</code></li>
+<li><code>source</code></li>
+<li><code>checked_at</code></li>
+<li><code>confidence</code></li>
+<li><code>verification_status</code></li>
+</ul>
+<p>Then provide the best verified option, the best unverified lead if useful, a live benchmark comparison, the transfer-risk note, and direct next-step links.</p>
+<h2>Historical figures are not inventory</h2>
+<p>An old route, points price, tax figure, or transfer promotion can help explain a</p>
+<p>comparison method, but it is never a quote. Re-search every program, cash fare,</p>
+<p>and promotion live for each request. Never claim historical availability is</p>
+<p>still bookable or competitive without current evidence.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/browser-hand/"><span class="name">browser-hand</span><span class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 3.8 KB</span></span></button><a class="raw-link" href="/bundles/award-travel-research/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/award-travel-research/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div></dl><p class="muted">Requires: SEATS_AERO_API_KEY</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/award-travel-research/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">codex, autojack</span></div></div></section>

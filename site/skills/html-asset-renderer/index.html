@@ -71,15 +71,108 @@ bin:
     command: scripts/render-html-assets.mjs
     description: Render fixed-size HTML assets from a directory or manifest.
     requires-tty: false
----</pre></div><h2>Why it exists</h2>
-<p>Design exports needed dimension-checked production assets, not freehand screenshots.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>Manifest-driven render path.</p>
-<h2>How Jack actually uses it</h2>
-<p>Social cards, favicons, docs images, store screenshots.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
+---</pre></div><h2>HTML Asset Renderer</h2>
+<p>Use this skill when a user has HTML/CSS design exports that should become</p>
+<p>production raster assets: Open Graph cards, Twitter/X cards, GitHub social</p>
+<p>previews, favicons, docs images, app-store screenshots, campaign images, or</p>
+<p>other fixed-size artwork rendered in the browser.</p>
+<h2>When to use</h2>
+<ul>
+<li>The user gives a folder of <code>.html</code> files and asks for screenshots at exact</li>
+</ul>
+<p>  dimensions.</p>
+<ul>
+<li>The source has a fixed canvas element such as <code>.canvas</code>, <code>.artboard</code>,</li>
+</ul>
+<p>  <code>[data-render-asset]</code>, or a named asset wrapper.</p>
+<ul>
+<li>The output needs production checks: exact width and height, file size,</li>
+</ul>
+<p>  metadata merge notes, and visual QA.</p>
+<ul>
+<li>The user asks to turn a Claude Design, Figma-to-HTML, or hand-authored</li>
+</ul>
+<p>  HTML export into static image assets.</p>
+<h2>Workflow</h2>
+<ol>
+<li>Inspect the source folder first.</li>
+</ol>
+<p>   - List HTML files and supporting CSS/assets.</p>
+<p>   - Identify the target selector; prefer <code>.canvas</code>, then</p>
+<p>     <code>[data-render-asset]</code>, then a manifest-provided selector.</p>
+<p>   - Look for stale product copy, fake metrics, placeholder paths, and</p>
+<p>     platform-specific crop requirements.</p>
+<ol>
+<li>Create a render manifest when output names or dimensions matter.</li>
+</ol>
+<p>   - Use JSON with an <code>assets</code> array.</p>
+<p>   - Each item may define <code>source</code>, <code>output</code>, <code>width</code>, <code>height</code>, <code>selector</code>,</p>
+<p>     <code>format</code>, and <code>maxBytes</code>.</p>
+<p>   - Keep brand/product copy in the project source, not in this generic skill.</p>
+<ol>
+<li>Render with the bundled script.</li>
+</ol>
+<p>   - Find the script with <code>autovault skill which html-asset-renderer render</code></p>
+<p>     or use the installed resource path directly.</p>
+<p>   - Use system Chrome by default; set <code>CHROME_PATH</code> or pass <code>--chrome</code> when</p>
+<p>     needed.</p>
+<pre><code>node ~/.autovault/skills/html-asset-renderer/scripts/render-html-assets.mjs \
+  ./source-html ./public \
+  --manifest ./social-assets.manifest.json \
+  --selector .canvas \
+  --report ./social-assets.report.json</code></pre>
+<ol>
+<li>Verify and merge.</li>
+</ol>
+<p>   - Confirm every generated PNG exists at the expected dimensions.</p>
+<p>   - Check file sizes against platform limits.</p>
+<p>   - Update the project metadata that points at the assets.</p>
+<p>   - Run the repo's normal tests/builds.</p>
+<p>   - Visually inspect native-size outputs before handoff.</p>
+<h2>Manifest shape</h2>
+<pre><code>{
+  &quot;assets&quot;: [
+    {
+      &quot;source&quot;: &quot;og-1200x630.html&quot;,
+      &quot;output&quot;: &quot;og-1200x630.png&quot;,
+      &quot;width&quot;: 1200,
+      &quot;height&quot;: 630,
+      &quot;selector&quot;: &quot;.canvas&quot;,
+      &quot;maxBytes&quot;: 1000000
+    }
+  ]
+}</code></pre>
+<p>If no manifest is provided, the renderer scans the input directory for <code>.html</code></p>
+<p>files except <code>index.html</code>, captures the target selector, and writes</p>
+<p><code>&lt;source-basename&gt;.png</code>.</p>
+<h2>Output</h2>
+<p>Return a concise checklist:</p>
+<ul>
+<li>Source folder and output folder.</li>
+<li>Generated asset names with dimensions and byte sizes.</li>
+<li>Any skipped source files and why.</li>
+<li>Metadata or route files that should point at the new assets.</li>
+<li>Visual QA notes and remaining risk.</li>
+</ul>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Do not bundle project-specific brand files or copy into this skill.</li>
+<li>Do not ship stale source screenshots as production assets; render from the</li>
+</ul>
+<p>  editable HTML/CSS source.</p>
+<ul>
+<li>Do not claim success without exact dimension verification.</li>
+<li>Do not rewrite product positioning inside the generic workflow; make those</li>
+</ul>
+<p>  edits in the project source before rendering.</p>
+<ul>
+<li>Do not create destructive cleanup steps. Only write to the requested output</li>
+</ul>
+<p>  directory and report path.</p>
+<ul>
+<li>Do not store secrets, tokens, or private account data in manifests, reports,</li>
+</ul>
+<p>  or generated assets.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>2</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 4.1 KB</span></span></button><a class="raw-link" href="/bundles/html-asset-renderer/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Scripts</div><div class="sd-resource-row"><button type="button" data-package-file="scripts/render-html-assets.mjs"><span class="kind">script</span><span class="file"><span class="title">Render Html Assets</span><span class="path">scripts/render-html-assets.mjs · 15 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/html-asset-renderer/scripts/render-html-assets.mjs.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/html-asset-renderer/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Node, Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/html-asset-renderer/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

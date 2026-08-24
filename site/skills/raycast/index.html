@@ -89,15 +89,108 @@ resources:
     type: file
   - path: references/troubleshooting.md
     type: file
----</pre></div><h2>Why it exists</h2>
-<p>No official Raycast MCP. The skill is file-native + deeplink operations.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>Synced to claude-code/codex/autojack; pairs with raycast-autojack.</p>
-<h2>How Jack actually uses it</h2>
-<p>Deeplinks, Script Commands, AI skill imports — UI-only prefs stay manual.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/flashspace/"><span class="name">flashspace</span><span class="desc">Workspace switching was voice/chat friction. CLI skill removes the mouse hunt.</span></a></div></div></div></article></section>
+---</pre></div><h2>raycast</h2>
+<p>Drive <strong>Raycast</strong> from agents without a first-party ops CLI and without</p>
+<p>an MCP. There is <strong>no</strong> FlashSpace-style inventory CLI. <code>npx ray</code> is for</p>
+<p><em>extension authors</em> (build/lint), not day-to-day control. Do <strong>not</strong></p>
+<p>build a Raycast MCP unless a real control API appears — it would only</p>
+<p>wrap the same deeplinks/files.</p>
+<p>Sibling skill: <strong><code>raycast-autojack</code></strong> owns Autohub <code>raycast/</code> install,</p>
+<p>doctor, sync, smoke. This skill owns general Raycast operation +</p>
+<p>file-native AI config.</p>
+<hr>
+<h2>When to use</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>User intent</th><th>Do this</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td>&quot;Open clipboard history / paste queue&quot;</td><td>deeplink built-in clipboard commands</td><td><code>references/control-surfaces.md</code></td></tr>
+<tr><td>&quot;Run Raycast command X&quot;</td><td>Copy/construct deeplink → <code>open</code></td><td><code>references/control-surfaces.md</code></td></tr>
+<tr><td>&quot;Add/edit a Script Command&quot;</td><td>write file under Script Directory</td><td><code>references/control-surfaces.md</code></td></tr>
+<tr><td>&quot;Point Raycast AI at AutoJack&quot;</td><td>edit <code>providers.yaml</code></td><td><code>references/ai-config.md</code></td></tr>
+<tr><td>&quot;Reusable AI instructions as code&quot;</td><td>write Raycast AI <strong>Skills</strong> (<code>SKILL.md</code>)</td><td><code>references/ai-config.md</code></td></tr>
+<tr><td>&quot;One-shot AI prompt as a command&quot;</td><td>AI Commands JSON → Import AI Commands</td><td><code>references/ai-config.md</code></td></tr>
+<tr><td>&quot;Change my Agent preset instructions&quot;</td><td>draft text; Jack applies in Settings → AI → Agents</td><td><code>references/ai-config.md</code></td></tr>
+<tr><td>&quot;Install Autohub quick-reply / voice-note scripts&quot;</td><td><strong><code>raycast-autojack</code></strong> skill</td><td>see below</td></tr>
+<tr><td>&quot;Something isn't working / verify setup&quot;</td><td>run Doctor, check the symptom table</td><td><code>references/troubleshooting.md</code></td></tr>
+<tr><td>&quot;Configure every extension pref / Agent UI field&quot;</td><td><strong>cannot fully automate</strong> — open settings, assist</td><td>—</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Safety / autonomy</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Class</th><th>Ops</th><th>Policy</th></tr></thead>
+<tbody>
+<tr><td>🟢 Green</td><td>Inventory manifests; <code>open</code> known-safe deeplinks; read <code>providers.yaml</code> structure (redact secrets); list Script Directories; draft AI Skills / AI Command JSON</td><td>Run freely</td></tr>
+<tr><td>🟡 Yellow</td><td>Edit Script Commands; edit <code>providers.yaml</code> models/base_url; write AI Skills under <code>~/.config/raycast/skills</code>; open Import/Create AI Command UI; deeplinks that change app state (mute, caffeinate, send Slack, …)</td><td>State intent; proceed if clear</td></tr>
+<tr><td>🔴 Red</td><td>Paste/read API keys into chat; rewrite <code>.rayconfig</code> bulk import blindly; delete Agents/commands en masse; edit encrypted SQLite under Application Support; change OAuth tokens in prefs</td><td>Always confirm; never dump secrets</td></tr>
+</tbody></table></div>
+<p>Never print <code>~/.config/raycast/config.json</code> or raw API keys from</p>
+<p><code>providers.yaml</code> into the conversation.</p>
+<hr>
+<h2>Architecture (what is / isn't agent-writable)</h2>
+<h3>Supported config surfaces</h3>
+<div class="table-wrap"><table>
+<thead><tr><th>Asset</th><th>Path / mechanism</th><th>Writable?</th></tr></thead>
+<tbody>
+<tr><td>Deeplink launch</td><td><code>raycast://extensions/&lt;author&gt;/&lt;ext&gt;/&lt;cmd&gt;</code></td><td>Invoke only</td></tr>
+<tr><td>Script Commands</td><td>e.g. <code>~/Documents/Raycast Scripts/</code></td><td>Yes (files)</td></tr>
+<tr><td>AI providers</td><td><code>~/.config/raycast/ai/providers.yaml</code></td><td>Yes (YAML)</td></tr>
+<tr><td>AI Skills</td><td><code>~/.config/raycast/skills/&lt;name&gt;/SKILL.md</code> (+ default scan dirs)</td><td>Yes</td></tr>
+<tr><td>AI Commands</td><td>UI create/edit; <strong>Import AI Commands</strong> from JSON</td><td>Draft + import</td></tr>
+<tr><td>Agents (ex-Presets)</td><td>Settings → AI → Agents; <a href="https://ray.so/presets" rel="noopener">ray.so/presets</a></td><td>UI / share links</td></tr>
+<tr><td>Personalization</td><td>Settings → AI → Personalization</td><td>UI</td></tr>
+<tr><td>Extension preferences</td><td>Raycast Settings → Extensions</td><td>UI (no write API)</td></tr>
+<tr><td>Bulk backup</td><td>Export/Import Preferences &amp; Data (<code>.rayconfig</code>)</td><td>UI, coarse</td></tr>
+</tbody></table></div>
+<h3>Not supported (don't fake it)</h3>
+<ul>
+<li>Programmatic CRUD of every extension preference</li>
+<li>Silent Store install + OAuth without user</li>
+<li>Reading live Raycast UI state from <code>raycast-enc.sqlite</code></li>
+<li>Treating plist keys under <code>com.raycast.macos</code> as a stable API</li>
+</ul>
+<hr>
+<h2>Autohub Raycast scripts (`raycast-autojack`)</h2>
+<p>Repo path: <code>autohub/raycast/</code> — <code>quick-reply.js</code>, <code>context-reply.js</code>,</p>
+<p><code>voice-note-raycast.js</code>, <code>summon-autojack.js</code>, <code>install.sh</code>, …</p>
+<pre><code># from autohub repo root, via the dedicated skill helper:
+autovault skill doctor raycast-autojack --repo .
+autovault skill setup raycast-autojack --repo .
+autovault skill sync raycast-autojack --repo .
+autovault skill smoke raycast-autojack --repo .</code></pre>
+<p>Do not re-implement installers in this skill; load <strong><code>raycast-autojack</code></strong>.</p>
+<hr>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Do <strong>not</strong> invent an MCP server that only shells <code>open raycast://…</code>.</li>
+<li>Do <strong>not</strong> use <code>npx ray</code> as an ops tool.</li>
+<li>Do <strong>not</strong> cat secrets from <code>config.json</code> / <code>providers.yaml</code> api_keys.</li>
+<li>Do <strong>not</strong> hand-edit <code>raycast-enc.sqlite</code> or treat plist keys as API.</li>
+<li>Do <strong>not</strong> confuse Raycast AI Skills with AutoVault operator skills —</li>
+</ul>
+<p>  different consumers; share formats carefully.</p>
+<ul>
+<li>Do <strong>not</strong> claim Agents/extension prefs are fully automatable.</li>
+<li>Prefer <strong><code>flashspace</code> CLI</strong> over FlashSpace Raycast extension for</li>
+</ul>
+<p>  workspace switching when both exist.</p>
+<hr>
+<h2>Reference files</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>Read when</th></tr></thead>
+<tbody>
+<tr><td><code>references/control-surfaces.md</code></td><td>Launching a Raycast command (deeplinks, known Autohub deeplinks, installed-extension inventory) or writing/editing a Script Command; also window-management alternatives.</td></tr>
+<tr><td><code>references/ai-config.md</code></td><td>Configuring Raycast AI: providers.yaml, AI Skills, AI Commands, Agents (presets), Personalization, PromptLab.</td></tr>
+<tr><td><code>references/troubleshooting.md</code></td><td>Running the Doctor check, or diagnosing a symptom (deeplink/script/AI Skill not working) — plus upstream Raycast doc links.</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Related skills</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Skill</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><strong>raycast</strong> (this)</td><td>General operate + file-native AI config</td></tr>
+<tr><td><strong>raycast-autojack</strong></td><td>Autohub script install/doctor/sync/smoke</td></tr>
+<tr><td><strong>flashspace</strong></td><td>Virtual workspaces (CLI)</td></tr>
+</tbody></table></div><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/flashspace/"><span class="name">flashspace</span><span class="desc">Workspace switching was voice/chat friction. CLI skill removes the mouse hunt.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>4</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 6.3 KB</span></span></button><a class="raw-link" href="/bundles/raycast/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/ai-config.md"><span class="kind">reference</span><span class="file"><span class="title">Ai Config</span><span class="path">references/ai-config.md · 3.1 KB</span></span></button><a class="raw-link" href="/bundles/raycast/references/ai-config.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/control-surfaces.md"><span class="kind">reference</span><span class="file"><span class="title">Control Surfaces</span><span class="path">references/control-surfaces.md · 5.5 KB</span></span></button><a class="raw-link" href="/bundles/raycast/references/control-surfaces.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/troubleshooting.md"><span class="kind">reference</span><span class="file"><span class="title">Troubleshooting</span><span class="path">references/troubleshooting.md · 2.5 KB</span></span></button><a class="raw-link" href="/bundles/raycast/references/troubleshooting.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/raycast/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>Bash,Python</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/raycast/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

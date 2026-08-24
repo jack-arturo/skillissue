@@ -122,18 +122,165 @@ bin:
     command: bin/doctor
     description: Verify local lead-capture project files, Wrangler config, and expected secret names.
     requires-tty: false
----</pre></div><h2>Why it exists</h2>
-<p>Hat Trick / waitlist work kept being rewritten. Packaged as scaffold + doctor + setup.</p>
-<h2>History</h2>
-<h3>1.2–1.3</h3>
-<p>Pages Functions + Astro SSR modes; lead-never-lost ordering (D1 first, email best-effort).</p>
-<h2>How Jack actually uses it</h2>
-<p>Scaffold into Pages or Astro SSR. Never paste Resend keys into chat.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p>
-<h2>History</h2>
-<h3>Skill patch — Resend project domain (2026-07-20)</h3>
-<p>Agents must create/verify the <strong>project</strong> custom domain in Resend when the zone is on Cloudflare — not silently ship From on a sibling verified domain. See SKILL.md § domain / anti-patterns.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a> <a class="sd-rel-tile" href="/skills/resend-cli/"><span class="name">resend-cli</span><span class="desc">Email setup needed a vendor CLI skill with non-interactive agent flags.</span></a></div></div></div></article></section>
+---</pre></div><h2>Cloudflare Lead Capture</h2>
+<h2>When To Use</h2>
+<p>Use this skill when a user wants a repeatable Cloudflare-based email database, waitlist, contact form, capture form, web lead form, or small lead-management backend. It is designed for Cloudflare Pages Functions or Workers with D1 as the system of record and Resend for outbound email.</p>
+<p>Use the separate <code>cloudflare-commerce-deploy</code> skill for deployment, DNS, custom domains, or other Cloudflare operator work. This skill owns only the lead-capture and email-template layer.</p>
+<p>For projects with separate preview and production environments, see the <strong>Per-Environment Pages Env Vars</strong> section in <code>cloudflare-commerce-deploy</code> for how to set <code>RESEND_API_KEY</code>, <code>ADMIN_TOKEN</code>, and <code>TURNSTILE_SECRET_KEY</code> differently per environment. <code>wrangler pages secret put</code> only writes to production; preview-environment secrets require the project-level PATCH endpoint.</p>
+<h2>Two project shapes</h2>
+<p><strong>Decide which shape the project is before scaffolding — they wire endpoints and bindings differently:</strong></p>
+<ul>
+<li><strong>Cloudflare Pages</strong> (static site + <code>functions/</code>): use the <code>bin/scaffold</code> templates below. Endpoints are Pages Functions (<code>functions/api/*.js</code>); bindings arrive as the handler's <code>env</code> argument; secrets via <code>wrangler pages secret put</code>.</li>
+<li><strong>Astro SSR on Workers</strong> (<code>output: 'server'</code>, <code>@astrojs/cloudflare</code>, <code>wrangler deploy</code> — e.g. an EmDash/Astro site, see <code>cloudflare-emdash-cms-deploy</code>): there is <strong>no <code>functions/</code> directory</strong>. Hand-write the same patterns as Astro API routes (next section). The scaffold's <code>schema/</code> and <code>lib/</code> files are still useful references.</li>
+</ul>
+<h2>Astro SSR (Workers) variant</h2>
+<p><strong>Scaffold it:</strong> <code>autovault skill scaffold cloudflare-lead-capture -- --mode=astro-ssr</code> (auto-detected for Astro + <code>@astrojs/cloudflare</code> projects; binding defaults to <code>DB</code>). It emits the shared <code>schema/lead-capture.sql</code> + <code>src/pages/api/contact.ts</code> (writes to <code>contacts</code>/<code>submissions</code> so the admin UI/exports see these leads; lead-never-lost; honeypot) + <code>src/components/ContactForm.astro</code> (fetch enhancement with a no-JS <code>?sent=1</code> fallback). Then apply the schema, set <code>RESEND_API_KEY</code> (Worker secret) + <code>NOTIFY_FROM</code>/<code>NOTIFY_TO</code> vars, render <code>&lt;ContactForm /&gt;</code>, and <code>wrangler deploy</code>. See the generated <code>README.astro-ssr.md</code>.</p>
+<p>If hand-writing instead, the contract is:</p>
+<ul>
+<li><strong>Endpoint:</strong> <code>src/pages/api/&lt;form&gt;.ts</code> exporting <code>POST</code>, with <code>export const prerender = false</code> (must run on the worker).</li>
+<li><strong>Bindings (Astro 6+):</strong> <code>import { env } from &quot;cloudflare:workers&quot;</code> — <code>env.DB</code> (D1), <code>env.RESEND_API_KEY</code> (Worker secret), and any non-secret <code>vars</code> from <code>wrangler.jsonc</code> (e.g. <code>CONTACT_FROM</code>, <code>CONTACT_TO</code>). Astro 6 removed <code>Astro.locals.runtime.env</code>; the <strong><code>cloudflare-emdash-cms-deploy</code></strong> skill owns the full why (it surfaces as an empty HTTP 500, not your JSON error path).</li>
+<li><strong>D1:</strong> create a <code>contact_messages</code> / <code>leads</code> table; <code>await env.DB.prepare(&quot;INSERT ...&quot;).bind(...).run()</code>. Store the lead <strong>first</strong>, then send email best-effort — a send failure must NOT lose the saved lead.</li>
+<li><strong>Resend:</strong> <code>POST https://api.resend.com/emails</code> with header <code>Authorization: Bearer &lt;RESEND_API_KEY&gt;</code> and a JSON body (<code>from</code>, <code>to</code>, <code>reply_to</code>, <code>subject</code>, <code>html</code>, <code>text</code>). Use a <strong>send-only, domain-scoped</strong> key — <code>resend api-keys create --name &lt;svc&gt; --permission sending_access --domain-id &lt;id&gt; -q</code> (api-keys flag contract: <strong><code>resend-cli</code></strong>) — piped straight into <code>wrangler secret put RESEND_API_KEY</code>, never printed.</li>
+<li><strong>Form:</strong> plain <code>&lt;form action=&quot;/api/contact&quot; method=&quot;POST&quot;&gt;</code> enhanced with a JS <code>fetch</code> (send <code>X-Requested-With: fetch</code> to get a JSON response) and a no-JS <code>303 → ?sent=1</code> fallback. Add a honeypot field + <code>maxlength</code> caps.</li>
+<li><strong>Secrets:</strong> <code>wrangler secret put RESEND_API_KEY</code> (Worker secret) — <strong>not</strong> <code>wrangler pages secret put</code>.</li>
+</ul>
+<h2>Brand-styled emails (React Email)</h2>
+<p>The scaffold emits plain notification HTML. For <strong>brand-matched</strong> transactional emails (the contact notification, plus invites/receipts), author <strong>React Email</strong> <code>.tsx</code> templates instead of inlining HTML, and follow the <strong><code>react-email</code></strong> skill (build templates) + <strong><code>email-best-practices</code></strong> skill (deliverability, accessibility, suppression). This skill owns the lead pipeline; those own the email design + deliverability.</p>
+<ul>
+<li><strong>Brand once, reuse:</strong> put tokens in <code>emails/brand.ts</code> mirrored from the site's CSS (colors, fonts, logo mark) + a shared <code>BrandLayout</code> shell (masthead + footer); every template wraps its body in it so all emails match the site.</li>
+<li><strong>Render in the Worker at request time:</strong> <code>@react-email/render</code> ships a <strong><code>workerd</code> export</strong> (edge build → <code>react-dom/server.edge</code>), so <code>render(createElement(Template, props))</code> runs inside the Worker — no extra runtime needed when the Astro app already SSRs React via <code>@astrojs/react</code>. Render <code>{ plainText: true }</code> for the text part too.</li>
+<li><strong>Preview:</strong> add <code>&quot;email&quot;: &quot;email dev --dir emails --port 3000&quot;</code> to <code>package.json</code> (needs <code>@react-email/ui</code>); each template exports <code>.PreviewProps</code> for sample data.</li>
+<li><strong>Gotchas:</strong> render newlines as <code>&lt;br/&gt;</code> — <code>white-space: pre-line</code> is ignored by Outlook. Use <code>pixelBasedPreset</code> (no <code>rem</code>), tables not flexbox/grid, always specify border style (<code>border-solid</code>), PNG/JPG only (no SVG/WEBP), keep under ~102KB (Gmail clips). Keep the send <strong>best-effort</strong> — a render/send failure must not lose the saved lead.</li>
+</ul>
+<h2>Prerequisites</h2>
+<ol>
+<li>The project should be a Cloudflare Pages or Workers project, or a static site that can accept a <code>functions/</code> directory.</li>
+<li>Wrangler should be available before remote setup or deployment.</li>
+</ol>
+<p>   If global Wrangler auth is already configured (<code>wrangler login</code> state and/or</p>
+<p>   <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> from shell startup), use it</p>
+<p>   directly as the default Cloudflare credential path.</p>
+<ol>
+<li>The user must configure secrets from their own terminal. Never ask them to paste <code>RESEND_API_KEY</code>, <code>ADMIN_TOKEN</code>, <code>TURNSTILE_SECRET_KEY</code>, or Cloudflare credentials into chat.</li>
+<li>If the project already has form endpoints, inspect them first and preserve existing behavior unless the user explicitly asks to replace it.</li>
+</ol>
+<h2>Workflow</h2>
+<h3>1. Inspect The Project</h3>
+<p>Check for <code>wrangler.toml</code>, <code>wrangler.jsonc</code>, <code>functions/</code>, existing D1 bindings, existing signup/contact endpoints, and existing admin routes. Prefer Cloudflare Pages Functions for static sites; use the Astro SSR variant when the project is an Astro <code>output: 'server'</code> Worker.</p>
+<p>If an existing lead-capture stack is present, run in <strong>adoption mode</strong> instead</p>
+<p>of scaffold mode. Inventory the current endpoints, tables, env var names,</p>
+<p>email provider calls, unsubscribe/confirm routes, admin token behavior, and</p>
+<p>preview/production bindings. Report which generated pieces are already covered,</p>
+<p>which safety gaps remain, and which templates should be skipped.</p>
+<h3>2. Scaffold The Lead-Capture Layer</h3>
+<p>From the project root, run:</p>
+<pre><code>autovault skill scaffold cloudflare-lead-capture</code></pre>
+<p>Useful options:</p>
+<pre><code>autovault skill scaffold cloudflare-lead-capture -- --project-name=my-site --database-name=my-site-leads --database-id=&lt;d1-id&gt; --binding=LEAD_DB
+autovault skill scaffold cloudflare-lead-capture -- --force</code></pre>
+<p>The scaffold action writes:</p>
+<ul>
+<li>D1 schema under <code>schema/lead-capture.sql</code>.</li>
+<li>Pages Functions under <code>functions/api</code>, <code>functions/admin</code>, and <code>functions/lib/lead-capture</code>.</li>
+<li><code>lead-capture-admin.html</code> for a basic token-protected admin UI.</li>
+<li><code>snippets/lead-form.html</code> for copy-paste signup and lead forms.</li>
+<li><code>README.lead-capture.md</code> with setup, schema, and smoke-test commands.</li>
+</ul>
+<p>Existing files are skipped unless <code>--force</code> is passed. (Astro SSR projects: skip scaffold, hand-write API routes per the Astro SSR variant section; reuse <code>schema/</code> and <code>lib/</code> as references.)</p>
+<p>In adoption mode, do not run <code>--force</code>. Patch only the missing safety pieces the</p>
+<p>inspection identified, such as Turnstile server verification, signed</p>
+<p>unsubscribe tokens, admin auth consistency, or preview-only env vars.</p>
+<h3>3. Configure Cloudflare And Secrets</h3>
+<p>If global Wrangler auth is missing or lacks required scope, ask the user to run:</p>
+<pre><code>autovault skill setup cloudflare-lead-capture</code></pre>
+<p>The setup action can create or record a D1 database and invokes Wrangler secret prompts for <code>RESEND_API_KEY</code>, <code>ADMIN_TOKEN</code>, optional <code>TURNSTILE_SECRET_KEY</code>, and optional <code>CONFIRM_SECRET</code>. The agent must not handle the raw secret values.</p>
+<h3>3b. Resend sending domain (project custom domain)</h3>
+<p><strong>Hard rule:</strong> When the site has a custom domain on Cloudflare (Pages custom domain or zone already active), <strong>create and verify that exact domain in Resend</strong> before shipping production <code>FROM_EMAIL</code>. Do <strong>not</strong> silently set <code>FROM_EMAIL</code> to a sibling verified domain (<code>*.autojack.ai</code>, another product zone, etc.) as a permanent workaround.</p>
+<p>Validated agent path (non-interactive; see <strong><code>resend-cli</code></strong>):</p>
+<ol>
+<li>Ensure <code>RESEND_API_KEY</code> is in the environment (never print it).</li>
+<li>Create the domain (or skip create if <code>resend domains list</code> already has it):</li>
+</ol>
+<pre><code>resend domains create --name example.com --region eu-west-1 -q
+# → id + records[] (DKIM TXT, SPF MX on send, SPF TXT on send)</code></pre>
+<ol>
+<li>Add DNS on the <strong>project’s Cloudflare zone</strong> (proxied <strong>off</strong> for MX/TXT Resend records):</li>
+</ol>
+<div class="table-wrap"><table>
+<thead><tr><th>Resend record</th><th>CF type</th><th>CF name (relative OK)</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>DKIM</td><td>TXT</td><td><code>resend._domainkey</code></td><td>Prefer value as returned; if value starts with <code>p=</code>, prefix <code>v=DKIM1; k=rsa; </code></td></tr>
+<tr><td>SPF</td><td>MX</td><td><code>send</code></td><td><code>content</code> = Resend host, <code>priority</code> = 10</td></tr>
+<tr><td>SPF</td><td>TXT</td><td><code>send</code></td><td>e.g. <code>v=spf1 include:amazonses.com ~all</code></td></tr>
+</tbody></table></div>
+<p>Use Zone DNS API or dashboard; zone must already be on Cloudflare (this stack assumes that).</p>
+<ol>
+<li>Trigger verify and poll until <code>status == &quot;verified&quot;</code>:</li>
+</ol>
+<pre><code>resend domains verify &lt;domain-id&gt; -q
+resend domains get &lt;domain-id&gt; -q   # poll; records[] should all be verified</code></pre>
+<ol>
+<li>Set production From to an address <strong>on that domain</strong>, e.g. <code>hello@example.com</code> / <code>noreply@example.com</code>:</li>
+</ol>
+<ul>
+<li>Pages vars: <code>FROM_EMAIL</code>, <code>FROM_NAME</code> (project PATCH env_vars and/or <code>wrangler.toml</code> <code>[vars]</code>)</li>
+<li>Prefer a send-only, domain-scoped Resend API key when rotating keys (<code>resend api-keys create … --domain-id &lt;id&gt;</code> — <strong><code>resend-cli</code></strong>)</li>
+</ul>
+<p><strong>Allowed temporary fallback:</strong> only if DNS cannot be written yet (zone not on CF, no token scope, or user forbids DNS edits). Then:</p>
+<ul>
+<li>State the blocker explicitly in the handoff</li>
+<li>Use a verified sibling From <strong>and</strong> leave a tracked TODO to flip to the project domain</li>
+<li>Do not treat the sibling From as “done”</li>
+</ul>
+<p><strong>Reference:</strong> Resend <a href="https://resend.com/docs/api-reference/domains/verify-domain" rel="noopener">Verify Domain</a> (<code>POST /domains/{id}/verify</code>); CLI: <code>resend domains verify &lt;id&gt;</code>.</p>
+<h3>4. Apply Schema And Wire The UI</h3>
+<p>Apply <code>schema/lead-capture.sql</code> to the bound D1 database. Then copy the signup or lead form snippet into the site, or adapt the project’s existing form to submit JSON to:</p>
+<ul>
+<li><code>POST /api/signup</code> for simple email capture.</li>
+<li><code>POST /api/lead</code> for general lead forms.</li>
+</ul>
+<p>If Turnstile is enabled, make sure the frontend sends <code>cf-turnstile-response</code> or <code>turnstileToken</code>; the server validates the token with Cloudflare Siteverify before accepting the submission.</p>
+<h3>5. Verify</h3>
+<p>Run:</p>
+<pre><code>autovault skill doctor cloudflare-lead-capture</code></pre>
+<p>Then smoke-test locally with Wrangler Pages dev or a non-production Cloudflare project before connecting production forms. For an Astro SSR Worker, deploy and POST a real submission, then confirm the D1 row was written AND the provider reports the message delivered (<code>resend emails list</code>).</p>
+<p>For projects that already have a live waitlist or CMS, verify preview traffic</p>
+<p>does not write to production D1/KV unless the user explicitly accepts that risk</p>
+<p>for a read-only surface. Lead forms, admin actions, test emails, and template</p>
+<p>edits should use preview resources in PR previews.</p>
+<h2>Generated Behavior</h2>
+<ul>
+<li>D1 stores contacts, form definitions, submissions, template rows, and email delivery events.</li>
+<li>Signup and lead handlers validate email, required fields, field lengths, source, UTM metadata, consent state, and Turnstile when configured.</li>
+<li>Resend confirmation and notification emails are sent from server-side Functions. Failures are recorded but do not discard the captured lead.</li>
+<li>Template rendering uses allowlisted <code>{{placeholder}}</code> replacement. It does not execute arbitrary template code.</li>
+<li>Unsubscribe links use signed expiring HMAC tokens and update contact consent state.</li>
+<li>Admin endpoints require <code>ADMIN_TOKEN</code> via Bearer auth or a query token and can return JSON or CSV.</li>
+</ul>
+<h2>Output</h2>
+<p>When finished, report:</p>
+<ul>
+<li>Which files were generated, skipped, or overwritten.</li>
+<li>Whether the run was scaffold mode or adoption mode.</li>
+<li>The D1 binding name and database name/id to verify in Wrangler config.</li>
+<li>Which secrets must be set by name only.</li>
+<li>How to reach the admin UI and which endpoint each form should submit to.</li>
+<li>Any tests or smoke checks run.</li>
+</ul>
+<h2>Anti-Patterns</h2>
+<ul>
+<li>Do not paste, print, commit, or summarize raw API keys or admin tokens.</li>
+<li>Do not replace an existing form stack without reading it first.</li>
+<li>Do not force the scaffold over a project that already has signup, unsubscribe,</li>
+</ul>
+<p>  admin, or email-template endpoints; adapt it in adoption mode.</p>
+<ul>
+<li>Do not scaffold Pages Functions into an Astro SSR Worker project (no <code>functions/</code> runtime there) — use the Astro SSR variant instead.</li>
+<li>Do not skip server-side Turnstile validation; the widget alone is not protection.</li>
+<li>Do not use D1 as a bulk newsletter sender. Store contacts and events in D1, send through a real email provider, and respect unsubscribe state.</li>
+<li>Do not turn the generated admin UI into a full CRM without explicit scope; it is a small operational surface for early projects.</li>
+<li><strong>Do not skip Resend domain verification for the project’s custom domain</strong> when the zone is already on Cloudflare and the agent can write DNS + call Resend. Using a random already-verified domain “because it works” is a failed ship for production From identity (skillissue lesson 2026-07-20).</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a> <a class="sd-rel-tile" href="/skills/resend-cli/"><span class="name">resend-cli</span><span class="desc">Email setup needed a vendor CLI skill with non-interactive agent flags.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>23</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 16 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Commands</div><div class="sd-resource-row"><button type="button" data-package-file="bin/doctor"><span class="kind">script</span><span class="file"><span class="title">Doctor</span><span class="path">bin/doctor · 4.0 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/bin/doctor.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="bin/scaffold"><span class="kind">script</span><span class="file"><span class="title">Scaffold</span><span class="path">bin/scaffold · 9.5 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/bin/scaffold.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="bin/setup"><span class="kind">script</span><span class="file"><span class="title">Setup</span><span class="path">bin/setup · 2.9 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/bin/setup.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Other files</div><div class="sd-resource-row"><button type="button" data-package-file="templates/astro-ssr/README.astro-ssr.md"><span class="kind">reference</span><span class="file"><span class="title">README.Astro Ssr</span><span class="path">templates/astro-ssr/README.astro-ssr.md · 2.3 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/astro-ssr/README.astro-ssr.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/astro-ssr/src/components/ContactForm.astro"><span class="kind">resource</span><span class="file"><span class="title">ContactForm</span><span class="path">templates/astro-ssr/src/components/ContactForm.astro · 2.9 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/astro-ssr/src/components/ContactForm.astro.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/astro-ssr/src/pages/api/contact.ts"><span class="kind">resource</span><span class="file"><span class="title">Contact</span><span class="path">templates/astro-ssr/src/pages/api/contact.ts · 5.9 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/astro-ssr/src/pages/api/contact.ts.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/admin/lead-capture.js"><span class="kind">resource</span><span class="file"><span class="title">Lead Capture</span><span class="path">templates/project/functions/admin/lead-capture.js · 2.2 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/admin/lead-capture.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/admin/lead-capture/templates.js"><span class="kind">resource</span><span class="file"><span class="title">Templates</span><span class="path">templates/project/functions/admin/lead-capture/templates.js · 1.7 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/admin/lead-capture/templates.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/admin/lead-capture/test-email.js"><span class="kind">resource</span><span class="file"><span class="title">Test Email</span><span class="path">templates/project/functions/admin/lead-capture/test-email.js · 1.1 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/admin/lead-capture/test-email.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/api/lead.js"><span class="kind">resource</span><span class="file"><span class="title">Lead</span><span class="path">templates/project/functions/api/lead.js · 5.1 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/api/lead.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/api/signup.js"><span class="kind">resource</span><span class="file"><span class="title">Signup</span><span class="path">templates/project/functions/api/signup.js · 3.8 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/api/signup.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/lib/lead-capture/email.js"><span class="kind">resource</span><span class="file"><span class="title">Email</span><span class="path">templates/project/functions/lib/lead-capture/email.js · 5.4 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/lib/lead-capture/email.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/lib/lead-capture/http.js"><span class="kind">resource</span><span class="file"><span class="title">Http</span><span class="path">templates/project/functions/lib/lead-capture/http.js · 4.4 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/lib/lead-capture/http.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/lib/lead-capture/tokens.js"><span class="kind">resource</span><span class="file"><span class="title">Tokens</span><span class="path">templates/project/functions/lib/lead-capture/tokens.js · 2.1 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/lib/lead-capture/tokens.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/lib/lead-capture/turnstile.js"><span class="kind">resource</span><span class="file"><span class="title">Turnstile</span><span class="path">templates/project/functions/lib/lead-capture/turnstile.js · 994 B</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/lib/lead-capture/turnstile.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/functions/unsubscribe.js"><span class="kind">resource</span><span class="file"><span class="title">Unsubscribe</span><span class="path">templates/project/functions/unsubscribe.js · 1.8 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/functions/unsubscribe.js.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/lead-capture-admin.html"><span class="kind">resource</span><span class="file"><span class="title">Lead Capture Admin</span><span class="path">templates/project/lead-capture-admin.html · 8.3 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/lead-capture-admin.html.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/README.lead-capture.md"><span class="kind">reference</span><span class="file"><span class="title">README.Lead Capture</span><span class="path">templates/project/README.lead-capture.md · 2.3 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/README.lead-capture.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/schema/lead-capture.sql"><span class="kind">resource</span><span class="file"><span class="title">Lead Capture</span><span class="path">templates/project/schema/lead-capture.sql · 5.7 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/schema/lead-capture.sql.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/snippets/lead-form.html"><span class="kind">resource</span><span class="file"><span class="title">Lead Form</span><span class="path">templates/project/snippets/lead-form.html · 2.4 KB</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/snippets/lead-form.html.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/wrangler.lead-capture.jsonc"><span class="kind">resource</span><span class="file"><span class="title">Wrangler.Lead Capture</span><span class="path">templates/project/wrangler.lead-capture.jsonc · 315 B</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/wrangler.lead-capture.jsonc.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="templates/project/wrangler.toml"><span class="kind">config</span><span class="file"><span class="title">Wrangler</span><span class="path">templates/project/wrangler.toml · 339 B</span></span></button><a class="raw-link" href="/bundles/cloudflare-lead-capture/templates/project/wrangler.toml.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/cloudflare-lead-capture/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Node, Read, Edit]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cloudflare-lead-capture/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

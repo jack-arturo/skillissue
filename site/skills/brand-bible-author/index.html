@@ -89,12 +89,165 @@ resources:
     type: file
   - path: tests/validate_schema.py
     type: file
----</pre></div><h2>Why</h2>
-<p>Campaign assets drift when every brief recreates the artist's visual language from memory.</p>
-<h2>How</h2>
-<p>Read the actual winning images, extract the repeatable choices, ask for the taste calls that cannot be inferred, then run the coherence check before the first lock.</p>
-<h2>Related</h2>
-<p>Begin with <a href="/skills/midjourney-iteration/">Midjourney Iteration</a>.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/midjourney-iteration/"><span class="name">midjourney-iteration</span><span class="desc">A bounded, evidence-based loop for turning a clear visual brief into better Midjourney candidates.</span></a></div></div></div></article></section>
+---</pre></div><h2>Brand Bible Author</h2>
+<p>Turn a Phase 0 divergent Midjourney run plus the artist's moodboard, prior released art, and voice references into a two-file brand bible plus a curated reference-pin library. The bible becomes the shared rubric every downstream skill (image production, packaging, voice) reads, so different assets stay coherent across a release campaign.</p>
+<p>This skill <strong>assumes the divergent exploration is done</strong> — there are 3–5 winning picks with provenance and short iteration notes. If that has not happened, run divergent exploration first and come back.</p>
+<h2>When to use</h2>
+<ul>
+<li>An artist has just finished a Phase 0 divergent run (5+ varied prompts, taste-judged) and the operator wants to lock the direction before producing a release campaign of assets.</li>
+<li>The user is starting a multi-asset production effort (cover + selfies + IG + lyric cards + merch) and needs <em>one</em> document set the per-asset briefs can share — otherwise every brief reinvents the vocabulary.</li>
+<li>The user has prior released art (a single cover, a music video) and wants to make sure the new direction stays in continuity with what already exists.</li>
+<li>A second artist is being onboarded into a chain that already has a locked bible — same skill, different inputs.</li>
+</ul>
+<h2>When NOT to use</h2>
+<ul>
+<li>Before a divergent exploration. The skill needs picks + provenance to extract from. If there's nothing locked yet, run <code>midjourney-iteration</code> in a divergent shape first (or work outside the skill).</li>
+<li>For a single one-off asset that doesn't need to share vocabulary with anything else.</li>
+<li>For genres or art forms where the bible's MJ-prompt-ready visual contract doesn't apply (pure literary work, music with no visual identity, etc.). The schema is image-first.</li>
+<li>To refresh an existing locked bible. Editing <code>brand/{identity, visual-language}.md</code> directly is the right move once the bible exists — the skill is for the <strong>first lock</strong>, not for revisions. (Future versions may add a <code>--refresh</code> mode.)</li>
+</ul>
+<h2>Prerequisites</h2>
+<ul>
+<li>The artist's project folder exists at <code>&lt;project_dir&gt;</code> and is preferably a git repo (so the lock commit creates a clean baseline).</li>
+<li>A divergent session at <code>&lt;divergent_session_path&gt;</code> containing:</li>
+</ul>
+<p>  - <code>picks.json</code> with <code>top_picks[]</code>, <code>concepts_tested[]</code>, and ideally <code>directions_to_park[]</code>.</p>
+<p>  - Per-round prompt files (<code>round-*.prompt.txt</code>) the operator can read for exact MJ params.</p>
+<p>  - The actual round screenshots so winning picks can be loaded as images.</p>
+<ul>
+<li>A moodboard directory (strongly recommended) at <code>&lt;project_dir&gt;/moodboard/</code> containing prior released art and any reference images the artist anchored on.</li>
+<li>Voice references the operator can articulate (1–3, with one-line &quot;why it lands&quot; each). These can come from the user directly, an in-conversation taste discussion, or AutoMem recall on the project.</li>
+</ul>
+<h2>Why a structured author skill instead of a free-form draft</h2>
+<p>Two failure modes happen reliably when an operator drafts a brand bible solo:</p>
+<ol>
+<li><strong>Trusting source labels.</strong> <code>picks.json</code> names the directions used during iteration, but the moodboard or released work can reveal another canonical composition. Count modes from all confirmed sources, not only the iteration labels.</li>
+<li><strong>Cross-file contradictions.</strong> identity.md's IS-NOT line and visual-language.md's compositions can each be correct in isolation while conflicting together. The skill includes a required <strong>cross-file coherence check</strong> between draft and lock.</li>
+</ol>
+<p>See <code>coherence-check.md</code> for the contradiction-check prompt.</p>
+<h2>Workflow</h2>
+<h3>1. Load the brief</h3>
+<p>Briefs are structured JSON — see <code>brief-schema.md</code>. At minimum: <code>project_dir</code> (absolute), <code>divergent_session_path</code> (absolute, contains <code>picks.json</code>). Optional: <code>moodboard_dir</code>, <code>voice_references[]</code>, <code>released_art_paths[]</code>, <code>iteration_notes_path</code>.</p>
+<p>If the user passed prose, convert to the structured shape first and confirm with them before running.</p>
+<p><strong>Session log location.</strong> Resolve once at the start:</p>
+<ul>
+<li><code>&lt;project_dir&gt;/sessions/brand-bible-author/&lt;timestamp&gt;-&lt;slug&gt;/</code></li>
+</ul>
+<p>The session log captures the friction notes — every taste call the operator made, every surprise from reading the picks vs the prompts, every coherence-check finding. This file is the source material for evolving the skill itself; do not skip it.</p>
+<h3>2. Mechanical extraction (no judgment, just reading)</h3>
+<p>Read in parallel:</p>
+<ul>
+<li><code>&lt;divergent_session_path&gt;/picks.json</code> — extract <code>top_picks[]</code>, <code>concepts_tested[]</code>, and <code>directions_to_park[]</code>.</li>
+<li><code>&lt;divergent_session_path&gt;/round-*.prompt.txt</code> — for each winning round, regex out <code>--ar X:Y --s NN --c NN</code> and any <code>--style</code> flag. These are brand defaults if both winning rounds share them.</li>
+<li><code>&lt;divergent_session_path&gt;/eval-notes.jsonl</code> — only as cross-check on dominant miss modes.</li>
+<li><code>&lt;moodboard_dir&gt;/*.png</code> (if provided) — list filenames; do not interpret yet.</li>
+<li><code>&lt;iteration_notes_path&gt;</code> (if provided) — for capturing concise iteration evidence alongside vocabulary decisions.</li>
+</ul>
+<p>From this extraction, produce a <strong>mechanical-facts block</strong> — the inputs the operator-decision steps will reference. Do not write it into the bible directly; surface it to the operator first.</p>
+<h3>3. Read winning picks as images (REQUIRED)</h3>
+<p>Load the top 2 picks from <code>picks.json</code> as actual images into context. <strong>Text descriptions of picks lie.</strong> A prompt-target color can render visibly differently; the bible must record the rendered result rather than the hoped-for one.</p>
+<p>If the iteration skill produced 4 picks, read at least 2; reading all 4 is preferred. Also read 1–3 moodboard images if a moodboard is provided.</p>
+<h3>4. Discover compositional modes</h3>
+<p>Count modes from picks <strong>and</strong> moodboard, not just picks. A released cover may establish a canonical composition that the divergent run never named. The bible needs all confirmed modes, not just the iteration outcomes.</p>
+<p>Surface to the operator: &quot;I see N compositional modes (list them, each with provenance). Confirm or correct before I draft.&quot;</p>
+<h3>5. Operator-decision prompts</h3>
+<p>Run these in the order below. Each prompts the operator for a taste call that cannot be auto-derived from the picks. Skipping any of these produces a generic bible.</p>
+<p>a. <strong>Persona one-liner.</strong> &quot;In 2–3 sentences, what does this artist <em>do</em> and what would they refuse to do?&quot;</p>
+<p>b. <strong>Satirical / sincere premise.</strong> &quot;Is the persona ironic, sincere, satirical, or layered? If layered, articulate the layers.&quot;</p>
+<p>c. <strong>Voice references (1–3, max).</strong> &quot;List 1–3 reference artists/tracks/aesthetics with a one-line <em>why it lands</em> each. Mark which is thesis-match vs visual-match vs vocabulary-match.&quot;</p>
+<p>d. <strong>Audience.</strong> &quot;Primary audience (one bullet). Secondary audience (one bullet). Not-the-audience (one bullet).&quot;</p>
+<p>e. <strong>Do-not-cross lines.</strong> &quot;What thematic or visual material is off for this artist? The skill enforces a minimum of 3 lines; add more if needed.&quot;</p>
+<p>f. <strong>Palette hexes — prompt target AND as-rendered.</strong> For each signature color, the operator looks at the picks and answers: &quot;what hex does MJ actually produce when it hits?&quot; These will both go into the visual-language.md palette table; never elide the divergence.</p>
+<h3>6. Draft identity.md</h3>
+<p>Use <code>outline.md</code> § &quot;identity.md skeleton&quot;. Target ~600 words. Required sections:</p>
+<ul>
+<li>Header (version, provenance one-liner)</li>
+<li>Persona one-line</li>
+<li>Premise (the satirical/sincere/layered framing from step 5b)</li>
+<li>Voice references table (1–3 rows)</li>
+<li>What the artist IS (bulleted)</li>
+<li>What the artist IS NOT (bulleted — anchor the genre/aesthetic ban here)</li>
+<li>Audience</li>
+<li>Tone register (the irony layers if applicable)</li>
+<li>Do-not-cross lines</li>
+<li>Continuity-check tests (3 quick tests for any future brief)</li>
+</ul>
+<h3>7. Draft visual-language.md</h3>
+<p>Use <code>outline.md</code> § &quot;visual-language.md skeleton&quot;. Target ~1200 words. Required sections:</p>
+<ol>
+<li>Palette table — prompt-target hex + as-rendered descriptor + provenance</li>
+<li>Signature compositions (one § per mode discovered in step 4) — composition rules, sub-modes if any, MJ failure modes documented</li>
+<li>Banned vocabulary (with evidence from the picks, moodboard, or iteration notes)</li>
+<li>Preferred vocabulary substitutions</li>
+<li>Aspect ratios per asset type</li>
+<li>MJ defaults for the brand (<code>--ar</code>, <code>--s</code>, <code>--c</code>, <code>--v</code>, raw-vs-default)</li>
+<li>Reference-pin index (filenames mapped to source + what each confirms)</li>
+<li>When to update this file + changelog</li>
+</ol>
+<h3>8. Build reference-pins/</h3>
+<p>Copy each <code>picks.json.top_picks[i].path</code> to <code>&lt;project_dir&gt;/brand/reference-pins/pick-NN-&lt;slugified-note&gt;.png</code>. Slug from the pick's <code>note</code> field, kebab-case.</p>
+<p>Copy moodboard files to <code>&lt;project_dir&gt;/brand/reference-pins/mood-NN-&lt;filename-derived-slug&gt;.png</code>. The operator should rename the slug if filename-derived doesn't read clearly.</p>
+<p>Filenames are stable once written — downstream skills resolve refs by exact filename. Do not rename after lock.</p>
+<h3>9. Cross-file coherence check (REQUIRED before lock)</h3>
+<p>This step is load-bearing. See <code>coherence-check.md</code> for the full prompt. Concretely:</p>
+<ul>
+<li>Read every IS-NOT bullet in identity.md.</li>
+<li>Read every Composition section in visual-language.md AND every reference-pin filename.</li>
+<li>For each IS-NOT bullet, ask: &quot;could any word in this bullet plausibly describe an asset the bible includes?&quot;</li>
+<li>Surface every flag to the operator. Reconcile before lock.</li>
+</ul>
+<p>Register-vs-medium distinctions are the most common failure mode: banning a feeling is different from banning a prop. Reconcile those conflicts explicitly at this step.</p>
+<h3>10. Lock and commit</h3>
+<ul>
+<li>Set version to <code>1.0</code> in both files. (Refreshing an existing locked bible is out of scope — see &quot;When NOT to use&quot;.)</li>
+<li>Append a changelog line in visual-language.md.</li>
+<li>Write the friction notes to <code>&lt;session-log-dir&gt;/notes.md</code> covering: inputs used, surprises, taste-judgment moments, mechanical extractions performed, coherence-check findings.</li>
+<li>If <code>&lt;project_dir&gt;</code> is a git repo, the operator commits the bible. The skill does NOT auto-commit — the lock is a deliberate human moment.</li>
+</ul>
+<h2>Output</h2>
+<p>Return a concise summary to the user:</p>
+<ul>
+<li>The two files written (<code>brand/identity.md</code>, <code>brand/visual-language.md</code>) with word counts.</li>
+<li>Reference-pin count and rename map.</li>
+<li>Coherence-check findings: contradictions reconciled vs none.</li>
+<li>Pointer to the session-log directory for the friction notes.</li>
+<li>A &quot;ready to lock&quot; or &quot;needs another pass&quot; verdict.</li>
+</ul>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Do <strong>not</strong> draft from picks.json alone. Read the actual winning images. Text descriptions of picks lie about palette and register.</li>
+<li>Do <strong>not</strong> trust the source naming for compositional modes. Count modes from picks AND moodboard; the released-art canonical comp is often missing from the iteration outcomes.</li>
+<li>Do <strong>not</strong> skip the cross-file coherence check. It is the only step that catches contradictions between identity.md's IS-NOT and visual-language.md's compositions/refs.</li>
+<li>Do <strong>not</strong> auto-commit the lock. The bible commit is the deliberate human moment that creates the baseline downstream skills will reference. The operator should review the diff and write the message.</li>
+<li>Do <strong>not</strong> bake brand-specific vocabulary into the skill files. A worked example is not a template; the skill must produce a coherent bible for a different artist without forcing them into the same shape.</li>
+<li>Do <strong>not</strong> add irony-layer tone register if the artist is sincere. Schema offers it as an optional section.</li>
+<li>Do <strong>not</strong> rename reference-pins after lock. Downstream skills resolve refs by exact filename; rename breaks every brief that referenced the old name.</li>
+<li>Do <strong>not</strong> elide as-rendered palette divergence. Record both the prompt target and observed output when they differ.</li>
+</ul>
+<h2>Tests and benchmarks</h2>
+<p>This skill ships deterministic regression coverage. Run after editing <code>SKILL.md</code>,</p>
+<p><code>brief-schema.md</code>, <code>outline.md</code>, or any locked bible.</p>
+<p><strong>Tier 1 — static contract validators</strong> (<code>tests/run_all.sh</code>, &lt;2s):</p>
+<ul>
+<li>Schema validity for every <code>examples/*.brief.json</code>.</li>
+<li>Reference integrity: every backtick-wrapped relative path in <code>SKILL.md</code> resolves.</li>
+<li>Locked-bible structure: required H2 sections, IS-NOT and do-not-cross bullet</li>
+</ul>
+<p>  counts vs brief constraints, reference-pin filenames present on disk.</p>
+<pre><code>bash tests/run_all.sh --project /path/to/artist --brief examples/&lt;brief&gt;.json</code></pre>
+<p><strong>Tier 2 — coherence partial-check</strong> (<code>bin/coherence-lint</code>, on-demand):</p>
+<p>Tokenizes IS-NOT bullets from <code>identity.md</code>, locates each in <code>visual-language.md</code>,</p>
+<p>applies intentional-vocabulary filters (§3 banned, §4 preferred, Changelog,</p>
+<p>backtick-quoted declarations), and reports the remainder as candidate</p>
+<p>contradictions for human review. Exit code is always 0 — flags are not failures.</p>
+<pre><code>bin/coherence-lint /path/to/artist/brand/</code></pre>
+<p>The coherence linter can report generic-English overlap. Treat its output as a</p>
+<p>review queue; compare a revised bible with its own prior run rather than aiming</p>
+<p>for zero flags.</p>
+<p><strong>Tier 3 — behavioral-quality benchmarks</strong>: deferred. Tier 1+2 catches the</p>
+<p>contract-drift regressions we've seen. LLM-judge benchmarks earn their token</p>
+<p>cost only after we have enough revision history to see Tier 1+2 miss something.</p>
+<p>Operators can invoke the Tier 1 validators and Tier 2 linter directly.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/midjourney-iteration/"><span class="name">midjourney-iteration</span><span class="desc">A bounded, evidence-based loop for turning a clear visual brief into better Midjourney candidates.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>12</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 14 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Commands</div><div class="sd-resource-row"><button type="button" data-package-file="bin/coherence-lint"><span class="kind">script</span><span class="file"><span class="title">Coherence Lint</span><span class="path">bin/coherence-lint · 7.2 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/brand-bible-author/bin/coherence-lint.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Other files</div><div class="sd-resource-row"><button type="button" data-package-file="brief-schema.md"><span class="kind">reference</span><span class="file"><span class="title">Brief Schema</span><span class="path">brief-schema.md · 5.4 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/brief-schema.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="coherence-check.md"><span class="kind">reference</span><span class="file"><span class="title">Coherence Check</span><span class="path">coherence-check.md · 2.1 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/coherence-check.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="examples/generic-artist.brief.json"><span class="kind">config</span><span class="file"><span class="title">Generic Artist.Brief</span><span class="path">examples/generic-artist.brief.json · 777 B</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/examples/generic-artist.brief.json.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="outline.md"><span class="kind">reference</span><span class="file"><span class="title">Outline</span><span class="path">outline.md · 8.2 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/outline.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="tests/_lib.py"><span class="kind">resource</span><span class="file"><span class="title"> Lib</span><span class="path">tests/_lib.py · 4.0 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/tests/_lib.py.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="tests/README.md"><span class="kind">reference</span><span class="file"><span class="title">README</span><span class="path">tests/README.md · 2.7 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/tests/README.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="tests/run_all.sh"><span class="kind">resource</span><span class="file"><span class="title">Run All</span><span class="path">tests/run_all.sh · 1.9 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/tests/run_all.sh.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="tests/validate_locked_bible.py"><span class="kind">resource</span><span class="file"><span class="title">Validate Locked Bible</span><span class="path">tests/validate_locked_bible.py · 6.2 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/tests/validate_locked_bible.py.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="tests/validate_references.py"><span class="kind">resource</span><span class="file"><span class="title">Validate References</span><span class="path">tests/validate_references.py · 2.2 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/tests/validate_references.py.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="tests/validate_schema.py"><span class="kind">resource</span><span class="file"><span class="title">Validate Schema</span><span class="path">tests/validate_schema.py · 1.7 KB</span></span></button><a class="raw-link" href="/bundles/brand-bible-author/tests/validate_schema.py.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/brand-bible-author/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Write, Edit]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/brand-bible-author/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

@@ -73,12 +73,82 @@ requires-secrets:
 resources:
   - path: story.md
     type: file
----</pre></div><h2>Why</h2>
-<p>Voice agents need continuity, but an MCP bridge is only useful when its access boundary is deliberate and testable.</p>
-<h2>How</h2>
-<p>Deploy a supported memory service using provider-managed environment variables, configure the MCP server with an authorization header, then verify tool calls from a real conversation.</p>
-<h2>Related</h2>
-<p>See <a href="/skills/automem/">AutoMem</a> for memory discipline.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
+---</pre></div><h2>ElevenLabs + AutoMem Memory</h2>
+<p>Connect a conversational agent to an AutoMem-compatible service through an MCP</p>
+<p>bridge. Treat memory as a production integration: isolate stores by persona,</p>
+<p>keep credentials in the deployment platform's secret manager, and confirm the</p>
+<p>real tool path before calling it done.</p>
+<h2>Preconditions</h2>
+<ul>
+<li>A supported memory API and MCP bridge are deployed and reachable.</li>
+<li>The memory service has persistent storage appropriate for the provider.</li>
+<li>The bridge requires an authorization header from clients; it must not fall</li>
+</ul>
+<p>  back to an embedded upstream credential for anonymous requests.</p>
+<ul>
+<li><code>ELEVENLABS_API_KEY</code> and <code>AUTOMEM_API_TOKEN</code> are configured outside the</li>
+</ul>
+<p>  repository. Never put either in a command, example file, or chat transcript.</p>
+<h2>Deploy the memory service</h2>
+<p>Use the provider's normal deployment controls. Configure public, non-secret</p>
+<p>settings as environment variables and send secrets through its secret manager</p>
+<p>or stdin-safe command. Names vary by implementation, but a typical boundary is:</p>
+<pre><code>MEMORY_API_URL=https://memory.example.com
+MCP_BRIDGE_URL=https://memory-bridge.example.com/mcp
+AUTOMEM_API_TOKEN=&lt;managed secret&gt;
+EMBEDDING_API_KEY=&lt;managed secret, if required&gt;</code></pre>
+<p>Provision persistent database/vector storage according to the service's</p>
+<p>documentation. Give each agent or persona a separate store and token unless a</p>
+<p>shared-memory product decision explicitly says otherwise. Validate the API and</p>
+<p>bridge health endpoints before configuring ElevenLabs.</p>
+<h2>Register the MCP server</h2>
+<p>Create an ElevenLabs conversational MCP server through the API or dashboard.</p>
+<p>Use the bridge URL and send the token as an HTTP authorization header:</p>
+<pre><code>{
+  &quot;config&quot;: {
+    &quot;url&quot;: &quot;https://memory-bridge.example.com/mcp&quot;,
+    &quot;name&quot;: &quot;Agent Memory&quot;,
+    &quot;transport&quot;: &quot;STREAMABLE_HTTP&quot;,
+    &quot;approval_policy&quot;: &quot;require_approval_per_tool&quot;,
+    &quot;request_headers&quot;: {
+      &quot;Authorization&quot;: &quot;Bearer ${AUTOMEM_API_TOKEN}&quot;
+    }
+  }
+}</code></pre>
+<p>Choose <code>auto_approve_all</code> only when the agent is intentionally autonomous and</p>
+<p>the available tools have been reviewed. Otherwise, use per-tool approval and</p>
+<p>permit only the calls the conversation needs. Do not put tokens in query</p>
+<p>parameters: URLs are commonly logged by proxies and analytics systems.</p>
+<p>Attach the returned MCP-server identifier to the agent's existing prompt</p>
+<p>configuration. Fetch the configuration first and update it as a whole so a</p>
+<p>partial patch cannot discard unrelated model, safety, or tool settings. Add a</p>
+<p>short memory directive: recall relevant context when useful, store only durable</p>
+<p>facts, and never expose stored memory as hidden system context.</p>
+<h2>Verify with a real conversation</h2>
+<p>Simulation endpoints can mock external tools, so they are useful for persona</p>
+<p>checks but cannot prove a bridge call happened. Instead:</p>
+<ol>
+<li>Hold a real test conversation that should trigger a recall or store.</li>
+<li>Inspect that conversation's transcript or tool-call record in ElevenLabs.</li>
+<li>Confirm the expected MCP tool name and a successful result.</li>
+<li>Inspect the memory service's safe operational logs for a corresponding,</li>
+</ol>
+<p>   redacted request.</p>
+<p>If no tool call appears, verify the MCP server is attached to the active agent,</p>
+<p>the agent is eligible for MCP use under its privacy/retention settings, the</p>
+<p>authorization header reaches the bridge, and the bridge rejects missing tokens.</p>
+<h2>Security rules</h2>
+<ul>
+<li>Keep browser-accessible agent configuration free of API tokens.</li>
+<li>Require a client token at the bridge; a health check is not evidence that</li>
+</ul>
+<p>  authorization is enforced.</p>
+<ul>
+<li>Use headers rather than query parameters for authentication.</li>
+<li>Do not reuse one persona's memory token for another persona's store.</li>
+<li>Rotate tokens through the secret manager and reconnect the bridge after a</li>
+</ul>
+<p>  suspected exposure.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 4.4 KB</span></span></button><a class="raw-link" href="/bundles/elevenlabs-automem-memory/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/elevenlabs-automem-memory/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">Requires: ELEVENLABS_API_KEY, AUTOMEM_API_TOKEN</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/elevenlabs-automem-memory/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

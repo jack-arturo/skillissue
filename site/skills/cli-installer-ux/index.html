@@ -72,15 +72,45 @@ resources:
     type: file
   - path: examples/cli-output.test.ts
     type: file
----</pre></div><h2>Why it exists</h2>
-<p>Install scripts leaked machine output into user-facing copy. This skill is the UX gate.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>Codified compact output and failure modes.</p>
-<h2>How Jack actually uses it</h2>
-<p>Any installer, updater, or setup wizard surface.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/autovault-skill/"><span class="name">autovault-skill</span><span class="desc">Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</span></a></div></div></div></article></section>
+---</pre></div><h2>CLI Installer UX</h2>
+<p>Use this when a project needs a command-line installer, updater, setup wizard, doctor command, or other user-facing CLI surface that should feel compact and intentional while keeping diagnostics, subprocess logs, and machine output out of the default path.</p>
+<h2>When to use</h2>
+<ul>
+<li>The user asks for a CLI installer, upgrader, first-run setup flow, doctor command, or command catalog.</li>
+<li>A CLI currently dumps raw JSON, structured logs, child-process output, stack traces, or verbose internals during normal success paths.</li>
+<li>A project needs both human output and parseable <code>--json</code> output.</li>
+<li>An installer must support interactive terminals, redirected stdout, CI/headless agents, and quiet or verbose modes.</li>
+</ul>
+<h2>Workflow</h2>
+<ol>
+<li>Inspect the current command surfaces before editing. Find entrypoints, shell installers, update commands, logging helpers, subprocess calls, and tests. Capture which commands are human-facing, which are machine-facing, and which mutate user state.</li>
+<li>Define the output contract. Human mode gets compact branded status, plan-first summaries, bounded tables, and explicit next actions. Machine mode gets strict JSON only. Errors go to stderr. Internal diagnostics stay behind verbose flags or log files.</li>
+<li>Build tiny shared UI primitives rather than one-off strings: theme/color detection, ASCII fallback, badges, key/value rows, list truncation, safe text escaping, task spinners, and success/error summaries.</li>
+<li>Keep installers plan-first. Print platform, runtime, install path, storage path, current version, target version, install state, and release notes before writing anything. Support <code>--dry-run</code>, <code>--yes</code>, <code>--quiet</code>, <code>--verbose</code>, and <code>--notes</code> where they make sense.</li>
+<li>Contain subprocess noise. Route child stdout/stderr to a temp log during success paths. Show a short tail only on failure, or in explicit verbose mode when the output is useful. For library calls that log internally, wrap them in the project's log-suppression helper.</li>
+<li>Treat interactivity as a capability, not an assumption. If stdin is not a TTY but <code>/dev/tty</code> is available, attach the guided flow there. If no TTY exists, defer the wizard and print the exact command to resume. Do not execute mutating updates from a non-TTY session unless an explicit yes flag is present.</li>
+<li>Add passive update notices only to human output. Keep them compact: current to latest, run command, disable command. Never append notices to JSON, markdown, or other machine-readable output.</li>
+<li>Make review and repair flows safe by default. Summarize counts first, hide long diagnostic detail until review/advanced/verbose modes, recommend non-destructive choices first, and show restore commands after backup-style actions.</li>
+<li>Test the transcript as a public API. Cover human snapshots with color off, JSON parseability, stderr cleanliness, suppressed child noise on success, log tails on failure, non-TTY behavior, quiet output, verbose output, command suggestions, and update notice gating.</li>
+</ol>
+<h2>Output standards</h2>
+<ul>
+<li>Default output should fit in a short terminal viewport and answer: what happened, what changed, what needs attention, and what to run next.</li>
+<li><code>--json</code> output must be parseable with no banners, update notices, warnings, or trailing prose.</li>
+<li>Normal successful commands should not print server logs, storage warnings, dependency install transcripts, stack traces, or raw API payloads.</li>
+<li>Every interactive prompt should have a safe default and a clear recovery command if skipped.</li>
+</ul>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Printing debug logs because they are technically useful.</li>
+<li>Letting passive notices contaminate JSON or other machine-readable streams.</li>
+<li>Showing full subprocess output on success.</li>
+<li>Using animation without a deterministic non-TTY fallback.</li>
+<li>Repeating large brand marks throughout a transcript.</li>
+<li>Treating <code>--verbose</code> as the default user experience.</li>
+<li>Performing destructive or persistent changes before showing the plan and asking or honoring an explicit yes flag.</li>
+<li>Hiding failures completely; suppress success noise, but surface failure tails and actionable next steps.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/autovault-skill/"><span class="name">autovault-skill</span><span class="desc">Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>5</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 4.7 KB</span></span></button><a class="raw-link" href="/bundles/cli-installer-ux/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/cli-ux-checklist.md"><span class="kind">reference</span><span class="file"><span class="title">Cli Ux Checklist</span><span class="path">references/cli-ux-checklist.md · 770 B</span></span></button><a class="raw-link" href="/bundles/cli-installer-ux/references/cli-ux-checklist.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Other files</div><div class="sd-resource-row"><button type="button" data-package-file="examples/clack-ui.ts"><span class="kind">resource</span><span class="file"><span class="title">Clack Ui</span><span class="path">examples/clack-ui.ts · 1.2 KB</span></span></button><a class="raw-link" href="/bundles/cli-installer-ux/examples/clack-ui.ts.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="examples/cli-output.test.ts"><span class="kind">resource</span><span class="file"><span class="title">Cli Output.Test</span><span class="path">examples/cli-output.test.ts · 1.3 KB</span></span></button><a class="raw-link" href="/bundles/cli-installer-ux/examples/cli-output.test.ts.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="examples/compact-install.sh"><span class="kind">resource</span><span class="file"><span class="title">Compact Install</span><span class="path">examples/compact-install.sh · 1.4 KB</span></span></button><a class="raw-link" href="/bundles/cli-installer-ux/examples/compact-install.sh.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/cli-installer-ux/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/cli-installer-ux/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

@@ -81,15 +81,208 @@ agents:
   - claude-code
 metadata:
   version: &quot;1.0.0&quot;
----</pre></div><h2>Why it exists</h2>
-<p>We kept shipping 1:1 API wrappers that rotted in agent context. This skill encodes the resist-bloat rules Jack runs house-wide.</p>
-<h2>History</h2>
-<h3>Origin</h3>
-<p>Mixed lineage with Anthropic-style guidance; house amendments on tool count ceilings and description craft.</p>
-<h2>How Jack actually uses it</h2>
-<p>Before adding any MCP tool — extend parameters first, compose client-side second, new tool last.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/mcp-registry-maintainer/"><span class="name">mcp-registry-maintainer</span><span class="desc">MCP server sprawl without inventory. Maintain registry scans and health.</span></a></div></div></div></article></section>
+---</pre></div><h2>MCP Server Development Guide</h2>
+<h2>Overview</h2>
+<p>Create MCP (Model Context Protocol) servers that enable LLMs to interact with external services through well-designed tools. The quality of an MCP server is measured by how well it enables LLMs to accomplish real-world tasks.</p>
+<hr>
+<h2>Process</h2>
+<h2>🚀 High-Level Workflow</h2>
+<p>Creating a high-quality MCP server involves four main phases:</p>
+<h3>Phase 1: Deep Research and Planning</h3>
+<p>#### 1.1 Understand Modern MCP Design</p>
+<p><strong>API Coverage vs. Workflow Tools:</strong></p>
+<p>Balance comprehensive API endpoint coverage with specialized workflow tools. Workflow tools can be more convenient for specific tasks, while comprehensive coverage gives agents flexibility to compose operations. Performance varies by client—some clients benefit from code execution that combines basic tools, while others work better with higher-level workflows. When uncertain, prioritize comprehensive API coverage.</p>
+<p><strong>Tool Naming and Discoverability:</strong></p>
+<p>Clear, descriptive tool names help agents find the right tools quickly. Use consistent prefixes (e.g., <code>github_create_issue</code>, <code>github_list_repos</code>) and action-oriented naming.</p>
+<p><strong>Context Management:</strong></p>
+<p>Agents benefit from concise tool descriptions and the ability to filter/paginate results. Design tools that return focused, relevant data. Some clients support code execution which can help agents filter and process data efficiently.</p>
+<p><strong>Actionable Error Messages:</strong></p>
+<p>Error messages should guide agents toward solutions with specific suggestions and next steps.</p>
+<p>#### 1.2 Study MCP Protocol Documentation</p>
+<p><strong>Navigate the MCP specification:</strong></p>
+<p>Start with the sitemap to find relevant pages: <code>https://modelcontextprotocol.io/sitemap.xml</code></p>
+<p>Then fetch specific pages with <code>.md</code> suffix for markdown format (e.g., <code>https://modelcontextprotocol.io/specification/draft.md</code>).</p>
+<p>Key pages to review:</p>
+<ul>
+<li>Specification overview and architecture</li>
+<li>Transport mechanisms (streamable HTTP, stdio)</li>
+<li>Tool, resource, and prompt definitions</li>
+</ul>
+<p>#### 1.3 Study Framework Documentation</p>
+<p><strong>Recommended stack:</strong></p>
+<ul>
+<li><strong>Language</strong>: TypeScript (high-quality SDK support and good compatibility in many execution environments e.g. MCPB. Plus AI models are good at generating TypeScript code, benefiting from its broad usage, static typing and good linting tools)</li>
+<li><strong>Transport</strong>: Streamable HTTP for remote servers, using stateless JSON (simpler to scale and maintain, as opposed to stateful sessions and streaming responses). stdio for local servers.</li>
+</ul>
+<p><strong>Load framework documentation:</strong></p>
+<ul>
+<li><strong>MCP Best Practices</strong>: [📋 View Best Practices](./reference/mcp_best_practices.md) - Core guidelines</li>
+</ul>
+<p><strong>For TypeScript (recommended):</strong></p>
+<ul>
+<li><strong>TypeScript SDK</strong>: Use WebFetch to load <code>https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md</code></li>
+<li>[⚡ TypeScript Guide](./reference/node_mcp_server.md) - TypeScript patterns and examples</li>
+</ul>
+<p><strong>For Python:</strong></p>
+<ul>
+<li><strong>Python SDK</strong>: Use WebFetch to load <code>https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md</code></li>
+<li>[🐍 Python Guide](./reference/python_mcp_server.md) - Python patterns and examples</li>
+</ul>
+<p>#### 1.4 Plan Your Implementation</p>
+<p><strong>Understand the API:</strong></p>
+<p>Review the service's API documentation to identify key endpoints, authentication requirements, and data models. Use web search and WebFetch as needed.</p>
+<p><strong>Tool Selection:</strong></p>
+<p>Prioritize comprehensive API coverage. List endpoints to implement, starting with the most common operations.</p>
+<hr>
+<h3>Phase 2: Implementation</h3>
+<p>#### 2.1 Set Up Project Structure</p>
+<p>See language-specific guides for project setup:</p>
+<ul>
+<li>[⚡ TypeScript Guide](./reference/node_mcp_server.md) - Project structure, package.json, tsconfig.json</li>
+<li>[🐍 Python Guide](./reference/python_mcp_server.md) - Module organization, dependencies</li>
+</ul>
+<p>#### 2.2 Implement Core Infrastructure</p>
+<p>Create shared utilities:</p>
+<ul>
+<li>API client with authentication</li>
+<li>Error handling helpers</li>
+<li>Response formatting (JSON/Markdown)</li>
+<li>Pagination support</li>
+</ul>
+<p>#### 2.3 Implement Tools</p>
+<p>For each tool:</p>
+<p><strong>Input Schema:</strong></p>
+<ul>
+<li>Use Zod (TypeScript) or Pydantic (Python)</li>
+<li>Include constraints and clear descriptions</li>
+<li>Add examples in field descriptions</li>
+</ul>
+<p><strong>Output Schema:</strong></p>
+<ul>
+<li>Define <code>outputSchema</code> where possible for structured data</li>
+<li>Use <code>structuredContent</code> in tool responses (TypeScript SDK feature)</li>
+<li>Helps clients understand and process tool outputs</li>
+</ul>
+<p><strong>Tool Description:</strong></p>
+<ul>
+<li>Concise summary of functionality</li>
+<li>Parameter descriptions</li>
+<li>Return type schema</li>
+</ul>
+<p><strong>Implementation:</strong></p>
+<ul>
+<li>Async/await for I/O operations</li>
+<li>Proper error handling with actionable messages</li>
+<li>Support pagination where applicable</li>
+<li>Return both text content and structured data when using modern SDKs</li>
+</ul>
+<p><strong>Annotations:</strong></p>
+<ul>
+<li><code>readOnlyHint</code>: true/false</li>
+<li><code>destructiveHint</code>: true/false</li>
+<li><code>idempotentHint</code>: true/false</li>
+<li><code>openWorldHint</code>: true/false</li>
+</ul>
+<hr>
+<h3>Phase 3: Review and Test</h3>
+<p>#### 3.1 Code Quality</p>
+<p>Review for:</p>
+<ul>
+<li>No duplicated code (DRY principle)</li>
+<li>Consistent error handling</li>
+<li>Full type coverage</li>
+<li>Clear tool descriptions</li>
+</ul>
+<p>#### 3.2 Build and Test</p>
+<p><strong>TypeScript:</strong></p>
+<ul>
+<li>Run <code>npm run build</code> to verify compilation</li>
+<li>Test with MCP Inspector: <code>npx @modelcontextprotocol/inspector</code></li>
+</ul>
+<p><strong>Python:</strong></p>
+<ul>
+<li>Verify syntax: <code>python -m py_compile your_server.py</code></li>
+<li>Test with MCP Inspector</li>
+</ul>
+<p>See language-specific guides for detailed testing approaches and quality checklists.</p>
+<hr>
+<h3>Phase 4: Create Evaluations</h3>
+<p>After implementing your MCP server, create comprehensive evaluations to test its effectiveness.</p>
+<p><strong>Load [✅ Evaluation Guide](./reference/evaluation.md) for complete evaluation guidelines.</strong></p>
+<p>#### 4.1 Understand Evaluation Purpose</p>
+<p>Use evaluations to test whether LLMs can effectively use your MCP server to answer realistic, complex questions.</p>
+<p>#### 4.2 Create 10 Evaluation Questions</p>
+<p>To create effective evaluations, follow the process outlined in the evaluation guide:</p>
+<ol>
+<li><strong>Tool Inspection</strong>: List available tools and understand their capabilities</li>
+<li><strong>Content Exploration</strong>: Use READ-ONLY operations to explore available data</li>
+<li><strong>Question Generation</strong>: Create 10 complex, realistic questions</li>
+<li><strong>Answer Verification</strong>: Solve each question yourself to verify answers</li>
+</ol>
+<p>#### 4.3 Evaluation Requirements</p>
+<p>Ensure each question is:</p>
+<ul>
+<li><strong>Independent</strong>: Not dependent on other questions</li>
+<li><strong>Read-only</strong>: Only non-destructive operations required</li>
+<li><strong>Complex</strong>: Requiring multiple tool calls and deep exploration</li>
+<li><strong>Realistic</strong>: Based on real use cases humans would care about</li>
+<li><strong>Verifiable</strong>: Single, clear answer that can be verified by string comparison</li>
+<li><strong>Stable</strong>: Answer won't change over time</li>
+</ul>
+<p>#### 4.4 Output Format</p>
+<p>Create an XML file with this structure:</p>
+<pre><code>&lt;evaluation&gt;
+  &lt;qa_pair&gt;
+    &lt;question&gt;Find discussions about AI model launches with animal codenames. One model needed a specific safety designation that uses the format ASL-X. What number X was being determined for the model named after a spotted wild cat?&lt;/question&gt;
+    &lt;answer&gt;3&lt;/answer&gt;
+  &lt;/qa_pair&gt;
+&lt;!-- More qa_pairs... --&gt;
+&lt;/evaluation&gt;</code></pre>
+<hr>
+<h2>Reference Files</h2>
+<h2>📚 Documentation Library</h2>
+<p>Load these resources as needed during development:</p>
+<h3>Core MCP Documentation (Load First)</h3>
+<ul>
+<li><strong>MCP Protocol</strong>: Start with sitemap at <code>https://modelcontextprotocol.io/sitemap.xml</code>, then fetch specific pages with <code>.md</code> suffix</li>
+<li>[📋 MCP Best Practices](./reference/mcp_best_practices.md) - Universal MCP guidelines including:</li>
+</ul>
+<p>  - Server and tool naming conventions</p>
+<p>  - Response format guidelines (JSON vs Markdown)</p>
+<p>  - Pagination best practices</p>
+<p>  - Transport selection (streamable HTTP vs stdio)</p>
+<p>  - Security and error handling standards</p>
+<h3>SDK Documentation (Load During Phase 1/2)</h3>
+<ul>
+<li><strong>Python SDK</strong>: Fetch from <code>https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md</code></li>
+<li><strong>TypeScript SDK</strong>: Fetch from <code>https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md</code></li>
+</ul>
+<h3>Language-Specific Implementation Guides (Load During Phase 2)</h3>
+<ul>
+<li>[🐍 Python Implementation Guide](./reference/python_mcp_server.md) - Complete Python/FastMCP guide with:</li>
+</ul>
+<p>  - Server initialization patterns</p>
+<p>  - Pydantic model examples</p>
+<p>  - Tool registration with <code>@mcp.tool</code></p>
+<p>  - Complete working examples</p>
+<p>  - Quality checklist</p>
+<ul>
+<li>[⚡ TypeScript Implementation Guide](./reference/node_mcp_server.md) - Complete TypeScript guide with:</li>
+</ul>
+<p>  - Project structure</p>
+<p>  - Zod schema patterns</p>
+<p>  - Tool registration with <code>server.registerTool</code></p>
+<p>  - Complete working examples</p>
+<p>  - Quality checklist</p>
+<h3>Evaluation Guide (Load During Phase 4)</h3>
+<ul>
+<li>[✅ Evaluation Guide](./reference/evaluation.md) - Complete evaluation creation guide with:</li>
+</ul>
+<p>  - Question creation guidelines</p>
+<p>  - Answer verification strategies</p>
+<p>  - XML format specifications</p>
+<p>  - Example questions and answers</p>
+<p>  - Running an evaluation with the provided scripts</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/mcp-registry-maintainer/"><span class="name">mcp-registry-maintainer</span><span class="desc">MCP server sprawl without inventory. Maintain registry scans and health.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>10</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 9.4 KB</span></span></button><a class="raw-link" href="/bundles/mcp-builder/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Scripts</div><div class="sd-resource-row"><button type="button" data-package-file="scripts/connections.py"><span class="kind">script</span><span class="file"><span class="title">Connections</span><span class="path">scripts/connections.py · 4.8 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/mcp-builder/scripts/connections.py.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="scripts/evaluation.py"><span class="kind">script</span><span class="file"><span class="title">Evaluation</span><span class="path">scripts/evaluation.py · 12 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/mcp-builder/scripts/evaluation.py.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="scripts/example_evaluation.xml"><span class="kind">script</span><span class="file"><span class="title">Example Evaluation</span><span class="path">scripts/example_evaluation.xml · 1.2 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/mcp-builder/scripts/example_evaluation.xml.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="scripts/requirements.txt"><span class="kind">script</span><span class="file"><span class="title">Requirements</span><span class="path">scripts/requirements.txt · 29 B</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/mcp-builder/scripts/requirements.txt.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Other files</div><div class="sd-resource-row"><button type="button" data-package-file="LICENSE.txt"><span class="kind">reference</span><span class="file"><span class="title">LICENSE</span><span class="path">LICENSE.txt · 11 KB</span></span></button><a class="raw-link" href="/bundles/mcp-builder/LICENSE.txt.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="reference/evaluation.md"><span class="kind">reference</span><span class="file"><span class="title">Evaluation</span><span class="path">reference/evaluation.md · 21 KB</span></span></button><a class="raw-link" href="/bundles/mcp-builder/reference/evaluation.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="reference/mcp_best_practices.md"><span class="kind">reference</span><span class="file"><span class="title">Mcp Best Practices</span><span class="path">reference/mcp_best_practices.md · 7.2 KB</span></span></button><a class="raw-link" href="/bundles/mcp-builder/reference/mcp_best_practices.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="reference/node_mcp_server.md"><span class="kind">reference</span><span class="file"><span class="title">Node Mcp Server</span><span class="path">reference/node_mcp_server.md · 28 KB</span></span></button><a class="raw-link" href="/bundles/mcp-builder/reference/node_mcp_server.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="reference/python_mcp_server.md"><span class="kind">reference</span><span class="file"><span class="title">Python Mcp Server</span><span class="path">reference/python_mcp_server.md · 25 KB</span></span></button><a class="raw-link" href="/bundles/mcp-builder/reference/python_mcp_server.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/mcp-builder/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>Capabilities</dt><dd>Not declared</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This mixed package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/mcp-builder/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code</span></div></div></section>

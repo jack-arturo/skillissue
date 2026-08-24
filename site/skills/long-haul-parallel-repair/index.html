@@ -72,15 +72,110 @@ requires-secrets: []
 resources:
   - path: agents/openai.yaml
     type: file
----</pre></div><h2>Why it exists</h2>
-<p>Agents would either under-delegate or fan out without authorization. This skill is the contract for when &quot;work for hours&quot; is real.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>Activation requires explicit autonomy language — thoroughness alone is not enough.</p>
-<h2>How Jack actually uses it</h2>
-<p>Only when fan-out/autonomy is authorized. Orchestrate; verify; do not claim done early.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
+---</pre></div><h2>Long-Haul Parallel Repair</h2>
+<h2>Activation Contract</h2>
+<p><strong>Authorized when any of these hold:</strong></p>
+<ol>
+<li><strong>≥2 independent streams</strong> that materially advance the goal (default</li>
+</ol>
+<p>   multi-slice / SDD posture — no special phrase required).</p>
+<ol>
+<li>The user authorizes subagents, delegation, fan-out, or long-running</li>
+</ol>
+<p>   autonomous work (phrases: &quot;fan out&quot;, &quot;dispatch agents&quot;, &quot;subagents&quot;,</p>
+<p>   &quot;work for hours&quot;, &quot;full autonomy&quot;, &quot;no human input&quot;, long-haul time budget).</p>
+<ol>
+<li>Solving every item under 8/10 confidence through evidence, fixes, and</li>
+</ol>
+<p>   verification was explicitly requested.</p>
+<p>Requests for &quot;thoroughness&quot; or &quot;deep investigation&quot; <strong>alone</strong> are not enough</p>
+<p>if there is only one stream and no autonomy language.</p>
+<p>If authorization is still ambiguous (single stream, no fan-out language, and</p>
+<p>spawning would be optional polish), ask one concise question before spawning.</p>
+<p>Otherwise spawn without re-asking.</p>
+<h2>Operating Model</h2>
+<p>Act as the orchestrator and integrator. Keep the critical path local, and</p>
+<p>delegate independent sidecar work that can run while you continue.</p>
+<p>Use the host's available subagent interface: Codex multi-agent tools such as</p>
+<p>spawn, wait, and close when exposed, or Claude Code's Agent tool when that is</p>
+<p>the available mechanism.</p>
+<p>Before spawning agents, write a short decomposition:</p>
+<ol>
+<li>Independent evidence questions.</li>
+<li>Independent implementation or test slices.</li>
+<li>Verification surfaces.</li>
+<li>The immediate task the orchestrator will do locally.</li>
+</ol>
+<p>Spawn agents early when at least two streams are independent and materially</p>
+<p>advance the goal. Do not delegate the task that blocks your next local step.</p>
+<h2>Fan-Out Rules</h2>
+<p>Use explorer-style agents for bounded read-only work:</p>
+<ul>
+<li>log and database forensics</li>
+<li>code ownership and blast-radius tracing</li>
+<li>existing issue or PR dedupe</li>
+<li>regression-test discovery</li>
+<li>independent verification of a suspected root cause</li>
+</ul>
+<p>Use worker-style agents for bounded changes:</p>
+<ul>
+<li>tests in a disjoint file</li>
+<li>one implementation slice with a clear owner path</li>
+<li>docs or workflow updates</li>
+<li>small scripts or queries</li>
+</ul>
+<p>Give every worker an explicit, path-bounded, disjoint write set. Tell workers</p>
+<p>they are not alone in the codebase, must not revert unrelated edits, and must</p>
+<p>adapt to concurrent changes.</p>
+<h2>Confidence Ledger</h2>
+<p>Maintain a visible ledger during the task:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Finding</th><th>Confidence</th><th>Evidence</th><th>Owner path</th><th>Action</th><th>Verification</th><th>Risk</th></tr></thead>
+<tbody>
+</tbody></table></div>
+<p>Every item below 8/10 confidence must become one of:</p>
+<ul>
+<li>a concrete evidence query</li>
+<li>a failing regression test</li>
+<li>a bounded implementation task</li>
+<li>a delegated explorer task</li>
+<li>a delegated worker task</li>
+<li>an explicit blocker with proof</li>
+</ul>
+<p>Do not final while any item below 8/10 remains merely speculative.</p>
+<h2>Long-Run Loop</h2>
+<p>Use long waits only when integration is blocked on a running agent result.</p>
+<p>Otherwise continue non-overlapping local work immediately.</p>
+<p>After an agent returns:</p>
+<ol>
+<li>Read the result and changed files.</li>
+<li>Verify claims with local commands or direct evidence.</li>
+<li>Integrate or reject the result.</li>
+<li>Update the confidence ledger.</li>
+<li>Close the agent when no longer needed.</li>
+</ol>
+<p>If the runtime cannot keep working for the requested duration, leave a durable</p>
+<p>handoff artifact such as an issue, task, workflow, or todo with evidence and</p>
+<p>the next exact command or query to run.</p>
+<h2>Completion Gate</h2>
+<p>Do not send final until:</p>
+<ul>
+<li>all worker agents are complete and closed</li>
+<li>any unfinished agents are read-only and explicitly non-blocking</li>
+<li>all changed code has been linted and tested with fresh commands</li>
+<li>every sub-8/10 finding is fixed, evidence-solved, or blocked with proof</li>
+<li>the final answer names remaining risks honestly</li>
+<li>the final answer reports what was verified, not just what was attempted</li>
+</ul>
+<h2>Anti-Patterns</h2>
+<ul>
+<li>Reporting a ranked list and stopping while repair was authorized.</li>
+<li>Spawning multiple agents on overlapping write scopes.</li>
+<li>Waiting idly while agents run and local non-overlapping work exists.</li>
+<li>Trusting agent self-report without checking evidence.</li>
+<li>Treating historical telemetry counts as reduced by a code change; only new</li>
+</ul>
+<p>  telemetry can prove recurrence reduction.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>2</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 4.8 KB</span></span></button><a class="raw-link" href="/bundles/long-haul-parallel-repair/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Agent metadata</div><div class="sd-resource-row"><button type="button" data-package-file="agents/openai.yaml"><span class="kind">config</span><span class="file"><span class="title">Openai</span><span class="path">agents/openai.yaml · 326 B</span></span></button><a class="raw-link" href="/bundles/long-haul-parallel-repair/agents/openai.yaml.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/long-haul-parallel-repair/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Agent, Read, Edit]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/long-haul-parallel-repair/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack, grok</span></div></div></section>

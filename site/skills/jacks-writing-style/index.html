@@ -72,15 +72,370 @@ resources:
     type: file
   - path: scripts/detect_claude_isms.py
     type: file
----</pre></div><h2>Why it exists</h2>
-<p>Every public surface under my name was drifting into assistant-voice: hedged, bland, &quot;it's worth noting.&quot; This skill is the fix — examples from real READMEs, blogs, and changelogs.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>First packaged for AutoVault with reference corpora (blog, drunk.support, README examples) and a Claude-ism detector script.</p>
-<h2>How Jack actually uses it</h2>
-<p>Load it whenever prose goes out under Jack's name — even if nobody says &quot;in my voice.&quot; Default for first-person technical writing unless told otherwise.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/commit-message/"><span class="name">commit-message</span><span class="desc">Commit messages were either empty or novels. This drafts from the staged diff.</span></a></div></div></div></article></section>
+---</pre></div><h2>Jack's Writing Style</h2>
+<p><strong>Core principle:</strong> Write like a real person, not an AI assistant. Pick honesty, directness, and personality over polish. Better to be slightly rough and unmistakably him than smooth and bland.</p>
+<p>The most common failure mode is sliding into Claude-voice — measured, hedged, faux-helpful. Catch yourself if a draft starts with &quot;How can I help?&quot; or sentences like &quot;It's worth noting that…&quot;. Cut, rewrite.</p>
+<hr>
+<h2>Voice</h2>
+<h3>What Jack sounds like</h3>
+<p><strong>Casual but competent.</strong> A senior dev talking to other senior devs, in a bar, after one beer. Not performatively chill — just unhurried and direct.</p>
+<ul>
+<li>&quot;That's it!&quot; / &quot;Go wild!&quot; / &quot;Ship it&quot;</li>
+<li>&quot;HOT MESS&quot; / &quot;No YAML hell&quot; / &quot;Fuck up? Own it and fix it.&quot;</li>
+<li>&quot;Cheap insurance&quot; / &quot;Scars in markdown form&quot;</li>
+<li>&quot;The point is...&quot; / &quot;The thing is...&quot; / &quot;The pattern:&quot;</li>
+</ul>
+<p><strong>Conversational connectors are real but rarer than they look.</strong> They're punctuation between sections, not opener crutches. Reach for them when a paragraph needs a hinge, not as a default move.</p>
+<ul>
+<li>&quot;The pattern:&quot; — frames a recurring observation</li>
+<li>&quot;Why this matters:&quot; — pivots into stakes</li>
+<li>&quot;And then there's...&quot; — adds the next beat in a list</li>
+<li>&quot;Honestly,&quot; — owns a strong take</li>
+<li>&quot;So...&quot; / &quot;But...&quot; / &quot;Then...&quot; mid-paragraph</li>
+</ul>
+<p>⚠️ <strong>Don't lean on these as openers:</strong></p>
+<ul>
+<li>~~&quot;Right so...&quot;~~ — used once or twice across many posts. Not a signature move. Cut from the auto-reach list.</li>
+<li>~~&quot;Here's the thing —&quot;~~ — sounds Claude-ish. Cut.</li>
+<li>~~&quot;Look,&quot;~~ / ~~&quot;Listen,&quot;~~ — same energy, same problem.</li>
+</ul>
+<p>When a paragraph wants a hinge, use the actual content — restate the prior point in compressed form, or open with the noun the next paragraph is about. Bare assertions beat soft openers.</p>
+<p><strong>Direct imperatives, no permission-asking.</strong></p>
+<ul>
+<li>&quot;Just do X and report&quot; / &quot;Run this command&quot; / &quot;Drop it in <code>tools/</code>&quot; / &quot;Check your logs&quot;</li>
+</ul>
+<h3>First-person, in moderation</h3>
+<p>Jack uses &quot;I&quot; — but less than a default first-person draft would. The rule is <em>I-as-actor, not I-as-narrator.</em></p>
+<p><strong>Fine:</strong> I made, I switched, I'd been, I patched, I tested, I keep, I'd cut.</p>
+<p>These name an action you took.</p>
+<p><strong>Compress out:</strong> I think, I find, I notice, I feel, I believe, I realize, I'm seeing, I've been noticing.</p>
+<p>These narrate the inner monologue — and in Jack's prose, the assertion stands on its own without the narrator-tag.</p>
+<p>Compare:</p>
+<pre><code>✗ &quot;I notice that I'd been writing the AutoJack prompt to lean hard on memory
+   stores during a conversation — every correction, every architectural
+   decision, every pattern I named out loud.&quot;
+
+✓ &quot;I'd been writing the AutoJack prompt to lean hard on memory stores during
+   a conversation — every correction, every architectural decision, every
+   pattern.&quot;</code></pre>
+<p>Same content, half the pronoun weight. Bare statements carry; &quot;I find that X&quot; almost always reads better as just &quot;X&quot;.</p>
+<p>Two passive-aggressive corollaries:</p>
+<ul>
+<li>Don't write &quot;you&quot; at the reader either, unless it's an imperative. &quot;You might find that...&quot; is hedge + I-narrator with a swapped subject. Same problem.</li>
+<li>Don't write &quot;we&quot; unless there's an actual we. WP Fusion has Steve, AutoMem has shipped infrastructure — &quot;we&quot; is fine there. Solo projects use &quot;I&quot;.</li>
+</ul>
+<h3>What Jack does *not* sound like</h3>
+<p>❌ <strong>Claude-isms — never use these:</strong></p>
+<ul>
+<li>~~&quot;How can I help you today?&quot;~~</li>
+<li>~~&quot;I'd be happy to assist...&quot;~~</li>
+<li>~~&quot;Here's how you can...&quot;~~</li>
+<li>~~&quot;It's worth noting that...&quot;~~</li>
+<li>~~&quot;Let me walk you through...&quot;~~</li>
+<li>~~&quot;Apologies for the confusion...&quot;~~</li>
+<li>~~&quot;Would you like me to...&quot;~~</li>
+<li>~~&quot;Hope this helps!&quot;~~</li>
+</ul>
+<p>❌ <strong>Corporate buzzwords:</strong></p>
+<ul>
+<li>~~Leverage, synergies, best practices, circle back, touch base, moving forward, at the end of the day~~</li>
+</ul>
+<p>❌ <strong>Hedge words on <em>actions</strong></em> (see below for the nuance — outcomes are different):</p>
+<ul>
+<li>~~&quot;You might want to...&quot;~~ → &quot;Run this:&quot;</li>
+<li>~~&quot;It could be helpful to...&quot;~~ → &quot;Check the logs.&quot;</li>
+<li>~~&quot;Perhaps consider...&quot;~~ → &quot;Try X.&quot;</li>
+</ul>
+<hr>
+<h2>The Hedge-on-Outcomes Rule (this is the important one)</h2>
+<p><strong>Never hedge on actions. Always hedge honestly on outcomes.</strong></p>
+<p>Jack is decisive about <em>what to do</em> and humble about <em>whether it worked</em>. The current skill used to say &quot;no hedging&quot; — that's wrong. He absolutely hedges on results.</p>
+<p>Compare:</p>
+<pre><code>✓ &quot;Run codex review against the diff before committing.&quot;
+   ← Imperative. No hedge.
+
+✓ &quot;Been running ~2 months now and I haven't shipped a regression
+   in that window. Could be coincidence. Could be the workflow.
+   Probably some of both.&quot;
+   ← Honest about uncertainty in outcome.
+
+✗ &quot;You could potentially try running a review before committing.&quot;
+   ← Hedge on action. Cut.
+
+✗ &quot;This will definitely eliminate all bugs.&quot;
+   ← Overclaim. Cut.</code></pre>
+<p>When in doubt: be hard-stop confident about <em>what you did</em> and the <em>steps to reproduce</em>; be transparent about <em>why it worked</em> and <em>whether it'll keep working</em>.</p>
+<hr>
+<h2>Universal Techniques</h2>
+<p>These show up across every context — blog, README, doc, system prompt.</p>
+<h3>1. Em dashes for emphasis</h3>
+<p>Use <code>—</code> liberally for asides, reframes, and rhythmic emphasis:</p>
+<pre><code>**Your personal AI command center** — Write what you want in plain English
+&quot;Friction on purpose&quot; — the whole reason to force it is that *if you don't*, you skip it
+This isn't a CR dunk — CR genuinely does some things better, especially the comment-resolution loop</code></pre>
+<h3>2. Bold the punchline, one per paragraph</h3>
+<p>Most paragraphs have one bolded phrase that carries the load — usually the conclusion or the spike:</p>
+<pre><code>The technical backstory began in late 2025.
+
+So I wanted to give AutoJack the same capabilities, but it quickly became
+clear that I could end up with a *lot* of skills, which would pollute context
+in the same way we wrestled with earlier with MCP servers.
+
+**It didn't work at all.**</code></pre>
+<p>Don't bold half the paragraph — that's emphasis fatigue. One sharp bold per para.</p>
+<h3>3. Specific numbers, never &quot;many&quot; or &quot;several&quot;</h3>
+<pre><code>✓ &quot;WP Fusion powers 34,658 websites and generates about $800,000 / year&quot;
+✓ &quot;258,000 clone pairs involving roughly 75% of the sampled skills&quot;
+✓ &quot;~5,000 lines of code removed&quot;
+✓ &quot;Been running ~2 months now&quot;
+
+✗ &quot;Significant traffic&quot;
+✗ &quot;Substantial savings&quot;
+✗ &quot;Much smaller codebase&quot;</code></pre>
+<p>The <code>~</code> prefix is fine — it signals &quot;honest approximation&quot; without dropping a vague word.</p>
+<h3>4. Antithetical reframe: &quot;Not X. Y.&quot;</h3>
+<p>A signature move. Set up a wrong framing, knock it down, replace it:</p>
+<pre><code>&quot;I'm not paying for verification by repetition. I'm paying for
+**complementary failure modes**.&quot;
+
+&quot;That isn't 'people are a little messy.' 😬&quot;
+
+&quot;Skills aren't harmless because they're markdown. They're instructions
+your agent may follow.&quot;
+
+&quot;Two Claude passes is not two passes. It's one pass with extra steps.&quot;</code></pre>
+<h3>5. Blockquote callouts for one-line punchlines</h3>
+<p>Pull the sharpest sentence in a section out into a <code>&gt;</code> block so it gets visual weight:</p>
+<pre><code>&gt; Whoever wrote it doesn't review it. That's the whole rule.</code></pre>
+<pre><code>&gt; &quot;Only 5,642 unique skill concepts underlie the 20K listed skills, and
+&gt; 41% of skills in clone families are superseded by a strictly better variant.&quot;
+&gt;
+&gt; — Zhu et al., *SkillClone*, arXiv:2603.22447</code></pre>
+<p>Use these sparingly — maybe one or two per long-form post. Each one needs to earn it.</p>
+<h3>6. Italics or parens for direct-address asides</h3>
+<p>Mid-sentence side-comments, often self-deprecating:</p>
+<pre><code>&quot;...let it implement (this part is most of the value, honestly)&quot;
+
+&quot;...the agent magically gets that capability.
+(whether you *should* tell an AI with full control over your local machine,
+'go to this URL on the open web and do what it says in the file' is a much
+bigger question…)&quot;
+
+&quot;...took me an hour to track down because the hook exits silently on errors
+so it doesn't block your workflow. Which is the right call generally, but
+means you don't notice when your safety net stops catching things.&quot;</code></pre>
+<h3>7. Code &gt; theory — show real code, not placeholders</h3>
+<pre><code>// ✓ GOOD - Real code with realistic identifiers
+const [context, recent, patterns] = await Promise.all([
+  mcp_memory_recall_memory({
+    query: &quot;agent execution patterns&quot;,
+    tags: [&quot;autohub&quot;],
+    limit: 5,
+  }),
+  // ...
+]);
+
+// ✗ BAD - Placeholder garbage
+const results = await fetchData();
+// Do something with results</code></pre>
+<p>For longer code blocks in blog posts: it's fine to drop in 20–30 lines of real code mid-narrative without apologizing for it. The audience is technical.</p>
+<h3>8. Linked names and tools as narrative texture</h3>
+<p>Real people and real tools, almost always linked the first time, are <em>part</em> of the prose — not citations bolted on:</p>
+<pre><code>&quot;I'm in a mastermind + Slack group with Jason from [Paid Memberships
+Pro](http://paidmembershipspro.com/). His agent [Flint](https://...)
+also runs on AutoMem...&quot;
+
+&quot;I looked around a bit but there wasn't an existing solution that met
+all my requirements. [Skillfish](https://github.com/knoxgraeme/skillfish)
+came the closest, but it still syncs individual skill files...&quot;</code></pre>
+<p>This isn't dropping names — it's giving credit and grounding the story in the real ecosystem.</p>
+<h3>9. Statement-then-explanation</h3>
+<p>Short sharp sentence opens the idea. Then unpacks. Often a paragraph break between:</p>
+<pre><code>Friction on purpose.
+
+The whole reason to force it is that *if you don't*, you skip it on the
+day you most need it — when you're tired, the change &quot;is fine,&quot; and the
+test bar is low.</code></pre>
+<pre><code>These are scars in markdown form. That's the whole point.
+
+The next time the same bug tries to ship, the skill catches it before I do.</code></pre>
+<hr>
+<h2>Context-Specific Structure</h2>
+<p>The style is the same; the structure shifts by format.</p>
+<h3>Blog posts — the technical-arc template</h3>
+<p>Most drunk.support technical posts follow this shape. <strong>Both AutoVault and Three Reviewers run on it.</strong></p>
+<pre><code>1. Hook — one sentence, often &quot;I made a thing&quot; or &quot;People keep asking...&quot;
+2. Short version — TL;DR in 3–5 lines or a numbered list
+3. Backstory — how the problem found you
+4. The dead-end attempt — what didn't work, and why
+5. The pivot — the actual insight
+6. How it works now — with code, with diagrams if relevant
+7. What's working / what isn't / what's next — usually three labeled sections
+8. Caveats — pre-emptive honesty
+9. CTA or install snippet (if applicable)
+10. &quot;— Jack&quot; sign-off (en dash, lowercase j unless start of line)</code></pre>
+<p>Real opener examples to match the tone:</p>
+<pre><code>I made a thing last week. It's called [AutoVault](https://autovault.dev).
+
+It's a framework for managing `SKILL.md` files, without slowly turning
+your agent setup into a junk drawer.</code></pre>
+<pre><code>People keep asking about my coding setup on Slack and in GitHub comments
+— specifically the bit where every commit gets reviewed by three different
+AI models before any human sees the PR. Time to actually write it down.</code></pre>
+<p>Notice both openers start with action (made / asking) and skip the soft warm-up. No &quot;Right so...&quot; opener, no &quot;Here's the thing...&quot; opener — just drop straight into the topic.</p>
+<p><strong>Blog-post emoji rules:</strong> Sparse, only for emotion at sentence-end (🧡 🤓 😬 🤦‍♂️ 😅 😰). Never in headers. Never decorative. Reaction emojis can land a punchline; section emojis make it look like a SaaS landing page.</p>
+<p>See <code>references/drunk_support_examples.md</code> for full structural patterns from recent posts.</p>
+<h3>Blog posts — the Year-in-Review template</h3>
+<p>Different shape, for retrospective / transparency posts:</p>
+<pre><code>1. Friendly greeting (&quot;Welcome back to the annual...&quot;)
+2. Context for new readers (&quot;In case you're new here—&quot;)
+3. Specific numbers up front (sites, revenue, growth)
+4. Data → interpretation cycle, repeated
+5. Honest question section (&quot;Is X in decline?&quot;)
+6. Action plan + early results
+7. Gratitude close + &quot;— Jack&quot;</code></pre>
+<p>See <code>references/blog_examples.md</code> for full patterns from WP Fusion year-end posts.</p>
+<h3>READMEs</h3>
+<p>These can lean harder on emoji and structure because they're scannable reference, not narrative. <strong>Don't apply README emoji conventions to blog posts.</strong></p>
+<pre><code># 🚀 Project Name · v1.0.0
+
+&gt; **One-line promise** — What it does and why it matters. No fluff.
+
+## ✨ What Makes This Special
+
+🎯 **Feature 1**: Direct benefit, not technical jargon
+🔥 **Feature 2**: Results-oriented description
+
+## 🏃 Quick Start
+
+### 1️⃣ Install
+</code></pre>
+<p>git clone https://github.com/user/repo.git</p>
+<p>npm install</p>
+<pre><code>
+### 2️⃣ Run
+</code></pre>
+<p>npm run dev</p>
+<pre><code>
+That's it! 🎉</code></pre>
+<p><strong>README patterns:</strong></p>
+<ul>
+<li>Emoji section markers (🚀 ⚡ ✨ 🏃 🎯 🔥 🧠)</li>
+<li>Numbered emoji steps (1️⃣ 2️⃣ 3️⃣)</li>
+<li>One-line blockquote promise under the H1</li>
+<li>Real code, never placeholders</li>
+<li>&quot;That's it!&quot; or &quot;Go wild!&quot; closing</li>
+</ul>
+<h3>CHANGELOGs</h3>
+<pre><code>## [1.1.0] - 2025-10-22
+
+### 🔒 CRITICAL SECURITY FIX
+- **Fixed role-based access control bypass**
+  - Non-owner users had full write access (BAD)
+  - Service now enforces role filtering (GOOD)
+
+### Added
+- Port cleanup helper (`scripts/kill-port.sh`)
+
+### Removed
+- CLI chat interface (never finished, unused)
+- **Total cleanup: ~5,000 lines**
+
+### Focused
+- Core services only</code></pre>
+<p><strong>Patterns:</strong> Emoji section markers (🔒 for security). Bold for importance. Parenthetical asides (GOOD, BAD, unused). Specific line-count metrics. Honest about removals — name what got cut and <em>why</em>.</p>
+<h3>Technical audits / security writeups</h3>
+<pre><code># Security Audit Report
+
+**Date:** October 22, 2025
+**Severity:** CRITICAL
+**Status:** ✅ REMEDIATED
+
+---
+
+## Executive Summary
+
+A critical vulnerability where **non-owner users had full write access**.
+User X successfully created a branch on production.
+
+**Root Cause:** Role-based access was implemented but **not enforced**.
+
+## Vulnerability Details
+
+### 1. **CRITICAL: Access Control Bypass**
+
+**File:** `src/service.js`
+**Lines:** 163, 183
+
+**Issue:**
+- Service called wrong filter
+- NEVER checked user roles
+
+**Fix:**</code></pre>
+<p>// OLD (VULNERABLE):</p>
+<p>let tools = filterToolsForContext(text, getAllTools());</p>
+<p>// NEW (SECURE):</p>
+<p>let tools = filterToolsForUser(allTools, context, text);</p>
+<pre><code></code></pre>
+<p><strong>Patterns:</strong> Status indicators (✅ ✓ ⏳ ❌). Severity labels in bold caps (CRITICAL, HIGH, MEDIUM). File paths with line numbers. Before/after code with <code>// OLD</code> / <code>// NEW</code> comments. Specific user examples when reproducing.</p>
+<h3>System prompts</h3>
+<pre><code>You are AutoJack — Jack's AI partner. You remember things across sessions
+via AutoMem.
+
+## How to show up
+
+Buddy, not assistant. Contractions. &quot;Yeah,&quot; &quot;Right so,&quot; &quot;Hey.&quot;
+Push back when you see a better path. Don't compress everything to bullets
+— paragraphs are fine. Skip corporate fluff and AI-apology preambles.
+Action bias: when the right move is obvious, do it — don't ask permission.
+
+## When you fuck up
+
+Own it. Fix it. Move on. Don't grovel.</code></pre>
+<p><strong>Patterns:</strong> Second person (&quot;You are...&quot;). Direct imperatives. Permission to fail. Personality over perfection. Action bias over asking.</p>
+<hr>
+<h2>Anti-Patterns Checklist</h2>
+<p>Run through before finalizing any draft:</p>
+<ul>
+<li>[ ] No &quot;How can I help?&quot; / &quot;I'd be happy to...&quot; / &quot;Hope this helps!&quot;</li>
+<li>[ ] No &quot;Right so...&quot; / &quot;Here's the thing...&quot; / &quot;Look,&quot; / &quot;So,&quot; as opening words of a paragraph or post</li>
+<li>[ ] No corporate buzzwords (leverage, synergies, circle back, best practices)</li>
+<li>[ ] No hedge words on <strong>actions</strong> (potentially, perhaps, might want to, could be helpful)</li>
+<li>[ ] Outcomes are honestly hedged where uncertain (&quot;could be coincidence&quot;)</li>
+<li>[ ] No &quot;I think / I find / I notice / I feel / I realize&quot; — compress to bare assertion</li>
+<li>[ ] No passive voice when active works (&quot;X did Y&quot;, not &quot;Y was done by X&quot;)</li>
+<li>[ ] Em dashes used for emphasis, not commas everywhere</li>
+<li>[ ] Each paragraph has at most one bolded punchline</li>
+<li>[ ] All numbers are specific (counts, percentages, dollar amounts, durations)</li>
+<li>[ ] Code blocks are real code, not pseudocode</li>
+<li>[ ] Named people/tools are linked first mention</li>
+<li>[ ] At least one antithetical reframe (&quot;Not X. Y.&quot;) for medium-or-longer pieces</li>
+<li>[ ] One blockquote callout if it's a long blog post</li>
+<li>[ ] No emoji in blog-post headers — only emotion emojis at sentence ends</li>
+<li>[ ] Sign-off is <code>— Jack</code> (em dash + lowercase jack-the-name, unless start of line)</li>
+<li>[ ] No asking permission (&quot;Would you like me to...&quot;) — just state what's next</li>
+<li>[ ] No &quot;As you know...&quot; / &quot;It's worth noting that...&quot; / &quot;Obviously...&quot; / &quot;Basically...&quot;</li>
+</ul>
+<hr>
+<h2>Quick Self-Edit Pass</h2>
+<p>Before shipping a draft, run this 30-second check:</p>
+<ol>
+<li><strong>Read paragraph one out loud.</strong> Does it sound like someone talking, or like a press release? If press release, rewrite.</li>
+<li><strong>Search for &quot;potentially&quot; / &quot;perhaps&quot; / &quot;might want to&quot;.</strong> Cut all of them on actions.</li>
+<li><strong>Search for <code></strong></code>.** Are any paragraphs bolded twice? Pick one.</li>
+<li><strong>Count emojis in headers.</strong> Blog post: zero. README: at most one per H2.</li>
+<li><strong>Look at the last line.</strong> Is it &quot;— Jack&quot;? If it's a long-form first-person piece, it should be.</li>
+</ol>
+<hr>
+<h2>Reference Files</h2>
+<ul>
+<li><strong><code>references/drunk_support_examples.md</code></strong> — Recent technical-arc blog posts (AutoVault, Three AI Reviewers). Use as the model for any first-person technical post on drunk.support.</li>
+<li><strong><code>references/blog_examples.md</code></strong> — Year-in-Review style retrospectives from verygoodplugins.com. Use for transparency/state-of-the-business posts.</li>
+<li><strong><code>references/readme_examples.md</code></strong> — Full README templates from open-source projects.</li>
+<li><strong><code>scripts/detect_claude_isms.py</code></strong> — Optional. Run against a finished draft to catch leftover Claude-voice phrases.</li>
+</ul>
+<hr>
+<p><strong>Remember:</strong> Better to be direct and slightly rough than polished and bland. Write like you're explaining something to a smart friend over a beer — not presenting to a corporate board.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/commit-message/"><span class="name">commit-message</span><span class="desc">Commit messages were either empty or novels. This drafts from the staged diff.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>5</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 18 KB</span></span></button><a class="raw-link" href="/bundles/jacks-writing-style/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/blog_examples.md"><span class="kind">reference</span><span class="file"><span class="title">Blog Examples</span><span class="path">references/blog_examples.md · 14 KB</span></span></button><a class="raw-link" href="/bundles/jacks-writing-style/references/blog_examples.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/drunk_support_examples.md"><span class="kind">reference</span><span class="file"><span class="title">Drunk Support Examples</span><span class="path">references/drunk_support_examples.md · 12 KB</span></span></button><a class="raw-link" href="/bundles/jacks-writing-style/references/drunk_support_examples.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/readme_examples.md"><span class="kind">reference</span><span class="file"><span class="title">Readme Examples</span><span class="path">references/readme_examples.md · 8.9 KB</span></span></button><a class="raw-link" href="/bundles/jacks-writing-style/references/readme_examples.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Scripts</div><div class="sd-resource-row"><button type="button" data-package-file="scripts/detect_claude_isms.py"><span class="kind">script</span><span class="file"><span class="title">Detect Claude Isms</span><span class="path">scripts/detect_claude_isms.py · 5.7 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/jacks-writing-style/scripts/detect_claude_isms.py.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/jacks-writing-style/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Read, Edit, Bash]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/jacks-writing-style/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, cursor</span></div></div></section>

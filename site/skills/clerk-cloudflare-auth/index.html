@@ -70,12 +70,75 @@ requires-secrets:
 resources:
   - path: story.md
     type: file
----</pre></div><h2>Why</h2>
-<p>Identity code gets tangled quickly when frontend state, edge verification, and billing records each invent their own user model.</p>
-<h2>How</h2>
-<p>Keep Clerk responsible for identity, verify sessions at the edge, and keep provider values in environment variables managed outside the repository.</p>
-<h2>Related</h2>
-<p>Use <a href="/skills/cloudflare-commerce-deploy/">Cloudflare Commerce Deploy</a> for deployment wiring and <a href="/skills/stripe-commerce-checkout/">Stripe Commerce Checkout</a> for billing.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-commerce-deploy/"><span class="name">cloudflare-commerce-deploy</span><span class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</span></a> <a class="sd-rel-tile" href="/skills/stripe-commerce-checkout/"><span class="name">stripe-commerce-checkout</span><span class="desc">A test-first pattern for a branded Stripe Checkout endpoint that keeps secrets server-side and live mutations explicit.</span></a></div></div></div></article></section>
+---</pre></div><h2>Clerk + Cloudflare Auth</h2>
+<p>Use this skill when a Cloudflare Pages or Workers application needs Clerk login,</p>
+<p>session-aware UI, protected API routes, account records, or billing-linked user</p>
+<p>mapping. Clerk should own identity; the application should own its domain data</p>
+<p>and any billing records.</p>
+<h2>Secret boundary</h2>
+<p>Keep provider values in the platform's environment-variable or secret manager.</p>
+<p>Do not commit them, paste them into chat, or invent a local credential-store</p>
+<p>format. A typical deployment needs these names:</p>
+<pre><code>CLERK_SECRET_KEY=&lt;managed server secret&gt;
+VITE_CLERK_PUBLISHABLE_KEY=&lt;managed build variable&gt;</code></pre>
+<p>The publishable key is intended for the browser but should still be supplied by</p>
+<p>the build environment. <code>CLERK_SECRET_KEY</code> belongs only in server-side runtime</p>
+<p>configuration. For local development, use ignored environment files and do not</p>
+<p>read or print their contents unless the user explicitly asks.</p>
+<h2>Integration shape</h2>
+<ol>
+<li>Inspect the application: framework, Pages Functions or Workers entry point,</li>
+</ol>
+<p>   existing session model, public/protected routes, and application records</p>
+<p>   keyed to users or accounts.</p>
+<ol>
+<li>Add Clerk's framework package in the client and Clerk's server package where</li>
+</ol>
+<p>   the edge runtime verifies tokens. Follow current official Clerk and</p>
+<p>   Cloudflare documentation for the package-specific initialization API.</p>
+<ol>
+<li>Initialize the client from <code>VITE_CLERK_PUBLISHABLE_KEY</code>. Render a clear</li>
+</ol>
+<p>   signed-out fallback if it is absent in a local build.</p>
+<ol>
+<li>Verify the session token at every protected Pages Function or Worker route;</li>
+</ol>
+<p>   never treat client-side visibility as authorization.</p>
+<ol>
+<li>Map the verified Clerk user or organization ID to D1/application records</li>
+</ol>
+<p>   only where the product needs internal data. Keep Stripe customer and</p>
+<p>   subscription truth in the billing layer rather than duplicating it in</p>
+<p>   identity claims.</p>
+<h2>Frontend rules</h2>
+<ul>
+<li>Prefer the framework's reactive Clerk APIs over polling global state.</li>
+<li>Request a fresh token immediately before authenticated API calls.</li>
+<li>Guard against a late anonymous response replacing a newer signed-in state.</li>
+<li>Configure Clerk appearance through its supported configuration object, not</li>
+</ul>
+<p>  brittle global CSS overrides.</p>
+<ul>
+<li>Keep static marketing pages static; add identity only where it is needed.</li>
+</ul>
+<h2>Edge authorization</h2>
+<p>At the server boundary, extract and verify the Clerk session token using the</p>
+<p>official backend SDK. Return <code>401</code> for a missing/invalid session and <code>403</code> for</p>
+<p>an authenticated user without the required application entitlement. Make route</p>
+<p>policy explicit so public webhooks and health endpoints do not accidentally</p>
+<p>inherit account-only checks.</p>
+<h2>Verification</h2>
+<p>Before deployment, test:</p>
+<ul>
+<li>Signed-out visitors can reach public pages and cannot call protected APIs.</li>
+<li>A signed-in test user receives the expected account data.</li>
+<li>Expired or malformed tokens are rejected by the edge route.</li>
+<li>Local and preview builds receive the appropriate Clerk environment values.</li>
+<li>Any D1 user mapping is idempotent and uses the verified Clerk identifier.</li>
+</ul>
+<p>Use <a href="/skills/cloudflare-commerce-deploy/">Cloudflare Commerce Deploy</a> for</p>
+<p>provider configuration and <a href="/skills/stripe-commerce-checkout/">Stripe Commerce Checkout</a></p>
+<p>when authentication gates paid product access.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-commerce-deploy/"><span class="name">cloudflare-commerce-deploy</span><span class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</span></a> <a class="sd-rel-tile" href="/skills/stripe-commerce-checkout/"><span class="name">stripe-commerce-checkout</span><span class="desc">A test-first pattern for a branded Stripe Checkout endpoint that keeps secrets server-side and live mutations explicit.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 3.8 KB</span></span></button><a class="raw-link" href="/bundles/clerk-cloudflare-auth/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/clerk-cloudflare-auth/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">Requires: CLERK_SECRET_KEY</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/clerk-cloudflare-auth/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

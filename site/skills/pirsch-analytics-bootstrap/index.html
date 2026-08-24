@@ -70,15 +70,241 @@ requires-secrets:
   - name: PIRSCH_CLIENT_SECRET
     description: OAuth client secret paired with PIRSCH_CLIENT_ID.
     required: false
----</pre></div><h2>Why it exists</h2>
-<p>Analytics installs were inconsistent and sometimes created domains without asking.</p>
-<h2>History</h2>
-<h3>1.1.0</h3>
-<p>Explicit authorization for domain create; no credential dumps.</p>
-<h2>How Jack actually uses it</h2>
-<p>Only with domain-create authorization when needed.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
+---</pre></div><h2>Pirsch Analytics Bootstrap</h2>
+<p>Wire a website to Pirsch Analytics: install the JS snippet, confirm it</p>
+<p>fires, and (optionally) connect the domain to a Pirsch API client so</p>
+<p>mcp-pirsch can query it.</p>
+<p>Pirsch domain creation is gated behind the dashboard UI for most API</p>
+<p>clients. Drive that UI only when the user has explicitly authorized account</p>
+<p>writes in their signed-in browser; otherwise prepare the exact values and hand</p>
+<p>the dashboard step back to them.</p>
+<h2>When to use</h2>
+<ul>
+<li>&quot;Add Pirsch to this site.&quot;</li>
+<li>&quot;Set up analytics on autovault-website / new-project / etc.&quot;</li>
+<li>&quot;Hook this domain into mcp-pirsch.&quot;</li>
+<li>A new project just deployed and the user wants traffic data.</li>
+</ul>
+<p>Skip when the user has chosen Cloudflare Web Analytics, Plausible,</p>
+<p>PostHog, etc. as the only analytics tool.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>The site repo is present and you can identify its head-tag insertion</li>
+</ul>
+<p>  point (VitePress <code>.vitepress/config.{ts,js}</code> <code>head[]</code>, Next.js</p>
+<p>  <code>_document.tsx</code>, Astro <code>&lt;Head&gt;</code>, plain HTML <code>&lt;head&gt;</code>, etc.).</p>
+<ul>
+<li>The user has a Pirsch account at &lt;https://dashboard.pirsch.io/&gt;.</li>
+<li>The dashboard is reachable in a logged-in browser. Use <code>browser-hand</code> only</li>
+</ul>
+<p>  when explicitly authorized — see step 2.</p>
+<h2>Workflow</h2>
+<h3>1. Look for existing Pirsch credentials</h3>
+<p>If an mcp-pirsch checkout is already configured, check for the two variable</p>
+<p>names without printing their values. Point <code>PIRSCH_MCP_DIR</code> at that checkout:</p>
+<pre><code>env_file=&quot;${PIRSCH_MCP_DIR:?set PIRSCH_MCP_DIR}/.env&quot;
+for key in PIRSCH_CLIENT_ID PIRSCH_CLIENT_SECRET; do
+  if grep -q &quot;^${key}=&quot; &quot;$env_file&quot; 2&gt;/dev/null; then
+    printf '%s=&lt;present&gt;\n' &quot;$key&quot;
+  else
+    printf '%s=&lt;missing&gt;\n' &quot;$key&quot;
+  fi
+done</code></pre>
+<p>A Pirsch API client is <strong>scoped to one or more domains</strong> chosen at</p>
+<p>creation time. The credentials in <code>mcp-pirsch/.env</code> may belong to a</p>
+<p>different domain than the one you're adding — that's fine for this</p>
+<p>skill, because creation happens in the dashboard, not via API.</p>
+<p>If creds are missing entirely, skip to step 2 — the user can still</p>
+<p>create the domain via the dashboard without them.</p>
+<h3>2. Create the domain in Pirsch</h3>
+<p>The domain-create endpoint (<code>POST /api/v1/domain</code>) requires</p>
+<p>organization-level API permissions that domain-scoped API clients do</p>
+<p>not have. Expect a 403 if you try.</p>
+<p><strong>The right path is the dashboard.</strong> If account writes are explicitly</p>
+<p>authorized, use <code>browser-hand</code> against the already signed-in tab and verify each</p>
+<p>saved value. Use target IDs when multiple Pirsch tabs are open. Otherwise ask</p>
+<p>the user to:</p>
+<ol>
+<li>Open &lt;https://dashboard.pirsch.io/&gt;.</li>
+<li>Click <strong>Add Website, Funnel, or Team</strong> → <strong>Add Website</strong>.</li>
+<li>Enter the hostname (e.g., <code>autovault.dev</code>), pick a subdomain and</li>
+</ol>
+<p>   timezone, save.</p>
+<ol>
+<li>Copy the <strong>identification code</strong> from the snippet Pirsch displays.</li>
+</ol>
+<p>   It looks like: <code>data-code=&quot;ooKBAPbmvXCA4hyKwoBDBx66yNyNswJL&quot;</code>.</p>
+<ol>
+<li>Paste the snippet — or just the <code>data-code</code> value — back into the</li>
+</ol>
+<p>   chat.</p>
+<p><strong>Do not</strong> drive the dashboard via <code>browser-hand</code> unless the user</p>
+<p>explicitly authorizes UI clicks under their logged-in session. The</p>
+<p>auto-mode classifier blocks browser-driven account writes by default;</p>
+<p>attempting them produces a denial that interrupts the workflow.</p>
+<p>If Pirsch requests DNS ownership verification and the domain is on</p>
+<p>Cloudflare, a Cloudflare API token with the required zone permission can add</p>
+<p>the exact TXT record shown by Pirsch. Never reuse a value from an earlier site:</p>
+<pre><code>curl -fsS -X POST \
+  -H &quot;Authorization: Bearer $CLOUDFLARE_API_TOKEN&quot; \
+  -H &quot;Content-Type: application/json&quot; \
+  &quot;https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records&quot; \
+  --data '{&quot;type&quot;:&quot;TXT&quot;,&quot;name&quot;:&quot;&lt;record-name&gt;&quot;,&quot;content&quot;:&quot;&lt;exact-pirsch-verification-value&gt;&quot;,&quot;ttl&quot;:300}'
+dig +short TXT '&lt;record-name&gt;'</code></pre>
+<p>Discover the zone through the authenticated Cloudflare tooling available to</p>
+<p>the project. If the token or permission is absent, return the exact record for</p>
+<p>the operator to create rather than weakening access controls.</p>
+<h3>3. Install the snippet</h3>
+<p>The Pirsch tracking snippet:</p>
+<pre><code>&lt;script defer src=&quot;https://api.pirsch.io/pa.js&quot;
+  id=&quot;pianjs&quot;
+  data-code=&quot;&lt;IDENTIFICATION_CODE&gt;&quot;&gt;&lt;/script&gt;</code></pre>
+<p>Insert it in the framework's HTML head. Common cases:</p>
+<p><strong>VitePress</strong> (<code>.vitepress/config.ts</code>, inside <code>head: []</code>):</p>
+<pre><code>[
+  &quot;script&quot;,
+  {
+    defer: &quot;&quot;,
+    src: &quot;https://api.pirsch.io/pa.js&quot;,
+    id: &quot;pianjs&quot;,
+    &quot;data-code&quot;: &quot;&lt;IDENTIFICATION_CODE&gt;&quot;
+  }
+]</code></pre>
+<p><strong>Next.js App Router</strong> (<code>app/layout.tsx</code>):</p>
+<pre><code>import Script from &quot;next/script&quot;;
+
+&lt;Script
+  defer
+  src=&quot;https://api.pirsch.io/pa.js&quot;
+  id=&quot;pianjs&quot;
+  data-code=&quot;&lt;IDENTIFICATION_CODE&gt;&quot;
+/&gt;</code></pre>
+<p><strong>Astro</strong> (<code>&lt;Head&gt;</code> in <code>Layout.astro</code>):</p>
+<pre><code>&lt;script defer src=&quot;https://api.pirsch.io/pa.js&quot; id=&quot;pianjs&quot;
+  data-code=&quot;&lt;IDENTIFICATION_CODE&gt;&quot;&gt;&lt;/script&gt;</code></pre>
+<p><strong>Plain HTML / static</strong>: paste verbatim into <code>&lt;head&gt;</code>.</p>
+<p>The identification code is <strong>public</strong> — it's served on every page</p>
+<p>view. Do not treat it as a secret.</p>
+<h3>4. Verify the snippet renders and pa.js loads</h3>
+<p>Build (or run dev/preview), then:</p>
+<pre><code># in another terminal
+curl -sf http://127.0.0.1:&lt;port&gt;/ | grep -o '&lt;script[^&gt;]*pianjs[^&gt;]*&gt;'</code></pre>
+<p>For a deeper check, fetch the loaded Pirsch script from the same browser page</p>
+<p>and assert its response status:</p>
+<pre><code>browser-hand open --url http://127.0.0.1:&lt;port&gt;/ --page-name pirsch-verify
+browser-hand evaluate --page-name pirsch-verify \
+  --code '(async () =&gt; { const url = performance.getEntriesByType(&quot;resource&quot;).map(e =&gt; e.name).find(name =&gt; name.includes(&quot;pirsch&quot;)); if (!url) return { ok: false, error: &quot;Pirsch resource was not requested&quot; }; const response = await fetch(url, { cache: &quot;no-store&quot; }); return { ok: response.ok, status: response.status, url: response.url }; })()'</code></pre>
+<p>Expected output: <code>ok: true</code> with <code>status: 200</code>; otherwise stop and diagnose the</p>
+<p>load failure. **No tracking POST will fire on</p>
+<p>localhost** — Pirsch's <code>pa.js</code> skips local hostnames by design. To</p>
+<p>confirm hits in the dashboard, you must check after deploying to the</p>
+<p>real domain.</p>
+<h3>5. (Optional) Wire the domain into mcp-pirsch</h3>
+<p>If the user wants Claude to query analytics conversationally for this</p>
+<p>new domain, they need an API client scoped to it:</p>
+<ol>
+<li>In Pirsch dashboard → <strong>Settings → Integrations → API Clients</strong>.</li>
+<li>Click <strong>Add Client</strong>, give access to the new domain, save.</li>
+<li>Copy <code>client_id</code> and <code>client_secret</code>.</li>
+</ol>
+<p>Two installation patterns:</p>
+<ul>
+<li><strong>Single-credential MCP</strong> — replace the values in</li>
+</ul>
+<p>  <code>mcp-pirsch/.env</code>. Old domains lose access; new domain gains it.</p>
+<ul>
+<li><strong>Multi-credential</strong> — current mcp-pirsch only reads one set of</li>
+</ul>
+<p>  credentials at a time. To run multi-domain you'd need a separate</p>
+<p>  MCP server instance per credential set, or extend mcp-pirsch.</p>
+<p>  Recommend the single-credential swap for solo use.</p>
+<p>After updating <code>.env</code>, restart the MCP server (<code>/mcp</code> in Claude Code or</p>
+<p>restart the host).</p>
+<h3>6. Add useful events and goals</h3>
+<p>After the snippet is live, identify a small set of meaningful user actions —</p>
+<p>for example sign-in completion, checkout start, provisioning success, or a</p>
+<p>primary content view. Emit named Pirsch custom events from the application and</p>
+<p>create matching conversion goals or funnels in the dashboard when authorized.</p>
+<p>Keep event names stable and business-oriented. Do not send secrets, email</p>
+<p>addresses, free-form user text, or other personal data as event metadata.</p>
+<p>Verify at least one event on the deployed site before calling the integration</p>
+<p>complete.</p>
+<h3>7. Confirm the test traffic and verification</h3>
+<p>After the user deploys:</p>
+<ol>
+<li>Visit the live site and exercise one configured event.</li>
+<li>Open the correct Pirsch property, or ask the user to do so when dashboard</li>
+</ol>
+<p>   writes were not authorized.</p>
+<ol>
+<li>Confirm page traffic, the custom event, and any DNS verification state.</li>
+</ol>
+<p>If nothing appears, common causes:</p>
+<ul>
+<li><strong>AdBlocker / browser extension</strong> — Pirsch is sometimes flagged.</li>
+</ul>
+<p>  Test in a clean browser profile.</p>
+<ul>
+<li><strong>Hostname mismatch</strong> — the hostname registered in Pirsch must match</li>
+</ul>
+<p>  the hostname the page is served from (or be a configured alias).</p>
+<ul>
+<li><strong>Page from cache</strong> — Cloudflare cache may serve a build from before</li>
+</ul>
+<p>  the snippet was added. Force-refresh / purge cache.</p>
+<ul>
+<li><strong>Domain verification pending</strong> — confirm the exact TXT name/value and allow</li>
+</ul>
+<p>  for DNS propagation before retrying Pirsch verification.</p>
+<h2>Output</h2>
+<ul>
+<li>Edited config file with Pirsch snippet in <code>&lt;head&gt;</code>.</li>
+<li>Verified build output contains <code>&lt;script ... id=&quot;pianjs&quot; ...&gt;</code>.</li>
+<li>Local pa.js fetch returns 200.</li>
+<li>DNS verification status when the property requires it.</li>
+<li>Custom event and goal status, including anything left for the operator.</li>
+<li>Brief follow-up note: deploy URL to test, dashboard verification result, and</li>
+</ul>
+<p>  optional scoped API-client wiring for mcp-pirsch.</p>
+<h2>Anti-patterns</h2>
+<ul>
+<li><strong>Do not commit a <code>data-code</code></strong> as if it were secret. It's public</li>
+</ul>
+<p>  per design and ships in every HTML response. Just put it in the</p>
+<p>  config file directly.</p>
+<ul>
+<li><strong>Do not try <code>POST /api/v1/domain</code> from a domain-scoped API client.</strong></li>
+</ul>
+<p>  It returns 403. The dashboard is the only viable path for most</p>
+<p>  users.</p>
+<ul>
+<li>**Do not driver-click the Pirsch dashboard via <code>browser-hand</code> without</li>
+</ul>
+<p>  explicit user authorization for UI writes.** The auto-mode</p>
+<p>  classifier denies this by default — attempting it stalls the</p>
+<p>  workflow.</p>
+<ul>
+<li><strong>Do not assume localhost test traffic will appear in Pirsch.</strong> It</li>
+</ul>
+<p>  won't; pa.js auto-skips local hostnames.</p>
+<ul>
+<li><strong>Do not copy a DNS verification value between sites.</strong> Use the exact record</li>
+</ul>
+<p>  Pirsch displays for the current property.</p>
+<ul>
+<li><strong>Do not put personal data or secrets in event metadata.</strong> Keep event payloads</li>
+</ul>
+<p>  minimal and purpose-specific.</p>
+<ul>
+<li>**Do not store <code>PIRSCH_CLIENT_*</code> values in the website repo's</li>
+</ul>
+<p>  <code>.env</code>.** Tracking only needs the public <code>data-code</code>. Server-side</p>
+<p>  Pirsch API access lives in mcp-pirsch (or another isolated location).</p>
+<ul>
+<li>**Do not gate the snippet behind <code>NODE_ENV === &quot;production&quot;</code> unless</li>
+</ul>
+<p>  the user asks.** Pirsch's localhost filter already prevents noise,</p>
+<p>  and gating it complicates preview-deployment debugging.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 11 KB</span></span></button><a class="raw-link" href="/bundles/pirsch-analytics-bootstrap/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/pirsch-analytics-bootstrap/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">Requires: PIRSCH_CLIENT_ID, PIRSCH_CLIENT_SECRET</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/pirsch-analytics-bootstrap/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

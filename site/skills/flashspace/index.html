@@ -83,15 +83,267 @@ capabilities:
   tools:
     - Bash
 requires-secrets: []
----</pre></div><h2>Why it exists</h2>
-<p>Workspace switching was voice/chat friction. CLI skill removes the mouse hunt.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>Installed flashspace CLI v1.0.0 path.</p>
-<h2>How Jack actually uses it</h2>
-<p>Switch profiles/workspaces, assign apps, float windows.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/raycast/"><span class="name">raycast</span><span class="desc">No official Raycast MCP. The skill is file-native + deeplink operations.</span></a></div></div></div></article></section>
+---</pre></div><h2>flashspace</h2>
+<p>Drive <strong>FlashSpace</strong> (virtual workspace manager for macOS) through its</p>
+<p>first-party CLI. The binary ships inside the app and is linked on PATH:</p>
+<pre><code>/opt/homebrew/bin/flashspace
+  → /Applications/FlashSpace.app/Contents/Resources/flashspace</code></pre>
+<p>Install / upgrade: <code>brew install --cask flashspace</code> (macOS ≥ 14).</p>
+<p>CLI version: <code>flashspace --version</code>. App help: <code>flashspace --help</code> and</p>
+<p><code>flashspace help &lt;subcommand&gt;</code>.</p>
+<p>This skill is <strong>operator-only</strong> — it does not reconfigure the app's</p>
+<p>GUI prefs, Accessibility permissions, or launch-at-login. If the CLI</p>
+<p>returns nothing useful, open the app once (<code>flashspace open</code>) and</p>
+<p>confirm Accessibility is granted.</p>
+<hr>
+<h2>When to use</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>User intent</th><th>Primary verbs</th></tr></thead>
+<tbody>
+<tr><td>&quot;Switch to Code / Web / Chat / Terminal&quot;</td><td><code>workspace --name …</code></td></tr>
+<tr><td>&quot;What's on right now?&quot;</td><td><code>get-profile</code>, <code>get-workspace</code>, <code>get-app</code>, <code>list-*</code></td></tr>
+<tr><td>&quot;Put Cursor on Code&quot; / &quot;assign this app&quot;</td><td><code>assign-app</code></td></tr>
+<tr><td>&quot;Float Spotify&quot; / &quot;stop floating Finder&quot;</td><td>`floating-apps float\</td><td>unfloat\</td><td>toggle`</td></tr>
+<tr><td>&quot;Clean up junk windows&quot;</td><td><code>workspace --name X --clean</code> or <code>hide-unassigned-apps</code></td></tr>
+<tr><td>&quot;Next / prev space&quot;</td><td>`workspace --next\</td><td>--prev`</td></tr>
+<tr><td>&quot;Focus the left window&quot;</td><td><code>focus --direction left</code></td></tr>
+<tr><td>&quot;New workspace for …&quot;</td><td><code>create-workspace</code> (confirm first)</td></tr>
+</tbody></table></div>
+<p>Do <strong>not</strong> use this skill for tiling geometry (that's Rectangle Pro /</p>
+<p>Hammerspoon), browser tabs, or Mission Control Spaces. FlashSpace</p>
+<p>workspaces are app-assignment spaces, not macOS Spaces.</p>
+<hr>
+<h2>Safety / autonomy</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Class</th><th>Ops</th><th>Policy</th></tr></thead>
+<tbody>
+<tr><td>🟢 Green</td><td><code>list-<em></code>, <code>get-</em></code>, <code>workspace</code> activate, <code>profile</code> activate, <code>focus</code>, <code>open</code>, <code>open-space-control</code>, <code>floating-apps</code> toggle on active app</td><td>Run freely</td></tr>
+<tr><td>🟡 Yellow</td><td><code>assign-app</code>, <code>unassign-app</code>, <code>assign-visible-apps</code>, `floating-apps float\</td><td>unfloat<code> by name, </code>update-workspace<code>, </code>create-workspace<code>, </code>create-profile<code>, </code>hide-unassigned-apps<code>, </code>workspace --clean`</td><td>Say what you'll do; proceed if intent is clear</td></tr>
+<tr><td>🔴 Red</td><td><code>delete-workspace</code>, <code>delete-profile</code>, bulk reassignment across many workspaces, recreating Jack's whole layout</td><td>Always confirm first</td></tr>
+</tbody></table></div>
+<p>Destructive deletes and &quot;rebuild my layout&quot; are red even when the user</p>
+<p>sounds casual. Prefer <code>list-*</code> first so names match exactly (spaces</p>
+<p>and casing matter: <code>Project Mgmt</code>, not <code>Project Management</code>).</p>
+<hr>
+<h2>Orientation (always re-list; snapshot is stale-tolerant)</h2>
+<p>Jack's dual-display layout under profile <strong>Default</strong> (snapshot</p>
+<p>2026-07-19 — re-run the list commands; do not treat this as SSOT):</p>
+<p><strong>Displays</strong></p>
+<div class="table-wrap"><table>
+<thead><tr><th>Display</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td>Studio Display</td><td>Primary external — Code / Web / AI / Build</td></tr>
+<tr><td>Built-in Retina Display</td><td>Laptop — Chat / Terminal / Notes / Music / Admin / Private</td></tr>
+</tbody></table></div>
+<p><strong>Workspaces → display (typical apps)</strong></p>
+<div class="table-wrap"><table>
+<thead><tr><th>Workspace</th><th>Display</th><th>Typical apps</th></tr></thead>
+<tbody>
+<tr><td>Music</td><td>Built-in</td><td>Spotify, WiiM Home</td></tr>
+<tr><td>Notes</td><td>Built-in</td><td>Evernote, Notes, Todoist, Calendar</td></tr>
+<tr><td>Chat</td><td>Built-in</td><td>Slack, Messages, Telegram, Signal, Zoom</td></tr>
+<tr><td>Project Mgmt</td><td>Built-in</td><td>GitHub Desktop</td></tr>
+<tr><td>Terminal</td><td>Built-in</td><td>iTerm2, Terminal</td></tr>
+<tr><td>Web</td><td>Studio Display</td><td>Chrome, Safari, Home Assistant</td></tr>
+<tr><td>Code</td><td>Studio Display</td><td>Cursor, VS Code, GitHub Desktop, Tower</td></tr>
+<tr><td>AI</td><td>Studio Display</td><td>Claude, ChatGPT, Codex</td></tr>
+<tr><td>Build</td><td>Studio Display</td><td>Unity Hub, Xcode, Local, Docker, Meta XR Simulator</td></tr>
+<tr><td>Admin</td><td>Built-in</td><td>TablePlus, Transmit</td></tr>
+<tr><td>Private</td><td>Built-in</td><td>Yandex, ExpressVPN</td></tr>
+</tbody></table></div>
+<p><strong>Floating apps</strong> (visible on every workspace): Finder, System Settings,</p>
+<p>Raycast, FlashSpace, Hammerspoon, Rectangle Pro, Spotify.</p>
+<p>Profiles currently present: <code>Alt</code>, <code>Default</code>. Active is usually</p>
+<p><code>Default</code>.</p>
+<p>When uncertain, prefer:</p>
+<pre><code>flashspace get-profile
+flashspace get-workspace
+flashspace get-display
+flashspace get-app --with-windows-count
+flashspace list-workspaces --with-display
+flashspace list-apps &quot;&lt;Workspace&gt;&quot; --with-bundle-id
+flashspace list-floating-apps --with-bundle-id
+flashspace list-running-apps --with-bundle-id
+flashspace list-displays</code></pre>
+<hr>
+<h2>Doctor (first response when CLI looks broken)</h2>
+<pre><code>command -v flashspace || echo &quot;MISSING: brew install --cask flashspace&quot;
+flashspace --version
+flashspace get-profile
+flashspace list-workspaces --with-display
+# if silent / errors:
+flashspace open   # ensure app is running + Accessibility granted</code></pre>
+<p>Expected healthy output: a profile name, a workspace list with</p>
+<p>display names, no permission errors.</p>
+<hr>
+<h2>Core recipes</h2>
+<h3>Switch workspace (most common)</h3>
+<pre><code>flashspace workspace --name Code
+flashspace workspace --name Web
+flashspace workspace --name Chat
+flashspace workspace --name Terminal
+flashspace workspace --name &quot;Project Mgmt&quot;   # quote multi-word names</code></pre>
+<p>Also:</p>
+<pre><code>flashspace workspace --number 1            # 1-indexed
+flashspace workspace --next
+flashspace workspace --prev
+flashspace workspace --recent
+flashspace workspace --next --skip-empty --loop
+flashspace workspace --name Code --clean   # also hide unassigned apps</code></pre>
+<h3>Activate profile</h3>
+<pre><code>flashspace profile Default
+flashspace profile Alt
+flashspace profile --next
+flashspace profile --prev</code></pre>
+<h3>Assign / unassign apps</h3>
+<pre><code># active app → active workspace
+flashspace assign-app --show-notification
+
+# named app → named workspace
+flashspace assign-app --name Cursor --workspace Code --show-notification
+flashspace assign-app --name &quot;Google Chrome&quot; --workspace Web
+
+# by bundle id when names collide
+flashspace assign-app --name com.todesktop.230313mzl4w4u92 --workspace Code
+
+# drop app from every workspace
+flashspace unassign-app --name Spotify --show-notification
+
+# bulk: every currently visible app → target workspace
+flashspace assign-visible-apps --workspace Code --show-notification</code></pre>
+<p><code>--activate true|false</code> on <code>assign-app</code> overrides the app setting for</p>
+<p>whether assigning also jumps to that workspace.</p>
+<h3>Floating apps</h3>
+<pre><code>flashspace floating-apps float --name Spotify
+flashspace floating-apps unfloat --name Finder
+flashspace floating-apps toggle                 # active app
+flashspace list-floating-apps --with-bundle-id</code></pre>
+<h3>Focus</h3>
+<pre><code>flashspace focus --direction left|right|up|down
+flashspace focus --next-app
+flashspace focus --prev-app
+flashspace focus --next-window
+flashspace focus --prev-window</code></pre>
+<h3>Create / update / delete (confirm on delete)</h3>
+<pre><code>flashspace create-workspace &quot;Review&quot; \
+  --display &quot;Studio Display&quot; \
+  --icon hammer \
+  --activate
+
+flashspace update-workspace --workspace Review --display &quot;Studio Display&quot;
+flashspace update-workspace --active-workspace --open-apps true
+flashspace update-workspace --active-workspace --active-display
+
+# RED — confirm first
+flashspace delete-workspace Review
+
+flashspace create-profile Focus --copy --activate
+flashspace delete-profile Focus   # RED</code></pre>
+<p><code>--icon</code> must be a valid <strong>SF Symbol</strong> name.</p>
+<h3>Hide unassigned / open UI</h3>
+<pre><code>flashspace hide-unassigned-apps
+flashspace open
+flashspace open-space-control</code></pre>
+<hr>
+<h2>AutoJack / agent quick paths</h2>
+<p>When Jack says:</p>
+<ol>
+<li><strong>&quot;Go to Code / Web / Chat / Terminal / AI / Build&quot;</strong></li>
+</ol>
+<p>   → <code>flashspace workspace --name &lt;Name&gt;</code> (quote multi-word names).</p>
+<ol>
+<li><strong>&quot;What's my layout?&quot; / &quot;which space am I on?&quot;</strong></li>
+</ol>
+<p>   → <code>get-profile</code> + <code>get-workspace</code> + <code>list-workspaces --with-display</code>.</p>
+<ol>
+<li><strong>&quot;Put this app on Code&quot;</strong> (active app implied)</li>
+</ol>
+<p>   → <code>flashspace assign-app --workspace Code --show-notification</code>.</p>
+<ol>
+<li><strong>&quot;Float this&quot;</strong></li>
+</ol>
+<p>   → <code>flashspace floating-apps toggle --show-notification</code>.</p>
+<ol>
+<li><strong>&quot;Clean this space&quot;</strong></li>
+</ol>
+<p>   → <code>flashspace workspace --name &quot;$(flashspace get-workspace)&quot; --clean</code></p>
+<p>     or <code>flashspace hide-unassigned-apps</code>.</p>
+<ol>
+<li><strong>&quot;Next space&quot;</strong></li>
+</ol>
+<p>   → <code>flashspace workspace --next --skip-empty</code>.</p>
+<p>Prefer exact workspace names from <code>list-workspaces</code>. Do not invent</p>
+<p>aliases (<code>coding</code> ≠ <code>Code</code>).</p>
+<hr>
+<h2>Naming &amp; quoting rules</h2>
+<ul>
+<li>Workspace names are <strong>case-sensitive</strong> and may contain spaces</li>
+</ul>
+<p>  (<code>Project Mgmt</code>). Always quote multi-word names.</p>
+<ul>
+<li>App identity accepts <strong>display name or bundle id</strong>. Prefer bundle id</li>
+</ul>
+<p>  when two apps share a label (e.g. ChatGPT vs Codex both branded</p>
+<p>  ChatGPT-ish).</p>
+<ul>
+<li>Display names come from <code>list-displays</code> (<code>Studio Display</code>,</li>
+</ul>
+<p>  <code>Built-in Retina Display</code>) — pass them exactly to</p>
+<p>  <code>create-workspace --display</code> / <code>update-workspace --display</code>.</p>
+<ul>
+<li>Profiles are independent workspace sets. Mutations apply to the</li>
+</ul>
+<p>  <strong>active</strong> profile unless a command takes <code>--profile</code>.</p>
+<hr>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Do <strong>not</strong> shell out to <code>osascript</code> / <code>yabai</code> / raw Accessibility to</li>
+</ul>
+<p>  fake workspace switching when FlashSpace is installed.</p>
+<ul>
+<li>Do <strong>not</strong> delete workspaces or profiles to &quot;tidy up&quot; without</li>
+</ul>
+<p>  explicit confirmation.</p>
+<ul>
+<li>Do <strong>not</strong> <code>assign-visible-apps</code> as a silent default — it rebinds</li>
+</ul>
+<p>  every on-screen app.</p>
+<ul>
+<li>Do <strong>not</strong> hard-code the 2026-07-19 inventory as truth; re-list when</li>
+</ul>
+<p>  the answer depends on current state.</p>
+<ul>
+<li>Do <strong>not</strong> treat FlashSpace workspaces as macOS Mission Control</li>
+</ul>
+<p>  Spaces — different system; mixing the two confuses the user.</p>
+<ul>
+<li>Do <strong>not</strong> store secrets or Accessibility tokens; there are none.</li>
+</ul>
+<hr>
+<h2>Troubleshooting</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>command not found: flashspace</code></td><td><code>brew install --cask flashspace</code>; ensure <code>/opt/homebrew/bin</code> on PATH</td></tr>
+<tr><td>CLI runs but no effect</td><td>App not running or missing Accessibility — <code>flashspace open</code>, then System Settings → Privacy → Accessibility</td></tr>
+<tr><td>Wrong display</td><td><code>list-displays</code> + <code>update-workspace --workspace X --display &quot;…&quot;</code> or <code>--active-display</code></td></tr>
+<tr><td>App still shows on every space</td><td>It's floating — <code>floating-apps unfloat --name …</code>, or never assigned (assign it)</td></tr>
+<tr><td>Name not found</td><td>Re-run <code>list-workspaces</code> / <code>list-apps</code>; check profile with <code>get-profile</code></td></tr>
+<tr><td>Multi-word name fails</td><td>Quote it: <code>--name &quot;Project Mgmt&quot;</code></td></tr>
+<tr><td>Want SF Symbol list for icons</td><td>Use Apple's SF Symbols app; FlashSpace rejects unknown names</td></tr>
+</tbody></table></div>
+<hr>
+<h2>Subcommand map (quick reference)</h2>
+<pre><code>PROFILES   create-profile | delete-profile | profile | list-profiles | get-profile
+WORKSPACES create-workspace | delete-workspace | update-workspace | workspace
+           list-workspaces | get-workspace
+APPS       assign-visible-apps | assign-app | unassign-app | hide-unassigned-apps
+           list-apps | list-running-apps | get-app
+FLOATING   floating-apps | list-floating-apps
+FOCUS      focus
+DISPLAYS   list-displays | get-display
+UI         open | open-space-control</code></pre>
+<p>Full flags: <code>flashspace help &lt;subcommand&gt;</code>.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/raycast/"><span class="name">raycast</span><span class="desc">No official Raycast MCP. The skill is file-native + deeplink operations.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 11 KB</span></span></button><a class="raw-link" href="/bundles/flashspace/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/flashspace/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>Bash</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/flashspace/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

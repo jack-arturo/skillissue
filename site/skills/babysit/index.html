@@ -74,15 +74,275 @@ resources:
     type: file
   - path: references/ci-and-final-readiness.md
     type: file
----</pre></div><h2>Why it exists</h2>
-<p>PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</p>
-<h2>History</h2>
-<h3>1.2.x</h3>
-<p>Unified babysit + codex-review aliases across Claude Code, Codex, and Cursor profiles.</p>
-<h2>How Jack actually uses it</h2>
-<p>When asked to babysit a PR or address Codex comments, this is the path. Do not merge unless explicitly told.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/commit-message/"><span class="name">commit-message</span><span class="desc">Commit messages were either empty or novels. This drafts from the staged diff.</span></a></div></div></div></article></section>
+---</pre></div><h2>Babysit</h2>
+<p>Create or take over a GitHub PR and keep working until it is merge-ready. Green</p>
+<p>means ready for the user to merge, not merged by the agent.</p>
+<p>PR status is always reflected with <strong>exclusive</strong> <code>babysit:*</code> labels so the PR</p>
+<p>list shows loop state at a glance — no need to open each PR.</p>
+<h2>When to Use</h2>
+<ul>
+<li>The user says &quot;babysit this PR&quot;, &quot;get this PR green&quot;, &quot;create a PR and</li>
+</ul>
+<p>  review it&quot;, &quot;address Codex comments&quot;, or &quot;fix Codex feedback&quot;.</p>
+<ul>
+<li>The user provides a PR number or URL.</li>
+<li>The current branch has local work that should become a PR and pass review.</li>
+</ul>
+<h2>Preconditions</h2>
+<ol>
+<li>Current directory is inside a git repository with a GitHub remote.</li>
+<li><code>gh auth status</code> succeeds.</li>
+<li>Codex review is enabled for the repository. Babysit first waits for smart</li>
+</ol>
+<p>   auto-review; only an initial PR with neither a human request nor a Codex</p>
+<p>   completion may receive one guarded baseline fallback request.</p>
+<ol>
+<li>Default wait cap is 45 minutes per external review/check wait unless</li>
+</ol>
+<p>   <code>--wait-cap</code> is supplied.</p>
+<ol>
+<li>Codex <strong>smart auto-review</strong> is expected to be on in the repo/org Codex</li>
+</ol>
+<p>   settings. It — not this skill — is what reviews later pushes.</p>
+<h2>Arguments</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Argument</th><th>Default</th><th>Effect</th></tr></thead>
+<tbody>
+<tr><td><code>[pr-number-or-url]</code></td><td>current branch's PR</td><td>Target PR; otherwise create-PR mode</td></tr>
+<tr><td><code>--dry-run</code></td><td>off</td><td>No labels, no comments, no pushes</td></tr>
+<tr><td><code>--wait-cap &lt;duration&gt;</code></td><td><code>45m</code></td><td>Cap on each <em>required</em> external wait (baseline Codex review, CI)</td></tr>
+<tr><td><code>--only &lt;path-glob&gt;</code></td><td>—</td><td>Narrow the related-path set</td></tr>
+<tr><td><code>--request-review</code></td><td>off</td><td>Post <strong>one</strong> extra <code>@codex review</code> on the current head at run start, even if a baseline request already exists. The escape hatch for &quot;review this again now&quot;</td></tr>
+<tr><td><code>--codex-grace &lt;duration&gt;</code></td><td><code>10m</code></td><td>How long to wait for Codex <strong>smart auto-review</strong> on the initial PR head and after a fix push. Later-head expiry is a pass, not a blocker.</td></tr>
+<tr><td><code>--reset-budget</code></td><td>off</td><td>Explicitly grant a fresh remediation budget on a PR whose <strong>lifetime</strong> budget is spent. Records a budget-reset marker comment on the PR so every later run counts from it. Only a human ask justifies this flag.</td></tr>
+<tr><td><code>--allow-large</code></td><td>off</td><td>Proceed on a PR whose diff exceeds the 700-changed-line size gate. Without it, oversized PRs stop at preflight with a recommendation to split.</td></tr>
+<tr><td><code>--adversarial [focus...]</code></td><td>off</td><td>Create-PR mode only: additionally run one local Codex <strong>adversarial review</strong> (design/approach challenge) before opening the PR, with optional focus text. Findings are reported for the human; design concerns are never auto-fixed.</td></tr>
+<tr><td><code>--skip-local-review</code></td><td>off</td><td>Skip the local Codex review gates (pre-PR and pre-push). They are also skipped silently when the codex CLI or plugin is unavailable.</td></tr>
+</tbody></table></div>
+<h2>Guardrails</h2>
+<ul>
+<li>Never merge the PR, enable auto-merge, delete the branch, force-push, reset,</li>
+</ul>
+<p>  stash, clean, discard, or overwrite unrelated user work.</p>
+<ul>
+<li>Stage only paths that are clearly part of the requested change. Stop if the</li>
+</ul>
+<p>  related-path set is ambiguous.</p>
+<ul>
+<li>Codex is the automated review gate. Do not request Copilot or Bugbot review</li>
+</ul>
+<p>  unless the user explicitly asks.</p>
+<ul>
+<li><strong>Review-request cadence (hard limit):</strong> automatic-first: on an initial PR</li>
+</ul>
+<p>  head, wait the Codex grace period. Post <strong>at most one</strong> <code>@codex review</code></p>
+<p>  baseline fallback only if no Codex completion and no human request exists;</p>
+<p>  <strong>never re-tag <code>@codex</code> because the head moved.</strong> A fix push is not a reason</p>
+<p>  to comment. Codex smart auto-review decides whether a later head warrants a</p>
+<p>  review; babysit only <em>waits</em> for it. The single exception is an explicit</p>
+<p>  human ask (<code>--request-review</code>, or a <code>@codex review</code> / <code>/codex review</code> comment</p>
+<p>  from a human), and each such ask buys exactly one comment. Before posting</p>
+<p>  anything, run <code>codex_review_already_requested</code> — a per-push tag loop is a</p>
+<p>  defect, not thoroughness.</p>
+<ul>
+<li>Human comments, Bugbot comments, and subjective comments are reported, not</li>
+</ul>
+<p>  resolved, unless the user explicitly puts them in scope.</p>
+<ul>
+<li>Do not treat an empty review-thread list as green until Codex has reviewed</li>
+</ul>
+<p>  the PR at least once and the current <code>headRefOid</code> is review-settled: reviewed</p>
+<p>  directly, or past the later-head grace window without an auto-review.</p>
+<ul>
+<li>Resolve a Codex thread only after replying and only when the fix landed,</li>
+</ul>
+<p>  the concern is demonstrably moot, or it is out of scope under the target</p>
+<p>  repo's AGENTS.md Threat Model (see step 5's triage gate) — that last case</p>
+<p>  closes automatically with the canned rationale, it does not stop the run.</p>
+<ul>
+<li>Auto-fix only a direct Review Contract breach or a regression introduced by</li>
+</ul>
+<p>  an earlier babysit fix. A valid scope expansion, subjective finding, or broad</p>
+<p>  refactor is a human decision: leave its thread open, set <code>babysit:blocked</code>,</p>
+<p>  and stop without creating follow-up work or broadening the PR.</p>
+<ul>
+<li><strong>Stop on convergence, not on a round count.</strong> A flat ceiling is the wrong</li>
+</ul>
+<p>  instrument in both directions, and measurably was: #1139 was halted at the</p>
+<p>  ceiling with <em>zero</em> open threads while actively converging (the human override</p>
+<p>  then closed everything in three commits), while #1085 burned 8 rounds and</p>
+<p>  #1255 burned 12 re-litigating one unmade decision. Each round, record threads</p>
+<p>  closed, threads opened, and the file+mechanism of each new finding, then:</p>
+<p>  - <strong>Continue</strong> while the round closed findings <em>and</em> the new findings land in</p>
+<p>    new territory. That loop is winning; do not stop it because a counter says so.</p>
+<p>  - <strong>Stop immediately</strong> when the same file <em>and</em> mechanism resurfaces across two</p>
+<p>    consecutive rounds, even with budget left. More rounds cannot fix an unmade</p>
+<p>    decision — name it and hand it over.</p>
+<p>  - <strong>Absolute safety ceiling: 6 review windows</strong>, so a pathological loop still</p>
+<p>    terminates. A product, deployment, secret, or architecture decision stops the</p>
+<p>    run immediately regardless of anything above.</p>
+<ul>
+<li><strong>The budget is per-PR lifetime, not per-run.</strong> Derive it from the PR's own</li>
+</ul>
+<p>  history at preflight (distinct Codex reviewed-commit markers since the last</p>
+<p>  budget-reset marker — see step 5), so a re-invocation on a previously blocked</p>
+<p>  PR inherits what that history already spent rather than resetting the counter.</p>
+<p>  Only an explicit human <code>--reset-budget</code> grants more, and it records a marker</p>
+<p>  comment so the next run counts from it.</p>
+<ul>
+<li><strong>Trivial-fix exception.</strong> When Codex re-raises a finding babysit previously</li>
+</ul>
+<p>  closed, and the fix is small, mechanical, and already known, apply it instead</p>
+<p>  of escalating — escalate only when the re-raise implies a genuine policy</p>
+<p>  disagreement. #1258 stopped on a fix its own stop comment described as &quot;one</p>
+<p>  import plus one line&quot;; #1109 left three near-one-liners unfixed for the same</p>
+<p>  reason.</p>
+<ul>
+<li><strong>No silent blocks.</strong> Post the stop comment naming the blocker class and the</li>
+</ul>
+<p>  exact decision or reason <strong>before</strong> setting <code>babysit:blocked</code>. A blocked</p>
+<p>  label with no explanation on the PR is a defect.</p>
+<ul>
+<li><strong>Never hand off a finding by claiming it is tracked — verify the tracker.</strong></li>
+</ul>
+<p>  The observed failure mode is not blocking, it is findings <em>evaporating</em> at the</p>
+<p>  stop boundary: #1266's residual findings were declared &quot;tracked in #1267&quot; when</p>
+<p>  #1267 covered entirely different files (both defects then sat live on <code>main</code>),</p>
+<p>  and #1254's answered decision was reported implemented in commit <code>8958d8b</code>,</p>
+<p>  which does not exist. When handing off a residual finding as tracked work,</p>
+<p>  <code>gh issue create</code> it — quoting the finding, its <code>file:line</code>, and the repro —</p>
+<p>  then read it back by number to confirm it exists, and link that number in both</p>
+<p>  the stop comment and the thread reply. A scope-expansion decision is not a</p>
+<p>  handoff: leave its review thread open and do not create follow-up work. A</p>
+<p>  claim is not a handoff.</p>
+<ul>
+<li><strong>Residual findings set the label by class, not by budget.</strong> With a verified</li>
+</ul>
+<p>  issue attached: a residual <em>non-correctness</em> finding (coverage gap, hardening)</p>
+<p>  sets <code>babysit:ready</code> with an advisory note, since it does not change the merge</p>
+<p>  decision. A residual <em>real correctness</em> finding still sets <code>babysit:blocked</code> —</p>
+<p>  but now with durable tracking rather than a claim.</p>
+<ul>
+<li><strong>Size gate:</strong> at preflight, a diff over 700 changed lines (additions +</li>
+</ul>
+<p>  deletions) stops the run with a recommendation to split (e.g. the</p>
+<p>  split-to-prs skill) unless <code>--allow-large</code> is passed; 400-700 proceeds with</p>
+<p>  a warning in the report. Review-loop data: no sub-100-line PR was ever</p>
+<p>  blocked; 700+ lines take 3+ review rounds 58-84% of the time.</p>
+<ul>
+<li><strong>Local Codex review gates are bounded and optional.</strong> The pre-PR gate runs</li>
+</ul>
+<p>  at most two local review-fix iterations; the pre-push check is one pass per</p>
+<p>  remediation batch, never a loop. Local findings go through the same Review</p>
+<p>  Contract / Threat Model triage as GitHub threads. When the codex CLI or</p>
+<p>  plugin is unavailable (or <code>--skip-local-review</code>), skip silently and note it</p>
+<p>  in the report — the gates are an accelerant, not a precondition.</p>
+<ul>
+<li><strong>Labels:</strong> keep exactly one of the exclusive <code>babysit:*</code> status labels on</li>
+</ul>
+<p>  the PR while babysitting (or none only when labels cannot be written). Never</p>
+<p>  leave a stale waiting/active label after the agent stops. Skip all label</p>
+<p>  mutations in <code>--dry-run</code>.</p>
+<ul>
+<li><strong>Label overhead:</strong> change labels only on <strong>state transitions</strong>, never every</li>
+</ul>
+<p>  poll tick. Cache the last applied status in the working note and no-op when</p>
+<p>  unchanged.</p>
+<h2>Model Dispatch</h2>
+<p>Babysit's phases differ enormously in judgment density, and running all of them</p>
+<p>at the orchestrating model's tier is the main avoidable cost. Split by tier —</p>
+<p>the roles are fixed, the concrete model IDs are yours to set:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Tier</th><th>Phases</th><th>Runs on</th></tr></thead>
+<tbody>
+<tr><td><strong>A — no model</strong></td><td>poll for review/CI, label writes, thread fetch, size gate, budget derivation</td><td><code>scripts/</code> — zero tokens</td></tr>
+<tr><td><strong>B — cheap executor</strong></td><td>apply an <em>already-specified</em> fix, run the focused test, run the formatter/linter</td><td>cheap tier, low effort</td></tr>
+<tr><td><strong>C — strong</strong></td><td>triage findings against the Review Contract and Threat Model, decide fix-vs-escalate, author replies and escalations</td><td>the orchestrating session</td></tr>
+</tbody></table></div>
+<pre><code># Tier mapping — override per environment. Roles above are the contract;
+# these IDs are not. Leave TIER_B_HARNESS unset to keep everything in-harness.
+TIER_B_MODEL=&quot;${BABYSIT_TIER_B_MODEL:-sonnet}&quot;   # cheap executor
+TIER_B_HARNESS=&quot;${BABYSIT_TIER_B_HARNESS:-}&quot;     # &quot;&quot;, &quot;codex&quot;, or &quot;grok&quot;</code></pre>
+<p>The largest saving is <strong>Tier A, not the model swap</strong>: polling inside the</p>
+<p>conversation and pulling full review-thread bodies into the orchestrating</p>
+<p>context cost more than the fixes do. Move those to scripts first.</p>
+<p>Tier B's contract, whichever harness runs it: <strong>input</strong> is <code>file:line</code> + the</p>
+<p>required change + the acceptance test; <strong>output</strong> is a diff. It never</p>
+<p>classifies a finding, never decides scope, never resolves a thread — those are</p>
+<p>Tier C by definition. If a &quot;fix&quot; cannot be specified that precisely, it is not a</p>
+<p>Tier B task; diagnose it at Tier C first, then hand the spec down.</p>
+<p>Delegating Tier B to the <em>same</em> vendor that produced the review trades away</p>
+<p>independent checking — a second opinion from the author is not a second opinion.</p>
+<p>Prefer a different vendor, or keep it in-harness.</p>
+<h2>Workflow at a Glance</h2>
+<p>Seven steps, grouped into four reference files. Work through them in order;</p>
+<p>each file covers the bash helpers, <code>gh</code>/<code>gh api</code> calls, and gotchas for its</p>
+<p>steps in full.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Steps</th><th>What happens</th><th>Reference</th></tr></thead>
+<tbody>
+<tr><td>1-2</td><td>Resolve or create the target PR, take babysit ownership, sweep stale babysit labels repo-wide, apply the size gate and lifetime-budget derivation, run the local pre-PR review gate, open a fresh PR when there's local work but no PR yet</td><td>[references/preflight-and-pr-creation.md](references/preflight-and-pr-creation.md)</td></tr>
+<tr><td>3-5</td><td>Automatic-first review grace, then at most one guarded baseline fallback; detect announced quota skips; fetch active review threads; sweep deployed integration boundaries when applicable; classify each against the Review Contract and Threat Model, batch direct breaches and fix regressions, run the local pre-push check, and stop for decisions or scope expansions</td><td>[references/codex-review-threads.md](references/codex-review-threads.md)</td></tr>
+<tr><td>6-7</td><td>Combined post-push CI + Codex wait, in-scope failure triage, and the final all-green readiness checklist</td><td>[references/ci-and-final-readiness.md](references/ci-and-final-readiness.md)</td></tr>
+<tr><td>throughout</td><td>Keep exactly one exclusive <code>babysit:*</code> label current on the PR (<code>active</code>, <code>waiting-codex</code>, <code>waiting-ci</code>, <code>blocked</code>, <code>ready</code>)</td><td>[references/pr-labels.md](references/pr-labels.md)</td></tr>
+</tbody></table></div>
+<p>The Guardrails above (review-request cadence, never merge, label discipline)</p>
+<p>apply across all four files and are not repeated in them.</p>
+<h2>Reference Map</h2>
+<ul>
+<li><code>references/pr-labels.md</code> — the five exclusive <code>babysit:*</code> labels, when to</li>
+</ul>
+<p>  set each, the stale-label sweep, and the <code>ensure_babysit_labels</code> /</p>
+<p>  <code>set_babysit_status</code> / <code>clear_babysit_labels</code> /</p>
+<p>  <code>sweep_stale_babysit_labels</code> bash helpers every other step calls.</p>
+<ul>
+<li><code>references/preflight-and-pr-creation.md</code> — resolving the target PR</li>
+</ul>
+<p>  (existing branch, PR number/URL, or create-PR mode), the size gate, the</p>
+<p>  lifetime-budget derivation, the merged-mid-flow recovery path, the local</p>
+<p>  pre-PR review gate, and opening a new PR into automatic-review grace.</p>
+<ul>
+<li><code>references/codex-review-threads.md</code> — automatic-first vs. guarded-baseline</li>
+</ul>
+<p>  requests, the reviewed-commit marker/timestamp-field parsing gotchas (the</p>
+<p>  #1 cause of false timeouts), announced quota-skip detection, fetching</p>
+<p>  review threads, the Threat Model triage gate, the local pre-push check,</p>
+<p>  and the fix/reply/resolve loop for valid P0/P1 findings.</p>
+<ul>
+<li><code>references/ci-and-final-readiness.md</code> — the combined post-push CI + Codex</li>
+</ul>
+<p>  wait, in-scope failure triage, conflict resolution, and the step-7</p>
+<p>  checklist that must all hold before <code>babysit:ready</code>.</p>
+<h2>Output</h2>
+<p>Report branch, PR URL/title, mode used, local checks run, Codex review cycles,</p>
+<p>Codex threads fixed/addressed/skipped, CI status, final mergeability, **current</p>
+<p><code>babysit:*</code> label**, files touched, commits pushed, and explicitly state that</p>
+<p>no merge was performed. Also record the number of babysit-authored remediation</p>
+<p>pushes <strong>this run and per the PR's lifetime budget derivation</strong>, the</p>
+<p>per-round convergence verdict (<code>converging</code> / <code>respawn</code> / <code>clean</code>), which tier</p>
+<p>ran each phase (and any Tier B harness used), the issue number filed for every</p>
+<p>tracked residual finding — or that scope-expansion decisions were left open —</p>
+<p>or plainly that filing failed — whether the trivial-fix</p>
+<p>exception was applied, whether <code>--reset-budget</code> was recorded, and the</p>
+<p>terminal blocker class (<code>decision</code>, <code>scope</code>, <code>nonconvergent</code>, <code>wait</code>, <code>ci</code>,</p>
+<p><code>conflict</code>, <code>quota</code>, or <code>size</code>) when the run is not ready. Labels are live</p>
+<p>status, not historical loop telemetry.</p>
+<p>Also report the local review gates: whether the pre-PR gate and each pre-push</p>
+<p>check ran (model used), findings fixed locally, and gates skipped (CLI absent,</p>
+<p><code>--skip-local-review</code>). Report any announced Codex quota skip and which heads</p>
+<p>it affected.</p>
+<p>Also report the review-request cadence, so a regression back to per-push tagging</p>
+<p>is visible in the transcript:</p>
+<ul>
+<li><code>@codex review</code> comments babysit posted this run — expected <strong>0 or 1</strong>. More</li>
+</ul>
+<p>  than one means the one-shot guard failed; say so plainly.</p>
+<ul>
+<li>For each later head: whether Codex auto-reviewed it, or the grace window</li>
+</ul>
+<p>  expired with no review (auto-review skip).</p>
+<p>Suggested closing line when green:</p>
+<blockquote>Label: <code>babysit:ready</code> — Codex all clear; ready for you to merge (agent did<br>not merge).</blockquote><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/commit-message/"><span class="name">commit-message</span><span class="desc">Commit messages were either empty or novels. This drafts from the staged diff.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>5</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 16 KB</span></span></button><a class="raw-link" href="/bundles/babysit/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/ci-and-final-readiness.md"><span class="kind">reference</span><span class="file"><span class="title">Ci And Final Readiness</span><span class="path">references/ci-and-final-readiness.md · 4.1 KB</span></span></button><a class="raw-link" href="/bundles/babysit/references/ci-and-final-readiness.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/codex-review-threads.md"><span class="kind">reference</span><span class="file"><span class="title">Codex Review Threads</span><span class="path">references/codex-review-threads.md · 32 KB</span></span></button><a class="raw-link" href="/bundles/babysit/references/codex-review-threads.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/pr-labels.md"><span class="kind">reference</span><span class="file"><span class="title">Pr Labels</span><span class="path">references/pr-labels.md · 7.8 KB</span></span></button><a class="raw-link" href="/bundles/babysit/references/pr-labels.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/preflight-and-pr-creation.md"><span class="kind">reference</span><span class="file"><span class="title">Preflight And Pr Creation</span><span class="path">references/preflight-and-pr-creation.md · 7.2 KB</span></span></button><a class="raw-link" href="/bundles/babysit/references/preflight-and-pr-creation.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/babysit/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit, Grep, Glob]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/babysit/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, cursor</span></div></div></section>

@@ -82,12 +82,130 @@ resources:
     type: file
   - path: references/site-features.md
     type: file
----</pre></div><h2>Why</h2>
-<p>EmDash makes an Astro site dynamic without making its operational model obvious. Most mistakes are small mismatches between content data and rendering code.</p>
-<h2>How</h2>
-<p>Start with the installed version, model content deliberately, then wire queries and UI around the CMS's actual shapes rather than assumptions.</p>
-<h2>Related</h2>
-<p>For command-line work, see <a href="/skills/emdash-cli/">EmDash CLI</a>; for extensions, see <a href="/skills/creating-plugins/">Creating EmDash Plugins</a>.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a> <a class="sd-rel-tile" href="/skills/creating-plugins/"><span class="name">creating-plugins</span><span class="desc">The extension map for EmDash plugins: hooks, storage, admin UI, API routes, and Portable Text blocks.</span></a></div></div></div></article></section>
+---</pre></div><h2>Building an EmDash Site</h2>
+<p>EmDash is a CMS built on Astro. It stores schema in the database (not in code), serves content via live content collections, and provides a full admin UI at <code>/_emdash/admin</code>. Sites are standard Astro projects with the <code>emdash</code> integration.</p>
+<h2>Common Gotchas</h2>
+<p>These are the things that silently break sites. Know them before you start.</p>
+<ol>
+<li><strong>Image fields are objects, not strings.</strong> <code>post.data.featured_image</code> is <code>{ id, src, alt }</code>. Writing <code>&lt;img src={post.data.featured_image} /&gt;</code> renders <code>[object Object]</code>. Use <code>&lt;Image image={post.data.featured_image} /&gt;</code> from <code>&quot;emdash/ui&quot;</code>.</li>
+</ol>
+<ol>
+<li><strong><code>entry.id</code> vs <code>entry.data.id</code> are different things.</strong> <code>entry.id</code> is the slug (use in URLs). <code>entry.data.id</code> is the database ULID (use for <code>getEntryTerms</code>, <code>Comments</code>, and other API calls that need the real ID). Mixing them up causes silent empty results.</li>
+</ol>
+<ol>
+<li><strong>Taxonomy names must match the seed exactly.</strong> If your seed defines <code>&quot;name&quot;: &quot;category&quot;</code>, you must query <code>getTerm(&quot;category&quot;, slug)</code> -- not <code>&quot;categories&quot;</code>. Wrong name = empty results, no error.</li>
+</ol>
+<ol>
+<li><strong>Always pass <code>cacheHint</code> to <code>Astro.cache.set()</code>.</strong> Every query returns a <code>cacheHint</code>. Call <code>Astro.cache.set(cacheHint)</code> on every page that queries content, or cache invalidation won't work when editors publish changes.</li>
+</ol>
+<ol>
+<li><strong>No <code>getStaticPaths</code> for CMS content.</strong> EmDash content is dynamic. Pages must be server-rendered (<code>output: &quot;server&quot;</code> in <code>astro.config.mjs</code>).</li>
+</ol>
+<h2>File Structure</h2>
+<p>Every EmDash site has these key files:</p>
+<pre><code>my-site/
+├── astro.config.mjs          # Astro config with emdash() integration
+├── src/
+│   ├── live.config.ts         # EmDash loader registration (boilerplate)
+│   ├── pages/                 # Astro pages (all server-rendered)
+│   ├── layouts/               # Layout components
+│   └── components/            # Reusable components
+├── seed/
+│   └── seed.json              # Schema + demo content
+├── emdash-env.d.ts          # Generated types (from `emdash types`)
+└── package.json</code></pre>
+<h2>Workflow</h2>
+<h3>1. Configure the project</h3>
+<p>Read <strong>[references/configuration.md](references/configuration.md)</strong> for <code>astro.config.mjs</code>, <code>live.config.ts</code>, deployment targets (Node vs Cloudflare), and type generation.</p>
+<h3>2. Design the schema</h3>
+<p>Read <strong>[references/schema-and-seed.md](references/schema-and-seed.md)</strong> for collection definitions, field types, taxonomies, menus, widget areas, sections, bylines, and the complete seed file format.</p>
+<h3>3. Build the pages</h3>
+<p>Read <strong>[references/querying-and-rendering.md](references/querying-and-rendering.md)</strong> for content queries, Portable Text rendering, the Image component, visual editing attributes, caching, and common page patterns (list, detail, taxonomy archive, RSS, search, 404).</p>
+<h3>4. Wire up site features</h3>
+<p>Read <strong>[references/site-features.md](references/site-features.md)</strong> for site settings, navigation menus, taxonomies, widget areas, search, SEO meta, comments, and page contributions.</p>
+<h3>5. Create the seed file</h3>
+<p>Write <code>seed/seed.json</code> with collections, fields, taxonomies, menus, widgets, and sample content.</p>
+<h3>6. Run and verify</h3>
+<pre><code>npx emdash dev          # Start dev server (runs migrations + seeds, and generates types)</code></pre>
+<p>The admin UI is at <code>http://localhost:4321/_emdash/admin</code>.</p>
+<h2>Quick API Cheat Sheet</h2>
+<pre><code>// Content (entries have .data.byline and .data.bylines eagerly loaded)
+import { getEmDashCollection, getEmDashEntry } from &quot;emdash&quot;;
+const { entries, nextCursor, cacheHint } = await getEmDashCollection(&quot;posts&quot;, {
+  limit: 10,
+  cursor,
+  orderBy: { published_at: &quot;desc&quot; },
+});
+const { entry: post, cacheHint } = await getEmDashEntry(&quot;posts&quot;, slug);
+
+// Site features
+import {
+  getSiteSettings,
+  getMenu,
+  getTaxonomyTerms,
+  getTerm,
+  getEntryTerms,
+  getEntriesByTerm,
+  getWidgetArea,
+  search,
+  getSection,
+  getSeoMeta,
+} from &quot;emdash&quot;;
+
+// Bylines (standalone queries -- usually not needed since entries have bylines attached)
+import { getByline, getBylineBySlug } from &quot;emdash&quot;;
+
+// UI components
+import {
+  PortableText,
+  Image,
+  Comments,
+  CommentForm,
+  WidgetArea,
+  EmDashHead,
+  EmDashBodyStart,
+  EmDashBodyEnd,
+} from &quot;emdash/ui&quot;;
+import LiveSearch from &quot;emdash/ui/search&quot;;
+
+// Page context (for plugin contributions)
+import { createPublicPageContext } from &quot;emdash/page&quot;;</code></pre>
+<h2>Plugins</h2>
+<p>EmDash supports plugins for extending the CMS with hooks, storage, settings, admin UI, API routes, and custom Portable Text block types. Consider a plugin when you need to:</p>
+<ul>
+<li>React to content lifecycle events (e.g., send a notification on publish, sync to an external service)</li>
+<li>Add custom admin pages or dashboard widgets</li>
+<li>Add custom block types to the Portable Text editor (e.g., embedded maps, code playgrounds, CTAs)</li>
+<li>Provide a reusable service (e.g., analytics, forms, comments via a third-party provider)</li>
+</ul>
+<p>Plugins are registered in <code>astro.config.mjs</code>:</p>
+<pre><code>emdash({
+  database: sqlite({ url: &quot;file:./data.db&quot; }),
+  storage: local({ directory: &quot;./uploads&quot;, baseUrl: &quot;/_emdash/api/media/file&quot; }),
+  plugins: [myPlugin()],
+}),</code></pre>
+<p><strong>To build a plugin, load the <code>creating-plugins</code> skill</strong> (in <code>.agents/skills/creating-plugins/</code>). It covers plugin anatomy, hooks, storage, admin UI, API routes, Portable Text blocks, capabilities, and the full <code>definePlugin()</code> API.</p>
+<h2>Version currency (do this first on every new site)</h2>
+<p>Canonical CMS: <strong><a href="https://github.com/emdash-cms/emdash" rel="noopener">emdash-cms/emdash</a></strong> · npm <code>emdash</code>.</p>
+<p><strong>Not</strong> <a href="https://github.com/generalaction/emdash" rel="noopener">generalaction/emdash</a> (different product).</p>
+<ol>
+<li>Resolve latest: <code>npm view emdash version</code> + <code>npm view @emdash-cms/cloudflare version</code></li>
+<li>Diff vs last project / AutoMem baseline</li>
+<li>Read GitHub releases <code>emdash@X.Y.Z</code> for the gap</li>
+<li>Summarize + propose (or auto-adopt under full autonomy)</li>
+<li>Pin <strong>latest stable</strong> in <code>package.json</code> — never hard-code an old skill example</li>
+</ol>
+<p>Full ritual: <strong>[references/version-currency.md](references/version-currency.md)</strong>.</p>
+<h2>Reference Documents</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>File</th><th>Contents</th></tr></thead>
+<tbody>
+<tr><td>[references/version-currency.md](references/version-currency.md)</td><td>Always-latest pins, delta research, autonomy modes, memory</td></tr>
+<tr><td>[references/configuration.md](references/configuration.md)</td><td>Project setup, astro.config, live.config, deployment, types</td></tr>
+<tr><td>[references/schema-and-seed.md](references/schema-and-seed.md)</td><td>Collections, fields, taxonomies, menus, widgets, seed format</td></tr>
+<tr><td>[references/querying-and-rendering.md](references/querying-and-rendering.md)</td><td>Content APIs, PortableText, Image, caching, page patterns</td></tr>
+<tr><td>[references/site-features.md](references/site-features.md)</td><td>Settings, menus, widgets, search, SEO, comments, page contributions</td></tr>
+</tbody></table></div><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a> <a class="sd-rel-tile" href="/skills/creating-plugins/"><span class="name">creating-plugins</span><span class="desc">The extension map for EmDash plugins: hooks, storage, admin UI, API routes, and Portable Text blocks.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>6</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 7.9 KB</span></span></button><a class="raw-link" href="/bundles/building-emdash-site/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/configuration.md"><span class="kind">reference</span><span class="file"><span class="title">Configuration</span><span class="path">references/configuration.md · 5.5 KB</span></span></button><a class="raw-link" href="/bundles/building-emdash-site/references/configuration.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/querying-and-rendering.md"><span class="kind">reference</span><span class="file"><span class="title">Querying And Rendering</span><span class="path">references/querying-and-rendering.md · 9.5 KB</span></span></button><a class="raw-link" href="/bundles/building-emdash-site/references/querying-and-rendering.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/schema-and-seed.md"><span class="kind">reference</span><span class="file"><span class="title">Schema And Seed</span><span class="path">references/schema-and-seed.md · 11 KB</span></span></button><a class="raw-link" href="/bundles/building-emdash-site/references/schema-and-seed.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/site-features.md"><span class="kind">reference</span><span class="file"><span class="title">Site Features</span><span class="path">references/site-features.md · 11 KB</span></span></button><a class="raw-link" href="/bundles/building-emdash-site/references/site-features.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/version-currency.md"><span class="kind">reference</span><span class="file"><span class="title">Version Currency</span><span class="path">references/version-currency.md · 1.6 KB</span></span></button><a class="raw-link" href="/bundles/building-emdash-site/references/version-currency.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/building-emdash-site/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/building-emdash-site/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack, cursor</span></div></div></section>

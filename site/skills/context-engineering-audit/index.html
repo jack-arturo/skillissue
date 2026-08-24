@@ -72,12 +72,69 @@ resources:
     type: file
   - path: references/rewrite-patterns.md
     type: file
----</pre></div><h2>Why</h2>
-<p>Instruction files accrete. Without measurement, trimming them is just trading useful constraints for vibes.</p>
-<h2>How</h2>
-<p>Measure each injection source, map its dependencies, then remove or rewrite only the parts that do not carry their weight.</p>
-<h2>Related</h2>
-<p>Use <a href="/skills/skill-author/">Skill Author</a> for package structure and <a href="/skills/automem/">AutoMem</a> for durable memory practice.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/skill-author/"><span class="name">skill-author</span><span class="desc">Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</span></a> <a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
+---</pre></div><h2>Context Engineering Audit</h2>
+<p>Every agent session pays for its instructions before the user types a word. This</p>
+<p>skill is a method for finding out what that costs, what it buys, and what to cut.</p>
+<p>The order matters. Measuring before cutting keeps you honest about where the</p>
+<p>tokens actually are; the coupling check keeps you from deleting a constraint</p>
+<p>something depends on. Skip step 3 and you will eventually delete a rule that a</p>
+<p>validator, a parser, or a test was relying on.</p>
+<h2>1. Measure before you cut</h2>
+<p>Get real numbers per injection source rather than guessing from file sizes.</p>
+<p>Sources usually rank: the imported instruction file, the skill listing (every</p>
+<p>skill's frontmatter description, always loaded), the global instruction file,</p>
+<p>deferred tool names, the agent listing, MCP server instruction blocks, hook</p>
+<p>output.</p>
+<p>See <code>references/measuring.md</code> for where each lives and how to count it,</p>
+<p>including reading the session transcript's attachment records.</p>
+<p>Record the total. A restructure that doesn't move it is a restructure you can</p>
+<p>skip.</p>
+<h2>2. Classify every section into four buckets</h2>
+<ul>
+<li><strong>Gotcha</strong> — non-obvious, expensive to rediscover, cheap to state. Keep upfront. (&quot;Tags are a hard gate: they filter before scoring.&quot; &quot;stdout is reserved for the MCP protocol.&quot;)</li>
+<li><strong>Runbook</strong> — needed by a minority of sessions, in full when needed. Move to a doc or skill and link it.</li>
+<li><strong>Restates the tree</strong> — a table of paths that a directory listing already shows. Delete.</li>
+<li><strong>Duplicate</strong> — the same instruction in a second place. Pick one home.</li>
+</ul>
+<p>The tell for a runbook is a command sequence. The tell for a duplicate is that</p>
+<p>you've read it twice in one file.</p>
+<h2>3. Coupling-check before deleting anything</h2>
+<p>This is the step that pays for the skill. Prompt text is often load-bearing in</p>
+<p>ways nothing documents.</p>
+<p>Before cutting a rule, search for code that depends on it: response validators,</p>
+<p>output parsers, harness branches, and tests asserting on prompt strings. Then</p>
+<p>give each rule a verdict — load-bearing (keep the substance, change the</p>
+<p>framing), format contract (move it into the schema or tool description), or</p>
+<p>residue (delete).</p>
+<p>Two failure modes worth knowing, both real:</p>
+<ul>
+<li>A prompt asserting something the harness doesn't actually do (&quot;your work will not be delivered unless you call X&quot; — when a fallback path exists). Fix the claim, don't preserve it.</li>
+<li>A prompt whose output is discarded downstream. Reasoning scaffolds are the usual case: check whether a sanitizer strips the very blocks you're asking for.</li>
+</ul>
+<p><code>references/coupling-check.md</code> has the search patterns and the verdict table.</p>
+<h2>4. Rewrite coercion as product-context facts</h2>
+<p>On current model generations, exhaustive prohibitions cost quality rather than</p>
+<p>buying it. State what the system does and let the model reason.</p>
+<blockquote>&quot;CRITICAL: These tools are NOT optional. Your work will not be delivered!&quot;<br><br>becomes<br><br>&quot;The user sees your <code>present_result</code> payload — summary condensed for chat,<br>content attached as a file. Exit without it and the harness falls back to<br>condensing your raw final message.&quot;</blockquote>
+<p>Keep every constraint that survived step 3. Change only the register.</p>
+<p>More before/after pairs in <code>references/rewrite-patterns.md</code>.</p>
+<h2>5. Add drift guards, then verify</h2>
+<p>Instruction files regrow. A size budget and an imperative-word budget as</p>
+<p>ordinary tests will catch it:</p>
+<pre><code>assert.ok(composed.length &lt;= BUDGET, `${composed.length} chars, budget ${BUDGET}`);
+assert.ok((text.match(/\b(NEVER|ALWAYS|MUST|CRITICAL|MANDATORY)\b/g) || []).length &lt;= N);</code></pre>
+<p>Set the ceiling just above where you landed, with a comment on what earned the</p>
+<p>headroom. <strong>Watch the floor too:</strong> cached prompt prefixes have a minimum below</p>
+<p>which they silently stop caching, so cutting past it trades a small token saving</p>
+<p>for a cache miss on every turn.</p>
+<p>Verify with <code>/context</code> in a fresh session before and after, and re-run the</p>
+<p>suites that touch prompt assembly.</p>
+<h2>Notes from practice</h2>
+<ul>
+<li>Rule density is often lowest in the files people suspect first. Measure imperatives per 1k chars before assuming an instruction file is the problem — the offender is frequently a plugin or a runtime prompt nobody reads.</li>
+<li>A repo's own history can tell you whether coercion worked. Commits that fix &quot;the model hesitated&quot; or &quot;the model looped&quot; are usually patching damage an earlier absolute rule caused.</li>
+<li>Moving content beats deleting it when a prior finding says a model generation still wants the structure. Progressive disclosure is generation-neutral; rule-density rewrites are not.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/skill-author/"><span class="name">skill-author</span><span class="desc">Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</span></a> <a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>4</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 5.2 KB</span></span></button><a class="raw-link" href="/bundles/context-engineering-audit/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/coupling-check.md"><span class="kind">reference</span><span class="file"><span class="title">Coupling Check</span><span class="path">references/coupling-check.md · 2.3 KB</span></span></button><a class="raw-link" href="/bundles/context-engineering-audit/references/coupling-check.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/measuring.md"><span class="kind">reference</span><span class="file"><span class="title">Measuring</span><span class="path">references/measuring.md · 2.5 KB</span></span></button><a class="raw-link" href="/bundles/context-engineering-audit/references/measuring.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/rewrite-patterns.md"><span class="kind">reference</span><span class="file"><span class="title">Rewrite Patterns</span><span class="path">references/rewrite-patterns.md · 2.5 KB</span></span></button><a class="raw-link" href="/bundles/context-engineering-audit/references/rewrite-patterns.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/context-engineering-audit/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Read, Edit, Bash, Grep]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/context-engineering-audit/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, cursor</span></div></div></section>

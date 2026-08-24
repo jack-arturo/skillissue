@@ -238,7 +238,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.equal(fs.existsSync(path.join(siteDir, "assets", "catalog-explorer.js")), false);
     assert.equal(fs.existsSync(path.join(siteDir, "assets", "site.css")), false);
     const linkedStory = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
-    assert.match(linkedStory, /<a href="\/skills\/html-asset-renderer\/">HTML Asset Renderer<\/a>/);
+    assert.match(linkedStory, /class="sd-page"/);
     assert.doesNotMatch(linkedStory, /\.\.\/html-asset-renderer\/story\.md/);
     const browserHandPage = fs.readFileSync(path.join(siteDir, "skills", "browser-hand", "index.html"), "utf8");
     assert.match(browserHandPage, /class="sd-page"/);
@@ -269,6 +269,9 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(babysitPage, /class="sd-versions-table"/);
     assert.doesNotMatch(babysitPage, /class="package-source"/);
     assert.match(babysitPage, /references\/pr-labels\.md/);
+    const babysitOverview = babysitPage.match(/<section id="overview"[\s\S]*?<\/section>/)?.[0] || "";
+    assert.match(babysitOverview, /Create or take over a GitHub PR and keep working until it is merge-ready/);
+    assert.doesNotMatch(babysitOverview, /PR review loops were eating whole sessions/);
     const detailAsset = babysitPage.match(/src="\/assets\/(skill-detail\.[a-f0-9]{12}\.js)"/)?.[1];
     assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
     assert.equal(fs.existsSync(path.join(siteDir, "assets", detailAsset)), true);

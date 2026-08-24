@@ -67,12 +67,79 @@ requires-secrets: []
 resources:
   - path: story.md
     type: file
----</pre></div><h2>Why</h2>
-<p>A borrowed camera texture looks simple right up until permissions change or the native feed disappears mid-frame.</p>
-<h2>How</h2>
-<p>Treat the feed as borrowed, copy it into a texture you own, keep CPU readback off the frame path, and build a credible no-camera fallback. The boring bits are the feature.</p>
+---</pre></div><h2>Reading passthrough camera frames on Quest</h2>
+<p><code>PassthroughCameraAccess</code> (Meta XR Core / MRUK) hands you the headset's real</p>
+<p>camera feed. It is a native-written texture owned by a component with its own</p>
+<p>lifecycle — treat it as a borrowed handle, never as an asset.</p>
+<h2>Never bind the feed's texture to a renderer</h2>
+<p><code>GetTexture()</code> returns the texture the feed writes into from the render thread</p>
+<p>and stops writing the moment the feed is disabled. Anything that disables the</p>
+<p>feed — a controller's <code>OnDisable</code>, a withdrawn permission, a torn-down scene —</p>
+<p>leaves a bound quad showing a live room that freezes, goes black, or references</p>
+<p>a destroyed native handle, depending on timing.</p>
+<p>Blit into a <code>RenderTexture</code> <strong>you</strong> allocate and release:</p>
+<pre><code>_target = new RenderTexture(source.width, source.height, 0, source.graphicsFormat);
+Graphics.Blit(source, _target);</code></pre>
+<p>Sizing and format both matter:</p>
+<ul>
+<li>Size from the source texture each time, not once at startup.</li>
+</ul>
+<p>  <code>CurrentResolution</code> is what the device <em>granted</em>, not what you requested, and</p>
+<p>  it can differ from the request or change mid-session.</p>
+<ul>
+<li>Match <code>source.graphicsFormat</code>. The feed is <code>R8G8B8A8_SRGB</code>; blitting into a</li>
+</ul>
+<p>  linear target darkens the whole image subtly enough to read as &quot;the capture</p>
+<p>  is murky&quot; rather than as a color-space bug.</p>
+<h2>Guard every access on `enabled &amp;&amp; IsPlaying`</h2>
+<p><code>GetTexture()</code> internally validates state and <strong>logs an error</strong> when the</p>
+<p>component is disabled or unpermitted. An unguarded per-frame call produces a</p>
+<p>per-frame error line and returns null. Check <code>feed.enabled &amp;&amp; feed.IsPlaying</code></p>
+<p>first.</p>
+<h2>Never call `GetColors()` in a frame path</h2>
+<p>It is <code>AsyncGPUReadback.RequestIntoNativeArray(...).WaitForCompletion()</code> — a</p>
+<p>blocking stall, and its own docs say so. If pixels must reach the CPU, issue a</p>
+<p>non-blocking <code>AsyncGPUReadback</code> and consume it a frame or more later. For</p>
+<p>display or shader input, the pixels never need to leave the GPU at all.</p>
+<h2>Capture continuously, freeze by stopping</h2>
+<p>When you want a frame at a specific moment (an entry, a trigger, a gesture),</p>
+<p>do not capture <em>at</em> that moment — allocation plus copy on the one frame the</p>
+<p>user is watching is the worst possible placement. Instead blit on a slow</p>
+<p>cadence beforehand into a texture nothing samples, and on the trigger simply</p>
+<p>stop blitting. The last frame taken becomes the frozen one.</p>
+<p>The freeze then has no separate flag to fall out of sync with: not capturing</p>
+<p><em>is</em> frozen.</p>
+<h2>Do not create a second feed</h2>
+<p>If anything else in the project already runs <code>PassthroughCameraAccess</code></p>
+<p>components (a stereo lens, a CV pipeline), find and read the existing one</p>
+<p>rather than adding your own — they contend for the same camera. Search the</p>
+<p>scene with a bounded retry; the feed may not exist on the frame your component</p>
+<p>lands, because composition is often permission-gated.</p>
+<h2>Design for the feed being absent</h2>
+<p>PCA is device-only and permission-gated. In the Editor, in tests, on an</p>
+<p>unsupported headset, or after a denied camera permission there is simply no</p>
+<p>feed. That path must be a designed outcome with a bundled fallback asset — not</p>
+<p>an error state — because it is the path every non-device run takes.</p>
+<p>Keep &quot;has a target&quot; and &quot;has a frame&quot; as separate questions. An</p>
+<p>allocated-but-never-blitted <code>RenderTexture</code> is a perfectly valid <code>Texture</code> full</p>
+<p>of nothing, and preferring it over a fallback turns every permission-denied</p>
+<p>session into a black rectangle.</p>
+<h2>What testing can and cannot reach</h2>
+<p>Extract the copy into a source-agnostic method (<code>LatchFrom(Texture)</code>) so an</p>
+<p>ordinary <code>Texture2D</code> can stand in for the feed. That gives real coverage of</p>
+<p>sizing, creation, release, and whether the blit moves pixels — assert a known</p>
+<p>color reads back from the target, because a latch that sizes perfectly and</p>
+<p>copies nothing looks identical to a working one from every angle except the</p>
+<p>user's.</p>
+<p>What no desktop test can answer: <strong>whether the live frame arrives upright.</strong></p>
+<p>The feed is native-written and <code>Graphics.Blit</code> follows the platform's</p>
+<p>texture-origin convention, which a <code>Texture2D</code> stand-in gets right for reasons</p>
+<p>a native handle may not. Put &quot;is it flipped or mirrored, and on which axis?&quot; on</p>
+<p>the device checklist explicitly.</p>
 <h2>Related</h2>
-<p>Follow <a href="/skills/unity-quest-build/">Unity Quest Build</a> for device evidence and <a href="/skills/unity-ai-collaboration/">Unity AI Collaboration</a> when more than one tool can touch the Editor.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/unity-quest-build/"><span class="name">unity-quest-build</span><span class="desc">An evidence ladder for building, testing, profiling, and accepting Unity applications on Meta Quest.</span></a> <a class="sd-rel-tile" href="/skills/unity-ai-collaboration/"><span class="name">unity-ai-collaboration</span><span class="desc">A routing and handoff model for multiple AI surfaces working around one live Unity Editor.</span></a></div></div></div></article></section>
+<p><code>OVRPassthroughLayer.textureOpacity</code> dims what the <em>wearer sees</em> through the</p>
+<p>compositor. It does not affect the raw PCA feed at all — a frame captured while</p>
+<p>the passthrough layer is fully dimmed still shows the lit room.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/unity-quest-build/"><span class="name">unity-quest-build</span><span class="desc">An evidence ladder for building, testing, profiling, and accepting Unity applications on Meta Quest.</span></a> <a class="sd-rel-tile" href="/skills/unity-ai-collaboration/"><span class="name">unity-ai-collaboration</span><span class="desc">A routing and handoff model for multiple AI surfaces working around one live Unity Editor.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 5.0 KB</span></span></button><a class="raw-link" href="/bundles/quest-passthrough-camera-capture/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/quest-passthrough-camera-capture/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/quest-passthrough-camera-capture/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex</span></div></div></section>

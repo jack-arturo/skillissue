@@ -85,12 +85,147 @@ bin:
     command: scripts/configure-unity-ai-settings
     description: Audit or explicitly apply reviewed non-secret Unity and Meta AI user defaults.
     requires-tty: false
----</pre></div><h2>Why</h2>
-<p>Several tools can talk to one Unity project. That does not make parallel mutation a good idea.</p>
-<h2>How</h2>
-<p>Name one writer, route tasks by the surface that can prove them, protect paid operations and credentials, and hand off only after imports and tests settle. A little traffic control beats a prefab merge autopsy.</p>
-<h2>Related</h2>
-<p>Use <a href="/skills/unity-quest-build/">Unity Quest Build</a> for device delivery and <a href="/skills/quest-passthrough-camera-capture/">Quest Passthrough Camera Capture</a> for a concrete camera pipeline.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/unity-quest-build/"><span class="name">unity-quest-build</span><span class="desc">An evidence ladder for building, testing, profiling, and accepting Unity applications on Meta Quest.</span></a> <a class="sd-rel-tile" href="/skills/quest-passthrough-camera-capture/"><span class="name">quest-passthrough-camera-capture</span><span class="desc">Practical lifecycle rules for safely copying Meta Quest passthrough camera frames into Unity-owned textures.</span></a></div></div></div></article></section>
+---</pre></div><h2>Unity AI collaboration</h2>
+<p>Treat Unity Assistant as the in-editor AI surface and Unity Hub as the manager</p>
+<p>for Editor installs, modules, licensing, organization linkage, and projects.</p>
+<p>Do not describe Hub itself as the collaborating agent.</p>
+<h2>Assign exactly one writer</h2>
+<p>Before any mutation, name one writer for the current phase. That writer owns</p>
+<p>Unity serialization, imports, scene/prefab/asset changes, package resolution,</p>
+<p>tests that mutate the project, builds, installs, and captures. Other agents may</p>
+<p>research or inspect only. Read-only subagents must not call MCP tools with side</p>
+<p>effects, enter Play Mode, trigger imports, or write files.</p>
+<p>Use the project's cross-worktree Unity and deployment locks. Wait for imports,</p>
+<p>compiles, tests, builds, and ADB operations to settle before handing ownership</p>
+<p>to another writer. Never ask Unity Assistant and an external agent to edit the</p>
+<p>same project concurrently.</p>
+<h2>Use Assistant modes deliberately</h2>
+<ul>
+<li><strong>Ask</strong>: explain, inspect supplied context, answer API/tooling questions, and</li>
+</ul>
+<p>  propose focused diagnostics. Keep it read-only unless the operator explicitly</p>
+<p>  changes the task.</p>
+<ul>
+<li><strong>Plan</strong>: explore the project read-only, define files/tools/evidence, identify</li>
+</ul>
+<p>  risks, and produce an ordered plan. A Plan is not permission to execute it.</p>
+<ul>
+<li><strong>Agent</strong>: execute an approved, bounded editor-local task as the assigned</li>
+</ul>
+<p>  writer, then run relevant tests and report exact changes and evidence.</p>
+<p>Start a new Assistant conversation after adding, changing, rescanning, allowing,</p>
+<p>or denying an AI Skill. Old conversations retain their original skill context.</p>
+<p>Read <code>references/responsibility-matrix.md</code> before combining surfaces.</p>
+<p>The checked-in settings baseline deliberately does not choose an AI provider or</p>
+<p>model. Choose those per project and per user after verifying entitlement, cost,</p>
+<p>and the intended task; the settings helper rejects provider/service/model keys</p>
+<p>before it can write EditorPrefs.</p>
+<h2>Route by comparative advantage</h2>
+<ul>
+<li>Use Unity Assistant for scene-aware, visual, asset, and short editor-local</li>
+</ul>
+<p>  work where live Unity context matters.</p>
+<ul>
+<li>Use Unity Default/Lite for routine work. Use a higher-cost model only when the</li>
+</ul>
+<p>  visual or architectural difficulty justifies it.</p>
+<ul>
+<li>Use AI Gateway's bundled Codex only for short editor-local tasks. Use Codex</li>
+</ul>
+<p>  Desktop for repository-scale changes, history, scripts, broad filesystem</p>
+<p>  context, and multi-file verification.</p>
+<ul>
+<li>Use the official Unity MCP relay for supported high-level operations,</li>
+</ul>
+<p>  explicit project/PID targeting, and paid Unity AI generation</p>
+<p>  (<code>Unity_AssetGeneration_GetModels</code> then <code>GenerateAsset</code>: materials + PBR,</p>
+<p>  meshes with retopology/texture/rig, sprites/images/cubemaps, humanoid</p>
+<p>  animation from text or video, sound). Prompts for materials/shaders must</p>
+<p>  state the render pipeline (URP) and mobile/Quest target explicitly, or</p>
+<p>  generation defaults to Standard-shader output that renders magenta on URP.</p>
+<ul>
+<li>Use IvanMurzak MCP for path-scoped reads, JSON patching, deep object/asset</li>
+</ul>
+<p>  access, tests, profiler, screenshots, packages, particles, editor C#</p>
+<p>  execution (<code>script-execute</code>, <code>reflection-method-*</code>), and other verified</p>
+<p>  editor surfaces.</p>
+<ul>
+<li>Use the Meta XR runtime bridge (Meta XR Core SDK AI Tools) for Quest</li>
+</ul>
+<p>  project-setup validation and auto-fix (<code>UPSTTools</code>), structured compile</p>
+<p>  state (<code>CompilationTools</code>, <code>CodeAnalysisTools</code>), async test runs</p>
+<p>  (<code>TestRunnerTools</code>), GameObject/component operations (<code>SceneObjectsTools</code>),</p>
+<p>  Building Block install/config (<code>BuildingBlocksTools</code>), and editor-window</p>
+<p>  capture/drive (<code>UIVerificationTools</code>, <code>InteractionTestingTools</code>).</p>
+<ul>
+<li>Use Meta XR Operator (Core SDK v205+, OpenXR API layer) to drive and verify</li>
+</ul>
+<p>  a RUNNING XR session: head/controller pose injection, controller input,</p>
+<p>  composited-image capture, spatial entities. Runtime-only — its tools error</p>
+<p>  outside an active session, and its evidence is simulator-grade.</p>
+<ul>
+<li>Use shell scripts for deterministic builds, manifests/APKs, Git, locks, and</li>
+</ul>
+<p>  reproducible audits. Use Meta XR Simulator, MQDH, and physical Quest hardware</p>
+<p>  for progressively stronger runtime evidence.</p>
+<p>All of these surfaces drive the same live Editor. The single-writer rule</p>
+<p>applies across servers, not per server: overlapping tools (IvanMurzak</p>
+<p><code>tests-run</code> vs <code>TestRunnerTools</code>; <code>gameobject-*</code> vs <code>SceneObjectsTools</code>)</p>
+<p>share underlying Editor state — pick one surface per phase and serialize.</p>
+<p>For PCA work, Simulator can prove surrounding XR/stereo plumbing and synthetic</p>
+<p>eye composition but cannot replace advancing live-camera evidence. Require a</p>
+<p>standalone Quest build for real PCA; Meta's PCA Camera API is not supported over</p>
+<p>Quest Link.</p>
+<p>Do not add <code>[AgentTool]</code>, <code>[McpTool]</code>, or IvanMurzak <code>[AiTool]</code> APIs (via</p>
+<p><code>unity-skill-create</code>) until repeated evaluation proves a missing operation.</p>
+<p>Do not duplicate an official, Ivan, or Meta-bridge tool. Keep</p>
+<p><code>com.ivanmurzak.unity.mcp</code> and its companion packages (<code>.particlesystem</code>,</p>
+<p><code>.animation</code>) version-locked — a mismatch is a project-wide compile failure.</p>
+<h2>Protect credentials and paid operations</h2>
+<p>Keep MCP credentials out of repositories, prompts, logs, generated skills, and</p>
+<p>screenshots. Configure Assistant extensions locally and keep real <code>.mcp.json</code></p>
+<p>and <code>UserSettings/mcp.json</code> ignored. Commit localhost-only examples with no</p>
+<p>headers or tokens. Verify the Unity organization seat is assigned and the</p>
+<p>project is linked to that organization; owned credits alone do not prove AI</p>
+<p>Gateway or MCP entitlement. The local Licensing Client lists Editor products,</p>
+<p>not the cloud Unity AI named-user seat; verify each surface independently.</p>
+<p>Before asset generation, obtain explicit operator consent for the proposed</p>
+<p>provider, asset type/count, destination, and expected credit use. Bound the wait,</p>
+<p>preserve generation provenance and license/usage metadata, inspect the result,</p>
+<p>and remove disposable smoke assets. Never interpret a long generation wait as</p>
+<p>permission for an unbounded retry.</p>
+<h2>Checkpoint and profiler policy</h2>
+<p>Keep Unity Assistant checkpoints disabled while external agents or another</p>
+<p>writer may touch the project. Enable checkpoints only on a clean isolated branch</p>
+<p>where Assistant is the sole writer and recovery behavior has been tested.</p>
+<p>With Assistant 2.14, <code>CheckpointEnabled: false</code> alone does not prevent the</p>
+<p>first-time discovery banner from auto-initializing and enabling checkpoints.</p>
+<p>Persist the package's explicit discovery user-disabled/dismissed opt-out fields</p>
+<p>and verify them after import.</p>
+<p>Capture a safe Git checkpoint before a risky package, scene, prefab, or generated</p>
+<p>asset mutation. Use Unity Profiler counters and Ivan/MQDH/Perfetto evidence for</p>
+<p>performance claims; visual inspection alone is not a frame-time result.</p>
+<h2>Audit user settings instead of copying Preferences</h2>
+<p>Run <code>scripts/configure-unity-ai-settings --project &lt;path&gt;</code> before an Assistant</p>
+<p>or Meta bridge canary. Add <code>--apply</code> only when the operator has approved the</p>
+<p>reviewed baseline and this Editor is the sole writer. The baseline keeps normal</p>
+<p>project reads available but approval-gates external reads, project writes,</p>
+<p>third-party tools, Play Mode, screen capture, generated code, and paid asset</p>
+<p>generation. Meta's remote and MCP listeners do not auto-start, which prevents</p>
+<p>LAN exposure, port collisions, and wrong-project routing across open Editors.</p>
+<p>Never serialize a whole Unity Preferences file. Do not read, copy, diff, or set</p>
+<p>access tokens, provider credentials, account disclaimers, enabled providers, or</p>
+<p>model choices. Those remain local, per-user consent and entitlement decisions.</p>
+<p>Read <code>references/settings-and-research.md</code> before changing the baseline or</p>
+<p>automating tooling research.</p>
+<h2>Handoff contract</h2>
+<p>At every writer change, record the exact project path and Editor/PID, branch and</p>
+<p>Git state, active lock/import/build status, packages changed, tests already run,</p>
+<p>remaining task, evidence paths, and credentials/credits that were intentionally</p>
+<p>not transferred. The next writer must re-check those facts before mutation.</p>
+<p>Read <code>references/safety-and-handoffs.md</code> for the preflight and acceptance</p>
+<p>checklists. If writer ownership is ambiguous, stop mutations and continue only</p>
+<p>with read-only inspection until ownership is explicit.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/unity-quest-build/"><span class="name">unity-quest-build</span><span class="desc">An evidence ladder for building, testing, profiling, and accepting Unity applications on Meta Quest.</span></a> <a class="sd-rel-tile" href="/skills/quest-passthrough-camera-capture/"><span class="name">quest-passthrough-camera-capture</span><span class="desc">Practical lifecycle rules for safely copying Meta Quest passthrough camera frames into Unity-owned textures.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>8</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 9.2 KB</span></span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/responsibility-matrix.md"><span class="kind">reference</span><span class="file"><span class="title">Responsibility Matrix</span><span class="path">references/responsibility-matrix.md · 2.7 KB</span></span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/references/responsibility-matrix.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/safety-and-handoffs.md"><span class="kind">reference</span><span class="file"><span class="title">Safety And Handoffs</span><span class="path">references/safety-and-handoffs.md · 2.5 KB</span></span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/references/safety-and-handoffs.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/settings-and-research.md"><span class="kind">reference</span><span class="file"><span class="title">Settings And Research</span><span class="path">references/settings-and-research.md · 3.0 KB</span></span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/references/settings-and-research.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/unity-ai-settings-baseline.json"><span class="kind">config</span><span class="file"><span class="title">Unity Ai Settings Baseline</span><span class="path">references/unity-ai-settings-baseline.json · 5.4 KB</span></span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/references/unity-ai-settings-baseline.json.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Agent metadata</div><div class="sd-resource-row"><button type="button" data-package-file="agents/openai.yaml"><span class="kind">config</span><span class="file"><span class="title">Openai</span><span class="path">agents/openai.yaml · 240 B</span></span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/agents/openai.yaml.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Scripts</div><div class="sd-resource-row"><button type="button" data-package-file="scripts/configure-unity-ai-settings"><span class="kind">script</span><span class="file"><span class="title">Configure Unity Ai Settings</span><span class="path">scripts/configure-unity-ai-settings · 8.2 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/scripts/configure-unity-ai-settings.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="scripts/test_configure_unity_ai_settings.py"><span class="kind">script</span><span class="file"><span class="title">Test Configure Unity Ai Settings</span><span class="path">scripts/test_configure_unity_ai_settings.py · 6.6 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/unity-ai-collaboration/scripts/test_configure_unity_ai_settings.py.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/unity-ai-collaboration/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/unity-ai-collaboration/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

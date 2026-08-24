@@ -67,12 +67,140 @@ requires-secrets: []
 resources:
   - path: story.md
     type: file
----</pre></div><h2>Why</h2>
-<p>The easy way to make a demo video is to outrun the facts. That is not a feature.</p>
-<h2>How</h2>
-<p>It inventories what the repository can honestly claim, plans real or clearly simulated captures, and stops at a reviewable script and storyboard. No render starts without a human yes.</p>
-<h2>Related</h2>
-<p>Hand the approved plan to <a href="/skills/repo-demo-video-publisher/">Repo Demo Video Publisher</a> and use <a href="/skills/video-toolkit/">Video Toolkit</a> only when the media work needs a bigger rig.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/repo-demo-video-publisher/"><span class="name">repo-demo-video-publisher</span><span class="desc">A gated workflow for rendering, checking, uploading, and embedding a repository demo video without polluting the repo.</span></a> <a class="sd-rel-tile" href="/skills/video-toolkit/"><span class="name">video-toolkit</span><span class="desc">A configurable production toolkit for assembling generated assets and Remotion renders without losing the thread.</span></a></div></div></div></article></section>
+---</pre></div><h2>Repo Demo Video Director</h2>
+<p>Plan short repository README demo videos before any render or upload work. This skill owns truthful positioning, storyboard choices, screenshot/terminal/audio asset direction, simulated data, and the handoff brief. It does not render video, generate audio, upload assets, or edit README files; use <code>repo-demo-video-publisher</code> for that publishing layer after human approval.</p>
+<p>A human review gate is mandatory. Stop after proposing the script/storyboard/render direction and ask the user to approve or revise it before any rendering, README editing, upload, or publisher workflow begins.</p>
+<h2>When to use</h2>
+<ul>
+<li>A user asks for a repository demo, trailer, launch video, README video, or product overview video.</li>
+<li>A README demo needs standardized public-repo positioning before a Remotion render.</li>
+<li>An existing video idea needs a claim check against the repo before publishing.</li>
+<li>A release update needs a demo video, but the repo's general value still needs to be clear first.</li>
+</ul>
+<h2>Direction Principles</h2>
+<ul>
+<li>Lead with the repo overview: what the project is, who it is for, and the core workflow it enables.</li>
+<li>Treat release notes, recent PRs, and commit-specific details as supporting proof points unless the user explicitly asks for a release-only video.</li>
+<li>Use real screenshots wherever possible: product UI, docs pages, GitHub pages, dashboards, setup screens, screenshots already in the repo, or browser-captured web interfaces.</li>
+<li>Use simulated data by default inside screenshots and terminal sessions; never require real credentials, account data, private messages, customer data, balances, or production traffic.</li>
+<li>Plan audio deliberately. Silence is acceptable; background music, UI sound effects, or voiceover should exist only when they improve the video and can be approved by a human before generation/rendering.</li>
+<li>Keep claims truthful, source-backed, and conservative.</li>
+<li>Do not impose an unrelated house style. Use the repository, organization, or product styling instead.</li>
+<li>Stop for human review at the script/storyboard milestone. Do not hand off an unapproved video direction as render-ready.</li>
+</ul>
+<h2>Screenshot and Terminal Asset Direction</h2>
+<p>Screenshots should be preferred over invented UI when they can truthfully show the repo or product.</p>
+<ul>
+<li>Identify every web interface that could be captured: local dev app, docs site, GitHub README/issues/releases, dashboard, admin UI, OAuth setup page, CLI docs page, generated API docs, or public demo page.</li>
+<li>If <code>browser-hand</code> is available, recommend it for browser screenshots, especially authenticated or already-open Chrome contexts. If not available, use Playwright, the in-app browser, or another screenshot tool available to that agent.</li>
+<li>Specify exact page states to capture, viewport sizes, privacy redactions, and whether the screenshot is real, staged, or simulated.</li>
+<li>For terminal or agent-session visuals, prefer deterministic scripted sessions over live recordings. The preferred renderer is Charmbracelet VHS when available; it can render scripted terminal demos from <code>.tape</code> files into video/GIF outputs.</li>
+<li>If the video needs a browser-rendered terminal UI, recommend xterm.js-style simulated terminal components. This works well inside Remotion because the terminal can be styled and animated as React/browser UI.</li>
+<li>Asciinema is useful for real terminal recordings and web/player replays; use it when a true command transcript is more important than fully scripted polish. <code>agg</code> can render asciinema casts to GIFs when installed.</li>
+<li>Treat Terminalizer and termtosvg as fallback/special-purpose options: Terminalizer is customizable but GIF-focused; termtosvg is archived and should not be a default dependency.</li>
+<li>Never show raw real agent logs, prompts, secrets, API keys, phone numbers, local paths, or private account data. Use a sanitized transcript or simulated agent session.</li>
+</ul>
+<h2>Audio Direction</h2>
+<p>Audio is part of the proposed video direction and must be reviewed with the script/storyboard.</p>
+<ul>
+<li>Decide explicitly whether the video should be silent, use background music, use subtle sound effects, use voiceover, or combine these.</li>
+<li>Default to lightweight background music or silence for README demos. Use voiceover only when it materially improves clarity and the user approves the narration script.</li>
+<li>Prefer ElevenLabs for generated audio when available: <code>music</code> for background tracks, <code>sound-effects</code> for UI/ambient cues, and <code>text-to-speech</code> for approved voiceover. If an ElevenLabs MCP server is exposed, the publisher may use it; otherwise it should use the local ElevenLabs skills or API workflow.</li>
+<li>Keep Suno as an explicit fallback or legacy option, not the default, unless the user specifically asks for it or an existing Suno asset is already approved.</li>
+<li>Include exact audio intent in the review brief: mood, duration, loop/fade behavior, whether lyrics are forbidden, sound-effect cues, voiceover text, and where audio enters/exits the timeline.</li>
+<li>Do not reference specific artists, bands, copyrighted lyrics, or private voice/persona data in prompts.</li>
+<li>Do not generate audio until the human approves the audio plan, including any voiceover script.</li>
+<li>Generated audio, prompt notes, model/tool provenance, and source files stay in scratch by default and must not be committed to the repo.</li>
+</ul>
+<h2>Remotion Plugin Coordination</h2>
+<p>This skill plans the creative and factual brief; it does not write Remotion code. When the final output will be rendered in Remotion, include a technical note for the publisher:</p>
+<ul>
+<li>If the agent has the Remotion plugin or skill, use <code>remotion:remotion-best-practices</code> before implementing or rendering Remotion code. In Codex this is the <code>@remotion</code> plugin-backed skill.</li>
+<li>If an agent does not have that plugin, do not block the project. Fall back to normal Remotion documentation, existing local project conventions, and direct CLI usage.</li>
+<li>Mention likely Remotion rule areas for the renderer, such as animations, assets/images, sequencing, text measurement, audio, captions, or video trimming, but avoid copying technical implementation detail into the director brief.</li>
+<li>The publisher remains responsible for loading the Remotion reference and doing render/frame/audio verification.</li>
+</ul>
+<h2>Workflow</h2>
+<ol>
+<li><strong>Inspect repo truth.</strong> Read the README, roadmap/scope docs, contribution or agent instructions, package metadata, public tool/API descriptions, screenshots/assets in the repo, and recent commits since the last release tag or documented baseline.</li>
+<li><strong>Build a claim ledger.</strong> List the product claims the video may show, their source files or commits, and any claims that must be avoided. Keep claims concrete and conservative.</li>
+<li><strong>Choose an overview-first angle.</strong> Identify the repo's primary job, target user, and baseline workflow. If there is a release angle, reserve it for one or two beats after the viewer understands the product.</li>
+<li><strong>Plan real visual captures.</strong> Identify screenshot candidates, browser pages, terminal/agent-session moments, exact capture states, and redaction/simulation requirements. Prefer real screenshots where feasible, but never at the expense of privacy or truthfulness.</li>
+<li><strong>Plan audio.</strong> Decide silent/music/sound-effects/voiceover, state the intended ElevenLabs or fallback path, write any voiceover text, define cue timing, and identify copyright/privacy constraints.</li>
+<li><strong>Define simulated data.</strong> Specify fake names, messages, accounts, API responses, logs, commands, agent output, and UI states. For privacy-sensitive domains, require obvious simulation cues and no real customer/account data.</li>
+<li><strong>Storyboard the video.</strong> Produce 5-7 beats for a 30-60s video with a deliberate frame-0 title/product slate, overview beats, screenshot/terminal beats, feature/demo beats, audio cues, and a clear final state. Include captions or on-screen copy, visual composition, and motion notes.</li>
+<li><strong>Write the proposed script.</strong> Include narration or on-screen copy, approximate timing, core visual action, audio direction, and source-backed claims for each beat. Keep it readable enough for a human to review without opening the repo.</li>
+<li><strong>Pick visual direction.</strong> Use repo or organization branding when it exists. Avoid one-hue palettes and generic AI magic visuals.</li>
+<li><strong>Add Remotion handoff notes.</strong> State whether the renderer should use <code>remotion:remotion-best-practices</code> if available, and list any relevant rule areas without prescribing unreviewed code.</li>
+<li><strong>Stop for human review.</strong> Ask the user to approve or revise the audience/angle, script, storyboard, screenshot/terminal asset plan, audio plan, simulated data, visual direction, README placement, and Remotion handoff notes. Do not render, generate audio, upload, edit README, call publisher, or continue into production until the user explicitly approves.</li>
+<li><strong>After approval only, write the final publisher handoff.</strong> Include the approval evidence so <code>repo-demo-video-publisher</code> can verify that the script/storyboard/audio review gate passed.</li>
+</ol>
+<h2>Human Review Gate</h2>
+<p>The director output is not render-ready until a human approves it.</p>
+<p>The review request must make these decisions explicit:</p>
+<ul>
+<li>Audience and angle.</li>
+<li>Script or on-screen copy.</li>
+<li>Storyboard beats and timing.</li>
+<li>Screenshot and terminal asset plan.</li>
+<li>Audio plan: silent/music/sound-effects/voiceover, prompts, voiceover text, cue timing, and generation path.</li>
+<li>Simulated data and privacy disclaimers.</li>
+<li>Visual direction and branding.</li>
+<li>README placement and caption/disclaimer.</li>
+<li>Remotion plugin/fallback note for the renderer.</li>
+</ul>
+<p>If the user has not approved the proposed video direction, end with <code>Status: pending human review</code> and do not provide an approved publisher handoff. If the user later approves with changes, incorporate those changes and mark the handoff as approved.</p>
+<p>Approval evidence should use a compact form such as:</p>
+<pre><code>script_review_status: approved
+reviewer: human user
+approved_at: &lt;date or message reference&gt;
+approved_scope: &lt;short description of the approved script/storyboard/audio plan&gt;</code></pre>
+<h2>Output</h2>
+<p>For the first pass, return a review brief with these sections:</p>
+<ul>
+<li><code>Repo overview</code></li>
+<li><code>Audience and angle</code></li>
+<li><code>Claim ledger</code></li>
+<li><code>Avoided claims</code></li>
+<li><code>Screenshot and terminal asset plan</code></li>
+<li><code>Audio plan</code></li>
+<li><code>Simulated data</code></li>
+<li><code>Proposed script and storyboard</code></li>
+<li><code>Visual direction</code></li>
+<li><code>README placement</code></li>
+<li><code>Remotion plugin note</code></li>
+<li><code>Human review request</code></li>
+<li><code>Status: pending human review</code></li>
+</ul>
+<p>After explicit approval, return a final publisher handoff with these sections:</p>
+<ul>
+<li><code>Audience and angle</code></li>
+<li><code>Claim ledger</code></li>
+<li><code>Avoided claims</code></li>
+<li><code>Screenshot and terminal asset plan</code></li>
+<li><code>Audio plan</code></li>
+<li><code>Simulated data</code></li>
+<li><code>Approved script and storyboard</code></li>
+<li><code>Visual direction</code></li>
+<li><code>README placement</code></li>
+<li><code>Remotion plugin note</code></li>
+<li><code>Human approval evidence</code></li>
+<li><code>Publisher handoff</code></li>
+</ul>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Do not invent capabilities because they would look good on video.</li>
+<li>Do not lead with PR numbers, commit internals, or release mechanics before the viewer understands what the repo does.</li>
+<li>Do not use abstract simulated UI when a safe real screenshot would be clearer and truthful.</li>
+<li>Do not add music, voiceover, or sound effects just because the tools exist.</li>
+<li>Do not generate audio before the audio plan and any narration script are approved.</li>
+<li>Do not show real credentials, messages, phone numbers, account balances, customer records, private repo data, raw agent logs, or local paths.</li>
+<li>Do not use a direct MP4 URL as a README fallback link; the publisher skill handles embed hygiene.</li>
+<li>Do not commit Remotion projects, rendered media, package locks, screenshots, audio, or generated assets to the target repo by default.</li>
+<li>Do not widen repo scope; respect the project roadmap and out-of-scope list.</li>
+<li>Do not hand off to the publisher as approved without explicit human approval of the script/storyboard/audio plan/proposed video.</li>
+<li>Do not require the Remotion plugin or ElevenLabs MCP for agents that do not have them; use them when available and document the fallback when unavailable.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/repo-demo-video-publisher/"><span class="name">repo-demo-video-publisher</span><span class="desc">A gated workflow for rendering, checking, uploading, and embedding a repository demo video without polluting the repo.</span></a> <a class="sd-rel-tile" href="/skills/video-toolkit/"><span class="name">video-toolkit</span><span class="desc">A configurable production toolkit for assembling generated assets and Remotion renders without losing the thread.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 12 KB</span></span></button><a class="raw-link" href="/bundles/repo-demo-video-director/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/repo-demo-video-director/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>[Bash, Read]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/repo-demo-video-director/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

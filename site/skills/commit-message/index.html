@@ -63,15 +63,95 @@ capabilities:
   network: false
   filesystem: readonly
   tools: [Bash]
----</pre></div><h2>Why it exists</h2>
-<p>Commit messages were either empty or novels. This drafts from the staged diff.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>Pure git; portable across agents.</p>
-<h2>How Jack actually uses it</h2>
-<p>After staging, before commit.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
+---</pre></div><h2>Commit Message Drafter</h2>
+<p>Turn the current staged diff into a well-formed conventional-commit message</p>
+<p>and present it to the user for approval before any commit is made.</p>
+<h2>When to use</h2>
+<ul>
+<li>The user asks you to &quot;commit this&quot;, &quot;write a commit message&quot;, &quot;stage and</li>
+</ul>
+<p>  commit&quot;, or similar.</p>
+<ul>
+<li>The user has finished a change and is about to run <code>git commit</code>.</li>
+<li>Staged changes exist but no message has been drafted yet.</li>
+</ul>
+<p>Do not use this skill to commit on the user's behalf without approval. The</p>
+<p>output of this skill is a <em>draft message</em>, not a commit action.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A git repository in the current working directory.</li>
+<li>At least one staged change (<code>git diff --staged</code> returns non-empty output).</li>
+</ul>
+<p>If nothing is staged, stop and ask the user what they want staged.</p>
+<h2>Workflow</h2>
+<h3>1. Inspect the staged change</h3>
+<pre><code>git status --short
+git diff --staged --stat
+git diff --staged</code></pre>
+<p>Read all three outputs before drafting anything. The stat view shows which</p>
+<p>files changed; the full diff shows how. Ignore generated files, lockfiles,</p>
+<p>and anything that looks mechanical (whitespace-only, import reordering).</p>
+<h3>2. Classify the change</h3>
+<p>Pick one <code>type</code> from the conventional-commits vocabulary:</p>
+<ul>
+<li><code>feat</code> — new user-visible capability</li>
+<li><code>fix</code> — bug fix</li>
+<li><code>refactor</code> — code change that neither adds a feature nor fixes a bug</li>
+<li><code>docs</code> — documentation only</li>
+<li><code>test</code> — test-only</li>
+<li><code>chore</code> — tooling, deps, CI, build scripts</li>
+<li><code>perf</code> — performance improvement</li>
+<li><code>style</code> — formatting only (rare; prefer <code>chore</code> unless explicitly stylistic)</li>
+</ul>
+<p>When in doubt between <code>feat</code> and <code>refactor</code>: if a user would notice, it's</p>
+<p><code>feat</code>. If only developers would notice, it's <code>refactor</code>.</p>
+<h3>3. Pick a scope (optional)</h3>
+<p>If the change is isolated to one subsystem, add a scope in parentheses.</p>
+<p>Keep it short and lowercase (<code>auth</code>, <code>parser</code>, <code>cli</code>, <code>storage</code>).</p>
+<h3>4. Write the subject line</h3>
+<p>Format: <code>&lt;type&gt;(&lt;scope&gt;): &lt;imperative summary&gt;</code></p>
+<ul>
+<li>Imperative mood (&quot;add X&quot;, not &quot;added X&quot; or &quot;adds X&quot;)</li>
+<li>No trailing period</li>
+<li>Target ≤ 72 characters</li>
+<li>Describe the <em>intent</em>, not the mechanics (&quot;fix login redirect loop&quot;, not</li>
+</ul>
+<p>  &quot;change if-statement in login.ts&quot;)</p>
+<h3>5. Write the body (if the change warrants one)</h3>
+<p>Skip the body for trivial changes. Include a body when:</p>
+<ul>
+<li>The <em>why</em> isn't obvious from the subject.</li>
+<li>There are trade-offs or non-obvious consequences.</li>
+<li>The change fixes an issue or implements an RFC — reference it.</li>
+</ul>
+<p>Format: one blank line after the subject, then wrapped paragraphs at ≤ 72</p>
+<p>columns. Use bullet points for multi-part rationale.</p>
+<h3>6. Present for approval</h3>
+<p>Show the user the full drafted message and ask whether to commit as-is,</p>
+<p>edit, or abandon. Never run <code>git commit</code> without explicit approval.</p>
+<h2>Example output</h2>
+<pre><code>feat(auth): add session renewal on MFA upgrade
+
+When a user upgrades their MFA factor from SMS to TOTP, the session token
+previously remained bound to the old factor claim until sign-out. Renew
+the session in-place so downstream services see the new factor immediately.
+
+- triggers on successful TOTP enrollment
+- preserves original issued_at for audit
+- no-op for sessions issued under the new factor</code></pre>
+<h2>Anti-patterns to avoid</h2>
+<ul>
+<li>Vague subjects like &quot;update code&quot;, &quot;small fixes&quot;, &quot;misc&quot;.</li>
+<li>Subjects that narrate the mechanical edit (&quot;move function&quot;, &quot;rename</li>
+</ul>
+<p>  variable&quot;) rather than the intent.</p>
+<ul>
+<li>Bodies that restate the diff. If a reader can learn the same thing from</li>
+</ul>
+<p>  <code>git show</code>, the body is noise.</p>
+<ul>
+<li>Committing without showing the user the draft first.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/babysit/"><span class="name">babysit</span><span class="desc">PR review loops were eating whole sessions. Babysit is the exclusive-label workflow: active, waiting-codex, waiting-ci, blocked, ready.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 3.8 KB</span></span></button><a class="raw-link" href="/bundles/commit-message/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/commit-message/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>[Bash]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/commit-message/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

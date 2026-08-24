@@ -67,15 +67,81 @@ requires-secrets:
   - name: AUTOMEM_API_KEY
     description: Bearer token for the AutoMem service at AUTOMEM_ENDPOINT (falls back to AUTOMEM_API_TOKEN).
     required: true
----</pre></div><h2>Why it exists</h2>
-<p>Pre-meeting context kept dying with the chat. The dossier in AutoMem is the deliverable.</p>
-<h2>History</h2>
-<h3>0.1.0</h3>
-<p>Wired through AutoHub context-module write path.</p>
-<h2>How Jack actually uses it</h2>
-<p>Primary sources, then store+verify recall before reporting done.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
+---</pre></div><h2>Entity Dossier</h2>
+<p>Turn web research on a person, business, or concept into durable AutoMem</p>
+<p>memories that AutoHub's context-module recall side (resolver, memory context</p>
+<p>service, voice memory) can activate later. The AutoMem write is the</p>
+<p>deliverable, not the chat reply.</p>
+<h2>When to use / when not</h2>
+<ul>
+<li><strong>Use:</strong> &quot;build a dossier on X&quot;, &quot;research X and remember them&quot;, background</li>
+</ul>
+<p>  on a person/company/concept that future conversations should recall.</p>
+<ul>
+<li><strong>Don't use:</strong> throwaway lookups (&quot;what's X's website&quot;), anything requiring</li>
+</ul>
+<p>  non-public data about private individuals, or research the requester</p>
+<p>  explicitly wants kept out of memory.</p>
+<h2>Ritual</h2>
+<ol>
+<li><strong>Scope.</strong> Pin the entity type (person / organization / concept), why it</li>
+</ol>
+<p>   matters (meeting, collab, mailing list, curiosity), and how deep to go.</p>
+<ol>
+<li><strong>Research.</strong> Primary sources first — their own site, talks, repos,</li>
+</ol>
+<p>   published writing, filings. Record dates on claims, keep explicit</p>
+<p>   uncertainty (&quot;unverified&quot;, &quot;as of &lt;date&gt;&quot;), collect 3–6 topics and the</p>
+<p>   source URLs you actually used.</p>
+<ol>
+<li><strong>Compose the payload</strong> as JSON:</li>
+</ol>
+<p>   ```json</p>
+<p>   {</p>
+<p>     &quot;module&quot;: { &quot;id&quot;: &quot;steven-cotler&quot;, &quot;name&quot;: &quot;Steven Cotler dossier&quot; },</p>
+<p>     &quot;people&quot;: [</p>
+<p>       {</p>
+<p>         &quot;canonicalName&quot;: &quot;Steven Cotler&quot;,</p>
+<p>         &quot;role&quot;: &quot;Author&quot;,</p>
+<p>         &quot;company&quot;: &quot;…&quot;,</p>
+<p>         &quot;publicSummary&quot;: &quot;2-4 sentences, dated, uncertainty explicit.&quot;,</p>
+<p>         &quot;topics&quot;: [&quot;flow research&quot;, &quot;…&quot;],</p>
+<p>         &quot;sources&quot;: [&quot;https://…&quot;, &quot;https://…&quot;]</p>
+<p>       }</p>
+<p>     ]</p>
+<p>   }</p>
+<p>   ```</p>
+<p>   <code>module.id</code> is the stable slug recall will key on. Multiple people in one</p>
+<p>   module are fine (rosters); one person is the common case.</p>
+<ol>
+<li><strong>Store</strong> — from the AutoHub workspace:</li>
+</ol>
+<p>   ```bash</p>
+<p>   node --env-file-if-exists=.env scripts/build-context-module.js --input /absolute/path/entity.json</p>
+<p>   ```</p>
+<p>   The <code>--env-file-if-exists=.env</code> flag is load-bearing: it pulls</p>
+<p>   <code>AUTOMEM_ENDPOINT</code> + <code>AUTOMEM_API_KEY</code>/<code>AUTOMEM_API_TOKEN</code> from the</p>
+<p>   workspace <code>.env</code> (the repo convention for env-dependent scripts). Without</p>
+<p>   it the store fails with a missing-credentials error unless those vars are</p>
+<p>   already exported in your shell.</p>
+<p>   Add <code>--expires-days N</code> only for event-scoped modules (conference rosters);</p>
+<p>   omit it for durable profiles. <code>--emit-module &lt;path&gt;</code> (writing a</p>
+<p>   <code>config/context-modules/&lt;id&gt;.json</code> activation descriptor) is opt-in and</p>
+<p>   needs an explicit request — never write it by default.</p>
+<ol>
+<li><strong>Verify.</strong> Recall with tags <code>[&quot;context-module:dossier&quot;, &quot;entity:people:&lt;slug&gt;&quot;]</code></li>
+</ol>
+<p>   and confirm the stored dossier comes back. No recall, not done.</p>
+<ol>
+<li><strong>Report.</strong> One paragraph of findings, the stored memory ids from the</li>
+</ol>
+<p>   script's JSON output, and a recommendation only if one was asked for.</p>
+<h2>Never</h2>
+<ul>
+<li>Store secrets, credentials, or non-public personal data.</li>
+<li>Fabricate or pad sources/topics — fewer, real ones win.</li>
+<li>Skip the verification recall or report &quot;done&quot; on the script exit code alone.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 3.7 KB</span></span></button><a class="raw-link" href="/bundles/entity-dossier/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/entity-dossier/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>[Bash, Read]</dd></div></dl><p class="muted">Requires: AUTOMEM_API_KEY</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/entity-dossier/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, autojack</span></div></div></section>

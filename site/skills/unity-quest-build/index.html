@@ -81,12 +81,185 @@ bin:
     command: scripts/audit-unity-quest-toolchain
     description: Audit a Unity Quest project's installed and pinned toolchain without changing it.
     requires-tty: false
----</pre></div><h2>Why</h2>
-<p>A successful Unity build says very little about a comfortable, functional headset experience.</p>
-<h2>How</h2>
-<p>Start with static checks, move through simulator evidence, then finish on a fresh device build with real runtime evidence. The toolchain audit keeps the local setup from becoming folklore.</p>
-<h2>Related</h2>
-<p>Coordinate the Editor with <a href="/skills/unity-ai-collaboration/">Unity AI Collaboration</a> and use <a href="/skills/quest-passthrough-camera-capture/">Quest Passthrough Camera Capture</a> for PCA-specific behavior.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/unity-ai-collaboration/"><span class="name">unity-ai-collaboration</span><span class="desc">A routing and handoff model for multiple AI surfaces working around one live Unity Editor.</span></a> <a class="sd-rel-tile" href="/skills/quest-passthrough-camera-capture/"><span class="name">quest-passthrough-camera-capture</span><span class="desc">Practical lifecycle rules for safely copying Meta Quest passthrough camera frames into Unity-owned textures.</span></a></div></div></div></article></section>
+---</pre></div><h2>Unity 6 Meta Quest delivery</h2>
+<p>Use a simulator-first, evidence-driven loop. A green compile is not a Quest</p>
+<p>acceptance result.</p>
+<h2>Platform contract</h2>
+<p><code>scripts/audit-unity-quest-toolchain</code> currently supports <strong>macOS only</strong>. It</p>
+<p>inspects macOS Unity Hub, Editor, Meta Quest Developer Hub, Simulator, and</p>
+<p>licensing layouts and fails closed on Windows or Linux rather than reporting</p>
+<p>those paths as missing. Run it on a macOS build machine, or perform an</p>
+<p>equivalent platform-specific inventory outside this package.</p>
+<h2>Start with the actual environment</h2>
+<ol>
+<li>Run <code>scripts/audit-unity-quest-toolchain --project &lt;path&gt; --json</code>.</li>
+<li>Read project instructions, package pins, build scripts, current Git state,</li>
+</ol>
+<p>   active Unity processes, and connected ADB devices.</p>
+<ol>
+<li>Preserve a validated Unity/Meta combination. Evaluate newer Editor streams</li>
+</ol>
+<p>   in an isolated worktree before changing the production pin.</p>
+<ol>
+<li>Assign one mutation owner. Serialize Unity imports, MCP writes, builds,</li>
+</ol>
+<p>   installs, captures, and other ADB operations.</p>
+<p>The audit's <code>unity_license</code> section is limited to local Editor product</p>
+<p>entitlements. Verify the Unity AI subscription, named-user seat assignment, and</p>
+<p>project organization separately in the authenticated Unity Dashboard. Credits</p>
+<p>alone do not prove AI Gateway or MCP entitlement.</p>
+<p>Required Quest build settings are Android, IL2CPP, ARM64 only, OpenXR with the</p>
+<p>Meta Quest feature group, Linear color, and Vulkan. Build enabled scenes with a</p>
+<p>project-owned batch method and validate the APK package before installation.</p>
+<h2>Route work to the right surface</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Need</th><th>Surface</th></tr></thead>
+<tbody>
+<tr><td>Scene, prefab, asset work; paid AI asset generation</td><td>Unity Assistant or official Unity MCP (<code>Unity_AssetGeneration_GetModels</code> then <code>GenerateAsset</code>; consent + URP/mobile-explicit prompts)</td></tr>
+<tr><td>Deep object/asset reads, JSON patch, tests, screenshots, profiler, packages, editor C# (<code>script-execute</code>)</td><td>IvanMurzak Unity MCP</td></tr>
+<tr><td>Quest project-setup validation/auto-fix, compilation status, async test runs, GameObject/component ops, Building Blocks install</td><td>Meta XR runtime bridge (<code>UPSTTools</code>, <code>CompilationTools</code>, <code>TestRunnerTools</code>, <code>SceneObjectsTools</code>, <code>BuildingBlocksTools</code>)</td></tr>
+<tr><td>Editor-window capture and UI drive (visual verification of editor state)</td><td>Meta XR runtime bridge (<code>UIVerificationTools</code>, <code>InteractionTestingTools</code>)</td></tr>
+<tr><td>Runtime interaction with a RUNNING XR session: pose/input injection, composited capture, spatial entities</td><td>Meta XR Operator (Core SDK v205+; Play Mode or Simulator session required)</td></tr>
+<tr><td>Reproducible build, manifest/APK inspection, Git, locks</td><td>Project shell scripts</td></tr>
+<tr><td>Production-scene XR iteration</td><td>Meta XR Simulator and Synthetic Environment Server</td></tr>
+<tr><td>Install, logs, casting, timed Perfetto</td><td>ADB and MQDH (or HZDB / Meta VR CLI where installed — one install path only, duplicates double-register tools)</td></tr>
+<tr><td>Comfort, real hands, compositor/PCA alignment, Quest GPU</td><td>Physical headset</td></tr>
+</tbody></table></div>
+<p>MCP drives a live Editor — and every server in the table drives the SAME</p>
+<p>Editor. Serialize mutations across servers, not per server: an</p>
+<p>IvanMurzak <code>tests-run</code> and a <code>TestRunnerTools</code> run hit the same Test Runner</p>
+<p>and collide. Keep the deterministic CLI build path authoritative. Use</p>
+<p>path-scoped reads and patch only the intended fields instead of serializing</p>
+<p>or rewriting whole Unity objects.</p>
+<p>When a Quest build or runtime misbehaves, check <code>UPSTTools.GetStatus</code> before</p>
+<p>hand-auditing settings — it reports Required/Recommended/Optional setup</p>
+<p>issues with previewable fixes (<code>PreviewFix</code> before <code>FixTask</code>; never blind</p>
+<p><code>FixAll</code> on a pinned project).</p>
+<h2>Follow the verification ladder</h2>
+<p>Read <code>references/verification-ladder.md</code> before choosing a test surface or</p>
+<p>accepting a build. The required order is:</p>
+<ol>
+<li>Static checks and EditMode tests.</li>
+<li>PlayMode tests using production scenes.</li>
+<li>Meta XR Simulator with Quest 3/OpenXR and real stereo structure. With Core</li>
+</ol>
+<p>   SDK v205+, drive this rung agent-side via Meta XR Operator: inject head and</p>
+<p>   controller poses, hold inputs across frames, capture the composited image,</p>
+<p>   and assert on it — closed-loop runtime verification without a human in the</p>
+<p>   headset. Operator evidence is simulator-grade, not device-grade.</p>
+<ol>
+<li>Fresh IL2CPP/ARM64/Vulkan APK on Quest with runtime and human evidence.</li>
+</ol>
+<p>Do not weaken production tracking or permission checks to satisfy a simulator.</p>
+<p>Use an Editor/test-only seam when a deterministic CI profile intentionally does</p>
+<p>not publish tracked head state.</p>
+<p>Meta XR Simulator 201 with Meta XR SDK 203 can expose PCA extensions and</p>
+<p>swapchains without advancing live camera images. In that combination, use an</p>
+<p>Editor/test-only deterministic pair of distinct synthetic eye textures to prove</p>
+<p>topology, eye targeting, and composition. Label them synthetic and reserve live</p>
+<p>freshness, intrinsics, resume, and camera/compositor evidence for a standalone</p>
+<p>Quest build; Meta's PCA Camera API is not supported over Quest Link.</p>
+<h3>`-nographics` breaks pixel-assertion tests</h3>
+<p>Batchmode EditMode/PlayMode tests that assert on rendered pixels fail under</p>
+<p><code>-batchmode -nographics</code> with &quot;rendered 0 visible pixels&quot; — the flag removes</p>
+<p>the graphics device the assertion needs. Drop <code>-nographics</code> for any test run</p>
+<p>that includes shader/renderer contract tests; a headless CI profile that must</p>
+<p>stay <code>-nographics</code> should exclude that fixture class explicitly rather than</p>
+<p>read the failure as a regression.</p>
+<p>Before attributing new test failures to new code, run two independent</p>
+<p>controls, not one: (1) remove the new files and re-run — same failures means</p>
+<p>the new code isn't the cause; (2) vary the suspected environment flag (e.g.</p>
+<p>drop <code>-nographics</code>) and re-run. Either control alone is suggestive; both</p>
+<p>together are proof.</p>
+<h2>Build and install deterministically</h2>
+<ul>
+<li>Use the exact Editor version pinned by <code>ProjectVersion.txt</code>; verify its</li>
+</ul>
+<p>  Android SDK, NDK, OpenJDK, and AndroidPlayer modules.</p>
+<ul>
+<li>Acquire the project's cross-worktree Unity/deployment lock before import,</li>
+</ul>
+<p>  tests, build, or ADB mutation.</p>
+<ul>
+<li>Remove stale output before building. Require Unity exit zero, a non-empty new</li>
+</ul>
+<p>  APK, expected embedded package ID, and restored protected project settings.</p>
+<ul>
+<li>If multiple Android devices exist, require <code>ANDROID_SERIAL</code>. Never restart an</li>
+</ul>
+<p>  ADB daemon owned by another active tool; use the established endpoint.</p>
+<ul>
+<li>Install the exact accepted APK, launch its explicit package, then verify the</li>
+</ul>
+<p>  process and resumed activity. Old installed builds are not evidence.</p>
+<ul>
+<li>Inspect the generated Android manifest, not only Unity templates. Re-add and</li>
+</ul>
+<p>  validate required deep-link filters after Meta manifest processing.</p>
+<h3>Never kill a transactional build mid-flight</h3>
+<p>A build script that swaps project settings — render pipeline asset, application</p>
+<p>identifier, product name, vendor/XR config — and restores them in a <code>finally</code></p>
+<p>leaves the project mutated when the run is killed. The compounding part is</p>
+<p>worse than the mutation: the restore is snapshot-based, so the NEXT build takes</p>
+<p>the mutated state as its own baseline and faithfully restores <em>that</em>. One kill</p>
+<p>becomes permanent, and no later build reports anything wrong.</p>
+<p>It surfaces as &quot;new&quot; failures in build and render-contract tests plus stray</p>
+<p>generated assets, which read as regressions in whatever code was being worked</p>
+<p>on at the time. If a build must be stopped, let it reach its own cleanup;</p>
+<p>otherwise diff the protected settings against HEAD afterwards and restore by</p>
+<p>hand.</p>
+<h3>Working-tree config can be load-bearing — do not `git checkout` it clean</h3>
+<p>Editor plugins write state the committed baseline does not carry: scripting</p>
+<p>define symbols a package needs in order to compile, and package-manifest</p>
+<p>versions whose binaries have already self-healed forward. Reverting those files</p>
+<p>to HEAD to tidy the tree breaks compilation — <code>CS0246</code> on the missing define,</p>
+<p><code>CS0115</code> when a manifest is rolled back underneath newer DLLs.</p>
+<p>Corollary worth knowing before diagnosing: a test that asserts the committed</p>
+<p>ProjectSettings baseline will fail locally whenever such a plugin is active,</p>
+<p>because the plugin requires symbols the baseline forbids committing. That red is</p>
+<p>the environment, not a regression. Confirm by checking whether the file appears</p>
+<p>in the branch diff at all before attributing it to work in progress.</p>
+<h2>Capture trustworthy evidence</h2>
+<ul>
+<li>Bind every capture to the foreground package before and after acquisition.</li>
+<li>Require present, tracked, and pose-valid as separate XR conditions.</li>
+<li>For live passthrough cameras on hardware, finish normal XR warmup and wait for</li>
+</ul>
+<p>  a synchronized left/right pair. Camera feeds can arrive at 60 Hz while the</p>
+<p>  headset renders at 72 Hz, so an arbitrary render frame is invalid evidence.</p>
+<ul>
+<li>After resume, require both eyes to advance beyond their pre-resume frame and</li>
+</ul>
+<p>  timestamp baselines. A young frame can still be pre-resume.</p>
+<ul>
+<li>Require distinct left/right textures or XR array slices and fail closed on</li>
+</ul>
+<p>  mono or left-eye-only rendering.</p>
+<ul>
+<li>Reject empty, uniform, or opaque-black eye images. The visual oracle must find</li>
+</ul>
+<p>  the intended effect bounds/layers in both eyes, not merely hands, UI, or any</p>
+<p>  nonzero pixels. Bound GPU readback and fail on timeout.</p>
+<ul>
+<li>Reject malformed or implausible eye baselines/projections; do not repair them</li>
+</ul>
+<p>  into evidence with a fabricated default.</p>
+<ul>
+<li>Record an atomic bundle: package, build identity, frame token, per-eye hashes,</li>
+</ul>
+<p>  timestamps/poses/intrinsics, visual oracle, logs, and performance trace.</p>
+<ul>
+<li>Use MQDH timed Perfetto capture for 72 Hz acceptance. Use MQDH casting when</li>
+</ul>
+<p>  Android <code>screencap</code> or <code>scrcpy</code> returns black or zero-byte output.</p>
+<p>Read <code>references/failure-modes.md</code> when imports, shaders, simulator tracking,</p>
+<p>PCA, ADB, screenshots, or resume behavior is abnormal.</p>
+<h2>Acceptance contract</h2>
+<p>Simulator evidence is sufficient for scene wiring, placement, interaction</p>
+<p>contracts, stereo topology, shader/material state, and most PCA iteration.</p>
+<p>Physical Quest evidence remains mandatory for binocular comfort, real-hand</p>
+<p>ergonomics, real compositor/camera alignment, lifecycle recovery, and final GPU</p>
+<p>performance. Report which rung passed and which evidence is still missing.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/unity-ai-collaboration/"><span class="name">unity-ai-collaboration</span><span class="desc">A routing and handoff model for multiple AI surfaces working around one live Unity Editor.</span></a> <a class="sd-rel-tile" href="/skills/quest-passthrough-camera-capture/"><span class="name">quest-passthrough-camera-capture</span><span class="desc">Practical lifecycle rules for safely copying Meta Quest passthrough camera frames into Unity-owned textures.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>6</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 11 KB</span></span></button><a class="raw-link" href="/bundles/unity-quest-build/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/failure-modes.md"><span class="kind">reference</span><span class="file"><span class="title">Failure Modes</span><span class="path">references/failure-modes.md · 3.5 KB</span></span></button><a class="raw-link" href="/bundles/unity-quest-build/references/failure-modes.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/verification-ladder.md"><span class="kind">reference</span><span class="file"><span class="title">Verification Ladder</span><span class="path">references/verification-ladder.md · 4.2 KB</span></span></button><a class="raw-link" href="/bundles/unity-quest-build/references/verification-ladder.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Agent metadata</div><div class="sd-resource-row"><button type="button" data-package-file="agents/openai.yaml"><span class="kind">config</span><span class="file"><span class="title">Openai</span><span class="path">agents/openai.yaml · 221 B</span></span></button><a class="raw-link" href="/bundles/unity-quest-build/agents/openai.yaml.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Scripts</div><div class="sd-resource-row"><button type="button" data-package-file="scripts/audit-unity-quest-toolchain"><span class="kind">script</span><span class="file"><span class="title">Audit Unity Quest Toolchain</span><span class="path">scripts/audit-unity-quest-toolchain · 15 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/unity-quest-build/scripts/audit-unity-quest-toolchain.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="scripts/test_audit_unity_quest_toolchain.py"><span class="kind">script</span><span class="file"><span class="title">Test Audit Unity Quest Toolchain</span><span class="path">scripts/test_audit_unity_quest_toolchain.py · 4.8 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/unity-quest-build/scripts/test_audit_unity_quest_toolchain.py.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/unity-quest-build/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/unity-quest-build/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

@@ -84,15 +84,134 @@ capabilities:
 resources:
   - path: bin/awtrix
     type: file
----</pre></div><h2>Why it exists</h2>
-<p>Desk presence without phone spam. Device-direct HTTP, no HA required for basic ops.</p>
-<h2>History</h2>
-<h3>1.0.0</h3>
-<p>bundle bin/awtrix helper; two physical units documented.</p>
-<h2>How Jack actually uses it</h2>
-<p>Push text/icons; identify which unit is which.</p>
-<h2>What it is not</h2>
-<p>Not a generic tutorial. It's the house runbook for this machine and these agents.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/home-assistant-operator/"><span class="name">home-assistant-operator</span><span class="desc">HA access was tribal knowledge. Skill owns inventory, verify, maintain.</span></a></div></div></div></article></section>
+---</pre></div><h2>awtrix-board</h2>
+<p>Control Jack's <strong>two Ulanzi TC001</strong> pixel clocks (32×8 RGB matrix each), flashed</p>
+<p>with <strong>AWTRIX 3</strong> (the awtrix-light firmware). Each exposes a plain JSON HTTP API</p>
+<p>on port 80 — <code>POST http://&lt;ip&gt;/api/&lt;endpoint&gt;</code>, no auth on the LAN.</p>
+<p><strong>The two units</strong> (router-pinned, in the <code>192.168.2.100-119</code> LED-display block):</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Name</th><th>IP</th><th>uid</th></tr></thead>
+<tbody>
+<tr><td>office</td><td><code>192.168.2.100</code></td><td><code>awtrix_967728</code></td></tr>
+<tr><td>bedroom</td><td><code>192.168.2.101</code></td><td><code>awtrix_2d2f60</code></td></tr>
+</tbody></table></div>
+<blockquote>⚠ The office/bedroom <strong>room labels are a starting guess</strong> — the IPs are<br>confirmed, but which physical unit sits where is not. Run <code>awtrix locate</code> to<br>light up each one with its assumed name, then (if swapped) edit the two<br><code>AWTRIX_*_IP</code> lines at the top of <code>bin/awtrix</code> or set the <code>AWTRIX_OFFICE_IP</code> /<br><code>AWTRIX_BEDROOM_IP</code> env vars. Never hard-code an IP elsewhere.</blockquote>
+<hr>
+<h2>Why there's no takeover here (unlike the Pixoo)</h2>
+<p>An AWTRIX display runs its <strong>own app loop on-device</strong> — Time / Temperature /</p>
+<p>Humidity / Battery cycle with <strong>no external controller</strong>. A <code>notify</code> <strong>overlays</strong></p>
+<p>that loop and the device <strong>auto-returns</strong> to it when the notification ends. So:</p>
+<ul>
+<li><strong>No takeover gate, no loop-stall, no config-entry reload.</strong> Push and walk away.</li>
+<li>A held notification (<code>--hold</code>) stays until you <code>dismiss</code> it; a timed one</li>
+</ul>
+<p>  (<code>--duration N</code>) clears itself.</p>
+<ul>
+<li>As of <strong>2026-06-01 these units are NOT in Home Assistant</strong> (verified: no</li>
+</ul>
+<p>  <code>awtrix</code>/<code>ulanzi</code> entities). Nothing else is drawing to them, so a raw push is</p>
+<p>  never clobbered. If the AWTRIX Light HACS integration is added later (see</p>
+<p>  <em>Home Assistant follow-up</em>), HA will co-control — re-read coexistence then.</p>
+<hr>
+<h2>Quick start</h2>
+<p>The helper ships at <code>bin/awtrix</code>. Install it once, or run it in place:</p>
+<pre><code>cp ~/.claude/skills/awtrix-board/bin/awtrix ~/.local/bin/awtrix &amp;&amp; chmod +x ~/.local/bin/awtrix
+# or: ~/.claude/skills/awtrix-board/bin/awtrix doctor</code></pre>
+<pre><code>awtrix notify &quot;Hello&quot; --color &quot;#7AA2F7&quot;            # 5s scroll on the office unit (default)
+awtrix notify &quot;Dinner!&quot; --device bedroom --hold    # stays until dismissed
+awtrix dismiss --device bedroom                    # clear a held notification
+awtrix brightness 80 --device office               # BRI 0–255 (or: awtrix brightness auto)
+awtrix state --device office                       # battery / temp / humidity / fw
+awtrix locate                                      # flash a label on each unit to ID it
+awtrix doctor                                      # reachability + identity of both units</code></pre>
+<p><code>--device office|bedroom</code> (default <code>office</code>) picks the target; <code>--ip &lt;addr&gt;</code></p>
+<p>overrides for an arbitrary unit. <code>awtrix</code> is <strong>device-only</strong> — it never touches HA.</p>
+<hr>
+<h2>`notify` — the core verb</h2>
+<p><code>POST /api/notify</code> shows a scrolling notification, then the device returns to its</p>
+<p>app loop. Options:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Flag</th><th>Default</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>--color &quot;#RRGGBB&quot;</code></td><td>white</td><td>Hex string (verified) or the device also accepts <code>[r,g,b]</code>. Tokyo Night blue is <code>#7AA2F7</code>.</td></tr>
+<tr><td><code>--duration N</code></td><td>5</td><td>Seconds on screen (ignored when <code>--hold</code>).</td></tr>
+<tr><td><code>--hold</code></td><td>off</td><td>Keep on screen until <code>awtrix dismiss</code>. Use for alerts that must be acknowledged.</td></tr>
+<tr><td><code>--icon ID</code></td><td>none</td><td>Numeric AWTRIX/LaMetric icon id. <strong>Must already be uploaded to the device</strong> (AWTRIX web UI → Icons) or it renders blank — so it's optional and no id is assumed here.</td></tr>
+<tr><td><code>--rainbow</code></td><td>off</td><td>Cycle text color.</td></tr>
+<tr><td><code>--sound MELODY</code></td><td><strong>silent</strong></td><td>Plays a melody from the device's <code>MELODIES</code> folder. <strong>⚠ One unit may be in a bedroom — leave sound off unless you mean it.</strong></td></tr>
+<tr><td><code>--device</code> / <code>--ip</code></td><td>office</td><td>Target selector.</td></tr>
+</tbody></table></div>
+<p>The text is JSON-escaped for you. 32×8 is small — short strings scroll; keep it punchy.</p>
+<hr>
+<h2>Other verbs</h2>
+<ul>
+<li><strong><code>dismiss [--device|--ip]</code></strong> — <code>POST /api/notify/dismiss</code>; clears a <code>--hold</code> notification.</li>
+<li><strong><code>brightness &lt;0-255|auto&gt; [--device|--ip]</code></strong> — <code>POST /api/settings {&quot;BRI&quot;:n}</code> (manual,</li>
+</ul>
+<p>  turns auto off) or <code>{&quot;ABRI&quot;:true}</code> for ambient auto-brightness. No crash-cap needed (small panel).</p>
+<ul>
+<li><strong><code>state [--device|--ip]</code></strong> — <code>GET /api/stats</code>, summarized: battery %, temp, humidity, lux,</li>
+</ul>
+<p>  brightness, current app, uptime.</p>
+<ul>
+<li><strong><code>locate [office|bedroom|all]</code></strong> — flashes a held label (<code>office? 100</code>) on each unit so you can</li>
+</ul>
+<p>  see which physical display is which, then correct the IP map if needed.</p>
+<ul>
+<li><strong><code>doctor</code></strong> — pings both units, prints uid/fw/battery, and restates the coexistence model.</li>
+</ul>
+<hr>
+<h2>Raw HTTP API (reference — `bin/awtrix` wraps these)</h2>
+<p>Base: <code>POST http://&lt;ip&gt;/api/&lt;endpoint&gt;</code>, <code>Content-Type: application/json</code>. Success = HTTP 200</p>
+<p>(body is usually <code>OK</code>, not a JSON error code).</p>
+<pre><code># Notify (scrolling text, blue, 5s)
+curl -sS -X POST &quot;http://192.168.2.100/api/notify&quot; -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;text&quot;:&quot;Now playing&quot;,&quot;color&quot;:&quot;#7AA2F7&quot;,&quot;duration&quot;:5}'
+
+# Custom persistent app (stays in the rotation until removed) — deferred from this skill's verbs:
+curl -sS -X POST &quot;http://192.168.2.100/api/custom?name=status&quot; -H &quot;Content-Type: application/json&quot; \
+  -d '{&quot;text&quot;:&quot;OK&quot;,&quot;color&quot;:&quot;#9ECE6A&quot;}'      # empty body removes the app
+
+curl -sS    &quot;http://192.168.2.100/api/stats&quot;      # device telemetry (battery/temp/hum/lux/version)
+curl -sS    &quot;http://192.168.2.100/api/loop&quot;       # apps currently in the rotation
+curl -sS -X POST &quot;http://192.168.2.100/api/notify/dismiss&quot;            # clear current notification
+curl -sS -X POST &quot;http://192.168.2.100/api/settings&quot; -d '{&quot;BRI&quot;:80}'  # brightness 0-255</code></pre>
+<p>Endpoints also reachable over MQTT (<code>&lt;prefix&gt;/notify</code>, <code>&lt;prefix&gt;/custom/&lt;name&gt;</code>, <code>&lt;prefix&gt;/stats</code>)</p>
+<p>if the device is configured against the broker at <code>192.168.2.114:1883</code>.</p>
+<hr>
+<h2>AutoJack quick-use</h2>
+<p>When Jack says &quot;notify X on the awtrix / put X on the office display&quot;:</p>
+<ol>
+<li><strong>Plain alert</strong> → <code>awtrix notify &quot;X&quot; --color &lt;by sentiment&gt; [--device office|bedroom]</code>.</li>
+</ol>
+<p>   - urgent: <code>#F7768E</code> (red) · info: <code>#7AA2F7</code> (blue) · positive: <code>#9ECE6A</code> (green).</p>
+<p>   - &quot;until I see it&quot; → add <code>--hold</code>, and tell Jack to ask you to <code>dismiss</code>.</p>
+<ol>
+<li><strong>&quot;What's the temp/battery on the clock?&quot;</strong> → <code>awtrix state --device &lt;unit&gt;</code>.</li>
+<li><strong>&quot;Which one is which?&quot;</strong> → <code>awtrix locate</code>.</li>
+<li><strong>Sound</strong> is off by default — only add <code>--sound</code> if Jack explicitly asks (bedroom unit).</li>
+</ol>
+<p>Defaults: device <code>office</code>, color white, duration 5s, silent.</p>
+<hr>
+<h2>Home Assistant follow-up (staged, not yet done)</h2>
+<p>The chosen plan is <strong>device-direct now, HA sensors next</strong>. Adding the **AWTRIX</p>
+<p>Light<strong> HACS integration would surface each unit's </strong>temperature / humidity /</p>
+<p>battery / lux** as HA sensors and give HA a native notify service + brightness</p>
+<p>control. That's a separate step (a HACS download + config) — greenlight it</p>
+<p>separately. Once HA co-controls, revisit whether notifications from this skill</p>
+<p>and from HA need any sequencing (far milder than the Pixoo — no loop-stall).</p>
+<hr>
+<h2>Troubleshooting</h2>
+<div class="table-wrap"><table>
+<thead><tr><th>Symptom</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td><code>notify failed (HTTP …)</code> / <code>NOT reachable</code></td><td>Wrong IP, asleep, or off-Wi-Fi. <code>awtrix doctor</code>; ping the IP; check the AWTRIX web UI at <code>http://&lt;ip&gt;</code>.</td></tr>
+<tr><td>Notification never clears</td><td>It was sent with <code>--hold</code>. <code>awtrix dismiss --device &lt;unit&gt;</code>.</td></tr>
+<tr><td>Icon shows blank</td><td>The <code>--icon</code> id isn't uploaded to that device. Add it via the AWTRIX web UI → Icons, or omit <code>--icon</code>.</td></tr>
+<tr><td>Text too long / unreadable</td><td>32×8 is tiny. Shorten it; it scrolls.</td></tr>
+<tr><td>Wrong unit lit up</td><td>The office/bedroom map is a guess — <code>awtrix locate</code>, then fix <code>AWTRIX_OFFICE_IP</code>/<code>AWTRIX_BEDROOM_IP</code>.</td></tr>
+<tr><td>Surprise beep</td><td>Something passed <code>--sound</code>. It's off by default; don't pass it for the bedroom unit.</td></tr>
+</tbody></table></div><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/home-assistant-operator/"><span class="name">home-assistant-operator</span><span class="desc">HA access was tribal knowledge. Skill owns inventory, verify, maintain.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>2</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 8.1 KB</span></span></button><a class="raw-link" href="/bundles/awtrix-board/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Commands</div><div class="sd-resource-row"><button type="button" data-package-file="bin/awtrix"><span class="kind">resource</span><span class="file"><span class="title">Awtrix</span><span class="path">bin/awtrix · 7.6 KB</span></span></button><a class="raw-link" href="/bundles/awtrix-board/bin/awtrix.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/awtrix-board/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>Bash</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/awtrix-board/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>

@@ -67,12 +67,115 @@ requires-secrets: []
 resources:
   - path: story.md
     type: file
----</pre></div><h2>Why</h2>
-<p>CI billing is full of misleading totals. The expensive workflow is often not the loudest one.</p>
-<h2>How</h2>
-<p>Separate billable work from everything else, weight it correctly, find the dominant workflow, and recommend the smallest change backed by the numbers.</p>
-<h2>Related</h2>
-<p>See <a href="/skills/cloudflare-ops/">Cloudflare Ops</a> for deployment-side operational checks.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
+---</pre></div><h2>CI Cost Audit</h2>
+<p>Answer “what burned CI budget, and what should change?” from current billing</p>
+<p>evidence rather than runner folklore. Pricing, included usage, and product SKUs</p>
+<p>change, so verify the current official GitHub billing and Actions documentation</p>
+<p>before calculating or recommending a cost change.</p>
+<h2>When to use</h2>
+<ul>
+<li>Included CI usage is exhausted or jobs are blocked for billing reasons.</li>
+<li>A team needs to explain a monthly Actions charge.</li>
+<li>A workflow or runner change needs a cost comparison.</li>
+<li>An Apple-platform project also uses Xcode Cloud.</li>
+</ul>
+<h2>Billing facts to verify live</h2>
+<p>Do not hard-code rates, allowances, operating-system multipliers, or billing</p>
+<p>endpoint behavior. Confirm these in the current official documentation and the</p>
+<p>account's billing report:</p>
+<ol>
+<li>Standard GitHub-hosted runners are free for public repositories.</li>
+<li>Larger GitHub-hosted runners are billed, including when used by public</li>
+</ol>
+<p>   repositories.</p>
+<ol>
+<li>Hosted-runner cost is calculated from the billing report's SKU and current</li>
+</ol>
+<p>   per-SKU rate, not from a guessed global multiplier.</p>
+<ol>
+<li>Self-hosted runners remove GitHub-hosted runner charges but still have</li>
+</ol>
+<p>   infrastructure, administration, availability, and security costs.</p>
+<h2>Gather current evidence</h2>
+<p>Use the account or organization billing experience and its supported API/export</p>
+<p>for the month under review. Save a redacted copy only when the user has asked</p>
+<p>for an artifact; it is billing data, so keep it out of commits.</p>
+<pre><code>gh api &quot;/organizations/&lt;org&gt;/settings/billing/usage?year=&lt;yyyy&gt;&amp;month=&lt;m&gt;&quot; \
+  &gt; billing-usage.json</code></pre>
+<p>For a personal account, use the corresponding supported user billing route and</p>
+<p>the required GitHub CLI scope. If the endpoint changes or returns an error, use</p>
+<p>the documented billing UI/export rather than guessing an undocumented</p>
+<p>replacement.</p>
+<p>For every line item, retain the product, SKU, quantity, amount, repository (if</p>
+<p>available), and time window. Separate Actions compute from storage, data</p>
+<p>transfer, and non-GitHub services before drawing conclusions.</p>
+<h2>Method</h2>
+<ol>
+<li>Pull the current-month report and identify each Actions-related SKU.</li>
+<li>Classify the runner behind each costly SKU as standard hosted, larger hosted,</li>
+</ol>
+<p>   or self-hosted. Use workflow <code>runs-on</code> labels and the current runner</p>
+<p>   configuration; repository visibility alone is insufficient.</p>
+<ol>
+<li>Rank line items by recorded cost and quantity. Use the report's own SKU rate</li>
+</ol>
+<p>   and amount—do not apply historical OS multipliers.</p>
+<ol>
+<li>For the top repository/workflow, inspect run count, jobs per run, matrix</li>
+</ol>
+<p>   width, queue time, and job duration.</p>
+<ol>
+<li>Compare the current daily rate with the period before and after any workflow</li>
+</ol>
+<p>   change. A historical spike may already be fixed.</p>
+<ol>
+<li>State uncertainty plainly when the report cannot attribute shared usage to a</li>
+</ol>
+<p>   repository or workflow.</p>
+<p>Useful workflow evidence:</p>
+<pre><code>gh api &quot;repos/&lt;org&gt;/&lt;repo&gt;/actions/runs?created=&gt;=&lt;yyyy-mm-01&gt;&amp;per_page=100&quot; \
+  --paginate --jq '.workflow_runs[] | [.name, .created_at[0:10]] | @tsv' \
+  | cut -f1 | sort | uniq -c | sort -rn
+
+gh api repos/&lt;org&gt;/&lt;repo&gt;/actions/runs/&lt;run_id&gt;/jobs --jq .total_count</code></pre>
+<h2>Levers</h2>
+<p>Choose the smallest change justified by the data:</p>
+<ol>
+<li>Narrow triggers with paths, labels, concurrency, or an intentional schedule.</li>
+<li>Remove unnecessary matrix entries or duplicate jobs after checking coverage.</li>
+<li>Reduce slow work through caching, test partitioning, or targeted checks.</li>
+<li>Move suitable work to a standard runner when a larger runner is not needed.</li>
+<li>Consider self-hosted capacity only with an explicit operational-cost and</li>
+</ol>
+<p>   reliability comparison.</p>
+<p>Never recommend making a repository public solely for cost without explicit</p>
+<p>product and security approval. Never promise a runner choice is free without</p>
+<p>checking its current billing class and the account's plan.</p>
+<h2>Xcode Cloud</h2>
+<p>Treat Xcode Cloud as a separate billing system. Check its current plan,</p>
+<p>included compute, and pricing in Apple's official documentation and the account</p>
+<p>console. Its workflows are managed in App Store Connect, so changes may require</p>
+<p>an operator action rather than a repository commit.</p>
+<h2>Reporting</h2>
+<p>Report the month/time window, each relevant SKU, billed quantity and amount,</p>
+<p>the top workflow driver, current versus historical burn rate, and the proposed</p>
+<p>change with its trade-off. Name the source and retrieval time for every billing</p>
+<p>claim.</p>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Applying stale multiplier tables or included-minute allowances.</li>
+<li>Treating all public-repository work as free without checking for larger</li>
+</ul>
+<p>  runners.</p>
+<ul>
+<li>Inferring cost from wall-clock duration when the billing report has SKU data.</li>
+<li>Calling self-hosted infrastructure free because GitHub does not bill its</li>
+</ul>
+<p>  compute minutes.</p>
+<ul>
+<li>Recommending a fix without checking whether a recent workflow change already</li>
+</ul>
+<p>  altered the current burn rate.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/cloudflare-ops/"><span class="name">cloudflare-ops</span><span class="desc">Every AutoHub-adjacent deploy was re-discovering the same wrangler gotchas. This skill is the operator runbook: one canonical deploy path, preview D1 isolation, no split-brain…</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>1</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 5.2 KB</span></span></button><a class="raw-link" href="/bundles/ci-cost-audit/SKILL.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/ci-cost-audit/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/ci-cost-audit/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex</span></div></div></section>

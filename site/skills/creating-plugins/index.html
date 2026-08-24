@@ -85,12 +85,391 @@ resources:
     type: file
   - path: references/storage.md
     type: file
----</pre></div><h2>Why</h2>
-<p>Plugins become hard to maintain when runtime, admin, and storage boundaries are treated as one blob.</p>
-<h2>How</h2>
-<p>Choose the plugin shape first, then use the focused reference for the extension point you are actually adding. Store secrets in the platform's secret setting type, never in code.</p>
-<h2>Related</h2>
-<p>See <a href="/skills/building-emdash-site/">Building an EmDash Site</a> and <a href="/skills/emdash-cli/">EmDash CLI</a>.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/building-emdash-site/"><span class="name">building-emdash-site</span><span class="desc">The EmDash-on-Astro playbook for content models, rendering, and the CMS details that are easy to misread.</span></a> <a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a></div></div></div></article></section>
+---</pre></div><h2>Creating EmDash Plugins</h2>
+<p>EmDash plugins extend the CMS with hooks, storage, settings, admin UI, API routes, and custom Portable Text block types. All plugins are TypeScript packages.</p>
+<h2>Plugin Types</h2>
+<p>EmDash has two plugin formats:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Type</th><th>Format</th><th>Admin UI</th><th>Where it runs</th></tr></thead>
+<tbody>
+<tr><td><strong>Standard</strong></td><td><code>definePlugin({ hooks, routes })</code></td><td>Block Kit</td><td>Isolate on Cloudflare, in-process elsewhere</td></tr>
+<tr><td><strong>Native</strong></td><td><code>createPlugin()</code> / <code>definePlugin()</code> with <code>id</code>+<code>version</code></td><td>React or Block Kit</td><td>Always in host isolate</td></tr>
+</tbody></table></div>
+<p><strong>Standard is the default.</strong> Most plugins should use it. Standard plugins can be published to the marketplace and work in both trusted and sandboxed modes.</p>
+<p><strong>Native is an escape hatch</strong> for plugins that need React admin components, direct DB access, or custom Astro components. Native plugins can only run in <code>plugins: []</code> -- they cannot be sandboxed or published to the marketplace.</p>
+<h2>Plugin Anatomy</h2>
+<p>Every plugin has two parts that <strong>run in different contexts</strong>:</p>
+<ol>
+<li><strong>Plugin descriptor</strong> (<code>PluginDescriptor</code>) — returned by the factory function in <code>index.ts</code>. Declares metadata (id, version, capabilities, storage). <strong>Runs at build time in Vite</strong> (imported in <code>astro.config.mjs</code>). Must be side-effect-free.</li>
+<li><strong>Plugin definition</strong> (<code>definePlugin()</code>) — contains the runtime logic (hooks, routes). <strong>Runs at request time on the deployed server.</strong> Has access to the full plugin context (<code>ctx</code>). Lives in a separate file (typically <code>sandbox-entry.ts</code>).</li>
+</ol>
+<p>These must be in <strong>separate entrypoints</strong> because they execute in completely different environments:</p>
+<pre><code>my-plugin/
+├── src/
+│   ├── index.ts            # Descriptor factory (runs in Vite at build time)
+│   ├── sandbox-entry.ts    # Plugin definition with definePlugin() (runs at deploy time)
+│   ├── admin.tsx            # Admin UI exports (React) — optional, native only
+│   └── astro/               # Site-side rendering components — optional, native only
+│       └── index.ts         # Must export `blockComponents`
+├── package.json
+└── tsconfig.json</code></pre>
+<h2>Minimal Plugin (Standard Format)</h2>
+<p>The simplest possible plugin -- just hooks:</p>
+<pre><code>// src/index.ts — descriptor factory, runs in Vite at build time
+import type { PluginDescriptor } from &quot;emdash&quot;;
+
+export function myPlugin(): PluginDescriptor {
+  return {
+    id: &quot;my-plugin&quot;,
+    version: &quot;1.0.0&quot;,
+    format: &quot;standard&quot;,
+    entrypoint: &quot;@my-org/my-plugin/sandbox&quot;,
+    options: {},
+  };
+}</code></pre>
+<pre><code>// src/sandbox-entry.ts — plugin definition, runs at request time
+import { definePlugin } from &quot;emdash&quot;;
+import type { PluginContext } from &quot;emdash&quot;;
+
+export default definePlugin({
+  hooks: {
+    &quot;content:afterSave&quot;: {
+      handler: async (event: any, ctx: PluginContext) =&gt; {
+        ctx.log.info(`Saved ${event.collection}/${event.content.id}`);
+      },
+    },
+  },
+});</code></pre>
+<p>The descriptor is what gets imported in <code>astro.config.mjs</code>. The <code>entrypoint</code> field points to the module containing the <code>definePlugin()</code> default export. For standard plugins, this is the <code>./sandbox</code> export from <code>package.json</code>.</p>
+<p>Key differences from native format:</p>
+<ul>
+<li>No <code>id</code>, <code>version</code>, or <code>capabilities</code> in <code>definePlugin()</code> -- those live in the descriptor</li>
+<li><code>definePlugin()</code> is an identity function providing type inference</li>
+<li>Hook handlers use <code>(event, ctx)</code> two-arg pattern</li>
+<li>Route handlers use <code>(routeCtx, ctx)</code> two-arg pattern</li>
+<li>Exported as <code>default</code> (not a factory function)</li>
+</ul>
+<h2>Plugin ID Rules</h2>
+<ul>
+<li>Lowercase alphanumeric + hyphens only</li>
+<li>Simple (<code>my-plugin</code>) or scoped (<code>@my-org/my-plugin</code>)</li>
+<li>Unique across all installed plugins</li>
+</ul>
+<h2>Registration</h2>
+<p>The descriptor is imported in <code>astro.config.mjs</code> (Vite context):</p>
+<pre><code>import { myPlugin } from &quot;@my-org/my-plugin&quot;;
+
+export default defineConfig({
+  integrations: [
+    emdash({
+      plugins: [myPlugin()], // runs in-process
+      // OR
+      sandboxed: [myPlugin()], // runs in isolate on Cloudflare
+    }),
+  ],
+});</code></pre>
+<p>Standard plugins work in either array. Native plugins only work in <code>plugins: []</code>.</p>
+<h2>Trusted vs Sandboxed Plugins</h2>
+<p>EmDash has two execution modes. Plugin code is identical in both — only the enforcement changes.</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>Trusted</th><th>Sandboxed</th></tr></thead>
+<tbody>
+<tr><td><strong>Runs in</strong></td><td>Main process</td><td>Isolated V8 isolate (Dynamic Worker Loader)</td></tr>
+<tr><td><strong>Install method</strong></td><td><code>astro.config.mjs</code> (code change + deploy)</td><td>Admin UI (one-click from marketplace)</td></tr>
+<tr><td><strong>Capabilities</strong></td><td>Advisory (not enforced)</td><td>Enforced at runtime via RPC bridge</td></tr>
+<tr><td><strong>Resource limits</strong></td><td>None</td><td>CPU 50ms, 10 subrequests, 30s wall-time, ~128MB memory</td></tr>
+<tr><td><strong>Network access</strong></td><td>Unrestricted</td><td>Blocked; only via <code>ctx.http</code> with <code>allowedHosts</code></td></tr>
+<tr><td><strong>Data access</strong></td><td>Full database access</td><td>Scoped to declared capabilities</td></tr>
+<tr><td><strong>Node.js APIs</strong></td><td>Full access</td><td>Not available (V8 isolate only)</td></tr>
+<tr><td><strong>Available on</strong></td><td>All platforms</td><td>Cloudflare Workers only</td></tr>
+<tr><td><strong>Best for</strong></td><td>First-party code, reviewed npm packages</td><td>Third-party extensions, marketplace plugins</td></tr>
+</tbody></table></div>
+<h3>Trusted Mode</h3>
+<p>Trusted plugins are npm packages or local files added in <code>astro.config.mjs</code>. They run in-process with your Astro site.</p>
+<ul>
+<li><strong>Capabilities are documentation only.</strong> Declaring <code>[&quot;content:read&quot;]</code> documents intent but isn't enforced — the plugin has full process access.</li>
+<li>Only install from sources you trust. A malicious trusted plugin has the same access as your application code.</li>
+</ul>
+<h3>Sandboxed Mode</h3>
+<p>Sandboxed plugins run in isolated V8 isolates on Cloudflare Workers via <a href="https://developers.cloudflare.com/workers/runtime-apis/bindings/worker-loader/" rel="noopener">Dynamic Worker Loader</a>. Each plugin gets its own isolate.</p>
+<ul>
+<li><strong>Capabilities are enforced.</strong> If a plugin declares <code>[&quot;content:read&quot;]</code>, it can only call <code>ctx.content.get()</code> and <code>ctx.content.list()</code>. Attempting <code>ctx.content.create()</code> throws a permission error.</li>
+<li><strong>Network is blocked by default.</strong> Direct <code>fetch()</code> calls fail. Plugins must use <code>ctx.http.fetch()</code>, which validates against <code>allowedHosts</code>.</li>
+<li><strong>Storage is scoped.</strong> A plugin can only access its own KV and storage collections.</li>
+<li><strong>Admin UI uses Block Kit.</strong> Sandboxed plugins describe their UI as JSON blocks -- no plugin JavaScript runs in the browser. See [Block Kit reference](./references/block-kit.md).</li>
+<li><strong>No Portable Text block types.</strong> PT blocks require Astro components for site-side rendering (<code>componentsEntry</code>), which are loaded at build time from npm. Sandboxed plugins are installed at runtime and can't ship components. PT blocks are a native-plugin-only feature.</li>
+<li><strong>Routes work.</strong> Standard plugin routes are available in both trusted and sandboxed modes via the sandbox runner's <code>invokeRoute()</code> RPC.</li>
+</ul>
+<p>Sandboxing is not available on Node.js. All plugins run in trusted mode on non-Cloudflare platforms.</p>
+<h3>Developing for Both Modes</h3>
+<p>Write the same code. Develop locally in trusted mode (faster iteration, easier debugging). Deploy to sandboxed mode in production without code changes. With the standard format, the same entrypoint serves both modes -- no separate sandbox entry needed.</p>
+<pre><code>// src/sandbox-entry.ts -- works in both trusted and sandboxed modes
+import { definePlugin } from &quot;emdash&quot;;
+import type { PluginContext } from &quot;emdash&quot;;
+
+export default definePlugin({
+  hooks: {
+    &quot;content:afterSave&quot;: {
+      handler: async (event: any, ctx: PluginContext) =&gt; {
+        // Trusted: ctx.http present because descriptor declares network:request
+        // Sandboxed: ctx.http present and enforced via RPC bridge
+        if (!ctx.http) return;
+        await ctx.http.fetch(&quot;https://api.analytics.example.com/track&quot;, {
+          method: &quot;POST&quot;,
+          body: JSON.stringify({ contentId: event.content.id }),
+        });
+      },
+    },
+  },
+});</code></pre>
+<p>Key constraint for sandbox compatibility: <strong>no Node.js built-ins</strong> (<code>fs</code>, <code>path</code>, <code>child_process</code>, etc.) in backend code. Use Web APIs instead.</p>
+<h2>Capabilities</h2>
+<p>Capabilities control what APIs are available on <code>ctx</code>. Always declare what your plugin needs — even in trusted mode, they document intent and are required for sandboxed execution.</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Capability</th><th>Grants</th><th><code>ctx</code> property</th></tr></thead>
+<tbody>
+<tr><td><code>content:read</code></td><td><code>ctx.content.get()</code>, <code>ctx.content.list()</code></td><td><code>content</code></td></tr>
+<tr><td><code>content:write</code></td><td><code>ctx.content.create()</code>, <code>ctx.content.update()</code>, <code>ctx.content.delete()</code></td><td><code>content</code></td></tr>
+<tr><td><code>media:read</code></td><td><code>ctx.media.get()</code>, <code>ctx.media.list()</code></td><td><code>media</code></td></tr>
+<tr><td><code>media:write</code></td><td><code>ctx.media.getUploadUrl()</code>, <code>ctx.media.delete()</code></td><td><code>media</code></td></tr>
+<tr><td><code>network:request</code></td><td><code>ctx.http.fetch()</code> (restricted to <code>allowedHosts</code>)</td><td><code>http</code></td></tr>
+<tr><td><code>network:request:unrestricted</code></td><td><code>ctx.http.fetch()</code> (unrestricted — for user-configured URLs)</td><td><code>http</code></td></tr>
+<tr><td><code>users:read</code></td><td><code>ctx.users.get()</code>, <code>ctx.users.list()</code>, <code>ctx.users.getByEmail()</code></td><td><code>users</code></td></tr>
+<tr><td><code>email:send</code></td><td><code>ctx.email.send()</code> — send email through the pipeline</td><td><code>email</code></td></tr>
+<tr><td><code>hooks.email-transport:register</code></td><td>Can register <code>email:deliver</code> exclusive hook (transport provider)</td><td>—</td></tr>
+<tr><td><code>hooks.email-events:register</code></td><td>Can register <code>email:beforeSend</code> / <code>email:afterSend</code> hooks</td><td>—</td></tr>
+<tr><td><code>hooks.page-fragments:register</code></td><td>Can register <code>page:fragments</code> hook (inject scripts/styles into pages)</td><td>—</td></tr>
+</tbody></table></div>
+<p>Storage (<code>ctx.storage</code>) and KV (<code>ctx.kv</code>) are <strong>always available</strong> — no capability needed. They're automatically scoped to the plugin.</p>
+<p><strong>Email capabilities are distinct:</strong></p>
+<ul>
+<li><code>email:send</code> — for plugins that _consume_ email (call <code>ctx.email.send()</code>)</li>
+<li><code>hooks.email-transport:register</code> — for plugins that _deliver_ email (implement the transport, e.g. Resend, SMTP)</li>
+<li><code>hooks.email-events:register</code> — for plugins that _observe or transform_ email (middleware hooks)</li>
+</ul>
+<pre><code>// In the descriptor (index.ts)
+export function myPlugin(): PluginDescriptor {
+  return {
+    id: &quot;my-plugin&quot;,
+    version: &quot;1.0.0&quot;,
+    format: &quot;standard&quot;,
+    entrypoint: &quot;@my-org/my-plugin/sandbox&quot;,
+    options: {},
+    capabilities: [&quot;content:read&quot;, &quot;network:request&quot;],
+    allowedHosts: [&quot;api.example.com&quot;, &quot;*.googleapis.com&quot;], // Wildcards supported
+  };
+}</code></pre>
+<p>When a marketplace plugin is installed, the admin sees a capability consent dialog listing what the plugin can access. Users must approve before installation.</p>
+<h2>Publishing to the Marketplace</h2>
+<p>Standard plugins can be published to the EmDash Marketplace for one-click installation:</p>
+<pre><code>emdash plugin bundle --dir packages/plugins/my-plugin  # creates .tar.gz
+emdash plugin login                                      # authenticate via GitHub
+emdash plugin publish --tarball dist/my-plugin-1.0.0.tar.gz</code></pre>
+<p>See [Publishing Reference](./references/publishing.md) for bundle format, validation, and security audit details.</p>
+<h2>Package Exports</h2>
+<p>Configure <code>package.json</code> exports so EmDash can load each entry point:</p>
+<pre><code>{
+  &quot;name&quot;: &quot;@my-org/my-plugin&quot;,
+  &quot;type&quot;: &quot;module&quot;,
+  &quot;exports&quot;: {
+    &quot;.&quot;: &quot;./src/index.ts&quot;,
+    &quot;./sandbox&quot;: &quot;./src/sandbox-entry.ts&quot;,
+    &quot;./admin&quot;: &quot;./src/admin.tsx&quot;
+  },
+  &quot;peerDependencies&quot;: {
+    &quot;emdash&quot;: &quot;^0.1.0&quot;
+  }
+}</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th>Export</th><th>Context</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><code>&quot;.&quot;</code></td><td>Vite (build time)</td><td>Descriptor factory -- imported in <code>astro.config.mjs</code></td></tr>
+<tr><td><code>&quot;./sandbox&quot;</code></td><td>Server (runtime)</td><td><code>definePlugin({ hooks, routes })</code> -- loaded by <code>entrypoint</code> at runtime</td></tr>
+<tr><td><code>&quot;./admin&quot;</code></td><td>Browser</td><td>React components for admin pages/widgets (native plugins only)</td></tr>
+<tr><td><code>&quot;./astro&quot;</code></td><td>Server (SSR)</td><td>Astro components for site-side block rendering (native plugins only)</td></tr>
+</tbody></table></div>
+<p>The <code>&quot;.&quot;</code> export has the descriptor. The <code>&quot;./sandbox&quot;</code> export has the implementation. The descriptor's <code>entrypoint</code> field points to <code>&quot;./sandbox&quot;</code>. Only include <code>./admin</code> and <code>./astro</code> exports for native-format plugins.</p>
+<h2>Plugin Features</h2>
+<p>Each feature is optional. Add only what your plugin needs:</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Feature</th><th>Where</th><th>Standard</th><th>Native</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><strong>Hooks</strong></td><td><code>definePlugin({ hooks })</code></td><td>Yes</td><td>Yes</td><td>React to content/media/lifecycle events</td></tr>
+<tr><td><strong>Storage</strong></td><td>descriptor <code>storage</code></td><td>Yes</td><td>Yes</td><td>Document collections with indexed queries</td></tr>
+<tr><td><strong>KV</strong></td><td><code>ctx.kv</code> in hooks/routes</td><td>Yes</td><td>Yes</td><td>Key-value store for internal state</td></tr>
+<tr><td><strong>API Routes</strong></td><td><code>definePlugin({ routes })</code></td><td>Yes</td><td>Yes</td><td>REST endpoints at <code>/_emdash/api/plugins/&lt;id&gt;/&lt;route&gt;</code></td></tr>
+<tr><td><strong>Admin Pages</strong></td><td>Block Kit <code>admin</code> route</td><td>Yes</td><td>Yes</td><td>Admin pages via Block Kit (JSON blocks)</td></tr>
+<tr><td><strong>Widgets</strong></td><td>Block Kit <code>admin</code> route</td><td>Yes</td><td>Yes</td><td>Dashboard cards via Block Kit</td></tr>
+<tr><td><strong>React Admin</strong></td><td><code>admin.entry</code> + React export</td><td>No</td><td>Yes</td><td>React-based admin pages and widgets (native only)</td></tr>
+<tr><td><strong>PT Blocks</strong></td><td><code>admin.portableTextBlocks</code></td><td>No</td><td>Yes</td><td>Custom block types in the Portable Text editor</td></tr>
+<tr><td><strong>Site Components</strong></td><td><code>componentsEntry</code></td><td>No</td><td>Yes</td><td>Astro components for rendering blocks on the site</td></tr>
+</tbody></table></div>
+<p>See the reference files for detailed syntax:</p>
+<ul>
+<li><strong>[Hooks Reference](./references/hooks.md)</strong> — All hook types, signatures, configuration</li>
+<li><strong>[Storage &amp; Settings](./references/storage.md)</strong> — Collections, KV, settings schema</li>
+<li><strong>[Admin UI](./references/admin-ui.md)</strong> — Pages, widgets, entry point structure</li>
+<li><strong>[API Routes](./references/api-routes.md)</strong> — Route handlers, validation, context</li>
+<li><strong>[Block Kit](./references/block-kit.md)</strong> — Declarative UI for sandboxed plugins (similar to Slack Block Kit but not identical)</li>
+<li><strong>[Portable Text Blocks](./references/portable-text-blocks.md)</strong> — Custom block types + frontend rendering</li>
+<li><strong>[Publishing](./references/publishing.md)</strong> — Bundle format, validation, marketplace publishing</li>
+</ul>
+<h2>Complete Example: Standard Plugin with Hooks, Routes, and Storage</h2>
+<pre><code>// src/index.ts — descriptor factory, runs in Vite at build time
+import type { PluginDescriptor } from &quot;emdash&quot;;
+
+export function submissionsPlugin(): PluginDescriptor {
+  return {
+    id: &quot;submissions&quot;,
+    version: &quot;1.0.0&quot;,
+    format: &quot;standard&quot;,
+    entrypoint: &quot;@my-org/plugin-submissions/sandbox&quot;,
+    options: {},
+    capabilities: [&quot;content:read&quot;],
+    storage: {
+      submissions: {
+        indexes: [&quot;formId&quot;, &quot;status&quot;, &quot;createdAt&quot;],
+      },
+    },
+    adminPages: [{ path: &quot;/submissions&quot;, label: &quot;Submissions&quot;, icon: &quot;list&quot; }],
+    adminWidgets: [{ id: &quot;recent-submissions&quot;, title: &quot;Recent Submissions&quot;, size: &quot;half&quot; }],
+  };
+}</code></pre>
+<pre><code>// src/sandbox-entry.ts — plugin definition, runs at request time
+import { definePlugin } from &quot;emdash&quot;;
+import type { PluginContext } from &quot;emdash&quot;;
+
+export default definePlugin({
+  hooks: {
+    &quot;plugin:install&quot;: {
+      handler: async (_event: any, ctx: PluginContext) =&gt; {
+        ctx.log.info(&quot;Submissions plugin installed&quot;);
+        await ctx.kv.set(&quot;settings:maxSubmissions&quot;, 1000);
+      },
+    },
+  },
+
+  routes: {
+    submit: {
+      public: true, // No auth required
+      handler: async (routeCtx: any, ctx: PluginContext) =&gt; {
+        const { formId, ...data } = routeCtx.input as Record&lt;string, unknown&gt;;
+
+        const count = await ctx.storage.submissions.count({ formId });
+        const max = (await ctx.kv.get&lt;number&gt;(&quot;settings:maxSubmissions&quot;)) ?? 1000;
+
+        if (count &gt;= max) {
+          return { success: false, error: &quot;Submission limit reached&quot; };
+        }
+
+        const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        await ctx.storage.submissions.put(id, {
+          formId,
+          data,
+          status: &quot;pending&quot;,
+          createdAt: new Date().toISOString(),
+        });
+
+        return { success: true, id };
+      },
+    },
+
+    list: {
+      handler: async (routeCtx: any, ctx: PluginContext) =&gt; {
+        const url = new URL(routeCtx.request.url);
+        const limit = Math.max(
+          1,
+          Math.min(parseInt(url.searchParams.get(&quot;limit&quot;) || &quot;50&quot;, 10) || 50, 100),
+        );
+        const cursor = url.searchParams.get(&quot;cursor&quot;) || undefined;
+
+        const result = await ctx.storage.submissions.query({
+          orderBy: { createdAt: &quot;desc&quot; },
+          limit,
+          cursor,
+        });
+
+        return {
+          items: result.items.map((item: any) =&gt; ({ id: item.id, ...item.data })),
+          cursor: result.cursor,
+          hasMore: result.hasMore,
+        };
+      },
+    },
+
+    // Block Kit admin handler for pages and widgets
+    admin: {
+      handler: async (routeCtx: any, ctx: PluginContext) =&gt; {
+        const interaction = routeCtx.input as { type: string; page?: string };
+
+        if (interaction.type === &quot;page_load&quot; &amp;&amp; interaction.page === &quot;/submissions&quot;) {
+          const result = await ctx.storage.submissions.query({
+            orderBy: { createdAt: &quot;desc&quot; },
+            limit: 50,
+          });
+          return {
+            blocks: [
+              { type: &quot;header&quot;, text: &quot;Submissions&quot; },
+              {
+                type: &quot;table&quot;,
+                blockId: &quot;submissions-table&quot;,
+                columns: [
+                  { key: &quot;formId&quot;, label: &quot;Form&quot;, format: &quot;text&quot; },
+                  { key: &quot;status&quot;, label: &quot;Status&quot;, format: &quot;badge&quot; },
+                  { key: &quot;createdAt&quot;, label: &quot;Date&quot;, format: &quot;relative_time&quot; },
+                ],
+                rows: result.items.map((item: any) =&gt; item.data),
+              },
+            ],
+          };
+        }
+
+        return { blocks: [] };
+      },
+    },
+  },
+});</code></pre>
+<h2>Plugin Context</h2>
+<p>All hooks and routes receive <code>ctx</code> (PluginContext):</p>
+<pre><code>interface PluginContext {
+  plugin: { id: string; version: string };
+  storage: Record&lt;string, StorageCollection&gt;; // Declared collections
+  kv: KVAccess; // Key-value store
+  log: LogAccess; // Structured logger
+  content?: ContentAccess; // If &quot;content:read&quot; capability
+  media?: MediaAccess; // If &quot;media:read&quot; capability
+  http?: HttpAccess; // If &quot;network:request&quot; capability
+  users?: UserAccess; // If &quot;users:read&quot; capability
+  cron?: CronAccess; // Always available — scoped to plugin
+  email?: EmailAccess; // If &quot;email:send&quot; capability AND a provider is configured
+}</code></pre>
+<p>Capabilities are declared in the <strong>descriptor</strong> (not in <code>definePlugin()</code> for standard format):</p>
+<pre><code>// In the descriptor
+export function myPlugin(): PluginDescriptor {
+  return {
+    id: &quot;my-plugin&quot;,
+    version: &quot;1.0.0&quot;,
+    format: &quot;standard&quot;,
+    entrypoint: &quot;@my-org/my-plugin/sandbox&quot;,
+    options: {},
+    capabilities: [&quot;content:read&quot;, &quot;network:request&quot;],
+    allowedHosts: [&quot;api.example.com&quot;],
+    storage: { events: { indexes: [&quot;timestamp&quot;] } },
+  };
+}</code></pre>
+<h2>Output Checklist</h2>
+<p>When creating a standard-format plugin, provide:</p>
+<ol>
+<li><strong><code>src/index.ts</code></strong> -- Descriptor factory (runs in Vite at build time)</li>
+<li><strong><code>src/sandbox-entry.ts</code></strong> -- <code>definePlugin({ hooks, routes })</code> as default export (runs at request time)</li>
+<li><strong><code>package.json</code></strong> -- With exports <code>&quot;.&quot;</code> (descriptor) and <code>&quot;./sandbox&quot;</code> (implementation)</li>
+<li><strong><code>tsconfig.json</code></strong> -- Standard TypeScript config</li>
+</ol>
+<p>For native-format plugins (React admin, PT blocks, Astro components), also provide:</p>
+<ol>
+<li><strong><code>src/admin.tsx</code></strong> -- Admin entry point with React components</li>
+<li><strong><code>src/astro/index.ts</code></strong> -- Block components export (if PT blocks)</li>
+</ol><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/building-emdash-site/"><span class="name">building-emdash-site</span><span class="desc">The EmDash-on-Astro playbook for content models, rendering, and the CMS details that are easy to misread.</span></a> <a class="sd-rel-tile" href="/skills/emdash-cli/"><span class="name">emdash-cli</span><span class="desc">Command-line guidance for managing EmDash content, schema, media, and automation safely.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>8</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 21 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/admin-ui.md"><span class="kind">reference</span><span class="file"><span class="title">Admin Ui</span><span class="path">references/admin-ui.md · 4.2 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/references/admin-ui.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/api-routes.md"><span class="kind">reference</span><span class="file"><span class="title">Api Routes</span><span class="path">references/api-routes.md · 6.2 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/references/api-routes.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/block-kit.md"><span class="kind">reference</span><span class="file"><span class="title">Block Kit</span><span class="path">references/block-kit.md · 10.0 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/references/block-kit.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/hooks.md"><span class="kind">reference</span><span class="file"><span class="title">Hooks</span><span class="path">references/hooks.md · 14 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/references/hooks.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/portable-text-blocks.md"><span class="kind">reference</span><span class="file"><span class="title">Portable Text Blocks</span><span class="path">references/portable-text-blocks.md · 6.3 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/references/portable-text-blocks.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/publishing.md"><span class="kind">reference</span><span class="file"><span class="title">Publishing</span><span class="path">references/publishing.md · 2.9 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/references/publishing.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/storage.md"><span class="kind">reference</span><span class="file"><span class="title">Storage</span><span class="path">references/storage.md · 7.1 KB</span></span></button><a class="raw-link" href="/bundles/creating-plugins/references/storage.md.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/creating-plugins/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Read, Edit]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/creating-plugins/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack, cursor</span></div></div></section>

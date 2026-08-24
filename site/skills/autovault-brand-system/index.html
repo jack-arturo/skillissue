@@ -87,12 +87,94 @@ resources:
     type: file
   - path: assets/usage-examples.md
     type: file
----</pre></div><h2>Why</h2>
-<p>One brand should not turn into five almost-matching ones the moment it crosses a surface boundary.</p>
-<h2>How</h2>
-<p>Start with the identity rules, then choose the smallest asset or motion treatment that survives the target medium. Keep the vault readable; let the surface do the rest.</p>
-<h2>Related</h2>
-<p>See <a href="/skills/html-asset-renderer/">HTML Asset Renderer</a> and <a href="/skills/docs-screenshot-packager/">Docs Screenshot Packager</a>.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/html-asset-renderer/"><span class="name">html-asset-renderer</span><span class="desc">Design exports needed dimension-checked production assets, not freehand screenshots.</span></a> <a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
+---</pre></div><h2>AutoVault Brand System</h2>
+<p>Use this skill when an agent needs to create or adapt AutoVault-branded</p>
+<p>interfaces, docs, terminal experiences, marketing stills, mascot prompts, or</p>
+<p>motion assets from one canonical brand source.</p>
+<h2>When to use</h2>
+<ul>
+<li>The user asks for an AutoVault-branded surface, demo, README asset, social</li>
+</ul>
+<p>  card, video bumper, checkout visual, terminal prompt, or iconography pass.</p>
+<ul>
+<li>A project already uses the AutoVault vault mark and needs consistent colors,</li>
+</ul>
+<p>  type, motion, interaction responses, or reduced-motion behavior.</p>
+<ul>
+<li>A surface has strict rendering constraints such as SVG-only web output,</li>
+</ul>
+<p>  terminal ASCII, raster illustration, or video-safe animation.</p>
+<h2>Workflow</h2>
+<ol>
+<li>Identify the target surface: web SVG/CSS, terminal ASCII/TUI, static docs,</li>
+</ol>
+<p>   social/raster, mascot illustration, or video-style motion.</p>
+<ol>
+<li>Load <code>references/identity.md</code> first. Keep AutoVault as the canonical brand</li>
+</ol>
+<p>   scope.</p>
+<ol>
+<li>Load <code>references/motion.md</code> whenever animation, interaction states, hover</li>
+</ol>
+<p>   behavior, reveal timing, or reduced-motion behavior is involved.</p>
+<ol>
+<li>Load <code>references/surface-adaptation.md</code> when translating the mark across</li>
+</ol>
+<p>   constrained media such as SVG, terminal ASCII, raster images, video, and</p>
+<p>   hosted checkout contexts.</p>
+<ol>
+<li>Reuse or adapt the files under <code>assets/</code>:</li>
+</ol>
+<p>   - <code>brand-mark.svg</code> for static web or document marks.</p>
+<p>   - <code>brand-mark-animated.svg</code> for SVG-native motion demos.</p>
+<p>   - <code>autovault-brand.css</code> for tokens, state classes, and keyframes.</p>
+<p>   - <code>ascii-vault.txt</code> for terminal-safe mark and loader frames.</p>
+<p>   - <code>mascot-prompt.md</code> for friendly raster/video mascot prompt direction.</p>
+<p>   - <code>usage-examples.md</code> for copy-paste implementation recipes.</p>
+<ol>
+<li>Validate the result against the surface constraints: no text overlap, clear</li>
+</ol>
+<p>   contrast on charcoal, stable mark anatomy, reduced-motion fallback, and no</p>
+<p>   asset path or network dependency that the target environment cannot load.</p>
+<h2>Output</h2>
+<p>Produce the smallest useful artifact for the user's surface:</p>
+<ul>
+<li>A patched SVG/CSS component for web UI.</li>
+<li>ASCII frames or a TUI-safe loader treatment for terminal contexts.</li>
+<li>A prompt and art-direction checklist for mascot, social, or video generation.</li>
+<li>A short implementation note explaining which brand tokens, mark state, and</li>
+</ul>
+<p>  motion state were used.</p>
+<h2>Brand Rules</h2>
+<ul>
+<li>The public brand is AutoVault.</li>
+<li>The canonical mark is a rounded vault body with two bottom stubs and a dial</li>
+</ul>
+<p>  that communicates locked, unlocked, scan, or admitted state.</p>
+<ul>
+<li>The primary environment is charcoal with mint <code>#5ad6c0</code> as the active signal.</li>
+<li>Use Inter for interface text, JetBrains Mono for terminal/code/micro-labels,</li>
+</ul>
+<p>  and Instrument Serif only for selective editorial emphasis.</p>
+<ul>
+<li>Motion should feel like scanning, admitting, syncing, or locking. Avoid</li>
+</ul>
+<p>  springy celebration unless the product moment is explicitly successful.</p>
+<ul>
+<li>Treat <code>assets/mascot-checkout-logo-draft.png</code>, when present in a project, as</li>
+</ul>
+<p>  reference material only. It is not a canonical source asset.</p>
+<h2>Anti-patterns</h2>
+<ul>
+<li>Do not add an unrelated parent-brand lockup.</li>
+<li>Do not replace hosted checkout raster constraints with SVG-only assumptions.</li>
+<li>Do not make the mascot draft PNG canonical or require it as an input.</li>
+<li>Do not use mint as the only color in every surface; charcoal, ink, warning,</li>
+</ul>
+<p>  blue, violet, and error accents have specific jobs.</p>
+<ul>
+<li>Do not ship looping motion without a reduced-motion fallback.</li>
+</ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/html-asset-renderer/"><span class="name">html-asset-renderer</span><span class="desc">Design exports needed dimension-checked production assets, not freehand screenshots.</span></a> <a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a></div></div></div></article></section>
       <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>11</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 4.4 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/identity.md"><span class="kind">reference</span><span class="file"><span class="title">Identity</span><span class="path">references/identity.md · 3.2 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/references/identity.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/motion.md"><span class="kind">reference</span><span class="file"><span class="title">Motion</span><span class="path">references/motion.md · 2.8 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/references/motion.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/surface-adaptation.md"><span class="kind">reference</span><span class="file"><span class="title">Surface Adaptation</span><span class="path">references/surface-adaptation.md · 2.8 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/references/surface-adaptation.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Assets</div><div class="sd-resource-row"><button type="button" data-package-file="assets/ascii-vault.txt"><span class="kind">reference</span><span class="file"><span class="title">Ascii Vault</span><span class="path">assets/ascii-vault.txt · 880 B</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/assets/ascii-vault.txt.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="assets/autovault-brand.css"><span class="kind">resource</span><span class="file"><span class="title">Autovault Brand</span><span class="path">assets/autovault-brand.css · 2.5 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/assets/autovault-brand.css.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="assets/brand-mark-animated.svg"><span class="kind">svg</span><span class="file"><span class="title">Brand Mark Animated</span><span class="path">assets/brand-mark-animated.svg · 4.0 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/assets/brand-mark-animated.svg.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="assets/brand-mark.svg"><span class="kind">svg</span><span class="file"><span class="title">Brand Mark</span><span class="path">assets/brand-mark.svg · 763 B</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/assets/brand-mark.svg.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="assets/mascot-prompt.md"><span class="kind">reference</span><span class="file"><span class="title">Mascot Prompt</span><span class="path">assets/mascot-prompt.md · 1.9 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/assets/mascot-prompt.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="assets/usage-examples.md"><span class="kind">reference</span><span class="file"><span class="title">Usage Examples</span><span class="path">assets/usage-examples.md · 1.4 KB</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/assets/usage-examples.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Agent metadata</div><div class="sd-resource-row"><button type="button" data-package-file="agents/openai.yaml"><span class="kind">config</span><span class="file"><span class="title">Openai</span><span class="path">agents/openai.yaml · 521 B</span></span></button><a class="raw-link" href="/bundles/autovault-brand-system/agents/openai.yaml.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/autovault-brand-system/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/autovault-brand-system/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>
