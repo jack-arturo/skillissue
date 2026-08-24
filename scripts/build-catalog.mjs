@@ -977,8 +977,9 @@ for (const s of publicSkills) {
   fs.mkdirSync(dir, { recursive: true });
   const featuredBadge = s.featured ? '<span class="badge">featured</span>' : "";
   const related = (s.related || [])
-    .filter((n) => publicSkills.some((p) => p.name === n))
-    .map((n) => `<a class="tag" href="/skills/${esc(n)}/">${esc(n)}</a>`)
+    .map((n) => publicSkills.find((p) => p.name === n))
+    .filter(Boolean)
+    .map((skill) => `<a class="sd-rel-tile" href="/skills/${esc(skill.name)}/"><span class="name">${esc(skill.name)}</span><span class="desc">${esc(skill.summary)}</span></a>`)
     .join(" ");
   const tags = (s.tags || [])
     .map((t) => `<span class="tag">${esc(t)}</span>`)
@@ -996,7 +997,7 @@ for (const s of publicSkills) {
   const resourceTree = ["root", "references", "assets", "agents", "bin", "scripts", "other"].map((group) => {
     const files = viewerFiles.filter((file) => file.group === group).sort(bundlePathCompare);
     if (!files.length) return "";
-    return `<div class="package-resource-group"><p>${groupLabels[group]}</p>${files.map((file) => `<div class="package-resource-row"><button type="button" data-package-file="${esc(file.path)}"><span class="package-file-kind">${esc(file.kind)}</span><span><strong>${esc(file.title)}</strong><small>${esc(file.path)} · ${esc(formatBytes(file.bytes))}</small></span></button><a href="${esc(file.url)}" rel="noopener">raw</a></div>`).join("")}</div>`;
+    return `<div class="sd-resource-group"><div class="sd-resource-group-title">${groupLabels[group]}</div>${files.map((file) => `<div class="sd-resource-row"><button type="button" data-package-file="${esc(file.path)}"><span class="kind">${esc(file.kind)}</span><span class="file"><span class="title">${esc(file.title)}</span><span class="path">${esc(file.path)} · ${esc(formatBytes(file.bytes))}</span></span>${file.kind === "script" ? '<span class="exec-badge">inspect only</span>' : ""}</button><a class="raw-link" href="${esc(file.url)}" rel="noopener">raw</a></div>`).join("")}</div>`;
   }).join("");
   const capabilityRows = Object.entries(s.capabilities).length
     ? Object.entries(s.capabilities).map(([key, value]) => `<div><dt>${esc(key)}</dt><dd>${esc(value)}</dd></div>`).join("")
@@ -1004,40 +1005,40 @@ for (const s of publicSkills) {
   const secrets = s.requiresSecrets.length
     ? `<p class="muted">Requires: ${esc(s.requiresSecrets.join(", "))}</p>`
     : '<p class="muted">No secrets declared by this package.</p>';
-  const body = `<div data-package-detail>
-    <section class="skill-package">
-      <div class="wrap">
-        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>${esc(s.provenance)}</span><span>/</span><span>${esc(s.name)}</span></p>
-        <div class="skill-package-top">
-          <div class="skill-package-intro">
-            <span class="explorer-mark" aria-hidden="true">${esc(explorerMark(s.name))}</span>
-            <div><p class="explorer-kicker">Hosted skill bundle · ${esc(s.provenance)} · ${esc(s.category)}</p><h1>${esc(s.title)}</h1><p class="lede">${esc(s.summary)}</p></div>
-          </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>${esc(s.cliInstall)}</code>
-            <div><button type="button" class="btn btn-primary" data-copy="${esc(s.cliInstall)}">Copy install</button><a class="btn btn-ghost" href="${esc(s.rawSourceUrl)}" rel="noopener">Raw</a></div>
-          </aside>
-        </div>
-        <dl class="skill-facts">
-          <div><dt>Version</dt><dd>v${esc(s.version)}</dd></div>
-          <div><dt>License</dt><dd>${esc(s.license)}</dd></div>
-          <div><dt>Targets</dt><dd>${esc((s.agents?.length ? s.agents : ["general"]).join(", "))}</dd></div>
-          <div><dt>Bundle</dt><dd>${s.bundleFileCount} files · ${s.resourceCount} resources${s.runnable ? " · runnable" : ""} · ${esc(formatBytes(s.bundleSize))}</dd></div>
-        </dl>
-        <div class="meta skill-meta">${tags}<span class="badge">${esc(s.provenance)}</span>${featuredBadge}</div>
-        <nav class="package-nav" aria-label="Package sections"><button type="button" data-package-tab="overview" aria-selected="true">Overview</button><button type="button" data-package-tab="bundle" aria-selected="false">Bundle <span>${s.bundleFileCount}</span></button><button type="button" data-package-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-package-tab="provenance" aria-selected="false">Provenance</button><button type="button" data-package-tab="source" aria-selected="false">Source</button></nav>
+  const frontmatter = s.skillSource.match(/^---[\s\S]*?\n---/)?.[0] || s.skillSource;
+  const featuredAssets = [
+    "assets/brand-mark-animated.svg",
+    "assets/brand-mark.svg",
+    "assets/ascii-vault.txt",
+    "assets/autovault-brand.css",
+  ].map((path) => viewerFiles.find((file) => file.path === path)).filter(Boolean);
+  const assetStrip = featuredAssets.length
+    ? `<div class="sd-asset-strip" aria-label="Bundle highlights">${featuredAssets.map((file) => `<button type="button" class="sd-asset-chip" data-package-open="${esc(file.path)}"><span class="thumb mono">${esc(file.kind)}</span><span><span class="name">${esc(file.title)}</span><span class="path">${esc(file.path)}</span></span></button>`).join("")}</div>`
+    : "";
+  const agents = s.agents?.length ? s.agents : ["general"];
+  const agentColors = ["#ffb020", "#5ca8ff", "#3dff9a", "#cc8cff"];
+  const railAgents = agents.map((agent, index) => `<div class="sd-agent-row"><span class="swatch" style="background:${agentColors[index % agentColors.length]}"></span><span class="lbl">${esc(agent)}</span><span class="stat">declared</span></div>`).join("");
+  const permissionRail = Object.entries(s.capabilities).length
+    ? Object.entries(s.capabilities).map(([key, value]) => `<div class="sd-perm-row"><span class="ico ok">✓</span><span>${esc(key)}</span><span class="scope">${esc(value)}</span></div>`).join("")
+    : '<div class="sd-perm-row"><span class="ico">—</span><span>capabilities</span><span class="scope">not declared</span></div>';
+  const body = `<div class="sd-page" data-package-detail>
+    <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>${esc(s.provenance)}</span><span class="sep">/</span><span class="cur">${esc(s.name)}</span></nav>
+    <header class="sd-head">
+      <div>
+        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">${esc(explorerMark(s.name))}</div><div><h1><span class="org">${esc(s.provenance)} / </span>${esc(s.title)}</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">${esc(s.category)}</span><span class="meta-facts"><span>v${esc(s.version)}</span><span>${esc(s.license)}</span><span>${esc(formatBytes(s.bundleSize))}</span></span></div><div class="src-path">skills/${esc(s.name)}/SKILL.md</div></div></div>
+        <p class="desc">${esc(s.summary)}</p>${assetStrip}
       </div>
-    </section>
-    <section><div class="wrap package-detail-grid">
-      <main class="package-panels prose">
-        <section class="package-section" id="overview" data-package-panel="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p>${s.bodyHtml}${related ? `<h3>Related skills</h3><div class="meta">${related}</div>` : ""}</div></section>
-        <section class="package-section" id="bundle" data-package-panel="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Inspect every package file</h2></div><span class="bundle-count">${s.bundleFileCount} files</span></div><p class="muted">Select a file to preview it from this public package. Script-like files are inspection-only.</p><div class="package-bundle-grid"><nav class="package-resource-tree" aria-label="Bundle files">${resourceTree}</nav><article class="package-resource-preview" data-package-preview><div class="package-resource-preview-head"><div><span data-package-preview-kind>markdown</span><strong data-package-preview-name>SKILL.md</strong></div><a data-package-preview-raw href="/bundles/${esc(s.name)}/SKILL.md.txt">view raw →</a></div><div class="package-resource-summary"><h3>Inspect the bundle</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
-        <section class="package-section" id="permissions" data-package-panel="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts">${capabilityRows}</dl>${secrets}</section>
-        <section class="package-section" id="provenance" data-package-panel="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This ${esc(s.provenance)} package is installed from the Git commit shown above. Its source, bundle files, and declared surface are available before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>${esc(shortPackageSourcePin)}</code></dd></div><div><dt>Compatibility</dt><dd>${esc((s.agents?.length ? s.agents : ["general"]).join(", "))}</dd></div></dl></section>
-        <section class="package-section" id="source" data-package-panel="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="${esc(s.rawSourceUrl)}" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>${esc(s.skillSource)}</code></pre></section>
-      </main>
-      <aside class="package-rail"><section><p>Compatibility</p>${(s.agents?.length ? s.agents : ["general"]).map((agent) => `<div><span>${esc(agent)}</span><b>declared</b></div>`).join("")}</section><section><p>Metadata</p><dl><dt>version</dt><dd>${esc(s.version)}</dd><dt>size</dt><dd>${esc(formatBytes(s.bundleSize))}</dd><dt>license</dt><dd>${esc(s.license)}</dd><dt>source</dt><dd>${esc(s.provenance)}</dd></dl></section><section><p>Permission summary</p>${Object.entries(s.capabilities).map(([key, value]) => `<div><span>${esc(key)}</span><b>${esc(value)}</b></div>`).join("") || "<div><span>capabilities</span><b>not declared</b></div>"}</section></aside>
-    </div></section>
+      <div class="actions"><div class="sd-install"><div class="sd-install-head"><span class="lbl">Install</span><span class="sd-install-tag">CLI + MCP</span></div><div class="sd-install-list"><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">CLI</span><span>Run from your local shell.</span></div><div class="cmd"><span class="pmt">$</span><span class="cmd-text">${esc(s.cliInstall)}</span><button class="copy" type="button" data-copy="${esc(s.cliInstall)}">Copy</button></div></div><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">MCP</span><span>Paste into an agent MCP tool call.</span></div><div class="cmd"><span class="pmt">&gt;</span><span class="cmd-text">${esc(s.mcpInstall)}</span><button class="copy" type="button" data-copy="${esc(s.mcpInstall)}">Copy</button></div></div></div></div><div class="sd-copy-status" aria-live="polite">Choose CLI for a shell install or MCP for an agent tool call.</div><div class="sd-secondary-actions"><a class="sd-sbtn" href="${esc(s.sourceUrl)}" rel="noopener">Source</a><button class="sd-sbtn" type="button" data-package-tab="provenance">Verify</button></div></div>
+    </header>
+    <section class="sd-stats" aria-label="Skill statistics"><div class="st"><div class="lbl">Example type</div><div class="val">bundle</div><div class="trend">hosted skill bundle</div></div><div class="st"><div class="lbl">Bundle files</div><div class="val">${s.bundleFileCount}</div><div class="trend">SKILL.md + resources</div></div><div class="st"><div class="lbl">Resources</div><div class="val">${s.resourceCount}</div><div class="trend">inspectable source files</div></div><div class="st"><div class="lbl">Declared agents</div><div class="val">${agents.length}</div><div class="trend">from frontmatter</div></div><div class="st"><div class="lbl">Source</div><div class="val">${esc(s.provenance)}</div><div class="trend">pinned GitHub bundle</div></div></section>
+    <nav class="sd-tabs" aria-label="Skill detail tabs"><button type="button" data-package-tab="overview" aria-selected="true">Overview</button><button type="button" data-package-tab="bundle" aria-selected="false">Bundle <span class="ct">${s.bundleFileCount}</span></button><button type="button" data-package-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-package-tab="provenance" aria-selected="false">Provenance</button><button type="button" data-package-tab="source" aria-selected="false">Source <span class="ct">1</span></button></nav>
+    <div class="sd-body"><main>
+      <section id="overview" data-package-panel="overview"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">SKILL.md</span><a class="raw" href="${esc(s.rawSourceUrl)}" rel="noopener">view raw →</a></div><div class="sd-md-body"><div class="sd-frontmatter"><pre>${esc(frontmatter)}</pre></div>${s.bodyHtml}${related ? `<div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related">${related}</div></div>` : ""}</div></article></section>
+      <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>${s.bundleFileCount}</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files">${resourceTree}</nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/${esc(s.name)}/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
+      <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts">${capabilityRows}</dl>${secrets}</div></section>
+      <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This ${esc(s.provenance)} package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">${esc(shortPackageSourcePin)}</span><span class="k">source</span><a class="v accent" href="${esc(s.sourceUrl)}" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">${esc(agents.join(", "))}</span></div></div></section>
+      <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v${esc(s.version)}<span class="latest">latest</span></span><span>${s.bundleFileCount} files · ${esc(formatBytes(s.bundleSize))}</span><span>${esc(s.provenance)}</span><code>${esc(shortPackageSourcePin)}</code><a href="${esc(s.rawSourceUrl)}" rel="noopener">SKILL.md</a></div></div></section>
+    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list">${railAgents}</div></div><div class="sd-card"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">${esc(s.version)}</span><span class="k">size</span><span class="v mono">${esc(formatBytes(s.bundleSize))}</span><span class="k">license</span><span class="v">${esc(s.license)}</span><span class="k">provider</span><span class="v accent">${esc(s.provenance)}</span></div></div><div class="sd-card"><h4>Permission summary</h4>${permissionRail}<button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">${esc(s.provenance)}</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
     <script id="package-data" type="application/json">${jsonForScript({ files: viewerFiles })}</script><script type="module" src="/assets/${detailAssetName}"></script>
   </div>`;
   fs.writeFileSync(

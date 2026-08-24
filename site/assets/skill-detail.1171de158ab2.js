@@ -99,6 +99,10 @@ function initPackageDetail() {
   const tabIds = tabs.map((tab) => tab.dataset.packageTab);
   tabs.forEach((tab) => tab.addEventListener("click", () => setTab(tab.dataset.packageTab, { updateHash: true })));
   fileButtons.forEach((button) => button.addEventListener("click", () => select(button.dataset.packageFile)));
+  root.querySelectorAll("[data-package-open]").forEach((button) => button.addEventListener("click", () => {
+    setTab("bundle", { updateHash: true });
+    select(button.dataset.packageOpen);
+  }));
   window.addEventListener("hashchange", () => setTab(packageTabForHash(window.location.hash, tabIds)));
   setTab(packageTabForHash(window.location.hash, tabIds));
   if (selectedPath) select(selectedPath);

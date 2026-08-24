@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/browser-hand/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.94eed5e754cd.css">
+<link rel="stylesheet" href="/assets/site.0ec063646511.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -38,59 +38,19 @@
     </div>
   </header>
   <main>
-<div data-package-detail>
-    <section class="skill-package">
-      <div class="wrap">
-        <p class="package-breadcrumb"><a href="/skills/">Skills</a><span>/</span><span>house</span><span>/</span><span>browser-hand</span></p>
-        <div class="skill-package-top">
-          <div class="skill-package-intro">
-            <span class="explorer-mark" aria-hidden="true">BH</span>
-            <div><p class="explorer-kicker">Hosted skill bundle · house · browser</p><h1>Browser Hand</h1><p class="lede">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</p></div>
-          </div>
-          <aside class="skill-install-card">
-            <span>Pinned install</span><code>autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md --sync-profiles</code>
-            <div><button type="button" class="btn btn-primary" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md --sync-profiles">Copy install</button><a class="btn btn-ghost" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md" rel="noopener">Raw</a></div>
-          </aside>
-        </div>
-        <dl class="skill-facts">
-          <div><dt>Version</dt><dd>v0.6.2</dd></div>
-          <div><dt>License</dt><dd>MIT</dd></div>
-          <div><dt>Targets</dt><dd>claude-code, codex, grok</dd></div>
-          <div><dt>Bundle</dt><dd>7 files · 6 resources · runnable · 54 KB</dd></div>
-        </dl>
-        <div class="meta skill-meta"><span class="tag">browser</span><span class="tag">chrome</span><span class="tag">extension</span><span class="tag">automation</span><span class="tag">agent</span><span class="badge">house</span><span class="badge">featured</span></div>
-        <nav class="package-nav" aria-label="Package sections"><button type="button" data-package-tab="overview" aria-selected="true">Overview</button><button type="button" data-package-tab="bundle" aria-selected="false">Bundle <span>7</span></button><button type="button" data-package-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-package-tab="provenance" aria-selected="false">Provenance</button><button type="button" data-package-tab="source" aria-selected="false">Source</button></nav>
+<div class="sd-page" data-package-detail>
+    <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>house</span><span class="sep">/</span><span class="cur">browser-hand</span></nav>
+    <header class="sd-head">
+      <div>
+        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">BH</div><div><h1><span class="org">house / </span>Browser Hand</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">browser</span><span class="meta-facts"><span>v0.6.2</span><span>MIT</span><span>54 KB</span></span></div><div class="src-path">skills/browser-hand/SKILL.md</div></div></div>
+        <p class="desc">Drive your real logged-in Chrome from an agent — extension bridge, no remote debugging port on the default profile, background-first so focus stays with you.</p>
       </div>
-    </section>
-    <section><div class="wrap package-detail-grid">
-      <main class="package-panels prose">
-        <section class="package-section" id="overview" data-package-panel="overview"><div class="package-overview"><p class="explorer-kicker">Overview</p><h2>Why it exists</h2>
-<p>Remote debugging and WebDriver-style attach are a bad fit for everyday Chrome:</p>
-<p>modern Chrome blocks debug ports on the default profile, many sites (including</p>
-<p>Google OAuth) treat debugger sessions as hostile, and automation steals OS focus.</p>
-<p>Sandbox Chromium has none of your cookies.</p>
-<p>Browser Hand uses a small Chrome extension and a local relay so agents drive the</p>
-<p><strong>same profile you already use</strong>. It is a loadable <strong>skill</strong>, not an MCP server —</p>
-<p>no always-on tool tax; agents pull it in when the task needs a real browser.</p>
-<h2>History</h2>
-<h3>0.6.x</h3>
-<p>Public skill package for <a href="https://github.com/verygoodplugins/browser-hand" rel="noopener">verygoodplugins/browser-hand</a>.</p>
-<p>AutoVault-first install, background focus, soft recovery for password-manager</p>
-<p>wedges, agent obstacle course.</p>
-<h3>Earlier (as house `dev-browser`)</h3>
-<p>Extension-relay vs debug-port paths lived under AutoHub-coupled runbooks.</p>
-<p>Productized as Browser Hand under Very Good Plugins.</p>
-<h2>How Jack actually uses it</h2>
-<p>Default to the extension CLI for signed-in work. Install the skill with AutoVault;</p>
-<p>keep the relay and extension running locally. Reach for headless/remote-debug only</p>
-<p>for CI or throwaway profiles.</p>
-<h2>What it is not</h2>
-<p>Not Playwright-in-a-box for empty Chromium. Not an MCP browser server. For durable</p>
-<p>agent memory across sessions, see AutoMem; for skill packaging, see AutoVault.</p><h3>Related skills</h3><div class="meta"><a class="tag" href="/skills/autovault-skill/">autovault-skill</a> <a class="tag" href="/skills/docs-screenshot-packager/">docs-screenshot-packager</a> <a class="tag" href="/skills/automem/">automem</a></div></div></section>
-        <section class="package-section" id="bundle" data-package-panel="bundle"><div class="skill-resources"><div class="section-head"><div><p class="explorer-kicker">Bundle contents</p><h2>Inspect every package file</h2></div><span class="bundle-count">7 files</span></div><p class="muted">Select a file to preview it from this public package. Script-like files are inspection-only.</p><div class="package-bundle-grid"><nav class="package-resource-tree" aria-label="Bundle files"><div class="package-resource-group"><p>Skill root</p><div class="package-resource-row"><button type="button" data-package-file="SKILL.md"><span class="package-file-kind">markdown</span><span><strong>SKILL.md</strong><small>SKILL.md · 4.6 KB</small></span></button><a href="/bundles/browser-hand/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="package-resource-group"><p>Reference docs</p><div class="package-resource-row"><button type="button" data-package-file="references/extension-cli.md"><span class="package-file-kind">reference</span><span><strong>Extension Cli</strong><small>references/extension-cli.md · 3.4 KB</small></span></button><a href="/bundles/browser-hand/references/extension-cli.md.txt" rel="noopener">raw</a></div><div class="package-resource-row"><button type="button" data-package-file="references/platform-gotchas.md"><span class="package-file-kind">reference</span><span><strong>Platform Gotchas</strong><small>references/platform-gotchas.md · 30 KB</small></span></button><a href="/bundles/browser-hand/references/platform-gotchas.md.txt" rel="noopener">raw</a></div><div class="package-resource-row"><button type="button" data-package-file="references/remote-debug-fallback.md"><span class="package-file-kind">reference</span><span><strong>Remote Debug Fallback</strong><small>references/remote-debug-fallback.md · 1.6 KB</small></span></button><a href="/bundles/browser-hand/references/remote-debug-fallback.md.txt" rel="noopener">raw</a></div><div class="package-resource-row"><button type="button" data-package-file="references/setup.md"><span class="package-file-kind">reference</span><span><strong>Setup</strong><small>references/setup.md · 3.5 KB</small></span></button><a href="/bundles/browser-hand/references/setup.md.txt" rel="noopener">raw</a></div><div class="package-resource-row"><button type="button" data-package-file="references/troubleshooting.md"><span class="package-file-kind">reference</span><span><strong>Troubleshooting</strong><small>references/troubleshooting.md · 7.8 KB</small></span></button><a href="/bundles/browser-hand/references/troubleshooting.md.txt" rel="noopener">raw</a></div></div><div class="package-resource-group"><p>Scripts</p><div class="package-resource-row"><button type="button" data-package-file="scripts/anon-screenshot.sh"><span class="package-file-kind">script</span><span><strong>Anon Screenshot</strong><small>scripts/anon-screenshot.sh · 3.0 KB</small></span></button><a href="/bundles/browser-hand/scripts/anon-screenshot.sh.txt" rel="noopener">raw</a></div></div></nav><article class="package-resource-preview" data-package-preview><div class="package-resource-preview-head"><div><span data-package-preview-kind>markdown</span><strong data-package-preview-name>SKILL.md</strong></div><a data-package-preview-raw href="/bundles/browser-hand/SKILL.md.txt">view raw →</a></div><div class="package-resource-summary"><h3>Inspect the bundle</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
-        <section class="package-section" id="permissions" data-package-panel="permissions"><p class="explorer-kicker">Permissions</p><h2>Declared capability surface</h2><dl class="permission-facts"><div><dt>Capabilities</dt><dd>Not declared</dd></div></dl><p class="muted">No secrets declared by this package.</p></section>
-        <section class="package-section" id="provenance" data-package-panel="provenance"><p class="explorer-kicker">Provenance</p><h2>Public, pinned, and inspectable</h2><p>This house package is installed from the Git commit shown above. Its source, bundle files, and declared surface are available before you run it.</p><dl class="permission-facts"><div><dt>Source model</dt><dd>GitHub package bundle</dd></div><div><dt>Package pin</dt><dd><code>fad7ebe</code></dd></div><div><dt>Compatibility</dt><dd>claude-code, codex, grok</dd></div></dl></section>
-        <section class="package-section" id="source" data-package-panel="source"><p class="explorer-kicker">Source</p><h2>SKILL.md</h2><p><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md" rel="noopener">Open the raw source</a></p><pre class="package-source"><code>---
+      <div class="actions"><div class="sd-install"><div class="sd-install-head"><span class="lbl">Install</span><span class="sd-install-tag">CLI + MCP</span></div><div class="sd-install-list"><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">CLI</span><span>Run from your local shell.</span></div><div class="cmd"><span class="pmt">$</span><span class="cmd-text">autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md --sync-profiles</span><button class="copy" type="button" data-copy="autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md --sync-profiles">Copy</button></div></div><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">MCP</span><span>Paste into an agent MCP tool call.</span></div><div class="cmd"><span class="pmt">&gt;</span><span class="cmd-text">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md&quot; })</span><button class="copy" type="button" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/browser-hand/SKILL.md&quot; })">Copy</button></div></div></div></div><div class="sd-copy-status" aria-live="polite">Choose CLI for a shell install or MCP for an agent tool call.</div><div class="sd-secondary-actions"><a class="sd-sbtn" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md" rel="noopener">Source</a><button class="sd-sbtn" type="button" data-package-tab="provenance">Verify</button></div></div>
+    </header>
+    <section class="sd-stats" aria-label="Skill statistics"><div class="st"><div class="lbl">Example type</div><div class="val">bundle</div><div class="trend">hosted skill bundle</div></div><div class="st"><div class="lbl">Bundle files</div><div class="val">7</div><div class="trend">SKILL.md + resources</div></div><div class="st"><div class="lbl">Resources</div><div class="val">6</div><div class="trend">inspectable source files</div></div><div class="st"><div class="lbl">Declared agents</div><div class="val">3</div><div class="trend">from frontmatter</div></div><div class="st"><div class="lbl">Source</div><div class="val">house</div><div class="trend">pinned GitHub bundle</div></div></section>
+    <nav class="sd-tabs" aria-label="Skill detail tabs"><button type="button" data-package-tab="overview" aria-selected="true">Overview</button><button type="button" data-package-tab="bundle" aria-selected="false">Bundle <span class="ct">7</span></button><button type="button" data-package-tab="permissions" aria-selected="false">Permissions</button><button type="button" data-package-tab="provenance" aria-selected="false">Provenance</button><button type="button" data-package-tab="source" aria-selected="false">Source <span class="ct">1</span></button></nav>
+    <div class="sd-body"><main>
+      <section id="overview" data-package-panel="overview"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">SKILL.md</span><a class="raw" href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md" rel="noopener">view raw →</a></div><div class="sd-md-body"><div class="sd-frontmatter"><pre>---
 name: browser-hand
 description: &gt;
   Use when work needs the user's already-open, signed-in Chrome: existing tabs,
@@ -118,97 +78,35 @@ resources:
     type: file
   - path: scripts/anon-screenshot.sh
     type: file
----
-
-# Browser Hand
-
-Control the user’s **real Chrome profile** through a local extension bridge. No `--remote-debugging-port` on the everyday profile.
-
-This is a **skill**, not an MCP server: no always-on tool list and no extra MCP process. The agent loads it when the task matches (signed-in browser work).
-
-## When to load this skill
-
-**Load it when any of these are true:**
-
-- The task needs a site the user is **already signed into**.
-- The user mentions **existing tabs, cookies, “my Chrome,” “logged in,” or a real account**.
-- Remote debugging / a fresh Chromium would lose auth or get blocked (common with Google and other OAuth).
-
-**Skip it when:**
-
-- A public page can be fetched with HTTP / `WebFetch`.
-- The user only wants a **disposable headless** browser (use the upstream `dev-browser` CLI).
-
-## Why this instead of remote debugging
-
-1. Modern Chrome **will not** attach a remote-debug port to the **default** profile without a separate user-data dir.
-2. Sites often **block** debugger/automation-shaped sessions (including Google OAuth).
-3. This stack defaults to **background tabs** — no stealing OS focus while the user works.
-4. Recovery paths for password-manager wedges and multi-step agent flows; local **challenge gym** for agent-shaped failures.
-
-## Pieces (repo root)
-
-| Piece | Command / path |
-|---|---|
-| CLI | `browser-hand` or `node cli-js/src/cli.js` |
-| Relay | `browser-hand-relay` / `npm run relay` — `ws://127.0.0.1:9333` |
-| Extension | Load unpacked `extension/dist/chrome-mv3` (name: Browser Hand) |
-| Challenges | `extension/challenges/` (default gym port **8766**) |
-
-## Setup (once)
-
-```bash
-npm run setup
-# Chrome → Load unpacked → extension/dist/chrome-mv3
-# NOT extension/.output/ — that is a stale WXT build whose manifest still
-# says &quot;dev-browser&quot;; loading it is why Chrome shows the old name.
-npm run relay    # leave running
-npm run doctor   # want status: tab_bootstrap_works
-```
-
-Switching from old `dev-browser` skill/extension? `npm run setup -- --cleanup-legacy`
-
-Details: `references/setup.md`.
-
-## Daily commands
-
-```bash
-browser-hand doctor
-browser-hand open --url https://example.com --page-name work
-browser-hand snapshot --page-name work
-browser-hand fill --page-name work --fields '{&quot;Email&quot;:&quot;a@b.c&quot;}'
-browser-hand click --page-name work --text &quot;Submit&quot;
-browser-hand type --page-name work --label &quot;Bio&quot; --text &quot;Hello&quot;
-browser-hand evaluate --page-name work --code 'document.title'
-browser-hand screenshot --page-name work
-```
-
-Full reference: `references/extension-cli.md`.
-
-## Agent rules
-
-- Prefer **named pages** (`--page-name`) for multi-step work.
-- `open/goto/snapshot/screenshot/evaluate` create a named tab if missing;
-  `click/type/fill/autofill-profile` attach to an existing one and error
-  instead. Pass the same `--page-name` you opened with — omitting it acts on
-  whichever tab is active.
-- **Do not** request window focus for ordinary fill/click/snapshot. Only use `focus --focus window --reason &quot;…&quot;` when a human must act (2FA, captcha, confirm).
-- Snapshot or screenshot **before and after** writes; verify with evaluate when critical.
-- On username/password manager weirdness, soft recovery is built in — retry evaluate/fill; re-open the named page if screenshot still fails.
-- Append new platform quirks to `references/platform-gotchas.md` on the same run.
-
-## Optional headless
-
-For CI / empty profile only: upstream `dev-browser --headless` or `--connect` to a **non-default** debug profile. See `references/remote-debug-fallback.md`. Never treat that as “drive my daily Chrome.”
-
-## Read-only / audit
-
-Observation-only tasks: no Save/Publish/Delete; evidence from the authenticated profile; filenames with provenance. See `references/troubleshooting.md`.
-</code></pre></section>
-      </main>
-      <aside class="package-rail"><section><p>Compatibility</p><div><span>claude-code</span><b>declared</b></div><div><span>codex</span><b>declared</b></div><div><span>grok</span><b>declared</b></div></section><section><p>Metadata</p><dl><dt>version</dt><dd>0.6.2</dd><dt>size</dt><dd>54 KB</dd><dt>license</dt><dd>MIT</dd><dt>source</dt><dd>house</dd></dl></section><section><p>Permission summary</p><div><span>capabilities</span><b>not declared</b></div></section></aside>
-    </div></section>
-    <script id="package-data" type="application/json">{"files":[{"path":"references/extension-cli.md","kind":"reference","group":"references","title":"Extension Cli","summary":"Reference material bundled with this skill.","bytes":3452,"url":"/bundles/browser-hand/references/extension-cli.md.txt"},{"path":"references/platform-gotchas.md","kind":"reference","group":"references","title":"Platform Gotchas","summary":"Reference material bundled with this skill.","bytes":30747,"url":"/bundles/browser-hand/references/platform-gotchas.md.txt"},{"path":"references/remote-debug-fallback.md","kind":"reference","group":"references","title":"Remote Debug Fallback","summary":"Reference material bundled with this skill.","bytes":1620,"url":"/bundles/browser-hand/references/remote-debug-fallback.md.txt"},{"path":"references/setup.md","kind":"reference","group":"references","title":"Setup","summary":"Reference material bundled with this skill.","bytes":3577,"url":"/bundles/browser-hand/references/setup.md.txt"},{"path":"references/troubleshooting.md","kind":"reference","group":"references","title":"Troubleshooting","summary":"Reference material bundled with this skill.","bytes":8001,"url":"/bundles/browser-hand/references/troubleshooting.md.txt"},{"path":"scripts/anon-screenshot.sh","kind":"script","group":"scripts","title":"Anon Screenshot","summary":"Runnable package helper. Inspect before running.","bytes":3122,"url":"/bundles/browser-hand/scripts/anon-screenshot.sh.txt"},{"path":"SKILL.md","kind":"markdown","group":"root","title":"SKILL.md","summary":"Primary agent instructions, frontmatter, workflow, and declared resource manifest.","bytes":4723,"url":"/bundles/browser-hand/SKILL.md.txt"}]}</script><script type="module" src="/assets/skill-detail.9a0a12b04080.js"></script>
+---</pre></div><h2>Why it exists</h2>
+<p>Remote debugging and WebDriver-style attach are a bad fit for everyday Chrome:</p>
+<p>modern Chrome blocks debug ports on the default profile, many sites (including</p>
+<p>Google OAuth) treat debugger sessions as hostile, and automation steals OS focus.</p>
+<p>Sandbox Chromium has none of your cookies.</p>
+<p>Browser Hand uses a small Chrome extension and a local relay so agents drive the</p>
+<p><strong>same profile you already use</strong>. It is a loadable <strong>skill</strong>, not an MCP server —</p>
+<p>no always-on tool tax; agents pull it in when the task needs a real browser.</p>
+<h2>History</h2>
+<h3>0.6.x</h3>
+<p>Public skill package for <a href="https://github.com/verygoodplugins/browser-hand" rel="noopener">verygoodplugins/browser-hand</a>.</p>
+<p>AutoVault-first install, background focus, soft recovery for password-manager</p>
+<p>wedges, agent obstacle course.</p>
+<h3>Earlier (as house `dev-browser`)</h3>
+<p>Extension-relay vs debug-port paths lived under AutoHub-coupled runbooks.</p>
+<p>Productized as Browser Hand under Very Good Plugins.</p>
+<h2>How Jack actually uses it</h2>
+<p>Default to the extension CLI for signed-in work. Install the skill with AutoVault;</p>
+<p>keep the relay and extension running locally. Reach for headless/remote-debug only</p>
+<p>for CI or throwaway profiles.</p>
+<h2>What it is not</h2>
+<p>Not Playwright-in-a-box for empty Chromium. Not an MCP browser server. For durable</p>
+<p>agent memory across sessions, see AutoMem; for skill packaging, see AutoVault.</p><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/autovault-skill/"><span class="name">autovault-skill</span><span class="desc">Agents kept looking for MCP when the skill was already symlinked. This meta-skill explains the model.</span></a> <a class="sd-rel-tile" href="/skills/docs-screenshot-packager/"><span class="name">docs-screenshot-packager</span><span class="desc">Screenshot PRs stalled with local-only images and placeholders. This is the full pack pipeline.</span></a> <a class="sd-rel-tile" href="/skills/automem/"><span class="name">automem</span><span class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</span></a></div></div></div></article></section>
+      <section id="bundle" data-package-panel="bundle"><div class="sd-bundle"><div class="sd-bundle-head"><div><h2>Bundle contents</h2><p>Every file declared by this skill is inspectable here. Static resources are previewed from same-origin hosted files; script-like files are shown as text only.</p></div><div class="sd-bundle-count"><strong>7</strong><span>files</span></div></div><div class="sd-bundle-grid"><nav class="sd-resource-tree" aria-label="Bundle files"><div class="sd-resource-group"><div class="sd-resource-group-title">Skill root</div><div class="sd-resource-row"><button type="button" data-package-file="SKILL.md"><span class="kind">markdown</span><span class="file"><span class="title">SKILL.md</span><span class="path">SKILL.md · 4.6 KB</span></span></button><a class="raw-link" href="/bundles/browser-hand/SKILL.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Reference docs</div><div class="sd-resource-row"><button type="button" data-package-file="references/extension-cli.md"><span class="kind">reference</span><span class="file"><span class="title">Extension Cli</span><span class="path">references/extension-cli.md · 3.4 KB</span></span></button><a class="raw-link" href="/bundles/browser-hand/references/extension-cli.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/platform-gotchas.md"><span class="kind">reference</span><span class="file"><span class="title">Platform Gotchas</span><span class="path">references/platform-gotchas.md · 30 KB</span></span></button><a class="raw-link" href="/bundles/browser-hand/references/platform-gotchas.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/remote-debug-fallback.md"><span class="kind">reference</span><span class="file"><span class="title">Remote Debug Fallback</span><span class="path">references/remote-debug-fallback.md · 1.6 KB</span></span></button><a class="raw-link" href="/bundles/browser-hand/references/remote-debug-fallback.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/setup.md"><span class="kind">reference</span><span class="file"><span class="title">Setup</span><span class="path">references/setup.md · 3.5 KB</span></span></button><a class="raw-link" href="/bundles/browser-hand/references/setup.md.txt" rel="noopener">raw</a></div><div class="sd-resource-row"><button type="button" data-package-file="references/troubleshooting.md"><span class="kind">reference</span><span class="file"><span class="title">Troubleshooting</span><span class="path">references/troubleshooting.md · 7.8 KB</span></span></button><a class="raw-link" href="/bundles/browser-hand/references/troubleshooting.md.txt" rel="noopener">raw</a></div></div><div class="sd-resource-group"><div class="sd-resource-group-title">Scripts</div><div class="sd-resource-row"><button type="button" data-package-file="scripts/anon-screenshot.sh"><span class="kind">script</span><span class="file"><span class="title">Anon Screenshot</span><span class="path">scripts/anon-screenshot.sh · 3.0 KB</span></span><span class="exec-badge">inspect only</span></button><a class="raw-link" href="/bundles/browser-hand/scripts/anon-screenshot.sh.txt" rel="noopener">raw</a></div></div></nav><article class="sd-resource-preview" data-package-preview><div class="sd-resource-preview-head"><div><span class="kind" data-package-preview-kind>markdown</span><span class="filename" data-package-preview-name>SKILL.md</span></div><a data-package-preview-raw href="/bundles/browser-hand/SKILL.md.txt">view raw →</a></div><div class="sd-resource-summary"><h3>SKILL.md</h3><p data-package-preview-summary>Primary agent instructions, frontmatter, workflow, and declared resource manifest.</p></div><pre data-package-preview-content>Select a package file to inspect it.</pre></article></div></div></section>
+      <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>Capabilities</dt><dd>Not declared</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
+      <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">fad7ebe</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, grok</span></div></div></section>
+      <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v0.6.2<span class="latest">latest</span></span><span>7 files · 54 KB</span><span>house</span><code>fad7ebe</code><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/fad7ebe05f463702405712d8cd57261ab4592972/skills/browser-hand/SKILL.md" rel="noopener">SKILL.md</a></div></div></section>
+    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">grok</span><span class="stat">declared</span></div></div></div><div class="sd-card"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">0.6.2</span><span class="k">size</span><span class="v mono">54 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico">—</span><span>capabilities</span><span class="scope">not declared</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
+    <script id="package-data" type="application/json">{"files":[{"path":"references/extension-cli.md","kind":"reference","group":"references","title":"Extension Cli","summary":"Reference material bundled with this skill.","bytes":3452,"url":"/bundles/browser-hand/references/extension-cli.md.txt"},{"path":"references/platform-gotchas.md","kind":"reference","group":"references","title":"Platform Gotchas","summary":"Reference material bundled with this skill.","bytes":30747,"url":"/bundles/browser-hand/references/platform-gotchas.md.txt"},{"path":"references/remote-debug-fallback.md","kind":"reference","group":"references","title":"Remote Debug Fallback","summary":"Reference material bundled with this skill.","bytes":1620,"url":"/bundles/browser-hand/references/remote-debug-fallback.md.txt"},{"path":"references/setup.md","kind":"reference","group":"references","title":"Setup","summary":"Reference material bundled with this skill.","bytes":3577,"url":"/bundles/browser-hand/references/setup.md.txt"},{"path":"references/troubleshooting.md","kind":"reference","group":"references","title":"Troubleshooting","summary":"Reference material bundled with this skill.","bytes":8001,"url":"/bundles/browser-hand/references/troubleshooting.md.txt"},{"path":"scripts/anon-screenshot.sh","kind":"script","group":"scripts","title":"Anon Screenshot","summary":"Runnable package helper. Inspect before running.","bytes":3122,"url":"/bundles/browser-hand/scripts/anon-screenshot.sh.txt"},{"path":"SKILL.md","kind":"markdown","group":"root","title":"SKILL.md","summary":"Primary agent instructions, frontmatter, workflow, and declared resource manifest.","bytes":4723,"url":"/bundles/browser-hand/SKILL.md.txt"}]}</script><script type="module" src="/assets/skill-detail.1171de158ab2.js"></script>
   </div>
   </main>
   <footer>

@@ -241,22 +241,33 @@ test("strict build exposes only public skills and writes canonical redirects", (
     assert.match(linkedStory, /<a href="\/skills\/html-asset-renderer\/">HTML Asset Renderer<\/a>/);
     assert.doesNotMatch(linkedStory, /\.\.\/html-asset-renderer\/story\.md/);
     const browserHandPage = fs.readFileSync(path.join(siteDir, "skills", "browser-hand", "index.html"), "utf8");
-    assert.match(browserHandPage, /class="skill-package"/);
-    assert.match(browserHandPage, /class="skill-resources"/);
-    assert.match(browserHandPage, /Pinned install/);
-    assert.match(browserHandPage, new RegExp(`href="https://raw.githubusercontent.com/${metadata.repo}/${packageSourcePin}/skills/browser-hand/SKILL\\.md" rel="noopener">Raw`));
-    assert.match(browserHandPage, /7 files · 6 resources · runnable/);
+    assert.match(browserHandPage, /class="sd-page"/);
+    assert.match(browserHandPage, /class="sd-head"/);
+    assert.match(browserHandPage, /class="sd-install"/);
+    assert.match(browserHandPage, /class="sd-stats"/);
+    assert.match(browserHandPage, /class="sd-tabs"/);
+    assert.match(browserHandPage, new RegExp(`class="raw" href="https://raw.githubusercontent.com/${metadata.repo}/${packageSourcePin}/skills/browser-hand/SKILL\\.md" rel="noopener">view raw →`));
+    assert.equal((browserHandPage.match(/class="sd-install-row"/g) || []).length, 2);
+    assert.match(browserHandPage, /<div class="lbl">Bundle files<\/div><div class="val">7<\/div>/);
+    assert.match(browserHandPage, /<div class="lbl">Resources<\/div><div class="val">6<\/div>/);
     const babysitPage = fs.readFileSync(path.join(siteDir, "skills", "babysit", "index.html"), "utf8");
-    assert.match(babysitPage, /class="package-overview"/);
+    assert.match(babysitPage, /class="sd-md"/);
     assert.match(babysitPage, /data-package-detail/);
     assert.match(babysitPage, /data-package-tab="bundle"/);
     assert.match(babysitPage, /data-package-file="references\/pr-labels\.md"/);
+    assert.match(babysitPage, /class="sd-bundle-head"/);
+    assert.match(babysitPage, /class="sd-bundle-grid"/);
+    assert.match(babysitPage, /class="sd-resource-tree"/);
+    assert.match(babysitPage, /class="sd-resource-preview"/);
+    assert.match(babysitPage, /class="sd-rail"/);
     assert.match(babysitPage, /data-package-preview/);
     assert.match(babysitPage, /data-package-preview-raw href="\/bundles\/babysit\/SKILL\.md\.txt"/);
     assert.match(babysitPage, /id="bundle"/);
     assert.match(babysitPage, /id="permissions"/);
     assert.match(babysitPage, /id="provenance"/);
     assert.match(babysitPage, /id="source"/);
+    assert.match(babysitPage, /class="sd-versions-table"/);
+    assert.doesNotMatch(babysitPage, /class="package-source"/);
     assert.match(babysitPage, /references\/pr-labels\.md/);
     const detailAsset = babysitPage.match(/src="\/assets\/(skill-detail\.[a-f0-9]{12}\.js)"/)?.[1];
     assert.ok(detailAsset, "Package pages reference a content-fingerprinted detail viewer");
@@ -277,7 +288,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
     );
     const brandPage = fs.readFileSync(path.join(siteDir, "skills", "autovault-brand-system", "index.html"), "utf8");
     assert.match(brandPage, /assets\/brand-mark\.svg\.txt/);
-    assert.match(brandPage, /<span class="package-file-kind">svg<\/span>/);
+    assert.match(brandPage, /<span class="kind">svg<\/span>/);
     const babysit = metadata.skills.find((skill) => skill.name === "babysit");
     const publishedBabysitBytes = publicBundleFiles(path.join(root, "skills", "babysit"))
       .filter((file) => file.path !== "story.md")
