@@ -1,11 +1,11 @@
 {
-  "public": 48,
+  "public": 49,
   "skipped": [],
   "missingNarrative": [],
   "missingSkillMd": [],
-  "generatedAt": "2026-08-24T02:30:52.433Z",
-  "packageSourcePin": "fad7ebe05f463702405712d8cd57261ab4592972",
-  "packageSourcePinShort": "fad7ebe",
+  "generatedAt": "2026-09-25T22:17:34.210Z",
+  "packageSourcePin": "b4079fb83a130ff5690c03e35d8a88a8238fa90b",
+  "packageSourcePinShort": "b4079fb",
   "publicSkills": [
     "skill-author",
     "automem",
@@ -20,6 +20,7 @@
     "phala-gpu-tee-deploy",
     "babysit",
     "commit-message",
+    "github-agent-identity",
     "browser-hand",
     "flashspace",
     "raycast",

@@ -187,6 +187,13 @@
       "fileCount": 2
     },
     {
+      "name": "github-agent-identity",
+      "version": "1.0.0",
+      "contentHash": "c8fb2dac27ee569e1c13ca83ec97a2f32cbed88379931c50d49139de261fb95b",
+      "bundleHash": "b2a0827bc8db017f22949ce197ca20797f9fd99e776fd1e430dd25c818e78f1e",
+      "fileCount": 9
+    },
+    {
       "name": "home-assistant-operator",
       "version": "1.0.0",
       "contentHash": "fac5d2ab5ef13efd8ff49fc9d8637373db0b8141814393d09ffb9ace720aacd7",

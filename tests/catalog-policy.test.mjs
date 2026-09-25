@@ -41,7 +41,7 @@ function independentBundleHash(files) {
   return hash.digest("hex");
 }
 
-test("publication registry is an explicit 48-skill allowlist", () => {
+test("publication registry is an explicit 49-skill allowlist", () => {
   const registry = JSON.parse(
     fs.readFileSync(path.join(root, "catalog", "autovault-publication.json"), "utf-8")
   );
@@ -51,7 +51,7 @@ test("publication registry is an explicit 48-skill allowlist", () => {
     .sort();
   assert.equal(registry.schemaVersion, 1);
   assert.equal(registry.target, "skillissue");
-  assert.equal(publicNames.length, 48);
+  assert.equal(publicNames.length, 49);
   assert.deepEqual(
     registry.skills["codex-review"],
     { visibility: "hidden", replacement: "babysit" }
@@ -181,7 +181,7 @@ test("strict build exposes only public skills and writes canonical redirects", (
       .filter((entry) => entry.isDirectory())
       .map((entry) => entry.name)
       .sort();
-    assert.equal(skillDirs.length, 48);
+    assert.equal(skillDirs.length, 49);
 
     const metadata = JSON.parse(fs.readFileSync(path.join(siteDir, "skills.json"), "utf-8"));
     const report = JSON.parse(fs.readFileSync(reportPath, "utf-8"));
@@ -189,8 +189,8 @@ test("strict build exposes only public skills and writes canonical redirects", (
       cwd: root,
       encoding: "utf8",
     }).trim();
-    assert.equal(metadata.publicCount, 48);
-    assert.equal(metadata.skills.length, 48);
+    assert.equal(metadata.publicCount, 49);
+    assert.equal(metadata.skills.length, 49);
     assert.equal(metadata.packageSourcePin, packageSourcePin);
     assert.equal(report.packageSourcePin, packageSourcePin);
     assert.equal(fs.existsSync(path.join(siteDir, ".skillissue-generated")), true);

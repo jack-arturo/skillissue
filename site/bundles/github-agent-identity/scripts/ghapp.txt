@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Run the GitHub CLI as the agent's GitHub App instead of as you.
+#
+# Mints a fresh installation token on every call, so a session that runs for
+# hours never reuses an expired one. Use it anywhere you would type `gh`:
+#
+#   ghapp pr create --fill
+#   ghapp pr comment 42 --body "Tests pass on 1a2b3c4."
+#
+# Needs GH_AGENT_IDENTITY (the profile name) and mint-token.mjs next to this
+# file. Set GHAPP_REAL_GH to pin a specific gh binary.
+set -euo pipefail
+
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+minter="$script_dir/mint-token.mjs"
+[ -f "$minter" ] || { echo "ghapp: mint-token.mjs not found next to $0" >&2; exit 1; }
+
+token="$(node "$minter")" || {
+  echo "ghapp: no token for profile '${GH_AGENT_IDENTITY:-unset}'. Refusing to fall back to your own login." >&2
+  exit 1
+}
+[ -n "$token" ] || { echo "ghapp: the token came back empty" >&2; exit 1; }
+
+real_gh="${GHAPP_REAL_GH:-$(command -v gh || true)}"
+[ -n "$real_gh" ] || { echo "ghapp: gh is not installed" >&2; exit 1; }
+
+GH_TOKEN="$token" exec "$real_gh" "$@"
