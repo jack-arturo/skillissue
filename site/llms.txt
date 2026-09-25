@@ -6,15 +6,15 @@
 - Home: https://skillissue.sh/
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
-- Source packages: https://github.com/jack-arturo/skillissue/tree/fad7ebe05f463702405712d8cd57261ab4592972/skills
-- Package-source install pin: fad7ebe05f463702405712d8cd57261ab4592972
+- Source packages: https://github.com/jack-arturo/skillissue/tree/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills
+- Package-source install pin: b4079fb83a130ff5690c03e35d8a88a8238fa90b
 
 ## Install
 ```
-autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:skills/<name>/SKILL.md --sync-profiles
+autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/<name>/SKILL.md --sync-profiles
 ```
 
-## Public skills (48)
+## Public skills (49)
 - skill-author (v2.0.0) — Package and validate an existing skill draft for AutoVault when its frontmatter, resources, capabilities, or admission result need review.
 - automem (v1.1.0) — Recall/store/associate via AutoMem (mcp__memory__*). Invoke on corrections (\"actually\", \"no, I prefer\", \"stop doing X\"), settled decisions (\"let's go with X\", \"ship it\"), or named patterns (\"I always X\", \"every time\"). Also to persist facts, or update/associate memories.
 - autovault-skill (v1.1.0) — Understand AutoVault-managed skills. AutoVault syncs skills into the agent's normal skill directory, so loaded skills can be used directly without an AutoVault MCP server.
@@ -28,6 +28,7 @@ autovault add jack-arturo/skillissue@fad7ebe05f463702405712d8cd57261ab4592972:sk
 - phala-gpu-tee-deploy (v1.0.0) — Use when deploying and verifying ComfyUI or vLLM on a Phala confidential H200 GPU TEE. Covers private bearer-gated endpoints, sealed secrets, dashboard reservation, no-file-mount Compose, attestation limits, and on-demand billing and shutdown behavior.
 - babysit (v1.7.0) — Use when babysitting a GitHub PR toward merge-ready — create/take over a PR, work Codex review threads, triage CI failures, manage babysit:* status labels. Never merges the PR.
 - commit-message (v1.0.0) — Draft a conventional-commit-style message from the repository's staged changes. Uses git only; no external services or API keys required.
+- github-agent-identity (v1.0.0) — Use when a coding agent (Claude Code, Codex) should act on GitHub under its own bot account instead of the human's: commits, pull requests, comments, reviews and labels. Sets up one GitHub App per agent, mints one-hour tokens per command, configures Claude Code and Codex, and checks for the silent fallbacks that put the human's name on agent work.
 - browser-hand (v0.6.2) — Use when work needs the user's already-open, signed-in Chrome: existing tabs, real cookies, forms, screenshots, OAuth-backed sites, or authenticated admin UIs. Includes an extension-first workflow plus a documented low-level headless/CDP fallback for disposable or dedicated-profile automation.
 - flashspace (v1.0.0) — Use when operating FlashSpace virtual workspaces on Jack's Mac: switch profiles or spaces, assign apps, manage floating windows, focus a window, inventory displays, or clean unassigned apps through the installed `flashspace` CLI.
 - raycast (v1.0.0) — Operate Raycast on Jack's Mac via deeplinks, Script Commands, AI providers.yaml/Skills/Commands/Agents, PromptLab, clipboard history, or Superwhisper toggle. Delegate Autohub script install to raycast-autojack.

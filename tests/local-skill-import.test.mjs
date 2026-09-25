@@ -18,7 +18,7 @@ const existingPublic = [
   "automem", "autovault-skill", "awtrix-board", "babysit", "browser-hand",
   "cli-installer-ux", "cloudflare-commerce-deploy", "cloudflare-emdash-cms-deploy",
   "cloudflare-lead-capture", "cloudflare-ops", "commit-message", "docs-screenshot-packager",
-  "entity-dossier", "flashspace", "home-assistant-operator", "html-asset-renderer",
+  "entity-dossier", "flashspace", "github-agent-identity", "home-assistant-operator", "html-asset-renderer",
   "jacks-writing-style", "long-haul-parallel-repair", "mcp-builder", "mcp-registry-maintainer",
   "pirsch-analytics-bootstrap", "raycast", "resend-cli", "skill-author", "triage-autohub-runtime",
 ].sort();
