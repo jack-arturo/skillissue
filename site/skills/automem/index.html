@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/automem/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
+<link rel="stylesheet" href="/assets/site.70eae1bbca58.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -32,8 +32,6 @@
         <a href="/essays/">essays</a>
         <a href="/install/">install</a>
         <a href="/about/">about</a>
-        <a href="/skills.json">skills.json</a>
-        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </nav>
     </div>
   </header>
@@ -42,7 +40,7 @@
     <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>house</span><span class="sep">/</span><span class="cur">automem</span></nav>
     <header class="sd-head">
       <div>
-        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">A</div><div><h1><span class="org">house / </span>AutoMem</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">meta</span><span class="meta-facts"><span>v1.1.0</span><span>MIT</span><span>9.6 KB</span></span></div><div class="src-path">skills/automem/SKILL.md</div></div></div>
+        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">A</div><div><h1><span class="org">house / </span>AutoMem</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">meta</span><span class="meta-facts"><span>v1.1.0</span><span>MIT</span><span>9.6 KB</span><span>claude-code · codex · autojack</span></span></div><div class="src-path">skills/automem/SKILL.md</div></div></div>
         <p class="desc">Memory only works if every agent uses the same ritual. This skill is that ritual for Grok/Claude/Codex hosts.</p>
       </div>
       <div class="actions"><div class="sd-install"><div class="sd-install-head"><span class="lbl">Install</span><span class="sd-install-tag">CLI + MCP</span></div><div class="sd-install-list"><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">CLI</span><span>Run from your local shell.</span></div><div class="cmd"><span class="pmt">$</span><span class="cmd-text">autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/automem/SKILL.md --sync-profiles</span><button class="copy" type="button" data-copy="autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/automem/SKILL.md --sync-profiles">Copy</button></div></div><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">MCP</span><span>Paste into an agent MCP tool call.</span></div><div class="cmd"><span class="pmt">&gt;</span><span class="cmd-text">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/automem/SKILL.md&quot; })</span><button class="copy" type="button" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/automem/SKILL.md&quot; })">Copy</button></div></div></div></div><div class="sd-copy-status" aria-live="polite">Choose CLI for a shell install or MCP for an agent tool call.</div><div class="sd-secondary-actions"><a class="sd-sbtn" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/automem/SKILL.md" rel="noopener">Source</a><button class="sd-sbtn" type="button" data-package-tab="provenance">Verify</button></div></div>
@@ -64,41 +62,19 @@ capabilities:
   filesystem: readonly
   tools: []
 ---</pre></div><h2>AutoMem Memory Discipline</h2>
-<p>The AutoMem MCP server (tools: <code>mcp__memory__*</code>) is the only persistent memory</p>
-<p>on this machine. This skill is the canonical operational guide for using it</p>
-<p>well: when to store, what to store, how to associate, how to verify a store</p>
-<p>landed, and what NOT to store.</p>
-<p>This skill does <strong>not</strong> cover session-start recall. That is delivered by the</p>
-<p>runtime: a shell hook (<code>~/.claude/hooks/automem-session-start.sh</code>) in Claude</p>
-<p>Code, or prose at the top of <code>~/.codex/AGENTS.md</code> in Codex. Both fire before</p>
-<p>any skill can load.</p>
+<p>The AutoMem MCP server (tools: <code>mcp__memory__*</code>) is the only persistent memory on this machine. This skill is the canonical operational guide for using it well: when to store, what to store, how to associate, how to verify a store landed, and what NOT to store.</p>
+<p>This skill does <strong>not</strong> cover session-start recall. That is delivered by the runtime: a shell hook (<code>~/.claude/hooks/automem-session-start.sh</code>) in Claude Code, or prose at the top of <code>~/.codex/AGENTS.md</code> in Codex. Both fire before any skill can load.</p>
 <h2>Recall mid-conversation, not just at session start</h2>
-<p>Session start delivers two recalls via a hook, and CLAUDE.md says not to</p>
-<p>re-recall after that unless something genuinely shifts. The shift that's</p>
-<p>easiest to miss is a bug report arriving mid-conversation — the pull to</p>
-<p>start reading code is immediate, and the recall gets skipped entirely.</p>
-<p>Treat &quot;the user just described a symptom, error, or unexpected behavior&quot; as</p>
-<p>a literal trigger, not a judgment call: recall with the symptom as a</p>
-<p>semantic query (no tags — a tag gate hides cross-corpus fixes) <em>before</em></p>
-<p>opening a file or invoking a debugging skill. If <code>systematic-debugging</code> is</p>
-<p>about to run, the recall belongs in its Phase 1 — see that skill's own copy</p>
-<p>of this rule — not squeezed in afterward once the investigation is already</p>
-<p>underway.</p>
-<p>(Cost of skipping this, confirmed live: an AppDaemon <code>init_commands</code></p>
-<p>multiline-payload failure mode was already in memory from April 2026 and</p>
-<p>got rediscovered the hard way — a broken add-on boot — on 2026-07-29,</p>
-<p>because this recall didn't happen before the fix was written.)</p>
+<p>Session start delivers two recalls via a hook, and CLAUDE.md says not to re-recall after that unless something genuinely shifts. The shift that's easiest to miss is a bug report arriving mid-conversation — the pull to start reading code is immediate, and the recall gets skipped entirely.</p>
+<p>Treat &quot;the user just described a symptom, error, or unexpected behavior&quot; as a literal trigger, not a judgment call: recall with the symptom as a semantic query (no tags — a tag gate hides cross-corpus fixes) <em>before</em> opening a file or invoking a debugging skill. If <code>systematic-debugging</code> is about to run, the recall belongs in its Phase 1 — see that skill's own copy of this rule — not squeezed in afterward once the investigation is already underway.</p>
+<p>(Cost of skipping this, confirmed live: an AppDaemon <code>init_commands</code> multiline-payload failure mode was already in memory from April 2026 and got rediscovered the hard way — a broken add-on boot — on 2026-07-29, because this recall didn't happen before the fix was written.)</p>
 <h2>When to use</h2>
-<p>Invoke on any of these three trigger families. Listen for the literal phrases</p>
-<p>— pattern-matching silently is how memory hygiene degrades.</p>
+<p>Invoke on any of these three trigger families. Listen for the literal phrases — pattern-matching silently is how memory hygiene degrades.</p>
 <ol><li><strong>User correction or override.</strong> Phrases: &quot;actually&quot;, &quot;no, I prefer&quot;, &quot;not X, Y&quot;, &quot;that's wrong&quot;, &quot;stop doing X&quot;, &quot;never do X&quot;, &quot;I told you before&quot;, &quot;we decided X already&quot;, &quot;you keep doing Y&quot;. Store as <code>Preference</code>, importance 0.9, confidence 0.95. Associate <code>INVALIDATED_BY</code> to the prior memory it overrides. Store this turn, not later.</li><li><strong>Decision stabilizes after at least one round of discussion.</strong> Phrases: &quot;let's go with X&quot;, &quot;yeah that's the plan&quot;, &quot;do it that way&quot;, &quot;ship it&quot;, &quot;okay let's do that&quot;. Signal: the decision survived pushback. One-turn ideas don't qualify. Store as <code>Decision</code>, importance 0.85–0.9. If alternatives came up, associate <code>PREFERS_OVER</code> against them.</li><li><strong>Pattern articulated, not inferred.</strong> Phrases: &quot;I always do X&quot;, &quot;every time&quot;, &quot;this is how I usually&quot;, or you observing &quot;you tend to do X&quot; and the user confirming. Patterns get stored when <strong>articulated</strong>, not when you pattern-match silently. Store as <code>Pattern</code>, importance 0.8. Associate <code>EXEMPLIFIES</code> to concrete examples.</li></ol>
-<p>Also invoke when you need to update a fact (URL, version, deployment state)</p>
-<p>or invalidate one (a deprecation), even without a trigger phrase.</p>
+<p>Also invoke when you need to update a fact (URL, version, deployment state) or invalidate one (a deprecation), even without a trigger phrase.</p>
 <h2>The atomic ritual — every store runs all four steps</h2>
 <ol><li><strong>Recall</strong> with a tight query (<code>limit: 5</code>) to find what this relates to.</li><li><strong>Store</strong> with <code>type</code>, <code>importance</code>, <code>tags</code>, and a non-default <code>confidence</code>.</li><li><strong>Verify</strong> with a recall on a distinctive phrase from the content you just stored. Retry the store once if verify misses (silent-fail insurance — <code>store_memory</code> can return success while failing to persist).</li><li><strong>Associate</strong> to the memory found in step 1, if plausible (<code>INVALIDATED_BY</code>, <code>PREFERS_OVER</code>, or <code>EXEMPLIFIES</code> per the trigger family above).</li></ol>
-<p>Step 4 is where the graph gets built. Skipping it is the #1 reason AutoMem</p>
-<p>degrades into a flat bag of notes. Skip association only if the step-1</p>
-<p>related-memory search returns nothing plausible.</p>
+<p>Step 4 is where the graph gets built. Skipping it is the #1 reason AutoMem degrades into a flat bag of notes. Skip association only if the step-1 related-memory search returns nothing plausible.</p>
 <h2>Storage call shape</h2>
 <pre><code>mcp__memory__store_memory({
   content: &quot;Brief title. Context + reasoning. Outcome.&quot;,   // 150–300 chars
@@ -108,16 +84,13 @@ capabilities:
   confidence: 0.9
 })</code></pre>
 <h3>Required tags</h3>
-<p>Use <strong>bare</strong> tags. The corpus has 9,000+ memories tagged this way; namespace</p>
-<p>prefixes (<code>project/&lt;slug&gt;</code>, <code>lang/&lt;x&gt;</code>) silently bifurcate recall.</p>
+<p>Use <strong>bare</strong> tags. The corpus has 9,000+ memories tagged this way; namespace prefixes (<code>project/&lt;slug&gt;</code>, <code>lang/&lt;x&gt;</code>) silently bifurcate recall.</p>
 <ul><li>One category tag when applicable: <code>preference</code> | <code>decision</code> | <code>pattern</code> | <code>bugfix</code> | <code>solution</code> | <code>milestone</code> | <code>deployment</code> | <code>build</code> | <code>test</code>.</li><li>Project slug (bare) when project-specific, e.g., <code>mcp-automem</code>. Omit if the slug collides with a common topic word (<code>video</code>, <code>test</code>, <code>api</code>).</li><li>Language tag (bare): <code>typescript</code>, <code>python</code>, <code>go</code>, etc.</li></ul>
-<p>Hierarchical entity tags the server injects (<code>entity:people:jack</code>) use</p>
-<p>colons — do not author these by hand.</p>
+<p>Hierarchical entity tags the server injects (<code>entity:people:jack</code>) use colons — do not author these by hand.</p>
 <h3>Importance scale (how much this matters)</h3>
 <ul><li><code>0.9–1.0</code> — user preferences, architectural decisions, prod deployments, critical bugs.</li><li><code>0.7–0.8</code> — features, non-critical bug fixes, articulated patterns.</li><li><code>0.5–0.6</code> — standard context, session milestones.</li><li><code>&lt;0.5</code> — low-signal; let it decay.</li></ul>
 <h3>Confidence scale (how sure you are it's stable)</h3>
-<p>A separate dial. Don't default everything to 0.95 — it flattens the signal</p>
-<p>the decay system uses to identify noise.</p>
+<p>A separate dial. Don't default everything to 0.95 — it flattens the signal the decay system uses to identify noise.</p>
 <ul><li><code>0.95</code> — user-stated facts, direct corrections, explicit preferences.</li><li><code>0.80</code> — observed patterns the user would recognize.</li><li><code>0.60</code> — tentative inference, not yet confirmed.</li></ul>
 <h2>Mandatory association pairings</h2>
 <div class="table-wrap"><table>
@@ -131,19 +104,11 @@ capabilities:
 <tr><td>Deprecated info</td><td><code>update_memory</code> (importance 0.1, <code>metadata.deprecated: true</code>)</td><td><code>INVALIDATED_BY</code> (old ← new)</td></tr>
 </tbody></table></div>
 <h2>Update &gt; duplicate</h2>
-<p>When a fact changes in place — a price, a URL, a version, a deployment</p>
-<p>state — call <code>update_memory</code> on the existing memory. Reserve new-store +</p>
-<p><code>INVALIDATED_BY</code> for archaeology worth preserving for the record</p>
-<p>(&quot;considered $15/mo before landing on $9/mo&quot;). Casual updates (&quot;dev URL</p>
-<p>changed&quot;) are not archaeology.</p>
-<p>Before storing on any topic, recall first. If a related memory exists,</p>
-<p>prefer <code>update_memory</code> or an association over a near-duplicate node.</p>
+<p>When a fact changes in place — a price, a URL, a version, a deployment state — call <code>update_memory</code> on the existing memory. Reserve new-store + <code>INVALIDATED_BY</code> for archaeology worth preserving for the record (&quot;considered $15/mo before landing on $9/mo&quot;). Casual updates (&quot;dev URL changed&quot;) are not archaeology.</p>
+<p>Before storing on any topic, recall first. If a related memory exists, prefer <code>update_memory</code> or an association over a near-duplicate node.</p>
 <h2>Temporal validity</h2>
-<p>For facts with a shelf life, set <code>t_valid</code> (ISO 8601 UTC, usually now) and</p>
-<p><code>t_invalid</code> when known. These fields don't appear in <code>/recall</code> envelopes</p>
-<p>but ARE persisted and queryable via <code>GET /memory/&lt;id&gt;</code>.</p>
-<p>Use for: current deployment URL, active staging env, incident window,</p>
-<p>feature-flag rollout, ongoing PR, current sprint focus.</p>
+<p>For facts with a shelf life, set <code>t_valid</code> (ISO 8601 UTC, usually now) and <code>t_invalid</code> when known. These fields don't appear in <code>/recall</code> envelopes but ARE persisted and queryable via <code>GET /memory/&lt;id&gt;</code>.</p>
+<p>Use for: current deployment URL, active staging env, incident window, feature-flag rollout, ongoing PR, current sprint focus.</p>
 <pre><code>mcp__memory__store_memory({
   content: &quot;mcp-automem deployed to Railway at https://automem.up.railway.app&quot;,
   type: &quot;Context&quot;, importance: 0.8,
@@ -156,10 +121,7 @@ capabilities:
 <h2>Never store</h2>
 <ul><li>Secrets, credentials, API keys, private tokens, PII.</li><li>Session summaries. Ever. &quot;End of session, here's what we accomplished&quot; is the pattern that creates most corpus garbage.</li><li>Agent task-result dumps. Same family.</li><li>&quot;Useful context that might matter later.&quot; Speculative stores are noise. If unsure, skip.</li><li>Things the user said they'll remember themselves — calendar, plans, casual opinions.</li><li>Confirmations. &quot;Great, that worked&quot; doesn't need a memory. The decision that preceded it might.</li><li>Anything stored to perform attentiveness. Memory is for future-you, not for showing the user you were listening.</li><li>Temporary build output, logs, debug dumps.</li><li>Large code blocks. Store the pattern or decision instead.</li><li>Duplicate memories. Recall first.</li></ul>
 <h2>Known server quirk — verify after store</h2>
-<p><code>store_memory</code> can return success while failing to persist (issue #97 A).</p>
-<p>The atomic ritual's step 3 is not optional — after storing anything you</p>
-<p>care about, do a quick recall on a distinctive phrase from the content. If</p>
-<p>it doesn't come back, retry the store once.</p>
+<p><code>store_memory</code> can return success while failing to persist (issue #97 A). The atomic ritual's step 3 is not optional — after storing anything you care about, do a quick recall on a distinctive phrase from the content. If it doesn't come back, retry the store once.</p>
 <h2>Anti-patterns</h2>
 <ul><li>Storing at the end of a session as a summary dump.</li><li>Defaulting <code>confidence</code> to 0.95 for everything (flattens the decay signal).</li><li>Using namespace-prefixed tags (<code>project/foo</code>, <code>lang/typescript</code>) — these silently bifurcate recall.</li><li>Re-recalling mid-conversation when the topic hasn't shifted. The 1M context already holds turn-1's recall results.</li><li>Storing a new memory when <code>update_memory</code> would have updated the old one in place.</li><li>Skipping step 4 (association). A flat bag of notes is not a memory graph.</li></ul><div class="sd-related-wrap"><div class="mono-label">Related skills</div><div class="sd-related"><a class="sd-rel-tile" href="/skills/entity-dossier/"><span class="name">entity-dossier</span><span class="desc">Pre-meeting context kept dying with the chat. The dossier in AutoMem is the deliverable.</span></a></div></div></div></article></section>
       <section id="story" data-package-panel="story"><article class="sd-md"><div class="sd-md-head"><span class="lights"><span></span><span></span><span></span></span><span class="filename">story.md</span></div><div class="sd-md-body"><h2>Why it exists</h2>
@@ -175,7 +137,7 @@ capabilities:
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>[]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">b4079fb</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/automem/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>
       <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v1.1.0<span class="latest">latest</span></span><span>1 files · 9.6 KB</span><span>house</span><code>b4079fb</code><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/automem/SKILL.md" rel="noopener">SKILL.md</a></div></div></section>
-    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">1.1.0</span><span class="k">size</span><span class="v mono">9.6 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico no">×</span><span>network</span><span class="scope">false</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readonly</span></div><div class="sd-perm-row"><span class="ico no">×</span><span>tools</span><span class="scope">[]</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
+    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card sd-meta-dup"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">1.1.0</span><span class="k">size</span><span class="v mono">9.6 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico no">×</span><span>network</span><span class="scope">false</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readonly</span></div><div class="sd-perm-row"><span class="ico no">×</span><span>tools</span><span class="scope">[]</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card sd-source-model"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
     <script id="package-data" type="application/json">{"files":[{"path":"SKILL.md","kind":"markdown","group":"root","title":"SKILL.md","summary":"Primary agent instructions, frontmatter, workflow, and declared resource manifest.","bytes":9810,"url":"/bundles/automem/SKILL.md.txt"}]}</script><script type="module" src="/assets/skill-detail.6d1388370f71.js"></script>
   </div>
   </main>
@@ -186,9 +148,10 @@ capabilities:
         · MIT ·
         <a href="https://autovault.dev">AutoVault</a> ·
         <a href="https://automem.ai">AutoMem</a> ·
-        <a href="/skills.json">skills.json</a>
+        <a href="/skills.json">skills.json</a> ·
+        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </div>
-      <div class="foot-mono">packages on github · install via AutoVault</div>
+      <div class="foot-mono">people kept saying it. the pin is the useful part.</div>
     </div>
   </footer>
   <script>

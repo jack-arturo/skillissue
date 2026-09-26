@@ -2,6 +2,12 @@
 title: Changelog
 ---
 
+## 0.5.0 (2026-09-26)
+
+- Home is a shelf. Skills sit in groups with the one-line why, and copy is on the row.
+- Explorer filters sit in one bar. Cards show which shelf they belong to.
+- Skill pages lead with the summary and the two install commands. The stat boxes collapse to one line.
+
 ## 0.4.0 — 2026-08-23
 
 - Expanded the public collection to 48 skills.

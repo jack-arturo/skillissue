@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/flashspace/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
+<link rel="stylesheet" href="/assets/site.70eae1bbca58.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -32,8 +32,6 @@
         <a href="/essays/">essays</a>
         <a href="/install/">install</a>
         <a href="/about/">about</a>
-        <a href="/skills.json">skills.json</a>
-        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </nav>
     </div>
   </header>
@@ -42,7 +40,7 @@
     <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>house</span><span class="sep">/</span><span class="cur">flashspace</span></nav>
     <header class="sd-head">
       <div>
-        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">F</div><div><h1><span class="org">house / </span>FlashSpace</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">desktop</span><span class="meta-facts"><span>v1.0.0</span><span>MIT</span><span>11 KB</span></span></div><div class="src-path">skills/flashspace/SKILL.md</div></div></div>
+        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">F</div><div><h1><span class="org">house / </span>FlashSpace</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">desktop</span><span class="meta-facts"><span>v1.0.0</span><span>MIT</span><span>11 KB</span><span>claude-code · codex · autojack</span></span></div><div class="src-path">skills/flashspace/SKILL.md</div></div></div>
         <p class="desc">Workspace switching was voice/chat friction. CLI skill removes the mouse hunt.</p>
       </div>
       <div class="actions"><div class="sd-install"><div class="sd-install-head"><span class="lbl">Install</span><span class="sd-install-tag">CLI + MCP</span></div><div class="sd-install-list"><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">CLI</span><span>Run from your local shell.</span></div><div class="cmd"><span class="pmt">$</span><span class="cmd-text">autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/flashspace/SKILL.md --sync-profiles</span><button class="copy" type="button" data-copy="autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/flashspace/SKILL.md --sync-profiles">Copy</button></div></div><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">MCP</span><span>Paste into an agent MCP tool call.</span></div><div class="cmd"><span class="pmt">&gt;</span><span class="cmd-text">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/flashspace/SKILL.md&quot; })</span><button class="copy" type="button" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/flashspace/SKILL.md&quot; })">Copy</button></div></div></div></div><div class="sd-copy-status" aria-live="polite">Choose CLI for a shell install or MCP for an agent tool call.</div><div class="sd-secondary-actions"><a class="sd-sbtn" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/flashspace/SKILL.md" rel="noopener">Source</a><button class="sd-sbtn" type="button" data-package-tab="provenance">Verify</button></div></div>
@@ -84,17 +82,11 @@ capabilities:
     - Bash
 requires-secrets: []
 ---</pre></div><h2>flashspace</h2>
-<p>Drive <strong>FlashSpace</strong> (virtual workspace manager for macOS) through its</p>
-<p>first-party CLI. The binary ships inside the app and is linked on PATH:</p>
+<p>Drive <strong>FlashSpace</strong> (virtual workspace manager for macOS) through its first-party CLI. The binary ships inside the app and is linked on PATH:</p>
 <pre><code>/opt/homebrew/bin/flashspace
   → /Applications/FlashSpace.app/Contents/Resources/flashspace</code></pre>
-<p>Install / upgrade: <code>brew install --cask flashspace</code> (macOS ≥ 14).</p>
-<p>CLI version: <code>flashspace --version</code>. App help: <code>flashspace --help</code> and</p>
-<p><code>flashspace help &lt;subcommand&gt;</code>.</p>
-<p>This skill is <strong>operator-only</strong> — it does not reconfigure the app's</p>
-<p>GUI prefs, Accessibility permissions, or launch-at-login. If the CLI</p>
-<p>returns nothing useful, open the app once (<code>flashspace open</code>) and</p>
-<p>confirm Accessibility is granted.</p>
+<p>Install / upgrade: <code>brew install --cask flashspace</code> (macOS ≥ 14). CLI version: <code>flashspace --version</code>. App help: <code>flashspace --help</code> and <code>flashspace help &lt;subcommand&gt;</code>.</p>
+<p>This skill is <strong>operator-only</strong> — it does not reconfigure the app's GUI prefs, Accessibility permissions, or launch-at-login. If the CLI returns nothing useful, open the app once (<code>flashspace open</code>) and confirm Accessibility is granted.</p>
 <hr>
 <h2>When to use</h2>
 <div class="table-wrap"><table>
@@ -109,9 +101,7 @@ requires-secrets: []
 <tr><td>&quot;Focus the left window&quot;</td><td><code>focus --direction left</code></td></tr>
 <tr><td>&quot;New workspace for …&quot;</td><td><code>create-workspace</code> (confirm first)</td></tr>
 </tbody></table></div>
-<p>Do <strong>not</strong> use this skill for tiling geometry (that's Rectangle Pro /</p>
-<p>Hammerspoon), browser tabs, or Mission Control Spaces. FlashSpace</p>
-<p>workspaces are app-assignment spaces, not macOS Spaces.</p>
+<p>Do <strong>not</strong> use this skill for tiling geometry (that's Rectangle Pro / Hammerspoon), browser tabs, or Mission Control Spaces. FlashSpace workspaces are app-assignment spaces, not macOS Spaces.</p>
 <hr>
 <h2>Safety / autonomy</h2>
 <div class="table-wrap"><table>
@@ -121,13 +111,10 @@ requires-secrets: []
 <tr><td>🟡 Yellow</td><td><code>assign-app</code>, <code>unassign-app</code>, <code>assign-visible-apps</code>, `floating-apps float\</td><td>unfloat<code> by name, </code>update-workspace<code>, </code>create-workspace<code>, </code>create-profile<code>, </code>hide-unassigned-apps<code>, </code>workspace --clean`</td><td>Say what you'll do; proceed if intent is clear</td></tr>
 <tr><td>🔴 Red</td><td><code>delete-workspace</code>, <code>delete-profile</code>, bulk reassignment across many workspaces, recreating Jack's whole layout</td><td>Always confirm first</td></tr>
 </tbody></table></div>
-<p>Destructive deletes and &quot;rebuild my layout&quot; are red even when the user</p>
-<p>sounds casual. Prefer <code>list-*</code> first so names match exactly (spaces</p>
-<p>and casing matter: <code>Project Mgmt</code>, not <code>Project Management</code>).</p>
+<p>Destructive deletes and &quot;rebuild my layout&quot; are red even when the user sounds casual. Prefer <code>list-*</code> first so names match exactly (spaces and casing matter: <code>Project Mgmt</code>, not <code>Project Management</code>).</p>
 <hr>
 <h2>Orientation (always re-list; snapshot is stale-tolerant)</h2>
-<p>Jack's dual-display layout under profile <strong>Default</strong> (snapshot</p>
-<p>2026-07-19 — re-run the list commands; do not treat this as SSOT):</p>
+<p>Jack's dual-display layout under profile <strong>Default</strong> (snapshot 2026-07-19 — re-run the list commands; do not treat this as SSOT):</p>
 <p><strong>Displays</strong></p>
 <div class="table-wrap"><table>
 <thead><tr><th>Display</th><th>Role</th></tr></thead>
@@ -151,10 +138,8 @@ requires-secrets: []
 <tr><td>Admin</td><td>Built-in</td><td>TablePlus, Transmit</td></tr>
 <tr><td>Private</td><td>Built-in</td><td>Yandex, ExpressVPN</td></tr>
 </tbody></table></div>
-<p><strong>Floating apps</strong> (visible on every workspace): Finder, System Settings,</p>
-<p>Raycast, FlashSpace, Hammerspoon, Rectangle Pro, Spotify.</p>
-<p>Profiles currently present: <code>Alt</code>, <code>Default</code>. Active is usually</p>
-<p><code>Default</code>.</p>
+<p><strong>Floating apps</strong> (visible on every workspace): Finder, System Settings, Raycast, FlashSpace, Hammerspoon, Rectangle Pro, Spotify.</p>
+<p>Profiles currently present: <code>Alt</code>, <code>Default</code>. Active is usually <code>Default</code>.</p>
 <p>When uncertain, prefer:</p>
 <pre><code>flashspace get-profile
 flashspace get-workspace
@@ -173,8 +158,7 @@ flashspace get-profile
 flashspace list-workspaces --with-display
 # if silent / errors:
 flashspace open   # ensure app is running + Accessibility granted</code></pre>
-<p>Expected healthy output: a profile name, a workspace list with</p>
-<p>display names, no permission errors.</p>
+<p>Expected healthy output: a profile name, a workspace list with display names, no permission errors.</p>
 <hr>
 <h2>Core recipes</h2>
 <h3>Switch workspace (most common)</h3>
@@ -211,8 +195,7 @@ flashspace unassign-app --name Spotify --show-notification
 
 # bulk: every currently visible app → target workspace
 flashspace assign-visible-apps --workspace Code --show-notification</code></pre>
-<p><code>--activate true|false</code> on <code>assign-app</code> overrides the app setting for</p>
-<p>whether assigning also jumps to that workspace.</p>
+<p><code>--activate true|false</code> on <code>assign-app</code> overrides the app setting for whether assigning also jumps to that workspace.</p>
 <h3>Floating apps</h3>
 <pre><code>flashspace floating-apps float --name Spotify
 flashspace floating-apps unfloat --name Finder
@@ -248,8 +231,7 @@ flashspace open-space-control</code></pre>
 <h2>AutoJack / agent quick paths</h2>
 <p>When Jack says:</p>
 <ol><li><strong>&quot;Go to Code / Web / Chat / Terminal / AI / Build&quot;</strong> → <code>flashspace workspace --name &lt;Name&gt;</code> (quote multi-word names).</li><li><strong>&quot;What's my layout?&quot; / &quot;which space am I on?&quot;</strong> → <code>get-profile</code> + <code>get-workspace</code> + <code>list-workspaces --with-display</code>.</li><li><strong>&quot;Put this app on Code&quot;</strong> (active app implied) → <code>flashspace assign-app --workspace Code --show-notification</code>.</li><li><strong>&quot;Float this&quot;</strong> → <code>flashspace floating-apps toggle --show-notification</code>.</li><li><strong>&quot;Clean this space&quot;</strong> → <code>flashspace workspace --name &quot;$(flashspace get-workspace)&quot; --clean</code> or <code>flashspace hide-unassigned-apps</code>.</li><li><strong>&quot;Next space&quot;</strong> → <code>flashspace workspace --next --skip-empty</code>.</li></ol>
-<p>Prefer exact workspace names from <code>list-workspaces</code>. Do not invent</p>
-<p>aliases (<code>coding</code> ≠ <code>Code</code>).</p>
+<p>Prefer exact workspace names from <code>list-workspaces</code>. Do not invent aliases (<code>coding</code> ≠ <code>Code</code>).</p>
 <hr>
 <h2>Naming &amp; quoting rules</h2>
 <ul><li>Workspace names are <strong>case-sensitive</strong> and may contain spaces (<code>Project Mgmt</code>). Always quote multi-word names.</li><li>App identity accepts <strong>display name or bundle id</strong>. Prefer bundle id when two apps share a label (e.g. ChatGPT vs Codex both branded ChatGPT-ish).</li><li>Display names come from <code>list-displays</code> (<code>Studio Display</code>, <code>Built-in Retina Display</code>) — pass them exactly to <code>create-workspace --display</code> / <code>update-workspace --display</code>.</li><li>Profiles are independent workspace sets. Mutations apply to the <strong>active</strong> profile unless a command takes <code>--profile</code>.</li></ul>
@@ -294,7 +276,7 @@ UI         open | open-space-control</code></pre>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readonly</dd></div><div><dt>tools</dt><dd>Bash</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">b4079fb</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/flashspace/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>
       <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v1.0.0<span class="latest">latest</span></span><span>1 files · 11 KB</span><span>house</span><code>b4079fb</code><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/flashspace/SKILL.md" rel="noopener">SKILL.md</a></div></div></section>
-    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">1.0.0</span><span class="k">size</span><span class="v mono">11 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico no">×</span><span>network</span><span class="scope">false</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readonly</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>tools</span><span class="scope">Bash</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
+    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card sd-meta-dup"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">1.0.0</span><span class="k">size</span><span class="v mono">11 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico no">×</span><span>network</span><span class="scope">false</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readonly</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>tools</span><span class="scope">Bash</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card sd-source-model"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
     <script id="package-data" type="application/json">{"files":[{"path":"SKILL.md","kind":"markdown","group":"root","title":"SKILL.md","summary":"Primary agent instructions, frontmatter, workflow, and declared resource manifest.","bytes":11185,"url":"/bundles/flashspace/SKILL.md.txt"}]}</script><script type="module" src="/assets/skill-detail.6d1388370f71.js"></script>
   </div>
   </main>
@@ -305,9 +287,10 @@ UI         open | open-space-control</code></pre>
         · MIT ·
         <a href="https://autovault.dev">AutoVault</a> ·
         <a href="https://automem.ai">AutoMem</a> ·
-        <a href="/skills.json">skills.json</a>
+        <a href="/skills.json">skills.json</a> ·
+        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </div>
-      <div class="foot-mono">packages on github · install via AutoVault</div>
+      <div class="foot-mono">people kept saying it. the pin is the useful part.</div>
     </div>
   </footer>
   <script>

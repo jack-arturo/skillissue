@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/cloudflare-commerce-deploy/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
+<link rel="stylesheet" href="/assets/site.70eae1bbca58.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -32,8 +32,6 @@
         <a href="/essays/">essays</a>
         <a href="/install/">install</a>
         <a href="/about/">about</a>
-        <a href="/skills.json">skills.json</a>
-        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </nav>
     </div>
   </header>
@@ -42,7 +40,7 @@
     <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>house</span><span class="sep">/</span><span class="cur">cloudflare-commerce-deploy</span></nav>
     <header class="sd-head">
       <div>
-        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">CC</div><div><h1><span class="org">house / </span>Cloudflare Commerce Deploy</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">deployment</span><span class="meta-facts"><span>v1.0.3</span><span>MIT</span><span>26 KB</span></span></div><div class="src-path">skills/cloudflare-commerce-deploy/SKILL.md</div></div></div>
+        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">CC</div><div><h1><span class="org">house / </span>Cloudflare Commerce Deploy</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">deployment</span><span class="meta-facts"><span>v1.0.3</span><span>MIT</span><span>26 KB</span><span>claude-code · codex · autojack</span></span></div><div class="src-path">skills/cloudflare-commerce-deploy/SKILL.md</div></div></div>
         <p class="desc">Commerce launches need DNS, secrets, and preview/prod isolation — not ad-hoc wrangler folklore.</p>
       </div>
       <div class="actions"><div class="sd-install"><div class="sd-install-head"><span class="lbl">Install</span><span class="sd-install-tag">CLI + MCP</span></div><div class="sd-install-list"><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">CLI</span><span>Run from your local shell.</span></div><div class="cmd"><span class="pmt">$</span><span class="cmd-text">autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles</span><button class="copy" type="button" data-copy="autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/cloudflare-commerce-deploy/SKILL.md --sync-profiles">Copy</button></div></div><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">MCP</span><span>Paste into an agent MCP tool call.</span></div><div class="cmd"><span class="pmt">&gt;</span><span class="cmd-text">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/cloudflare-commerce-deploy/SKILL.md&quot; })</span><button class="copy" type="button" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/cloudflare-commerce-deploy/SKILL.md&quot; })">Copy</button></div></div></div></div><div class="sd-copy-status" aria-live="polite">Choose CLI for a shell install or MCP for an agent tool call.</div><div class="sd-secondary-actions"><a class="sd-sbtn" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/cloudflare-commerce-deploy/SKILL.md" rel="noopener">Source</a><button class="sd-sbtn" type="button" data-package-tab="provenance">Verify</button></div></div>
@@ -92,14 +90,8 @@ bin:
     requires-tty: true
 ---</pre></div><h2>Cloudflare Commerce Deploy</h2>
 <h2>When To Use</h2>
-<p>Use this skill when a user wants an agent to take a web or commerce project from</p>
-<p>local code to Cloudflare: Pages or Workers deploys, DNS mapping, custom domains,</p>
-<p>D1/KV/R2/Queues setup, environment variables, secrets, logs, cache operations,</p>
-<p>or optional domain registration through Cloudflare Registrar.</p>
-<p>For full one-shot Clerk + Stripe + Cloudflare builds, drive this skill from</p>
-<p><code>clerk-cloudflare-commerce-bootstrap</code>. Route AutoHub runtime operations —</p>
-<p>preview D1 + KV pairs, migrations, data sync, and local tunnels — to</p>
-<p><code>cloudflare-ops</code>.</p>
+<p>Use this skill when a user wants an agent to take a web or commerce project from local code to Cloudflare: Pages or Workers deploys, DNS mapping, custom domains, D1/KV/R2/Queues setup, environment variables, secrets, logs, cache operations, or optional domain registration through Cloudflare Registrar.</p>
+<p>For full one-shot Clerk + Stripe + Cloudflare builds, drive this skill from <code>clerk-cloudflare-commerce-bootstrap</code>. Route AutoHub runtime operations — preview D1 + KV pairs, migrations, data sync, and local tunnels — to <code>cloudflare-ops</code>.</p>
 <h2>Preconditions</h2>
 <ol><li>Prefer existing Wrangler/operator auth first. If the machine already has <code>wrangler login</code> state or <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> exported in shell startup (for example <code>~/.zshrc</code>), use it directly:</li></ol>
 <pre><code>npx wrangler whoami</code></pre>
@@ -111,26 +103,14 @@ bin:
 <h2>Credential Profile</h2>
 <p>The setup action stores a local credential profile at:</p>
 <pre><code>$AUTOVAULT_STORAGE_PATH/credentials/cloudflare-commerce.json</code></pre>
-<p>Use profile <code>default</code> unless the user names another profile through</p>
-<p><code>AUTOVAULT_CLOUDFLARE_PROFILE</code>. Project files may reference this credential as:</p>
+<p>Use profile <code>default</code> unless the user names another profile through <code>AUTOVAULT_CLOUDFLARE_PROFILE</code>. Project files may reference this credential as:</p>
 <pre><code>AUTOVAULT_SECRET:cloudflare-commerce:&lt;profile&gt;:CLOUDFLARE_API_TOKEN</code></pre>
-<p>Do not copy the raw token into project files, <code>.env</code> files, PR descriptions, or</p>
-<p>agent messages.</p>
-<p>Wrangler global auth (interactive <code>wrangler login</code> state and/or</p>
-<p><code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> exported at shell startup) is a</p>
-<p>first-class credential source for this skill. Treat AutoVault's stored</p>
-<p>credential profile as an additional profile/fallback path, not a mandatory</p>
-<p>replacement for working Wrangler auth.</p>
+<p>Do not copy the raw token into project files, <code>.env</code> files, PR descriptions, or agent messages.</p>
+<p>Wrangler global auth (interactive <code>wrangler login</code> state and/or <code>CLOUDFLARE_API_TOKEN</code> + <code>CLOUDFLARE_ACCOUNT_ID</code> exported at shell startup) is a first-class credential source for this skill. Treat AutoVault's stored credential profile as an additional profile/fallback path, not a mandatory replacement for working Wrangler auth.</p>
 <h2>Pages Deploy Models</h2>
-<p>Cloudflare Pages projects should have one canonical deploy path. Inspect the</p>
-<p>repo workflow and the Pages project before changing it.</p>
+<p>Cloudflare Pages projects should have one canonical deploy path. Inspect the repo workflow and the Pages project before changing it.</p>
 <h3>Git-connected Pages</h3>
-<p>Pages can deploy via <code>git push</code> to a connected GitHub repo. The Wrangler CLI</p>
-<p>creates the project and attaches custom domains; a Cloudflare API call wires the</p>
-<p>project to GitHub; from that point on, every push to the production branch</p>
-<p>triggers an auto-build. Do <strong>not</strong> run ad hoc local <code>wrangler pages deploy</code></p>
-<p>against a Git-connected project — it bypasses that project's canonical path and</p>
-<p>creates split-brain deploys.</p>
+<p>Pages can deploy via <code>git push</code> to a connected GitHub repo. The Wrangler CLI creates the project and attaches custom domains; a Cloudflare API call wires the project to GitHub; from that point on, every push to the production branch triggers an auto-build. Do <strong>not</strong> run ad hoc local <code>wrangler pages deploy</code> against a Git-connected project — it bypasses that project's canonical path and creates split-brain deploys.</p>
 <p>Order of operations for a new Pages project:</p>
 <ol><li><code>wrangler pages project create &lt;project_name&gt; --production-branch=main</code>.</li><li>Attach custom domains (Pages domains API or dashboard).</li><li>Connect the project to its GitHub repo:</li></ol>
 <pre><code>curl -sS -X POST \
@@ -148,15 +128,9 @@ bin:
     }
   }'</code></pre>
 <ol><li>Set build command and output directory in the dashboard or via PATCH <code>deployment_configs.{preview,production}.build_config</code>.</li><li><code>git push origin main</code>. Cloudflare auto-builds.</li></ol>
-<p>Verify the wiring with <code>GET …/pages/projects/&lt;project_name&gt;</code> and confirm</p>
-<p><code>result.source.type == &quot;github&quot;</code>.</p>
+<p>Verify the wiring with <code>GET …/pages/projects/&lt;project_name&gt;</code> and confirm <code>result.source.type == &quot;github&quot;</code>.</p>
 <h3>Direct Upload from CI</h3>
-<p>Pages can also be deployed by GitHub Actions using <code>wrangler pages deploy</code></p>
-<p>after the repo's tests and build pass. This is a healthy model when the workflow</p>
-<p>is the only deploy path and passes <code>--project-name</code>, <code>--branch</code>, and</p>
-<p><code>--commit-hash</code>. Keep this model when a repo already uses it; do not add a</p>
-<p>second Git-connected auto-build unless the user asks to migrate deployment</p>
-<p>models.</p>
+<p>Pages can also be deployed by GitHub Actions using <code>wrangler pages deploy</code> after the repo's tests and build pass. This is a healthy model when the workflow is the only deploy path and passes <code>--project-name</code>, <code>--branch</code>, and <code>--commit-hash</code>. Keep this model when a repo already uses it; do not add a second Git-connected auto-build unless the user asks to migrate deployment models.</p>
 <h2>Workflow</h2>
 <ol><li>Inspect the app and choose the Cloudflare surface:<ul><li>Pages for static or Pages Functions apps.</li><li>Workers for Worker-first apps.</li><li>D1/KV/R2/Queues only when the app actually needs those bindings.</li></ul></li></ol>
 <ol><li>Build a non-secret project manifest from <code>templates/cloudflare-commerce.json</code> when the repo lacks one. Store account IDs, zone IDs, Pages project names, domains, bindings, and secret reference names only.</li></ol>
@@ -165,27 +139,17 @@ bin:
 <ol><li>For custom domains, attach the domain to the Pages project or Worker route first, then create or update DNS. For Pages, do not rely on manually adding a CNAME alone. For Git-connected Pages, follow the order in &quot;Git-connected Pages&quot; above: create project → attach domains → connect to GitHub → push. For Direct Upload from CI, attach domains and keep deployment in the checked-in workflow.</li></ol>
 <ol><li>For logs and post-deploy triage, use available Workers/Pages logs, Workers Tail, Pages deployment logs, Analytics, and Logpush/Logpull permissions when configured.</li></ol>
 <h2>Per-Environment Pages Env Vars</h2>
-<p>Cloudflare Pages projects have separate <code>preview</code> and <code>production</code> environments</p>
-<p>with independent environment variables and secrets. Driving these correctly is</p>
-<p>critical for PR previews that must not touch production data or live keys.</p>
-<h3>Why `wrangler pages secret put` is not enough</h3>
-<p><code>wrangler pages secret put &lt;NAME&gt; --project-name &lt;project&gt;</code> writes to the</p>
-<p><strong>production</strong> environment only. There is no <code>--environment</code> flag for this</p>
-<p>command in wrangler v4.x. Setting a preview-environment secret requires the</p>
-<p>project-level PATCH endpoint.</p>
+<p>Cloudflare Pages projects have separate <code>preview</code> and <code>production</code> environments with independent environment variables and secrets. Driving these correctly is critical for PR previews that must not touch production data or live keys.</p>
+<h3>Why <code>wrangler pages secret put</code> is not enough</h3>
+<p><code>wrangler pages secret put &lt;NAME&gt; --project-name &lt;project&gt;</code> writes to the <strong>production</strong> environment only. There is no <code>--environment</code> flag for this command in wrangler v4.x. Setting a preview-environment secret requires the project-level PATCH endpoint.</p>
 <h3>Reading current per-environment env vars</h3>
 <pre><code>curl -sS \
   -H &quot;Authorization: Bearer $CLOUDFLARE_API_TOKEN&quot; \
   &quot;https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/pages/projects/$PAGES_PROJECT_NAME&quot; \
   | jq '.result.deployment_configs | {preview: .preview.env_vars, production: .production.env_vars}'</code></pre>
-<p><code>secret_text</code>-typed values come back redacted on read — they are write-only.</p>
-<p>The agent cannot copy preview→production by reading values; the user must</p>
-<p>re-provide the value (typically from Keychain, an AutoVault credential</p>
-<p>profile, or another secret store).</p>
+<p><code>secret_text</code>-typed values come back redacted on read — they are write-only. The agent cannot copy preview→production by reading values; the user must re-provide the value (typically from Keychain, an AutoVault credential profile, or another secret store).</p>
 <h3>Writing per-environment env vars</h3>
-<p>PATCH the Pages project with one or both <code>deployment_configs.{preview|production}.env_vars</code></p>
-<p>maps. Each entry is either <code>{&quot;type&quot;: &quot;plain_text&quot;, &quot;value&quot;: &quot;...&quot;}</code> or</p>
-<p><code>{&quot;type&quot;: &quot;secret_text&quot;, &quot;value&quot;: &quot;...&quot;}</code>.</p>
+<p>PATCH the Pages project with one or both <code>deployment_configs.{preview|production}.env_vars</code> maps. Each entry is either <code>{&quot;type&quot;: &quot;plain_text&quot;, &quot;value&quot;: &quot;...&quot;}</code> or <code>{&quot;type&quot;: &quot;secret_text&quot;, &quot;value&quot;: &quot;...&quot;}</code>.</p>
 <pre><code>curl -sS -X PATCH \
   -H &quot;Authorization: Bearer $CLOUDFLARE_API_TOKEN&quot; \
   -H &quot;Content-Type: application/json&quot; \
@@ -212,16 +176,13 @@ bin:
   }
 }
 JSON</code></pre>
-<p>PATCH is <strong>merge</strong> at the env-var key level: existing keys not in the request</p>
-<p>remain. Setting a key to <code>null</code> deletes it. Setting <code>value</code> to an empty string</p>
-<p>sets it to empty — usually not what is wanted.</p>
+<p>PATCH is <strong>merge</strong> at the env-var key level: existing keys not in the request remain. Setting a key to <code>null</code> deletes it. Setting <code>value</code> to an empty string sets it to empty — usually not what is wanted.</p>
 <h3>Recommended split</h3>
 <ul><li>Preview environment: test-mode keys only (<code>sk_test_…</code>, <code>pk_test_…</code>, <code>whsec_test_…</code>, Clerk dev/test instance keys).</li><li>Production environment: live-mode keys, gated by the test-mode-default rule in <code>stripe-commerce-checkout</code>.</li><li>Vite/VitePress browser keys are build-time inputs: <code>VITE_CLERK_PUBLISHABLE_KEY</code> must be available to the build command, not only present as a runtime Pages env var. Prefer CI source variables named <code>VITE_CLERK_PREVIEW_PUBLISHABLE_KEY=pk_test_…</code> and <code>VITE_CLERK_PRODUCTION_PUBLISHABLE_KEY=pk_live_…</code>, then set the app-facing <code>VITE_CLERK_PUBLISHABLE_KEY</code> from the matching source variable before the static build.</li><li>Plain-text (non-secret) values, e.g. <code>AUTOVAULT_ENVIRONMENT=preview</code> vs <code>production</code>, also belong in <code>env_vars</code> with <code>type: plain_text</code>.</li><li>Preview D1/KV bindings should point at preview resources for any form, checkout, auth, CMS, or admin surface that writes data. If an existing repo shares production bindings in preview, report it as a data-isolation gap before enabling PR-preview traffic.</li></ul>
 <h3>Anti-patterns specific to this surface</h3>
 <ul><li>Do not assume <code>wrangler pages secret put</code> covers preview — it doesn't.</li><li>Do not paste production live secrets into the preview environment &quot;to keep things consistent.&quot; Preview is the test-mode surface.</li><li>Do not try to read a <code>secret_text</code> value back; the API returns it redacted. Re-provide from the user's secret store.</li></ul>
 <h2>Domain Registration Rule</h2>
-<p>Domain registration is billable and non-refundable. Before calling a Registrar</p>
-<p>registration endpoint:</p>
+<p>Domain registration is billable and non-refundable. Before calling a Registrar registration endpoint:</p>
 <ol><li>Run an immediate availability and pricing check.</li><li>Present the exact domain, registration period, price, currency, and renewal behavior to the user.</li><li>Require an explicit confirmation in the current conversation.</li><li>Do not register premium domains through the API.</li><li>Leave <code>auto_renew</code> off unless the user explicitly asks for it.</li></ol>
 <h2>Output</h2>
 <p>When finishing Cloudflare deployment work, report:</p>
@@ -241,7 +202,7 @@ JSON</code></pre>
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>true</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Bash, Node, Read, Edit]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">b4079fb</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/cloudflare-commerce-deploy/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>
       <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v1.0.3<span class="latest">latest</span></span><span>5 files · 26 KB</span><span>house</span><code>b4079fb</code><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/cloudflare-commerce-deploy/SKILL.md" rel="noopener">SKILL.md</a></div></div></section>
-    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">1.0.3</span><span class="k">size</span><span class="v mono">26 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico ok">✓</span><span>network</span><span class="scope">true</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readwrite</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>tools</span><span class="scope">[Bash, Node, Read, Edit]</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
+    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card sd-meta-dup"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">1.0.3</span><span class="k">size</span><span class="v mono">26 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico ok">✓</span><span>network</span><span class="scope">true</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readwrite</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>tools</span><span class="scope">[Bash, Node, Read, Edit]</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card sd-source-model"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
     <script id="package-data" type="application/json">{"files":[{"path":"bin/doctor","kind":"script","group":"bin","title":"Doctor","summary":"Runnable package helper. Inspect before running.","bytes":4207,"url":"/bundles/cloudflare-commerce-deploy/bin/doctor.txt"},{"path":"bin/dry-run","kind":"script","group":"bin","title":"Dry Run","summary":"Runnable package helper. Inspect before running.","bytes":3458,"url":"/bundles/cloudflare-commerce-deploy/bin/dry-run.txt"},{"path":"bin/setup","kind":"script","group":"bin","title":"Setup","summary":"Runnable package helper. Inspect before running.","bytes":5309,"url":"/bundles/cloudflare-commerce-deploy/bin/setup.txt"},{"path":"SKILL.md","kind":"markdown","group":"root","title":"SKILL.md","summary":"Primary agent instructions, frontmatter, workflow, and declared resource manifest.","bytes":13099,"url":"/bundles/cloudflare-commerce-deploy/SKILL.md.txt"},{"path":"templates/cloudflare-commerce.json","kind":"config","group":"other","title":"Cloudflare Commerce","summary":"Bundled package file.","bytes":524,"url":"/bundles/cloudflare-commerce-deploy/templates/cloudflare-commerce.json.txt"}]}</script><script type="module" src="/assets/skill-detail.6d1388370f71.js"></script>
   </div>
   </main>
@@ -252,9 +213,10 @@ JSON</code></pre>
         · MIT ·
         <a href="https://autovault.dev">AutoVault</a> ·
         <a href="https://automem.ai">AutoMem</a> ·
-        <a href="/skills.json">skills.json</a>
+        <a href="/skills.json">skills.json</a> ·
+        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </div>
-      <div class="foot-mono">packages on github · install via AutoVault</div>
+      <div class="foot-mono">people kept saying it. the pin is the useful part.</div>
     </div>
   </footer>
   <script>
