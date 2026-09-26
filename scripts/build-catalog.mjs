@@ -449,9 +449,24 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     item.content += ` ${continuation}`;
     return true;
   };
+  let para = [];
+  const flushPara = () => {
+    if (!para.length) return;
+    const text = para.join(" ");
+    para = [];
+    const imgOnly = text.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
+    if (imgOnly) {
+      html.push(
+        `<figure class="chart"><img src="${esc(imgOnly[2])}" alt="${esc(imgOnly[1])}" loading="lazy" /><figcaption>${esc(imgOnly[1])}</figcaption></figure>`,
+      );
+    } else {
+      html.push(`<p>${inline(text)}</p>`);
+    }
+  };
 
   for (const line of lines) {
     if (line.startsWith("```")) {
+      flushPara();
       flushList();
       flushTable();
       flushBq();
@@ -470,6 +485,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     }
     const listItem = line.match(/^(\s*)([-*]|\d+\.)\s+(.+)$/);
     if (listItem) {
+      flushPara();
       flushTable();
       flushBq();
       appendListItem(listItem);
@@ -478,6 +494,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     if (/^\s{2,}\S/.test(line) && appendListContinuation(line)) continue;
     // Allow raw HTML blocks for inline SVG figures (lines starting with <)
     if (/^<\/?(figure|div|svg|img|table|section)\b/i.test(line.trim())) {
+      flushPara();
       flushList();
       flushTable();
       flushBq();
@@ -485,6 +502,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
       continue;
     }
     if (/^> /.test(line) || line === ">") {
+      flushPara();
       flushList();
       flushTable();
       if (!inBq) inBq = true;
@@ -494,6 +512,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     if (inBq && !/^>/.test(line)) flushBq();
 
     if (/^\|/.test(line) && line.includes("|")) {
+      flushPara();
       flushList();
       flushBq();
       if (!inTable) inTable = true;
@@ -504,28 +523,24 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
 
     const heading = line.match(/^(#{1,6})\s+(.+)$/);
     if (heading) {
+      flushPara();
       flushList();
       const level = heading[1].length;
       const tag = level < 3 ? "h2" : `h${level}`;
-      html.push(`<${tag}>${esc(heading[2])}</${tag}>`);
+      html.push(`<${tag}>${inline(heading[2])}</${tag}>`);
     } else if (/^---+$/.test(line.trim())) {
+      flushPara();
       flushList();
       html.push("<hr>");
     } else if (!line.trim()) {
+      flushPara();
       flushList();
     } else {
       flushList();
-      // Image-only paragraph: unwrap double figure from inline
-      const imgOnly = line.match(/^!\[([^\]]*)\]\(([^)]+)\)$/);
-      if (imgOnly) {
-        html.push(
-          `<figure class="chart"><img src="${esc(imgOnly[2])}" alt="${esc(imgOnly[1])}" loading="lazy" /><figcaption>${esc(imgOnly[1])}</figcaption></figure>`,
-        );
-      } else {
-        html.push(`<p>${inline(line)}</p>`);
-      }
+      para.push(line.trim());
     }
   }
+  flushPara();
   flushList();
   flushTable();
   flushBq();
@@ -568,6 +583,29 @@ const CATALOG_GROUPS = {
   workflow: { label: "workflow", order: 9 },
 };
 
+const GROUP_NOTES = {
+  agents: "Memory, orchestration, research. What the agent does next.",
+  cloudflare: "Deploys, lead capture, DNS. The wrangler scars, written down once.",
+  git: "Review loops and commit identity. PRs that finish.",
+  browser: "Drive the Chrome you already have open.",
+  desktop: "Raycast, windows, the Mac side of the desk.",
+  ops: "Boards, Home Assistant, inboxes. Machines that are not a repo.",
+  mcp: "Build a server, or keep the ones you already run honest.",
+  writing: "Voice, brand, docs. So the page does not sound like a model.",
+  workflow: "Terminals, long jobs, and the glue between them.",
+  auth: "Clerk on Cloudflare, without reinventing sign-in.",
+  brand: "Marks, and the files the other brand skills share.",
+  commerce: "Clerk, Stripe, and Cloudflare in one bootstrap.",
+  devops: "CI minutes, and where they actually went.",
+  media: "Screenshots and demo video, the stuff next to the README.",
+  payments: "Stripe checkout. Test mode unless you say live.",
+  travel: "Award routes before the miles get spent.",
+  unity: "Agents in the Unity editor without stepping on each other.",
+  voice: "ElevenLabs with AutoMem, so the agent remembers.",
+  web: "EmDash sites, plugins, and the WordPress theme port.",
+  xr: "Quest builds and passthrough frames.",
+};
+
 const CATEGORY_TO_GROUP = {
   analytics: "cloudflare",
   cloudflare: "cloudflare",
@@ -600,6 +638,59 @@ function catalogGroup(category) {
 
 function groupOrderOf(id) {
   return CATALOG_GROUPS[id]?.order ?? 99;
+}
+
+function groupNote(id) {
+  return GROUP_NOTES[id] || "Packaged from real use.";
+}
+
+function shelfRow(skill, { anchor = true } = {}) {
+  const id = anchor ? ` id="skill-${esc(skill.name)}"` : "";
+  const mark = skill.featured ? '<span class="shelf-mark">start</span>' : "";
+  return `<li${id}>
+    <a class="shelf-link" href="/skills/${esc(skill.name)}/">
+      <span class="shelf-name">${esc(skill.name)}${mark}</span>
+      <span class="shelf-why">${esc(skill.summary)}</span>
+    </a>
+    <button type="button" class="shelf-copy" data-copy="${esc(skill.cliInstall)}">copy</button>
+  </li>`;
+}
+
+function shelfMarkup(skills) {
+  const byGroup = new Map();
+  for (const skill of skills) {
+    const id = skill.group || "ops";
+    if (!byGroup.has(id)) byGroup.set(id, []);
+    byGroup.get(id).push(skill);
+  }
+  const ids = [...byGroup.keys()].sort((a, b) => {
+    return groupOrderOf(a) - groupOrderOf(b) || a.localeCompare(b);
+  });
+  const jump = ids
+    .map((id) => {
+      const count = byGroup.get(id).length;
+      return `<a href="#shelf-${esc(id)}"><span>${esc(id)}</span><b>${count}</b></a>`;
+    })
+    .join("");
+  const shelves = ids
+    .map((id) => {
+      const rows = byGroup
+        .get(id)
+        .slice()
+        .sort(
+          (a, b) =>
+            Number(b.featured) - Number(a.featured) ||
+            a.name.localeCompare(b.name),
+        )
+        .map((skill) => shelfRow(skill))
+        .join("\n");
+      return `<section class="shelf" id="shelf-${esc(id)}" data-group="${esc(id)}">
+      <header class="shelf-head"><h2>${esc(id)}</h2><p>${esc(groupNote(id))}</p></header>
+      <ul class="shelf-list">${rows}</ul>
+    </section>`;
+    })
+    .join("\n");
+  return { jump, shelves };
 }
 
 function clampBlurb(text, max = 180) {
@@ -694,8 +785,6 @@ function shellLayout({ title, description, path: pagePath, body, active }) {
       </a>
       <nav class="links" aria-label="Primary">
         ${nav}
-        <a href="/skills.json">skills.json</a>
-        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </nav>
     </div>
   </header>
@@ -709,9 +798,10 @@ ${body}
         · MIT ·
         <a href="https://autovault.dev">AutoVault</a> ·
         <a href="https://automem.ai">AutoMem</a> ·
-        <a href="/skills.json">skills.json</a>
+        <a href="/skills.json">skills.json</a> ·
+        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </div>
-      <div class="foot-mono">packages on github · install via AutoVault</div>
+      <div class="foot-mono">people kept saying it. the pin is the useful part.</div>
     </div>
   </footer>
   <script>
@@ -1076,7 +1166,7 @@ for (const s of publicSkills) {
     <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>${esc(s.provenance)}</span><span class="sep">/</span><span class="cur">${esc(s.name)}</span></nav>
     <header class="sd-head">
       <div>
-        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">${esc(explorerMark(s.name))}</div><div><h1><span class="org">${esc(s.provenance)} / </span>${esc(s.title)}</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">${esc(s.category)}</span><span class="meta-facts"><span>v${esc(s.version)}</span><span>${esc(s.license)}</span><span>${esc(formatBytes(s.bundleSize))}</span></span></div><div class="src-path">skills/${esc(s.name)}/SKILL.md</div></div></div>
+        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">${esc(explorerMark(s.name))}</div><div><h1><span class="org">${esc(s.provenance)} / </span>${esc(s.title)}</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">${esc(s.category)}</span><span class="meta-facts"><span>v${esc(s.version)}</span><span>${esc(s.license)}</span><span>${esc(formatBytes(s.bundleSize))}</span><span>${esc(agents.join(" · "))}</span></span></div><div class="src-path">skills/${esc(s.name)}/SKILL.md</div></div></div>
         <p class="desc">${esc(s.summary)}</p>${assetStrip}
       </div>
       <div class="actions"><div class="sd-install"><div class="sd-install-head"><span class="lbl">Install</span><span class="sd-install-tag">CLI + MCP</span></div><div class="sd-install-list"><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">CLI</span><span>Run from your local shell.</span></div><div class="cmd"><span class="pmt">$</span><span class="cmd-text">${esc(s.cliInstall)}</span><button class="copy" type="button" data-copy="${esc(s.cliInstall)}">Copy</button></div></div><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">MCP</span><span>Paste into an agent MCP tool call.</span></div><div class="cmd"><span class="pmt">&gt;</span><span class="cmd-text">${esc(s.mcpInstall)}</span><button class="copy" type="button" data-copy="${esc(s.mcpInstall)}">Copy</button></div></div></div></div><div class="sd-copy-status" aria-live="polite">Choose CLI for a shell install or MCP for an agent tool call.</div><div class="sd-secondary-actions"><a class="sd-sbtn" href="${esc(s.sourceUrl)}" rel="noopener">Source</a><button class="sd-sbtn" type="button" data-package-tab="provenance">Verify</button></div></div>
@@ -1090,7 +1180,7 @@ for (const s of publicSkills) {
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts">${capabilityRows}</dl>${secrets}</div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This ${esc(s.provenance)} package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">${esc(shortPackageSourcePin)}</span><span class="k">source</span><a class="v accent" href="${esc(s.sourceUrl)}" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">${esc(agents.join(", "))}</span></div></div></section>
       <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v${esc(s.version)}<span class="latest">latest</span></span><span>${s.bundleFileCount} files · ${esc(formatBytes(s.bundleSize))}</span><span>${esc(s.provenance)}</span><code>${esc(shortPackageSourcePin)}</code><a href="${esc(s.rawSourceUrl)}" rel="noopener">SKILL.md</a></div></div></section>
-    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list">${railAgents}</div></div><div class="sd-card"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">${esc(s.version)}</span><span class="k">size</span><span class="v mono">${esc(formatBytes(s.bundleSize))}</span><span class="k">license</span><span class="v">${esc(s.license)}</span><span class="k">provider</span><span class="v accent">${esc(s.provenance)}</span></div></div><div class="sd-card"><h4>Permission summary</h4>${permissionRail}<button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">${esc(s.provenance)}</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
+    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list">${railAgents}</div></div><div class="sd-card sd-meta-dup"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">${esc(s.version)}</span><span class="k">size</span><span class="v mono">${esc(formatBytes(s.bundleSize))}</span><span class="k">license</span><span class="v">${esc(s.license)}</span><span class="k">provider</span><span class="v accent">${esc(s.provenance)}</span></div></div><div class="sd-card"><h4>Permission summary</h4>${permissionRail}<button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card sd-source-model"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">${esc(s.provenance)}</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
     <script id="package-data" type="application/json">${jsonForScript({ files: viewerFiles })}</script><script type="module" src="/assets/${detailAssetName}"></script>
   </div>`;
   fs.writeFileSync(
@@ -1152,10 +1242,10 @@ function explorerAgentPills(skill) {
 }
 
 function fallbackExplorerCard(skill) {
-  return `<article class="explorer-card" data-explorer-card data-skill="${esc(skill.name)}">
+  return `<article class="explorer-card" data-explorer-card data-skill="${esc(skill.name)}" data-group="${esc(skill.group || "")}" data-category="${esc(skill.category || "")}">
   <header class="explorer-card-head">
     <span class="explorer-mark" data-explorer-mark aria-hidden="true">${esc(explorerMark(skill.name))}</span>
-    <div><p class="explorer-kicker">public package · ${esc(skill.provenance)} · ${esc(skill.category)}</p><h2><a href="/skills/${esc(skill.name)}/">${esc(skill.title || skill.name)}</a></h2></div>
+    <div><p class="explorer-kicker"><span class="sr-only">public package · ${esc(skill.provenance)}</span>${esc(skill.group || skill.category || "skill")}</p><h2><a href="/skills/${esc(skill.name)}/">${esc(skill.title || skill.name)}</a></h2></div>
   </header>
   <p class="explorer-card-summary">${esc(skill.summary)}</p>
   <div class="explorer-agent-row" aria-label="Agent targets">${explorerAgentPills(skill)}</div>
@@ -1175,23 +1265,33 @@ fs.writeFileSync(
     body: `
     <section class="hero catalog-hero"><div class="wrap">
       <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · package source ${esc(shortPackageSourcePin)}</div>
-      <h1>Skills Explorer</h1>
-      <p class="lede">A public package directory. Scan the bundle, copy a pinned install, or open the package when you need the deeper notes.</p>
+      <h1>${publicSkills.length} public skills</h1>
+      <p class="lede">Search the shelf, copy a pinned install, or open a skill for the source and the longer note.</p>
     </div></section>
     <section class="catalog-body"><div class="wrap">
       <div class="explorer" data-catalog-explorer>
         <form class="explorer-facets" aria-label="Filter skills">
-          <label for="explorer-q">Search</label>
-          <input class="search" id="explorer-q" name="q" type="search" placeholder="name, summary, description, tag" autocomplete="off" spellcheck="false">
-          <label for="explorer-category">Category</label>
-          <select id="explorer-category" name="category"><option value="">All categories</option></select>
-          <label for="explorer-agent">Agent</label>
-          <select id="explorer-agent" name="agent"><option value="">All agents</option></select>
-          <label for="explorer-source">Source</label>
-          <select id="explorer-source" name="source"><option value="">All sources</option></select>
+          <div class="facet facet-search">
+            <label for="explorer-q">Search</label>
+            <input class="search" id="explorer-q" name="q" type="search" placeholder="name, summary, description, tag" autocomplete="off" spellcheck="false">
+          </div>
+          <div class="facet">
+            <label for="explorer-category">Category</label>
+            <select id="explorer-category" name="category"><option value="">All categories</option></select>
+          </div>
+          <div class="facet">
+            <label for="explorer-agent">Agent</label>
+            <select id="explorer-agent" name="agent"><option value="">All agents</option></select>
+          </div>
+          <div class="facet">
+            <label for="explorer-source">Source</label>
+            <select id="explorer-source" name="source"><option value="">All sources</option></select>
+          </div>
+          <div class="facet">
+            <label for="explorer-resources">Resources</label>
+            <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
+          </div>
           <label class="explorer-check"><input type="checkbox" name="featured"> Featured only</label>
-          <label for="explorer-resources">Package resources</label>
-          <select id="explorer-resources" name="resources"><option value="">Any package</option><option value="yes">Has resources</option><option value="none">No resources</option></select>
           <p class="section-note" data-explorer-count aria-live="polite">Showing ${publicSkills.length} of ${publicSkills.length} skills</p>
         </form>
         <div class="explorer-main"><div class="explorer-toolbar"><div class="explorer-sort" role="group" aria-label="Sort skills"><span>Sort</span><button type="button" data-explorer-sort="referenced" aria-pressed="true">Most referenced</button><button type="button" data-explorer-sort="recent" aria-pressed="false">Recent</button><button type="button" data-explorer-sort="name" aria-pressed="false">Name</button></div><div class="explorer-view" role="group" aria-label="Result view"><button type="button" data-explorer-view="grid" aria-pressed="true">Grid</button><button type="button" data-explorer-view="list" aria-pressed="false">List</button></div></div><div class="explorer-results" data-explorer-results aria-label="Skill results">${fallbackRows}</div></div>
@@ -1207,89 +1307,64 @@ fs.writeFileSync(
 const featured = publicSkills
   .filter((s) => s.featured)
   .sort((a, b) => a.name.localeCompare(b.name));
-const featCards = featured
-  .map(
-    (s) => `<a class="card featured" href="/skills/${esc(s.name)}/">
-  <div class="card-top"><h3>${esc(s.name)}</h3><span class="badge">featured</span></div>
-  <p>${esc(s.summary)}</p>
-</a>`,
-  )
-  .join("\n");
-
 const sampleCli =
   publicSkills.find((s) => s.name === "cloudflare-ops")?.cliInstall ||
   publicSkills[0]?.cliInstall ||
   "";
+const shelves = shelfMarkup(publicSkills);
+const startLinks = featured
+  .map(
+    (skill) =>
+      `<a href="#skill-${esc(skill.name)}">${esc(skill.name)}</a>`,
+  )
+  .join("");
 
 fs.writeFileSync(
   path.join(siteDir, "index.html"),
   shellLayout({
-    title: "skillissue.sh — agent skills that earn their keep",
+    title: "skillissue.sh: agent skills that earn their keep",
     description:
       "Jack Arturo's personal/agent skills. Packages live on GitHub; install with AutoVault.",
     path: "/",
     body: `
-    <section class="hero">
-      <div class="wrap">
-        <div class="prompt"><span class="dot"></span> live · ${publicSkills.length} public skills · package source ${esc(shortPackageSourcePin)}</div>
-        <h1><span class="path">skillissue</span>.sh<span class="cursor" aria-hidden="true"></span></h1>
-        <p class="lede">
-          Jack Arturo’s personal/agent skills —
-          the ones that <strong>earn their keep</strong>.
-          Packages live in this GitHub repo. Install with AutoVault. Not a marketplace.
-        </p>
-        <div class="cta-row">
-          <a class="btn btn-primary" href="/skills/">Browse skills</a>
-          <a class="btn btn-ghost" href="/install/">Install with AutoVault</a>
-          <a class="btn btn-ghost" href="/about/">The story</a>
+    <section class="mast">
+      <div class="wrap mast-grid">
+        <div>
+          <div class="prompt"><span class="dot"></span> ${publicSkills.length} public · pin ${esc(shortPackageSourcePin)}</div>
+          <h1>Skills that earn their keep.</h1>
+          <p class="lede">Public packages from the repo I actually run. Install with AutoVault. This page is the shelf. Open a skill when you want the pin, the source, or the longer note.</p>
+          <div class="start-row"><span>start here</span>${startLinks}</div>
         </div>
-        <div class="term" aria-label="Example terminal session">
-          <div class="term-bar"><i></i><i></i><i></i><span class="term-title">zsh · skillissue</span></div>
-          <div class="term-body">
-            <div><span class="dim">$</span> <span class="cmd">${esc(sampleCli)}</span></div>
-            <div class="ok">✓ package from github · vault syncs claude-code · codex · cursor</div>
-            <div class="amber"># if your agent still can't ship… skill issue</div>
-          </div>
-        </div>
-        <div class="stats">
-          <div class="stat"><b>${publicSkills.length}</b><span>public skill pages</span></div>
-          <div class="stat"><b>${featured.length}</b><span>featured</span></div>
-          <div class="stat"><b>${esc(shortPackageSourcePin)}</b><span>package-source install pin</span></div>
+        <div class="install-slab" aria-label="Example install">
+          <div class="install-slab-top"><span>grab one</span><button type="button" class="shelf-copy" data-copy="${esc(sampleCli)}">copy</button></div>
+          <code>${esc(sampleCli)}</code>
+          <p>Pinned to this build. Same tree GitHub serves. If the agent still can't ship, skill issue.</p>
         </div>
       </div>
     </section>
-    <section id="featured">
+    <section class="shelves" aria-label="Skills by shelf">
       <div class="wrap">
-        <div class="section-head"><h2>Featured</h2><div class="section-note">house skills that pull weight</div></div>
-        <div class="grid">${featCards}</div>
+        <nav class="shelf-jump" aria-label="Shelves">${shelves.jump}</nav>
+        ${shelves.shelves}
       </div>
     </section>
-    <section id="newsletter">
-      <div class="wrap">
-        <div class="section-head"><h2>Get drops</h2><div class="section-note">occasional · no spam</div></div>
-        <div class="panel" style="max-width:36rem">
-          <h3>Skills that earn their keep</h3>
-          <p>Occasional notes when a new skill ships or an old one levels up. Unsubscribe anytime.</p>
+    <section class="floor" id="newsletter">
+      <div class="wrap floor-grid">
+        <div>
+          <h2>Drops</h2>
+          <p class="muted">A note when a skill ships or an old one levels up. Unsubscribe anytime.</p>
           <form class="signup" id="signup" action="/api/signup" method="POST">
-            <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" class="search" style="margin-bottom:0.6rem">
+            <input type="email" name="email" required placeholder="you@example.com" autocomplete="email" class="search">
             <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
             <input type="hidden" name="source" value="skillissue-hub">
             <button type="submit" class="btn btn-primary">Subscribe</button>
             <p class="form-msg" id="signup-msg" hidden></p>
           </form>
         </div>
-      </div>
-    </section>
-    <section>
-      <div class="wrap about" style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:1.25rem">
-        <div>
-          <h2>Why this exists</h2>
-          <p class="muted">AutoVault holds the runtime vault on your machine. This repo holds the public packages. skillissue.sh is the shelf — stories plus <code>autovault add</code>.</p>
-          <p><a href="/about/">Read the stack story →</a></p>
-        </div>
         <div class="callout">
-          <h3>$ whoami</h3>
-          <p>Jack Arturo — Very Good Plugins, AutoHub, AutoMem, AutoVault. Personal tooling made public where useful.</p>
+          <h2>The shelf</h2>
+          <p>AutoVault is the vault on your machine. This repo is the public packages. <a href="/about/">The longer version</a>.</p>
+          <p class="muted">Jack Arturo. Very Good Plugins, AutoHub, AutoMem, AutoVault.</p>
         </div>
       </div>
     </section>

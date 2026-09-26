@@ -133,6 +133,8 @@ function renderCard(skill) {
   card.className = "explorer-card";
   card.dataset.explorerCard = "";
   card.dataset.skill = skill.name;
+  if (skill.group) card.dataset.group = skill.group;
+  if (skill.category) card.dataset.category = skill.category;
 
   const head = document.createElement("header");
   head.className = "explorer-card-head";
@@ -140,7 +142,10 @@ function renderCard(skill) {
   const heading = document.createElement("div");
   const kicker = document.createElement("p");
   kicker.className = "explorer-kicker";
-  kicker.textContent = `public package · ${skill.provenance || "house"} · ${skill.category || "skill"}`;
+  const quiet = document.createElement("span");
+  quiet.className = "sr-only";
+  quiet.textContent = `public package · ${skill.provenance || "house"}`;
+  kicker.append(quiet, document.createTextNode(skill.group || skill.category || "skill"));
   const name = document.createElement("h2");
   const canonical = document.createElement("a");
   canonical.href = skill.storyUrl;

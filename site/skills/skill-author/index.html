@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/skills/skill-author/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.b39a8c778476.css">
+<link rel="stylesheet" href="/assets/site.70eae1bbca58.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -32,8 +32,6 @@
         <a href="/essays/">essays</a>
         <a href="/install/">install</a>
         <a href="/about/">about</a>
-        <a href="/skills.json">skills.json</a>
-        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </nav>
     </div>
   </header>
@@ -42,7 +40,7 @@
     <nav class="sd-crumb" aria-label="Breadcrumb"><a href="/skills/">Skills</a><span class="sep">/</span><span>house</span><span class="sep">/</span><span class="cur">skill-author</span></nav>
     <header class="sd-head">
       <div>
-        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">SA</div><div><h1><span class="org">house / </span>Skill Author</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">meta</span><span class="meta-facts"><span>v2.0.0</span><span>MIT</span><span>6.5 KB</span></span></div><div class="src-path">skills/skill-author/SKILL.md</div></div></div>
+        <div class="ttl-row"><div class="icon-tile" aria-hidden="true">SA</div><div><h1><span class="org">house / </span>Skill Author</h1><div class="sub-row"><span class="verified">✓ hosted skill bundle</span><span class="source-badge">meta</span><span class="meta-facts"><span>v2.0.0</span><span>MIT</span><span>6.5 KB</span><span>claude-code · codex · autojack</span></span></div><div class="src-path">skills/skill-author/SKILL.md</div></div></div>
         <p class="desc">Half-finished SKILL.md files were rotting in chat. This is the admission checklist before something enters the vault.</p>
       </div>
       <div class="actions"><div class="sd-install"><div class="sd-install-head"><span class="lbl">Install</span><span class="sd-install-tag">CLI + MCP</span></div><div class="sd-install-list"><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">CLI</span><span>Run from your local shell.</span></div><div class="cmd"><span class="pmt">$</span><span class="cmd-text">autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/skill-author/SKILL.md --sync-profiles</span><button class="copy" type="button" data-copy="autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/skill-author/SKILL.md --sync-profiles">Copy</button></div></div><div class="sd-install-row"><div class="sd-install-row-meta"><span class="sd-install-method">MCP</span><span>Paste into an agent MCP tool call.</span></div><div class="cmd"><span class="pmt">&gt;</span><span class="cmd-text">add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/skill-author/SKILL.md&quot; })</span><button class="copy" type="button" data-copy="add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/skill-author/SKILL.md&quot; })">Copy</button></div></div></div></div><div class="sd-copy-status" aria-live="polite">Choose CLI for a shell install or MCP for an agent tool call.</div><div class="sd-secondary-actions"><a class="sd-sbtn" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/skill-author/SKILL.md" rel="noopener">Source</a><button class="sd-sbtn" type="button" data-package-tab="provenance">Verify</button></div></div>
@@ -64,31 +62,18 @@ capabilities:
   filesystem: readwrite
   tools: [Read, Edit, Write]
 ---</pre></div><h2>AutoVault Skill Packager</h2>
-<p>Prepare an existing <code>SKILL.md</code> or skill directory for AutoVault admission. This</p>
-<p>skill is about AutoVault packaging: schema correctness, bundle membership,</p>
-<p>capability declarations, validation, deduplication, and signed installation.</p>
+<p>Prepare an existing <code>SKILL.md</code> or skill directory for AutoVault admission. This skill is about AutoVault packaging: schema correctness, bundle membership, capability declarations, validation, deduplication, and signed installation.</p>
 <h2>Scope</h2>
 <p>Use this skill when:</p>
 <ul><li>a workflow or draft already exists and needs valid AutoVault frontmatter;</li><li>a bundle has support files that must be inventoried and declared;</li><li>an AutoVault validation, security, or dedup result needs remediation; or</li><li>a reviewed bundle is ready for <code>propose_skill</code> or <code>add_skill</code>.</li></ul>
-<p>Do not use it for open-ended workflow invention, trigger design, or general</p>
-<p>skill-writing pedagogy. Use the host-native <code>skill-creator</code> or equivalent design</p>
-<p>tool first, then return here once there is a concrete draft to package.</p>
+<p>Do not use it for open-ended workflow invention, trigger design, or general skill-writing pedagogy. Use the host-native <code>skill-creator</code> or equivalent design tool first, then return here once there is a concrete draft to package.</p>
 <h2>1. Check for an existing capability</h2>
-<p>If the AutoVault compatibility tools are connected, search with</p>
-<p><code>get_skill({query: &quot;specific workflow nouns&quot;})</code>. Prefer extending or reusing a</p>
-<p>good match over adding another near-duplicate.</p>
-<p>When the MCP tools are absent, inspect the host's normal visible skill</p>
-<p>directory instead. AutoVault-managed skills are synced into those native</p>
-<p>directories, so filesystem discovery is sufficient and the missing MCP server</p>
-<p>is not an error.</p>
+<p>If the AutoVault compatibility tools are connected, search with <code>get_skill({query: &quot;specific workflow nouns&quot;})</code>. Prefer extending or reusing a good match over adding another near-duplicate.</p>
+<p>When the MCP tools are absent, inspect the host's normal visible skill directory instead. AutoVault-managed skills are synced into those native directories, so filesystem discovery is sufficient and the missing MCP server is not an error.</p>
 <h2>2. Inventory the complete bundle</h2>
 <p>Treat the skill directory as one unit:</p>
 <ul><li><code>SKILL.md</code> is the entry point.</li><li>Every regular sibling file under the directory is a resource.</li><li>Exclude OS/editor metadata and generated caches.</li><li>Reject symlinks, path traversal, device files, and other non-regular entries.</li><li>Review executable resources as carefully as the skill body.</li></ul>
-<p>For a GitHub source, AutoVault fetches all regular sibling files beneath the</p>
-<p>selected skill directory at one immutable commit. It does not rely on the</p>
-<p>upstream author having declared every file. Missing <code>resources</code> declarations</p>
-<p>are synthesized during normalization, and the install response reports</p>
-<p><code>inferred_resources</code> for review.</p>
+<p>For a GitHub source, AutoVault fetches all regular sibling files beneath the selected skill directory at one immutable commit. It does not rely on the upstream author having declared every file. Missing <code>resources</code> declarations are synthesized during normalization, and the install response reports <code>inferred_resources</code> for review.</p>
 <h2>3. Normalize frontmatter</h2>
 <p>The minimum admitted shape is:</p>
 <pre><code>---
@@ -99,8 +84,7 @@ metadata:
   version: &quot;1.0.0&quot;
 ---</code></pre>
 <ul><li><code>name</code> must match the bundle directory and storage name.</li><li><code>description</code> must be at least 20 characters and cover both what and when.</li><li><code>agents</code> must contain at least one valid target profile.</li><li><code>metadata.version</code> should describe the packaged revision.</li></ul>
-<p>Useful optional fields include <code>license</code>, <code>tags</code>, <code>category</code>, <code>capabilities</code>,</p>
-<p><code>requires-secrets</code>, <code>resources</code>, and <code>bin</code>.</p>
+<p>Useful optional fields include <code>license</code>, <code>tags</code>, <code>category</code>, <code>capabilities</code>, <code>requires-secrets</code>, <code>resources</code>, and <code>bin</code>.</p>
 <h2>4. Declare resources and actions</h2>
 <p>For ordinary support files, declare their canonical relative paths:</p>
 <pre><code>resources:
@@ -108,40 +92,30 @@ metadata:
     type: file
   - path: scripts/helper.js
     type: file</code></pre>
-<p>An executable action uses a <code>bin</code> entry whose command also resolves inside the</p>
-<p>bundle:</p>
+<p>An executable action uses a <code>bin</code> entry whose command also resolves inside the bundle:</p>
 <pre><code>bin:
   setup:
     command: bin/setup
     description: Configure the provider integration.
     requires-tty: true</code></pre>
-<p><code>propose_skill</code>, <code>bulk_import</code>, and normalized remote installs can synthesize</p>
-<p>missing resource entries from supplied bundle files. Always review the returned</p>
-<p><code>inferred_resources</code>; inference records bundle membership but does not replace a</p>
-<p>human content review.</p>
+<p><code>propose_skill</code>, <code>bulk_import</code>, and normalized remote installs can synthesize missing resource entries from supplied bundle files. Always review the returned <code>inferred_resources</code>; inference records bundle membership but does not replace a human content review.</p>
 <h2>5. Declare the real capability surface</h2>
-<p>Capabilities describe the whole bundle, including resource files and executable</p>
-<p>actions:</p>
+<p>Capabilities describe the whole bundle, including resource files and executable actions:</p>
 <pre><code>capabilities:
   network: false
   filesystem: readonly
   tools: [Read]</code></pre>
 <ul><li>Set <code>network</code> to true when any workflow or bundled action contacts a remote service.</li><li>Use <code>filesystem: readwrite</code> when any step creates, edits, or deletes files.</li><li>List the actual host tools and runtimes used by the body and resources.</li><li>Declare secrets only by environment-variable name and purpose; never include secret values in a bundle.</li></ul>
-<p>Under-declaration is rejected by the capability cross-check. Over-declaration</p>
-<p>unnecessarily expands the skill's claimed authority.</p>
+<p>Under-declaration is rejected by the capability cross-check. Over-declaration unnecessarily expands the skill's claimed authority.</p>
 <h2>6. Validate before writing</h2>
 <p>With MCP compatibility tools available, dry-run the exact bytes:</p>
 <pre><code>propose_skill({skill_md: &quot;&lt;full SKILL.md&gt;&quot;, resources: [], check: true})</code></pre>
 <p>Handle the result explicitly:</p>
 <ul><li><code>would_accept</code>: schema, security, capability, and dedup checks passed.</li><li><code>duplicate</code>: inspect <code>existing_match</code> and choose whether to reuse, replace, merge, or keep both.</li><li><code>invalid</code>: repair the listed schema or bundle errors.</li><li><code>security_blocked</code>: remove unsafe behavior or correct an inaccurate capability declaration; do not bypass strict validation.</li></ul>
-<p>For an existing reviewed directory, the local CLI path is</p>
-<p><code>autovault add &lt;path&gt; --dry-run</code>. A successful dry run does not write or sync</p>
-<p>profiles.</p>
+<p>For an existing reviewed directory, the local CLI path is <code>autovault add &lt;path&gt; --dry-run</code>. A successful dry run does not write or sync profiles.</p>
 <h2>7. Admit the reviewed bundle</h2>
 <ul><li>Use <code>propose_skill({skill_md: &quot;&lt;full SKILL.md&gt;&quot;, resources: [...]})</code> for caller-held draft bytes.</li><li>Use <code>add_skill({source: &quot;local&quot;, skill_dir: &quot;&lt;directory&gt;&quot;})</code> for a reviewed local directory.</li><li>Use <code>add_skill({source: &quot;github&quot;, identifier: &quot;owner/repo:path/SKILL.md&quot;})</code> for a source-backed GitHub bundle.</li></ul>
-<p>Confirm the accepted name, inferred resources, target agents, and profile-sync</p>
-<p>warnings. AutoVault signs <code>SKILL.md</code>, resources, and source metadata as one</p>
-<p>installed bundle.</p>
+<p>Confirm the accepted name, inferred resources, target agents, and profile-sync warnings. AutoVault signs <code>SKILL.md</code>, resources, and source metadata as one installed bundle.</p>
 <h2>Packaging checklist</h2>
 <ul><li>[ ] A concrete draft exists; general design work is already complete.</li><li>[ ] The name is safe, unique, and matches the directory.</li><li>[ ] The description states what and when.</li><li>[ ] Target agents are explicit.</li><li>[ ] Every regular bundle file was reviewed.</li><li>[ ] Resource and <code>bin</code> paths are relative and remain inside the bundle.</li><li>[ ] Capabilities describe the body and every resource honestly.</li><li>[ ] No credentials, personal data, caches, or OS metadata are included.</li><li>[ ] The exact candidate passed a dry-run validation.</li><li>[ ] Any inferred resources and functional-duplicate warning were reviewed.</li></ul>
 <h2>Anti-patterns</h2>
@@ -159,7 +133,7 @@ metadata:
       <section id="permissions" data-package-panel="permissions"><div class="sd-card"><h4>Declared capabilities</h4><dl class="permission-facts"><div><dt>network</dt><dd>false</dd></div><div><dt>filesystem</dt><dd>readwrite</dd></div><div><dt>tools</dt><dd>[Read, Edit, Write]</dd></div></dl><p class="muted">No secrets declared by this package.</p></div></section>
       <section id="provenance" data-package-panel="provenance"><div class="sd-card sd-provenance"><h4>Public, pinned, and inspectable</h4><p>This house package is installed from the pinned Git commit shown here. Inspect the source and every bundled file before you run it.</p><div class="kv"><span class="k">package pin</span><span class="v mono">b4079fb</span><span class="k">source</span><a class="v accent" href="https://github.com/jack-arturo/skillissue/blob/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/skill-author/SKILL.md" rel="noopener">GitHub package</a><span class="k">compatibility</span><span class="v">claude-code, codex, autojack</span></div></div></section>
       <section id="source" data-package-panel="source"><div class="sd-versions-table"><div class="sd-versions-row head"><span>Version</span><span>Bundle</span><span>Source</span><span>Pin</span><span>Raw</span></div><div class="sd-versions-row"><span class="ver">v2.0.0<span class="latest">latest</span></span><span>1 files · 6.5 KB</span><span>house</span><code>b4079fb</code><a href="https://raw.githubusercontent.com/jack-arturo/skillissue/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills/skill-author/SKILL.md" rel="noopener">SKILL.md</a></div></div></section>
-    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">2.0.0</span><span class="k">size</span><span class="v mono">6.5 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico no">×</span><span>network</span><span class="scope">false</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readwrite</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>tools</span><span class="scope">[Read, Edit, Write]</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
+    </main><aside class="sd-rail"><div class="sd-card"><h4>Compatibility</h4><div class="sd-agent-list"><div class="sd-agent-row"><span class="swatch" style="background:#ffb020"></span><span class="lbl">claude-code</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#5ca8ff"></span><span class="lbl">codex</span><span class="stat">declared</span></div><div class="sd-agent-row"><span class="swatch" style="background:#3dff9a"></span><span class="lbl">autojack</span><span class="stat">declared</span></div></div></div><div class="sd-card sd-meta-dup"><h4>Metadata</h4><div class="kv"><span class="k">version</span><span class="v mono">2.0.0</span><span class="k">size</span><span class="v mono">6.5 KB</span><span class="k">license</span><span class="v">MIT</span><span class="k">provider</span><span class="v accent">house</span></div></div><div class="sd-card"><h4>Permission summary</h4><div class="sd-perm-row"><span class="ico no">×</span><span>network</span><span class="scope">false</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>filesystem</span><span class="scope">readwrite</span></div><div class="sd-perm-row"><span class="ico ok">✓</span><span>tools</span><span class="scope">[Read, Edit, Write]</span></div><button class="sd-link-btn" type="button" data-package-tab="permissions">View full breakdown →</button></div><div class="sd-card sd-source-model"><h4>Source model</h4><div class="sd-maintainer"><span class="avatar"></span><div><div class="name">house</div><div class="meta">GitHub-hosted package</div></div></div></div></aside></div>
     <script id="package-data" type="application/json">{"files":[{"path":"SKILL.md","kind":"markdown","group":"root","title":"SKILL.md","summary":"Primary agent instructions, frontmatter, workflow, and declared resource manifest.","bytes":6650,"url":"/bundles/skill-author/SKILL.md.txt"}]}</script><script type="module" src="/assets/skill-detail.6d1388370f71.js"></script>
   </div>
   </main>
@@ -170,9 +144,10 @@ metadata:
         · MIT ·
         <a href="https://autovault.dev">AutoVault</a> ·
         <a href="https://automem.ai">AutoMem</a> ·
-        <a href="/skills.json">skills.json</a>
+        <a href="/skills.json">skills.json</a> ·
+        <a href="https://github.com/jack-arturo/skillissue" rel="noopener">github</a>
       </div>
-      <div class="foot-mono">packages on github · install via AutoVault</div>
+      <div class="foot-mono">people kept saying it. the pin is the useful part.</div>
     </div>
   </footer>
   <script>
