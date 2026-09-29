@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://skillissue.sh/install/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="/assets/site.70eae1bbca58.css">
+<link rel="stylesheet" href="/assets/site.7ca678acac01.css">
 <link rel="alternate" type="application/json" href="/skills.json" title="Skills catalog">
 </head>
 <body>
@@ -39,17 +39,17 @@
 <section class="hero" style="padding-bottom:1rem"><div class="wrap"><h1>Install</h1></div></section>
     <section style="padding-top:0"><div class="wrap prose"><h2>1. Get AutoVault</h2>
 <p>If you don't have it yet:</p>
-<pre><code>curl -fsSL https://autovault.sh | sh</code></pre>
+<pre class="md-block"><code>curl -fsSL https://autovault.sh | sh</code></pre>
 <p>Or see <a href="https://autovault.dev/quick-start" rel="noopener">autovault.dev quick-start</a>.</p>
 <h2>2. Add a skill from this repo</h2>
 <p>Every public skill page has a copy button. Pattern:</p>
-<pre><code>autovault add jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md --sync-profiles</code></pre>
+<pre class="md-block"><code>autovault add jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md --sync-profiles</code></pre>
 <p>The <code>@sha</code> pin is the last committed package-source revision, so installs stay reproducible even when the site itself is rebuilt later. Packages are multi-file when needed (resources, bin scripts) — that's why we use GitHub source, not a lone SKILL.md URL.</p>
 <h2>3. What AutoVault does</h2>
 <ol><li>Fetches the skill bundle at that commit  </li><li>Validates / signs into your local vault  </li><li>Syncs into agent skill directories (Claude Code, Codex, Cursor, …)</li></ol>
 <p>You do <strong>not</strong> need an AutoVault MCP server for day-to-day use after sync — the files land where the agent already looks.</p>
 <h2>MCP form</h2>
-<pre><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md&quot; })</code></pre></div></section>
+<pre class="md-block"><code>add_skill({ source: &quot;github&quot;, identifier: &quot;jack-arturo/skillissue@&lt;sha&gt;:skills/&lt;name&gt;/SKILL.md&quot; })</code></pre></div></section>
   </main>
   <footer>
     <div class="wrap foot-inner">

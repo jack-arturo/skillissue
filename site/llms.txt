@@ -6,12 +6,12 @@
 - Home: https://skillissue.sh/
 - Catalog: https://skillissue.sh/skills/
 - Machine catalog: https://skillissue.sh/skills.json
-- Source packages: https://github.com/jack-arturo/skillissue/tree/b4079fb83a130ff5690c03e35d8a88a8238fa90b/skills
-- Package-source install pin: b4079fb83a130ff5690c03e35d8a88a8238fa90b
+- Source packages: https://github.com/jack-arturo/skillissue/tree/91e4a6150690753070595f35d9f236e134e9af9e/skills
+- Package-source install pin: 91e4a6150690753070595f35d9f236e134e9af9e
 
 ## Install
 ```
-autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:skills/<name>/SKILL.md --sync-profiles
+autovault add jack-arturo/skillissue@91e4a6150690753070595f35d9f236e134e9af9e:skills/<name>/SKILL.md --sync-profiles
 ```
 
 ## Public skills (49)
@@ -43,7 +43,7 @@ autovault add jack-arturo/skillissue@b4079fb83a130ff5690c03e35d8a88a8238fa90b:sk
 - midjourney-iteration (v0.1.0) — Iterate on Midjourney prompts in a closed loop — generate, vision-evaluate the result grid against a structured brief, refine the prompt, re-roll — when a user wants album art, music video stills, social-post imagery, or any other MJ output that benefits from autonomous taste-driven iteration rather than one-shot prompting.
 - tui-design (v1.0.0) — Use when designing terminal interfaces, layouts, color systems, keyboard navigation, dashboards, or accessibility across Ratatui, Ink, Textual, Bubble Tea, and similar TUI frameworks.
 - docs-screenshot-packager (v1.0.0) — Capture, package, optimize, verify, and place documentation screenshots for GitHub READMEs, repo docs, and marketing/docs sites. Use for release screenshot passes, visual docs updates, screenshot QA, and reusable screenshot workflows across repos.
-- jacks-writing-style (v1.0.0) — Write like Jack Arturo — direct, casual, technical. Use for anything under his name: blog posts, READMEs, CHANGELOGs, audits, system prompts, drunk.support/verygoodplugins.com content.
+- jacks-writing-style (v2.0.0) — Write like Jack Arturo: direct, casual, technical. Use for anything under his name (blog, README, CHANGELOG, audit, system prompt, drunk.support, verygoodplugins.com). Also use when a draft needs de-Claudeing: no em dashes, no LLM cadence, no formula contrast.
 - bubble-tea-tui-builder (v1.1.0) — Build, test, and harden Go Bubble Tea terminal user interfaces with replayable events, responsive rendering, and terminal-safe fallbacks.
 - cli-installer-ux (v1.0.0) — Design and harden compact, useful CLI installers, updaters, setup wizards, and command output surfaces without leaking debug logs or machine JSON into human UX.
 - context-engineering-audit (v1.0.0) — Audit and cut what an agent loads before the user types — system prompts, CLAUDE.md/AGENTS.md, skill and tool descriptions. Use before trimming any instruction file, or after a model-generation change makes old prompt scaffolding counterproductive.
