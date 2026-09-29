@@ -1,3 +1,5 @@
+> **Archive.** These are published posts. Punctuation (em dashes) and a few phrases ("Let's dive in") are historical. Copy voice, structure, and examples. Do not copy those tells into a new draft.
+
 # Blog Post Writing Examples
 
 Real patterns from Jack's WP Fusion blog posts showing long-form technical writing style.

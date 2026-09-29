@@ -344,7 +344,13 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
   let bqBuf = [];
 
   const renderList = (list) =>
-    `<${list.tag}>${list.items.map((item) => `<li>${inline(item.content)}${item.children.map(renderList).join("")}</li>`).join("")}</${list.tag}>`;
+    `<${list.tag}>${list.items.map((item) => {
+      const task = item.task
+        ? `<span class="task ${item.task}" aria-hidden="true"></span>`
+        : "";
+      const klass = item.task ? ` class="task-item"` : "";
+      return `<li${klass}>${task}${inline(item.content)}${item.children.map(renderList).join("")}</li>`;
+    }).join("")}</${list.tag}>`;
   const flushList = () => {
     if (!listStack.length) return;
     html.push(renderList(listStack[0]));
@@ -414,10 +420,15 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
       .split("|")
       .map((c) => c.trim());
   const appendListItem = (match) => {
-    const [, whitespace, marker, content] = match;
+    const [, whitespace, marker, rawContent] = match;
     const indent = whitespace.replace(/\t/g, "  ").length;
     const tag = /^\d+\.$/.test(marker) ? "ol" : "ul";
-    const item = { content, children: [] };
+    const taskMatch = rawContent.match(/^\[([ xX])\]\s+(.*)$/);
+    const item = {
+      content: taskMatch ? taskMatch[2] : rawContent,
+      children: [],
+      task: taskMatch ? (taskMatch[1].toLowerCase() === "x" ? "done" : "open") : "",
+    };
     if (!listStack.length) {
       listStack.push({ indent, tag, items: [item] });
       return;
@@ -449,6 +460,24 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
     item.content += ` ${continuation}`;
     return true;
   };
+  let fenceSize = 0;
+  let fenceLang = "";
+  const openingFence = (line) => {
+    const match = line.match(/^(`{3,})([^`]*)$/);
+    if (!match) return null;
+    const lang = (match[2].trim().split(/\s+/)[0] || "")
+      .replace(/[^A-Za-z0-9_+-]/g, "")
+      .toLowerCase();
+    return { size: match[1].length, lang };
+  };
+  const closingFence = (line) => {
+    const match = line.match(/^(`{3,})\s*$/);
+    return Boolean(match && match[1].length >= fenceSize);
+  };
+  const renderCode = () => {
+    const langAttr = fenceLang ? ` data-lang="${esc(fenceLang)}"` : "";
+    html.push(`<pre class="md-block"${langAttr}><code>${esc(codeBuf.join("\n"))}</code></pre>`);
+  };
   let para = [];
   const flushPara = () => {
     if (!para.length) return;
@@ -465,22 +494,27 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
   };
 
   for (const line of lines) {
-    if (line.startsWith("```")) {
+    if (inCode) {
+      if (closingFence(line)) {
+        renderCode();
+        inCode = false;
+        fenceSize = 0;
+        fenceLang = "";
+      } else {
+        codeBuf.push(line);
+      }
+      continue;
+    }
+    const fence = openingFence(line);
+    if (fence) {
       flushPara();
       flushList();
       flushTable();
       flushBq();
-      if (!inCode) {
-        inCode = true;
-        codeBuf = [];
-      } else {
-        html.push(`<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`);
-        inCode = false;
-      }
-      continue;
-    }
-    if (inCode) {
-      codeBuf.push(line);
+      inCode = true;
+      fenceSize = fence.size;
+      fenceLang = fence.lang;
+      codeBuf = [];
       continue;
     }
     const listItem = line.match(/^(\s*)([-*]|\d+\.)\s+(.+)$/);
@@ -544,7 +578,7 @@ function mdToHtml(md, { resourceUrls = new Map() } = {}) {
   flushList();
   flushTable();
   flushBq();
-  if (inCode) html.push(`<pre><code>${esc(codeBuf.join("\n"))}</code></pre>`);
+  if (inCode) renderCode();
   return html.join("\n");
 }
 

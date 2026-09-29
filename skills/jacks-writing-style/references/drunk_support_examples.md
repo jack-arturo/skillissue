@@ -1,3 +1,5 @@
+> **Archive.** These are published posts. Punctuation (em dashes) and a few phrases ("Let's dive in") are historical. Copy voice, structure, and examples. Do not copy those tells into a new draft.
+
 # drunk.support Technical-Arc Blog Posts
 
 Long-form first-person technical writing from Jack's personal blog. Use as the model for any technical post that's *not* a year-end retrospective — product launches, workflow writeups, deep dives, postmortems.

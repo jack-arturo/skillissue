@@ -209,10 +209,10 @@
     },
     {
       "name": "jacks-writing-style",
-      "version": "1.0.0",
-      "contentHash": "f00030c5f229714d7f018cb4fe32849638c22b1abdde53bef4269bbad824546a",
-      "bundleHash": "7acb12092fd8f29c73b0f3710b61729a6b746ffe656219584b6bf599c3886503",
-      "fileCount": 6
+      "version": "2.0.0",
+      "contentHash": "28a82abb2ded2f46606d93b91bf59309ec1a555264adb424a37b1f2caf890488",
+      "bundleHash": "2fd7d8040351f1feba24048a80b636b3de7373e88fd36b221b802184f2e6a263",
+      "fileCount": 7
     },
     {
       "name": "long-haul-parallel-repair",
